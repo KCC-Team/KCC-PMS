@@ -270,4 +270,24 @@ $(document.body).ready(function () {
     ]);
 
     $('#add-member-by-prjmem').hide();
+
+
+    // 적용 버튼 클릭
+    $('#apply').on('click', function() {
+        insertProject();
+    });
+
 });
+
+function insertProject() {
+    let urlParams = new URLSearchParams(window.location.search);
+    let typeValue = urlParams.get('type');
+    if (typeValue === 'project') {
+        if (window.opener) {
+            window.opener.postMessage(addedMembers, "http://localhost:8085");
+            window.close();
+        } else {
+            console.error("부모 창을 인식하지 못했습니다.");
+        }
+    }
+}

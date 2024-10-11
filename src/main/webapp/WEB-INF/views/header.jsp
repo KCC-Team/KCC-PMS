@@ -1,10 +1,25 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 
+<%
+    String uri = request.getRequestURI();
+    String project_type = request.getParameter("type");
+    boolean isProjectRegister = uri.contains("/project/info.jsp");
+    boolean isProjectList = uri.contains("/project/list.jsp");
+
+    String projectTitle = "";
+    if (isProjectRegister && project_type.equals("register")) {
+        projectTitle = "프로젝트 등록";
+    }
+    if (isProjectList) {
+        projectTitle = "프로젝트 현황";
+    }
+%>
+
 <!-- header -->
 <header class="header">
     <div class="header-content">
-        <% if (title != null) { %>
-            <span><%=title%></span>
+        <% if (!projectTitle.isEmpty()) { %>
+            <span><%=projectTitle%></span>
         <% } else { %>
             <div class="dropdown header-project-name">
                 <a class="btn dropdown-toggle project-title fw-bold" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
