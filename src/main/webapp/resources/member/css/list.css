@@ -6,10 +6,11 @@
 .member-info {
     width: 100%;
     margin: 1px 20px 20px 20px;
-    font-size: 17px;
+    font-size: 25px;
     font-weight: bold;
     color: black;
-    border-bottom: 1px solid black;
+    border-bottom: 1px solid #989898;
+    padding-bottom: 5px;
 }
 
 .container1 {
@@ -49,6 +50,7 @@
     color: #3366cc;
     margin-bottom: 20px;
     background-color: #EBEEF3;
+    padding: 5px;
 }
 
 .team-overview, .team-members, .member-detail {
@@ -126,7 +128,7 @@
 .team-overview-title {
     display: flex;
     justify-content: space-between;
-    margin-bottom: 5px;
+    margin-bottom: 13px;
 }
 
 .btn-group {
@@ -144,12 +146,25 @@
 
 .text-align-right {
     text-align: right;
+    background-color: #EDF0F5;
+    font-weight: bold;
 }
 
 .text-align-center {
     text-align: center;
+    background-color: #EDF0F5;
+    font-weight: bold;
 }
 
 .members-table a {
     text-decoration: none;
+}
+
+.text-align-left {
+    text-align: left;
+    background-color: #EDF0F5;
+}
+
+.detail-table > tbody > tr > td {
+    width: 100px;
 }
