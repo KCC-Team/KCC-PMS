@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!-- mapper DTD 선언 -->
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.kcc.pms.domain.team.mapper.TeamMapper">
+    <cache />
+
+    <select id="getTeamList" resultType="com.kcc.pms.domain.team.model.dto.TeamResponseDto">
+        SELECT t.tm_no as key,
+               t.tm_nm as title,
+               t.tm_cont as teamDescription,
+               pt.tm_nm as parentTeamName,
+               NVL(pm.cnt, 0) as totalCount,
+               s.sys_ttl as systemName,
+               t.par_tm_no as parentId,
+               t.order_no
+        FROM team t,
+             system s,
+             team pt,
+             (SELECT tm_no, COUNT(*) cnt
+              FROM projectmember
+              GROUP BY tm_no) pm
+        WHERE t.sys_no = s.sys_no(+)
+          AND t.par_tm_no = pt.tm_no(+)
+          AND t.tm_no = pm.tm_no(+)
+          AND t.prj_no = #{projectNo}
+        ORDER BY NVL(t.par_tm_no, t.tm_no), t.order_no
+    </select>
+
+
+
+
+    <resultMap id="teamMemberDetail" type="com.kcc.pms.domain.team.model.dto.TeamMemberResponseDto">
+        <id column="MEM_NO" property="id" />
+        <result column="MEM_NM" property="memberName" />
+        <result column="AUTH" property="auth" /> <!-- 프로젝트 권한 -->
+        <result column="GRP_NM" property="groupName" /> <!-- 소속 그룹 -->
+        <result column="POSITION" property="position" /> <!-- 직위 -->
+        <result column="PRE_START_DT" property="preStartDate" />
+        <result column="PRE_END_DT" property="preEndDate" />
+        <result column="START_DT" property="startDate" />
+        <result column="END_DT" property="endDate" />
+        <result column="TECH" property="tech" /> <!-- 기술 등급 -->
+        <result column="EMAIL" property="email" />
+        <result column="PHONE_NO" property="phoneNo" />
+
+        <collection property="connectTeams" resultMap="connectTeams"/>
+    </resultMap>
+
+    <resultMap id="connectTeams" type="com.kcc.pms.domain.team.model.vo.Team">
+        <result column="TM_NO" property="teamNo" />
+        <result column="TM_NM" property="teamName" />
+    </resultMap>
+
+    <select id="getTeamMember" resultMap="teamMemberDetail">
+        SELECT m.mem_no,
+               m.mem_nm,
+               auth.cd_dtl_nm as AUTH,
+               gr.grp_nm,
+               pos.cd_dtl_nm as POSITION,
+               pm.pre_start_dt,
+               pm.pre_end_dt,
+               pm.start_dt,
+               pm.end_dt,
+               tech.cd_dtl_nm as TECH,
+               m.email,
+               m.phone_no,
+               pmt.tm_no,
+               pmt.tm_nm
+        FROM projectmember pm,
+             member m,
+             usergroup gr,
+             codedetail auth,
+             codedetail pos,
+             codedetail tech,
+             (SELECT t.tm_no, t.tm_nm, pm.mem_no
+              FROM team t, projectmember pm
+              WHERE t.tm_no = pm.tm_no
+                AND t.par_tm_no IS NOT NULL
+             ) pmt
+        WHERE pm.prj_auth_cd = auth.cd_dtl_no AND
+            m.tech_grd_cd = tech.cd_dtl_no AND
+            m.pos_nm = pos.cd_dtl_no AND
+            pm.mem_no = m.mem_no AND
+            m.grp_no = gr.grp_no AND
+            pm.mem_no = pmt.mem_no AND
+            pm.tm_no = #{teamNo}
+    </select>
+</mapper>
