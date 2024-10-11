@@ -70,6 +70,7 @@ table {
     font-size: 13px;
     margin-left: 26px;
     margin-right: 10px;
+    color: black;
 }
 
 table th, table td {
@@ -102,6 +103,7 @@ table td a:hover {
 
 .status-in-progress {
     background-color: #4caf50;
+    color: white;
 }
 
 .status-completed {
@@ -140,4 +142,8 @@ table td a:hover {
 
 .search-text {
     width: 245px;
+}
+
+#project_search_form {
+    color: black;
 }
