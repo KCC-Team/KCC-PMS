@@ -34,11 +34,6 @@
         font-size: 15px;
     }
 
-    .es-star {
-        margin-right: 10px !important;
-        color: red !important;
-    }
-
     .txt-area {
         padding: 4px;
         font-size: 17px;

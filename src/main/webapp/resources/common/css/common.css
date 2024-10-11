@@ -345,3 +345,58 @@ body {
     border-radius: 5px;
     font-size: 16px;
 }
+
+.custom-button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 35px;
+    padding: 5px 5px;
+    background-color: #646464;
+    border-radius: 2px;
+    color: white;
+    border: none;
+    font-size: 13px;
+    cursor: pointer;
+}
+
+.custom-button:hover {
+    background-color: #8B8B8B;
+}
+
+.green-status {
+    background-color: #65f16b;
+    color: #000;
+    padding: 5px 5px;
+    border-radius: 5px;
+    font-size: 12px;
+}
+
+.red-status {
+    background-color: #f55e5e;
+    color: #fff;
+    padding: 5px 5px;
+    border-radius: 5px;
+    font-size: 12px;
+}
+
+.blue-status {
+    background-color: #5e9bf5;
+    color: #fff;
+    padding: 5px 5px;
+    border-radius: 5px;
+    font-size: 12px;
+}
+
+.cancel-status {
+    background-color: #f5a65e;
+    color: #fff;
+    padding: 5px 5px;
+    border-radius: 5px;
+    font-size: 12px;
+}
+
+.es-star {
+    margin-right: 10px !important;
+    color: red !important;
+}

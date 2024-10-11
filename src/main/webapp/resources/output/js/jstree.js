@@ -1,5 +1,5 @@
 $(function() {
-    let treeData = [
+    let treeFolderData = [
         {
             id: "1",
             text: "차세대 프로그램 구축",
@@ -28,6 +28,47 @@ $(function() {
                     type: "output",
                 },
             ],
+        },
+    ];
+
+    let treeData = [
+        {
+            id: "1",
+            text: "차세대 프로그램 구축",
+            type: "folder",
+            children: [
+                {
+                    id: "1.1",
+                    text: "요구사항 정의서",
+                    type: "output",
+                    children: [
+                        { id: "1.1.1", text: "A 업무 시스템 요구사항 정의서", type: "file" },
+                        { id: "1.1.2", text: "B 업무 시스템 요구사항 정의서", type: "file" },
+                    ],
+                },
+                {
+                    id: "1.2",
+                    text: "요구사항추적표(설계)",
+                    type: "output",
+                },
+            ],
+        },
+        {
+            id: "2",
+            text: "B 프로그램 구축",
+            type: "folder",
+            children: [
+                {
+                    id: "2.1",
+                    text: "개발환경 설치 작업계획서",
+                    type: "output",
+                },
+            ],
+        },
+        {
+            id: "3",
+            text: "ProjectExcelDown_초기 프로젝트 등록 테스트",
+            type: "file",
         },
     ];
 
@@ -69,9 +110,10 @@ $(function() {
         }
     });
 
+    let jsTreeFolderData = convertToJsTreeData(treeFolderData);
     window.jsTreeFolderInstance = $('.jstree-folder').jstree({
         'core': {
-            'data': jsTreeData,
+            'data': jsTreeFolderData,
             "themes" : { "stripes" : true },
             'check_callback': true
         },
@@ -79,6 +121,9 @@ $(function() {
         'types': {
             "default": {
                 "icon": "fa fa-folder text-warning"
+            },
+            "file": {
+                "icon": "fa fa-file text-info"
             },
             "output": {
                 "icon": "fa-solid fa-box-archive text-success"

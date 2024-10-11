@@ -41,7 +41,7 @@
             <div class="d-flex justify-content-center">
                 <div style="width: 95%;">
                     <div class="d-flex justify-content-end align-items-center">
-                        <input type="text" class="form-control w-25" id="search" placeholder="산출물 이름을 입력해주세요.">
+                        <input type="text" class="form-control w-25" id="search" placeholder="산출물을 검색하세요.">
                         &nbsp;&nbsp;
                         <button id="search-btn" class="custom-button d-flex align-items-center me-3">&nbsp;&nbsp;&nbsp;&nbsp;검색&nbsp;&nbsp;&nbsp;&nbsp;</button>
                     </div>
@@ -157,9 +157,9 @@
     <!-- 동적 모달 -->
     <jsp:include page="modal/file-detail-modal.jsp" />
     <jsp:include page="modal/folder-modal.jsp" />
-    <jsp:include page="modal/file-insert-modal.jsp" />
     <jsp:include page="modal/output-file-insert.jsp" />
     <jsp:include page="modal/output-file-reinsert.jsp" />
+    <jsp:include page="modal/file-insert-modal.jsp" />
     <script src="../../../resources/output/js/list.js"></script>
 </main>
 
