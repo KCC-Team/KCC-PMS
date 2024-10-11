@@ -93,7 +93,7 @@
                     <div class="project-info-title">
                         <h2>프로젝트 정보</h2>
                         <div class="action-buttons">
-                            <span><a href="/projects/modify">수정</a></span>
+<%--                            <span><a href="/projects/modify">수정</a></span>--%>
                         </div>
                     </div>
                     <div class="project-title">

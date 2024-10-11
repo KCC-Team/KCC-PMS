@@ -1,10 +1,10 @@
 package com.kcc.pms.domain.project.controller;
 
-import com.kcc.pms.domain.project.model.dto.ProjectDto;
-import com.kcc.pms.domain.project.model.vo.ProjectVO;
+import com.kcc.pms.domain.project.model.dto.ProjectRequestDto;
 import com.kcc.pms.domain.project.service.ProjectService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -18,8 +18,9 @@ public class ProjectController {
 
     // 프로젝트 현황
     @GetMapping("/list")
-    public String list() {
-        String id = "";
+    public String list(Model model) {
+        String login_id = "user1";
+        model.addAttribute("projectList", projectService.getProjects(login_id));
         return "project/list";
     }
 
@@ -36,9 +37,8 @@ public class ProjectController {
     }
 
     @PostMapping("/saveProject")
-    public String saveProject(ProjectDto project) {
+    public String saveProject(ProjectRequestDto project) {
         int result = projectService.saveProject(project);
-        System.out.println("result ======== " + result);
         return "redirect:/projects/list";
     }
 

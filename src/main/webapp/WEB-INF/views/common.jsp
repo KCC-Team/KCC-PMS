@@ -68,11 +68,10 @@
             </a>
             <ul class="submenu">
                 <li><a href="/projects/dashboard"><span class="dot">•</span>대시보드</a></li>
-                <li><a href="/projects/info"><span class="dot">•</span>프로젝트 정보</a></li>
+                <li><a href="/projects/info?type=view"><span class="dot">•</span>프로젝트 정보</a></li>
                 <li><a href="/projects/wbsList"><span class="dot">•</span>프로젝트 WBS</a></li>
                 <li><a href="#"><span class="dot">•</span>프로젝트 기능</a></li>
                 <li><a href="#"><span class="dot">•</span>시스템 / 업무 관리</a></li>
-
             </ul>
         </li>
 
