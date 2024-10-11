@@ -1,13 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 
 <%@ include file="../common.jsp" %>
-<link rel="stylesheet" type="text/css" href="../../../resources/output/css/list.css">
-<link rel="stylesheet" type="text/css" href="https://cdn.rawgit.com/ax5ui/ax5ui-calendar/master/dist/ax5calendar.css">
-<link rel="stylesheet" type="text/css" href="https://cdn.rawgit.com/ax5ui/ax5ui-picker/master/dist/ax5picker.css">
-<link rel="stylesheet" type="text/css" href="https://cdn.rawgit.com/ax5ui/ax5ui-select/master/dist/ax5select.css">
-<link rel="stylesheet" type="text/css" href="../../../resources/output/css/ax5grid.css">
 <%--<link rel="stylesheet" type="text/css" href="https://cdn.rawgit.com/ax5ui/ax5ui-grid/master/dist/ax5grid.css">--%>
-<script type="text/javascript" src="https://code.jquery.com/jquery-1.12.3.min.js"></script>
+
 <script type="text/javascript" src="https://cdn.rawgit.com/ax5ui/ax5core/master/dist/ax5core.min.js"></script>
 <script type="text/javascript" src="https://cdn.rawgit.com/ax5ui/ax5ui-calendar/master/dist/ax5calendar.min.js"></script>
 <script type="text/javascript" src="https://cdn.rawgit.com/ax5ui/ax5ui-picker/master/dist/ax5picker.min.js"></script>
@@ -15,12 +10,12 @@
 <script type="text/javascript" src="https://cdn.rawgit.com/ax5ui/ax5ui-select/master/dist/ax5select.min.js"></script>
 <script type="text/javascript" src="https://cdn.rawgit.com/ax5ui/ax5ui-grid/master/dist/ax5grid.min.js"></script>
 
-<link
-        rel="stylesheet"
-        href="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.3.12/themes/default/style.min.css"
-/>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.3.12/jstree.min.js"></script>
-<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+<link rel="stylesheet" type="text/css" href="https://cdn.rawgit.com/ax5ui/ax5ui-calendar/master/dist/ax5calendar.css">
+<link rel="stylesheet" type="text/css" href="https://cdn.rawgit.com/ax5ui/ax5ui-picker/master/dist/ax5picker.css">
+<link rel="stylesheet" type="text/css" href="https://cdn.rawgit.com/ax5ui/ax5ui-select/master/dist/ax5select.css">
+<link rel="stylesheet" type="text/css" href="../../../resources/output/css/ax5grid.css">
+
+<link rel="stylesheet" type="text/css" href="../../../resources/output/css/list.css">
 
 <!-- 샘플 데이터 -->
 <%@ page import="java.util.List" %>
@@ -53,7 +48,7 @@
                     <section class="output-figure mt-3">
                         <div class="table-header d-flex justify-content-end align-items-center border-bottom mb-3">
                             <div class="me-5">
-                                <button class="btn btn-link" type="button"><i class="fa-regular fa-folder"></i>&nbsp;&nbsp;&nbsp;새 폴더 만들기</button>
+                                <button id="newFolder" class="btn btn-link" type="button"><i class="fa-regular fa-folder"></i>&nbsp;&nbsp;&nbsp;새 폴더 만들기</button>
                             </div>
                         </div>
                         <div class="table-body p-1 ms-4 d-flex align-items-center" style="width: 38%">
@@ -69,7 +64,8 @@
                                 <div class="fir-com-header d-flex justify-content-center align-items-center">
                                     파일명
                                 </div>
-                                <div class="jstree">
+                                <div class="jstree-section">
+                                    <jsp:include page="jstree.jsp" />
                                 </div>
                             </section>
                             <section class="second-component p-3">
@@ -78,7 +74,7 @@
                                         산출물 상세</label>
                                     <hr style="margin-top: 7px; margin-bottom: 7px;">
                                     <div class="d-flex justify-content-end pe-3">
-                                        <button class="custom-button" type="button">&nbsp;&nbsp;<i class="modify-icon"></i>&nbsp;&nbsp;수정&nbsp;&nbsp;</button>
+                                        <button class="custom-button file-modify-btn" type="button">&nbsp;&nbsp;<i class="modify-icon"></i>&nbsp;&nbsp;수정&nbsp;&nbsp;</button>
                                     </div>
                                     <div>
                                         <h5 class="text-black">&nbsp;&nbsp;&nbsp;산출물명</h5>
@@ -98,7 +94,7 @@
                                         <span class="label me-5">파일: &nbsp;<label id="detail-cnt">0</label></span>
                                         <button type="button" class="green-btn me-2">&nbsp;&nbsp;&nbsp;선택 다운로드&nbsp;&nbsp;&nbsp;</button>
                                         <button type="button" class="red-btn">&nbsp;&nbsp;&nbsp;선택 삭제&nbsp;&nbsp;&nbsp;</button>
-                                        <button type="button" class="custom-button ms-auto me-3 d-flex justify-content-end">&nbsp;&nbsp;파일 추가&nbsp;&nbsp;</button>
+                                        <button type="button" id="file-insert" class="custom-button ms-auto me-3 d-flex justify-content-end">&nbsp;&nbsp;파일 추가&nbsp;&nbsp;</button>
                                     </div>
                                     <div class="d-flex justify-content-center">
                                         <div class="ax5-ui" style="width: 97%;">
@@ -115,13 +111,55 @@
         </div>
     </div>
 
-    <!-- 동적 파일 상세 모달 -->
+    <!-- 산출물 정보 수정 모달 -->
+    <div class="modal fade" id="modifyModal" tabindex="-1" aria-labelledby="fileModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" style="color: #070606; font-weight: bold">산출물 수정</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <section class="info-section">
+                        <div class="d-flex justify-content-between">
+                            <div class="info-item">
+                                <div class="info-item d-flex align-items-start ms-3">
+                                    <div class="d-flex justify-content-start">
+                                        <div><label class="text-nowrap">제목&nbsp;&nbsp;&nbsp;<span class="es-star">*</span></label></div>
+                                        <span><textarea class="txt-area"></textarea></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-item d-flex flex-column align-items-start">
+                                    <div class="d-flex justify-content-start">
+                                        <div><label class="text-nowrap">연결 작업 선택&nbsp;&nbsp;&nbsp;</label></div>
+                                        <select class="form-select" aria-label="Multiple select example" id="task-select-list">
+                                            <option value="" selected disabled>작업 선택하기</option>
+                                            <option value="1">현행 업무분석</option>
+                                            <option value="2">업무 프로세스 분석</option>
+                                        </select>
+                                    </div>
+                                    <div class="select-box-list">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="save-button" data-bs-dismiss="modal">&nbsp;&nbsp;저장하기&nbsp;&nbsp;</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 동적 모달 -->
     <jsp:include page="modal/file-detail-modal.jsp" />
+    <jsp:include page="modal/folder-modal.jsp" />
     <jsp:include page="modal/file-insert-modal.jsp" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.3.12/themes/default/style.min.css" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
-    <script src="https://code.jquery.com/jquery-3.6.1.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.3.12/jstree.min.js"></script>
+    <jsp:include page="modal/output-file-insert.jsp" />
+    <jsp:include page="modal/output-file-reinsert.jsp" />
     <script src="../../../resources/output/js/list.js"></script>
 </main>
 

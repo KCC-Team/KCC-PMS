@@ -1,85 +1,7 @@
+// jstree
 $(function () {
-    let treeData = [
-        {
-            id: "1",
-            text: "차세대 프로그램 구축",
-            type: "folder",
-            children: [
-                {
-                    id: "1.1",
-                    text: "요구사항 정의서",
-                    type: "folder",
-                    children: [
-                        { id: "1.1.1", text: "A 업무 시스템 요구사항 정의서", type: "file" },
-                        { id: "1.1.2", text: "B 업무 시스템 요구사항 정의서", type: "file" },
-                    ],
-                },
-                {
-                    id: "1.2",
-                    text: "요구사항추적표(설계)",
-                    type: "folder",
-                },
-            ],
-        },
-        {
-            id: "2",
-            text: "B 프로그램 구축",
-            type: "folder",
-            children: [
-                {
-                    id: "2.1",
-                    text: "개발환경 설치 작업계획서",
-                    type: "folder",
-                },
-            ],
-        },
-        {
-            id: "3",
-            text: "ProjectExcelDown_초기 프로젝트 등록 테스트",
-            type: "file",
-        },
-    ];
-
-    // treeData를 jsTree 데이터로 변환하는 함수
-    function convertToJsTreeData(nodes, parentId) {
-        let jsTreeData = [];
-        nodes.forEach(function(node) {
-            let jsTreeNode = {
-                id: node.id,
-                parent: parentId || '#', // 루트 노드의 부모는 '#'
-                text: node.text,
-                type: node.type
-            };
-            jsTreeData.push(jsTreeNode);
-            if (node.children && node.children.length > 0) {
-                jsTreeData = jsTreeData.concat(convertToJsTreeData(node.children, node.id));
-            }
-        });
-        return jsTreeData;
-    }
-
-    let jsTreeData = convertToJsTreeData(treeData);
-
-    // jsTree 초기화
-    $('.jstree').jstree({
-        'core': {
-            'data': jsTreeData,
-            "themes" : { "stripes" : true },
-            'check_callback': true
-        },
-        'plugins': ["types", "dnd", "wholerow", "search"],
-        'types': {
-            "default": {
-                "icon": "fa fa-folder text-warning"
-            },
-            "file": {
-                "icon": "fa fa-file text-info"
-            }
-        }
-    });
-
     // 노드 이동 이벤트 핸들러
-    $('.jstree').on("move_node.jstree", function (e, data) {
+    $('.jstree-files').on("move_node.jstree", function (e, data) {
         let movedNode = data.node;
         let newParentId = data.parent;
         updateTreeData(movedNode, newParentId);
@@ -147,29 +69,30 @@ $(function () {
 
         if (isEditing) {
             // 드래그 앤 드롭 활성화
-            $('.jstree').jstree(true).settings.dnd.is_draggable = function () { return true; };
+            $('.jstree-files').jstree(true).settings.dnd.is_draggable = function () { return true; };
         } else {
             // 드래그 앤 드롭 비활성화
-            $('.jstree').jstree(true).settings.dnd.is_draggable = function () { return false; };
+            $('.jstree-files').jstree(true).settings.dnd.is_draggable = function () { return false; };
         }
     });
 
     // 초기 상태에서 드래그 앤 드롭 비활성화
-    $('.jstree').jstree(true).settings.dnd.is_draggable = function () { return false; };
+    $('.jstree-files').jstree(true).settings.dnd.is_draggable = function () { return false; };
 
     $('#search').on('keypress', function(e) {
         if (e.which === 13) { // 엔터 키 코드
             let v = $(this).val();
-            $('.jstree').jstree(true).search(v);
+            $('.jstree-files').jstree(true).search(v);
         }
     });
 
     $('#search-btn').on('click', function() {
         let v = $('#search').val();
-        $('.jstree').jstree(true).search(v);
+        $('.jstree-files').jstree(true).search(v);
     });
 });
 
+// file grid
 let gridData = [
     {
         fileName: "A 업무 시스템 요구사항 정의서_1",
@@ -218,7 +141,7 @@ $(function () {
                     return `
                                 <div class="me-5">
                                     <button class="ms-1 file-btn" data-file="${this.item.fileName}">&nbsp;다운로드&nbsp;</button>
-                                    <button class="file-btn" data-file="${this.item.fileName}">&nbsp;업로드&nbsp;</button>
+                                    <button onclick="openReInsertModal('${this.item.fileName}', gridData)" class="file-btn" data-file="${this.item.fileName}">&nbsp;업로드&nbsp;</button>
                                 </div>
                             `;
                 }
@@ -241,7 +164,75 @@ $(function () {
     });
 
     $('.file-insert-btn').on('click', function() {
-        openInsertModal();
+        $('#insertModal').modal('show');
+    });
+
+    $('.file-modify-btn').on('click', function() {
+        $('#modifyModal').modal('show');
+    });
+
+    const $selectElement = $('#task-select-list');
+    const $selectBox = $('.select-box-list');
+
+    let selectedOptions = [];
+    $selectElement.on('change', function() {
+        const value = $selectElement.val();
+        console.log(value);
+        if (value && !selectedOptions.includes(value)) {
+            selectedOptions.push(value);
+            createLabel(value);
+            console.log(selectedOptions);
+        }
+        $selectElement.val('');
+    });
+
+    function createLabel(value) {
+        const optionText = $selectElement.find('option[value="' + value + '"]').text();
+
+        const $label = $('<span>', {
+            class: 'label-item',
+            text: optionText
+        });
+
+        const $removeBtn = $('<button>', {
+            class: 'remove-btn',
+            html: '&times;'
+        });
+
+        $removeBtn.on('click', function() {
+            $label.remove();
+            selectedOptions = selectedOptions.filter(function(val) {
+                return val !== value;
+            });
+        });
+
+        $label.append($removeBtn);
+        $selectBox.append($label);
+    }
+
+    $('#modifyModal').on('show.bs.modal', function() {
+        isSaved = false;
+    });
+
+    $('#modifyModal .save-button').on('click', function() {
+        isSaved = true;
+    });
+
+    $('#modifyModal').on('hidden.bs.modal', function() {
+        if (!isSaved) {
+            selectedOptions = [];
+            $selectBox.empty();
+        }
+    });
+});
+
+$(function() {
+    $('#newFolder').on('click', function() {
+        $('#folderModal').modal('show');
+    });
+
+    $('#file-insert').on('click', function() {
+        $('#fileInsertModal').modal('show');
     });
 });
 
@@ -298,7 +289,6 @@ function loadVersionHistory(fileData) {
         versionHistoryContainer.appendChild(card);
     });
 }
-
 function openDetailModal(fileName, gridData) {
     const fileData = gridData.find(item => item.fileName === fileName);
     if (!fileData) {
@@ -314,7 +304,18 @@ function openDetailModal(fileName, gridData) {
     loadVersionHistory(fileData);
     $('#detailModal').modal('show');
 }
+function openReInsertModal(fileName, gridData) {
+    const fileData = gridData.find(item => item.fileName === fileName);
+    if (!fileData) {
+        alert('파일 정보를 찾을 수 없습니다.');
+        return;
+    }
 
-function openInsertModal() {
-    $('#insertModal').modal('show');
+    $('#ori-fileName').text(fileData.fileName);
+    $('#ori-fileSize').text(fileData.size);
+    $('#ori-fileVersion').text(fileData.version);
+    $('#ori-fileType').text(fileData.fileType);
+
+    loadVersionHistory(fileData);
+    $('#fileReInsertModal').modal('show');
 }
