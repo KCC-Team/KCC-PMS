@@ -279,15 +279,29 @@ $(document.body).ready(function () {
 
 });
 
+checkProject();
+
+function checkProject() {
+    let urlParams = new URLSearchParams(window.location.search);
+    let typeValue = urlParams.get('type');
+    if (typeValue === 'project') {
+        document.getElementById('project_member_total').hidden = true;
+    }
+}
+
 function insertProject() {
     let urlParams = new URLSearchParams(window.location.search);
     let typeValue = urlParams.get('type');
     if (typeValue === 'project') {
         if (window.opener) {
+            if (addedMembers.length > 1) {
+                alert("PM은 1명만 등록이 가능합니다.")
+                return false;
+            }
             window.opener.postMessage(addedMembers, "http://localhost:8085");
             window.close();
         } else {
-            console.error("부모 창을 인식하지 못했습니다.");
+            console.log("부모 창을 인식하지 못했습니다.");
         }
     }
 }

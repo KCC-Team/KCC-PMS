@@ -12,7 +12,7 @@ import java.util.Date;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class ProjectDto {
+public class ProjectRequestDto {
 
     private Long prj_no;
 

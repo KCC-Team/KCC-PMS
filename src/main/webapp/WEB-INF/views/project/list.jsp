@@ -1,4 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<%@ taglib prefix="c" uri="jakarta.tags.core"%>
+<%@ taglib prefix="fmt" uri="jakarta.tags.core"%>
 
 <%@ include file="../project/projectHeader.jsp" %>
 
@@ -39,33 +41,54 @@
             </tr>
             </thead>
             <tbody>
-            <tr>
-                <td><a href="/projects/dashboard">차세대 프로그램 구축</a></td>
-                <td><span class="status-label status-in-progress">진행중</span></td>
-                <td>PM01</td>
-                <td>SI개발1팀</td>
-                <td>2024-09-12</td>
-                <td>2024-09-13</td>
-                <td><progress id="bar01" value="30" max="100"></progress>&nbsp; 30%</td>
-            </tr>
-            <tr>
-                <td><a href="/projects/dashboard">B 프로젝트</a></td>
-                <td><span class="status-label status-completed">종료</span></td>
-                <td>PM02</td>
-                <td>SI개발1팀</td>
-                <td>2024-09-18</td>
-                <td>2024-09-18</td>
-                <td><progress id="bar02" value="100" max="100"></progress>&nbsp; 100%</td>
-            </tr>
-            <tr>
-                <td><a href="/projects/dashboard">C 프로젝트</a></td>
-                <td><span class="status-label status-completed">종료</span></td>
-                <td>PM03</td>
-                <td>SI개발2팀</td>
-                <td>2024-09-19</td>
-                <td>2024-09-19</td>
-                <td><progress id="bar03" value="100" max="100"></progress>&nbsp; 100%</td>
-            </tr>
+                <c:forEach items="${projectList}" var="list">
+                    <tr>
+                        <td><a href="/projects/dashboard"><c:out value="${list.prj_title}" /></a></td>
+                        <td><c:out value="${list.project_status}" /></td>
+                        <td>
+                            <c:if test="${not empty list.projectManager}">
+                                <c:forEach var="manager" items="${list.projectManager}">
+                                    <c:out value="${manager.memNm}" />
+                                </c:forEach>
+                            </c:if>
+                            <c:if test="${empty list.projectManager}">
+                                No Manager Assigned
+                            </c:if>
+                        </td>
+                        <td><c:out value="${list.org}" /></td>
+                        <c:if test="${list.st_dt != null}">
+                            <td><c:out value="${list.st_dt}" /></td>
+                        </c:if>
+                        <c:if test="${list.st_dt == null}">
+                            <td> - </td>
+                        </c:if>
+                        <c:if test="${list.end_dt != null}">
+                            <td><c:out value="${list.end_dt}" /></td>
+                        </c:if>
+                        <c:if test="${list.end_dt == null}">
+                            <td> - </td>
+                        </c:if>
+                        <td><progress id="bar01" value="<c:out value="${list.prg}" />" max="100"></progress> <c:out value="${list.prg}" />%</td>
+                    </tr>
+                </c:forEach>
+                <tr>
+                    <td><a href="/projects/dashboard">차세대 프로그램 구축</a></td>
+                    <td><span class="status-label status-in-progress">진행중</span></td>
+                    <td>PM01</td>
+                    <td>SI개발1팀</td>
+                    <td>2024-09-12</td>
+                    <td>2024-09-13</td>
+                    <td><progress id="bar00" value="30" max="100"></progress>&nbsp; 30%</td>
+                </tr>
+                <tr>
+                    <td><a href="/projects/dashboard">B 프로젝트</a></td>
+                    <td><span class="status-label status-completed">종료</span></td>
+                    <td>PM02</td>
+                    <td>SI개발1팀</td>
+                    <td>2024-09-18</td>
+                    <td>2024-09-18</td>
+                    <td><progress id="bar02" value="100" max="100"></progress>&nbsp; 100%</td>
+                </tr>
             </tbody>
         </table>
 
