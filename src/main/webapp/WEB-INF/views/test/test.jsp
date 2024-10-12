@@ -43,7 +43,7 @@
         <c:set var="disabled" value="disabled" />
     </c:otherwise>
 </c:choose>
-<input type="hidden" id="disabled-val" value="${disabled}" />
+<input type="hidden"  class="disabled-val" value="${disabled}" />
 
 <main class="content" id="content">
     <div class="main_content">
