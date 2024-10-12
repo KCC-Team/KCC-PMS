@@ -29,8 +29,8 @@
                         결함 관리</label>
                     <div class="d-flex justify-content-center">
                         <button type="button" class="btn btn-primary d-flex justify-content-end align-items-center me-4 text-nowrap">
-                            <i class="fas fa-plus"></i>&nbsp;&nbsp;테스트 등록</button>
-                        <input type="text" class="form-control" id="searchTest" placeholder="테스트를 검색하세요." style="height: 40px;">
+                            <i class="fas fa-plus"></i>&nbsp;&nbsp;결함 등록</button>
+                        <input type="text" class="form-control" id="searchTest" placeholder="결함 검색하세요." style="height: 40px;">
                         &nbsp;&nbsp;
                         <button id="test-search-btn" class="custom-button d-flex align-items-center me-3 text-nowrap">&nbsp;&nbsp;&nbsp;&nbsp;검색&nbsp;&nbsp;&nbsp;&nbsp;</button>
                     </div>
@@ -77,6 +77,8 @@
                         </div>
                     </div>
                 </div>
+            </section>
+            <section class="button-list">
             </section>
         </div>
     </div>

@@ -50,6 +50,28 @@
     <c:when test="${type eq 'register'}">
         <c:set var="titleName" value="결함 등록" />
         <c:set var="disabled" value="" />
+        <c:set var="save" value="저장" />
+        <c:set var="cancel" value="취소" />
+    </c:when>
+    <c:when test="${type eq 'modify'}">
+        <c:set var="titleName" value="결함 수정" />
+        <c:set var="disabled" value="" />
+        <c:set var="save" value="저장" />
+        <c:set var="cancel" value="취소" />
+    </c:when>
+    <c:otherwise>
+        <c:set var="titleName" value="결함 상세" />
+        <c:set var="disabled" value="disabled" />
+        <c:set var="work" value="조치" />
+        <c:set var="modify" value="수정" />
+    </c:otherwise>
+</c:choose>
+
+<c:set var="type" value="${type}" />
+<c:choose>
+    <c:when test="${type eq 'register'}">
+        <c:set var="titleName" value="결함 등록" />
+        <c:set var="disabled" value="" />
     </c:when>
     <c:when test="${type eq 'modify'}">
         <c:set var="titleName" value="결함 수정" />
@@ -98,7 +120,7 @@
             </tr>
             <tr>
                 <td colspan="4">
-                    <textarea id="defect_desc" class="defect-desc" required ${disabled} ></textarea>
+                    <textarea class="defect-desc" required ${disabled} ></textarea>
                 </td>
             </tr>
             <tr>
@@ -151,15 +173,42 @@
                 </div>
             </div>
         </div>
-        <div class="file-zone_2 w-100">
-            <div class="file-section mt-3">
-                <div class="info-item d-flex flex-column align-items-start">
-                    <div class="mb-2"><label>결함 발견 첨부파일</label></div>
-                    <div id="df-insert-file-dropzone_2" class="dropzone"></div>
-                    <jsp:include page="../output/file/file.jsp" />
+        <br>
+        <c:if test="${not empty defectActionContent and defectActionContent != ''}">
+            <section class="defect-table work-info w-100">
+                <table>
+                    <tr>
+                        <td colspan="4" class="td-title text-center">결함 조치 내용</td>
+                    </tr>
+                    <tr>
+                        <td colspan="4">
+                            <textarea class="defect-desc" required ${disabled} >${defectActionContent}</textarea>
+                        </td>
+                    </tr>
+                </table>
+                <div class="file-zone_2 w-100">
+                    <div class="file-section mt-3">
+                        <div class="info-item d-flex flex-column align-items-start">
+                            <div class="mb-2"><label>결함 발견 첨부파일</label></div>
+                            <div id="df-insert-file-dropzone_2" class="dropzone"></div>
+                            <jsp:include page="../output/file/file.jsp" />
+                        </div>
+                    </div>
                 </div>
-            </div>
-        </div>
+            </section>
+        </c:if>
+        <section class="btn-sec d-flex justify-content-end">
+            <c:choose>
+                <c:when test="${type eq 'register' or type eq 'modify'}">
+                    <button class="btn btn-success" id="save">&nbsp;&nbsp;&nbsp;${save}&nbsp;&nbsp;&nbsp;</button>&nbsp;&nbsp;&nbsp;
+                    <button class="btn btn-secondary me-3" id="cancel">&nbsp;&nbsp;&nbsp;${cancel}&nbsp;&nbsp;&nbsp;</button>
+                </c:when>
+                <c:otherwise>
+                    <button class="btn btn-primary" id="work">&nbsp&nbsp;&nbsp;${work}&nbsp;&nbsp;&nbsp;</button>&nbsp;&nbsp;&nbsp;
+                    <button class="btn btn-secondary me-3" id="modify">&nbsp;&nbsp;&nbsp;${modify}&nbsp;&nbsp;&nbsp;</button>
+                </c:otherwise>
+            </c:choose>
+        </section>
         <br><br><br>
     </section>
 </body>
