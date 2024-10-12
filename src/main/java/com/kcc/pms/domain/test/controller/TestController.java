@@ -10,8 +10,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping("/projects/tests")
 public class TestController {
 
-    @GetMapping("/list")
-    public String list() {
+    @GetMapping
+    public String findAll() {
         return "test/list";
     }
 

@@ -42,16 +42,16 @@
         overflow-y: hidden;
     }
 
+    .jstree-div {
+        border: 1px solid #ced4da;
+    }
+
     .file-zone .select-box {
         margin-left: 20px;
         width: 250px;
         height: 150px;
         padding: 10px;
         overflow-y: auto;
-    }
-
-    .jstree-div {
-        border: 1px solid #ced4da;
     }
 
     .file-zone .dropzone {
