@@ -1,3 +1,15 @@
+#tree-table th, #tree-table td {
+    text-align: center;
+    vertical-align: middle;
+    padding: 10px;
+    font-size: 14px;
+}
+
+
+#tree-table td:nth-child(1){
+    text-align: left;
+}
+
 .member-content {
     display: flex;
     padding-top: 15px;
@@ -23,7 +35,7 @@
 .left-section {
     flex: 0.8;
     background-color: white;
-    border: 1px solid black;
+
     padding-bottom: 20px;
 }
 
@@ -55,6 +67,10 @@
 
 .team-overview, .team-members, .member-detail {
     margin-bottom: 30px;
+}
+
+.member-detail {
+    display: none;
 }
 
 .overview-table, .members-table, .detail-table {
@@ -120,7 +136,7 @@
 }
 
 .team-title {
-    font-size: 16px;
+    font-size: 20px;
     color: black;
     font-weight: bold;
 }
@@ -137,11 +153,15 @@
 
 .btn-group > button {
     padding: 4px 10px 4px 10px;
-    background-color: #717070;
+    background-color: #8B8B8B;
     color: white;
     border: none;
     border-radius: 5px;
     cursor: pointer;
+}
+
+#btnEdit {
+    margin-left: 85px;
 }
 
 .text-align-right {
@@ -167,4 +187,15 @@
 
 .detail-table > tbody > tr > td {
     width: 100px;
+}
+
+
+.clickable-name {
+    color: blue;
+    cursor: pointer;
+    text-decoration: underline;
+}
+
+.clickable-name:hover {
+    color: darkblue;
 }
