@@ -177,19 +177,16 @@ $(function () {
     let selectedOptions = [];
     $selectElement.on('change', function() {
         const value = $selectElement.val();
-        console.log(value);
         if (value && !selectedOptions.includes(value)) {
             selectedOptions.push(value);
             createLabel(value);
-            console.log(selectedOptions);
         }
         $selectElement.val('');
     });
 
     function createLabel(value) {
         const optionText = $selectElement.find('option[value="' + value + '"]').text();
-
-        const $label = $('<span>', {
+        const $label = $('<div>', {
             class: 'label-item',
             text: optionText
         });

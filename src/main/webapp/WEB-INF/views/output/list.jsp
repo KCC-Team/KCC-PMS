@@ -122,26 +122,22 @@
                 <div class="modal-body">
                     <section class="info-section">
                         <div class="d-flex justify-content-between">
-                            <div class="info-item">
-                                <div class="info-item d-flex align-items-start ms-3">
-                                    <div class="d-flex justify-content-start">
-                                        <div><label class="text-nowrap">제목&nbsp;&nbsp;&nbsp;<span class="es-star">*</span></label></div>
-                                        <span><textarea class="txt-area"></textarea></span>
-                                    </div>
+                            <div class="info-item d-flex align-items-start ms-3">
+                                <div class="d-flex justify-content-start">
+                                    <div><label class="text-nowrap">제목&nbsp;&nbsp;&nbsp;<span class="es-star">*</span></label></div>
+                                    <span><textarea class="txt-area"></textarea></span>
                                 </div>
                             </div>
-                            <div class="info-item">
-                                <div class="info-item d-flex flex-column align-items-start">
-                                    <div class="d-flex justify-content-start">
-                                        <div><label class="text-nowrap">연결 작업 선택&nbsp;&nbsp;&nbsp;</label></div>
-                                        <select class="form-select" aria-label="Multiple select example" id="task-select-list">
-                                            <option value="" selected disabled>작업 선택하기</option>
-                                            <option value="1">현행 업무분석</option>
-                                            <option value="2">업무 프로세스 분석</option>
-                                        </select>
-                                    </div>
-                                    <div class="select-box-list">
-                                    </div>
+                            <div class="info-item d-flex flex-column align-items-start">
+                                <div class="d-flex justify-content-start">
+                                    <div><label class="text-nowrap">연결 작업 선택&nbsp;&nbsp;&nbsp;</label></div>
+                                    <select class="form-select" aria-label="Multiple select example" id="task-select-list">
+                                        <option value="" selected disabled>작업 선택하기</option>
+                                        <option value="1">현행 업무분석</option>
+                                        <option value="2">업무 프로세스 분석</option>
+                                    </select>
+                                </div>
+                                <div class="select-box-list">
                                 </div>
                             </div>
                         </div>

@@ -67,7 +67,7 @@
                             <div class="d-flex justify-content-start"><label>테스트 명&nbsp;&nbsp;&nbsp;<span class="es-star">*</span></label></div>
                             <input type="text" value="" required ${disabled} >
                         </div>&nbsp;&nbsp;&nbsp;
-                        <div class="ms-4">
+                        <div class="ms-3">
                             <div class="d-flex justify-content-start"><label>테스트 ID&nbsp;&nbsp;&nbsp;<span class="es-star">*</span></label></div>
                             <input id="teat_id" type="text" value="" required ${disabled} >
                         </div>
@@ -77,7 +77,7 @@
                         <div class="me-3">
                             <div class="d-flex justify-content-start"><label> 테스트 기간&nbsp;&nbsp;&nbsp;<span class="es-star">*</span></label></div>
                             <input type="date" id="due_dt" name="due_dt" value="" required ${disabled} >
-                        </div><div><div class="fw-bold fs-1 d-flex justify-content-start"><label>&nbsp;</label></div>~</div>
+                        </div><div><div class="fw-bold fs-1 d-flex justify-content-start"><label>&nbsp;</label></div>~</div>&nbsp;&nbsp;&nbsp;
                         <div class="ms-3">
                             <div class="d-flex justify-content-start"><label>&nbsp;&nbsp;&nbsp;</label></div>
                             <input type="date" id="compl_date" name="compl_date" value="" ${disabled} >
@@ -139,9 +139,9 @@
                         <button class="custom-button tc-btn">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                             테스트케이스 추가
                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</button>
+                    </div>
                 </div>
             </section>
-
         </div>
     </div>
 

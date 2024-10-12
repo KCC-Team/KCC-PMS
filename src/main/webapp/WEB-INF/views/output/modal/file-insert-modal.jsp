@@ -124,32 +124,6 @@
         padding: 10px;
         overflow-y: auto;
     }
-
-    .label-item {
-        display: inline-block;
-        background-color: #e9ecef;
-        color: #495057;
-        padding: 5px 10px;
-        margin: 5px;
-        border-radius: 15px;
-        position: relative;
-        font-size: 14px;
-    }
-
-    .label-item .remove-btn {
-        background: none;
-        border: none;
-        color: #6c757d;
-        font-size: 16px;
-        line-height: 1;
-        padding: 0;
-        margin-left: 5px;
-        cursor: pointer;
-    }
-
-    .label-item .remove-btn:hover {
-        color: #dc3545;
-    }
 </style>
 <div class="modal fade" id="insertModal" tabindex="-1" aria-labelledby="fileModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
@@ -225,8 +199,7 @@
 
         function createLabel(value) {
             const optionText = $selectElement.find('option[value="' + value + '"]').text();
-
-            const $label = $('<span>', {
+            const $label = $('<div>', {
                 class: 'label-item',
                 text: optionText
             });
