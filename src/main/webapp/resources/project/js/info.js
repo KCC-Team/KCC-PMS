@@ -99,6 +99,20 @@ function getStatusCode() {
     });
 }
 
+
+function handleStatusChange() {
+    const statCd = document.getElementById('stat_cd').value;
+    const prg = document.getElementById('prg');
+
+    if (statCd === 'PMS00101') {
+        prg.value = '0';
+    }
+    if (statCd === 'PMS00103') {
+        prg.value = '100';
+    }
+}
+
+
 // 날짜 계산
 function calculateDaysBetween(division) {
     let sDate = '#st_dt';

@@ -55,6 +55,7 @@
 
 
     <resultMap id="projectResultMap" type="com.kcc.pms.domain.project.model.dto.ProjectResponseDto">
+        <result property="prj_no" column="prj_no"/>
         <result property="project_status" column="project_status"/>
         <collection property="projectManager" ofType="com.kcc.pms.domain.project.model.dto.ProjectManagerResponseDto"
                     column="prj_no" javaType="list" select="getProjectManager">
@@ -63,14 +64,76 @@
         </collection>
     </resultMap>
 
+
     <select id="getProjects" resultMap="projectResultMap">
         SELECT
-            P.*,
+            inline_query.*,
             CASE
-                WHEN P.stat_cd = 'PMS00101' THEN '대기'
-                WHEN P.stat_cd = 'PMS00102' THEN '진행중'
-            ELSE '완료'
-        END AS project_status
+                WHEN inline_query.stat_cd = 'PMS00101' THEN '대기'
+                WHEN inline_query.stat_cd = 'PMS00102' THEN '진행중'
+                ELSE '완료'
+            END AS project_status
+        FROM
+        (
+            SELECT
+                rownum rn,
+                P.*,
+                CASE
+                    WHEN P.stat_cd = 'PMS00101' THEN '대기'
+                    WHEN P.stat_cd = 'PMS00102' THEN '진행중'
+                    ELSE '완료'
+                END AS project_status
+            FROM
+                project P
+            JOIN
+                team T ON P.prj_no = T.prj_no
+            JOIN
+                projectmember PM ON P.prj_no = PM.prj_no
+            JOIN
+                member M ON PM.mem_no = M.mem_no
+            WHERE
+                <![CDATA[
+                    rownum <= #{cri.pageNum} * #{cri.amount}
+                ]]>
+                    AND M.login_id = #{prjReqDto.login_id}
+                <if test="prjReqDto.prj_title != null and prjReqDto.prj_title != ''">
+                    AND REPLACE(prj_title, ' ', '') like '%' || REPLACE(#{prjReqDto.prj_title}, ' ', '') || '%'
+                </if>
+                <if test="prjReqDto.stat_cd != null and prjReqDto.stat_cd != 'all'">
+                    AND stat_cd = #{prjReqDto.stat_cd}
+                </if>
+        ) inline_query
+        WHERE
+        <![CDATA[
+            inline_query.rn > (#{cri.pageNum} -1) * #{cri.amount}
+        ]]>
+        ORDER BY
+            CASE
+                WHEN stat_cd = 'PMS00102' THEN 1
+                WHEN stat_cd = 'PMS00101' THEN 2
+                ELSE 3
+            END,
+        st_dt DESC NULLS LAST,
+        prj_no DESC
+    </select>
+
+
+    <select id="getProjectManager" resultType="com.kcc.pms.domain.project.model.dto.ProjectManagerResponseDto">
+        SELECT M.mem_no as memNo , M.mem_nm as memNm
+        FROM
+            projectmember PM
+        JOIN
+            member M ON PM.mem_no = M.mem_no
+        WHERE
+            PM.prj_no = #{prj_no}
+        AND
+            PM.prj_auth_cd = 'PMS00201'
+    </select>
+
+
+    <select id="getProjectCount" resultType="int">
+        SELECT
+            COUNT(prj_no)
         FROM
             project P
         JOIN
@@ -80,19 +143,13 @@
         JOIN
             member M ON PM.mem_no = M.mem_no
         WHERE
-            M.login_id = #{login_id}
-        AND
-            PM.prj_auth_cd != 'PMS00205'
-    </select>
-
-    <select id="getProjectManager" resultType="com.kcc.pms.domain.project.model.dto.ProjectManagerResponseDto">
-        SELECT M.mem_no as memNo , M.mem_nm as memNm
-        FROM
-            projectmember PM
-        JOIN
-            member M ON PM.mem_no = M.mem_no
-        WHERE PM.prj_no = #{prj_no}
-        AND PM.prj_auth_cd = 'PMS00201'
+            M.login_id = #{prjReqDto.login_id}
+            <if test="prjReqDto.prj_title != null and prjReqDto.prj_title != ''">
+                AND REPLACE(prj_title, ' ', '') like '%' || REPLACE(#{prjReqDto.prj_title}, ' ', '') || '%'
+            </if>
+            <if test="prjReqDto.stat_cd != null and prjReqDto.stat_cd != 'all'">
+                AND stat_cd = #{prjReqDto.stat_cd}
+            </if>
     </select>
 
 

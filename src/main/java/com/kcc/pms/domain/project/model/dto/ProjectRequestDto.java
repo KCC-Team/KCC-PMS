@@ -73,4 +73,6 @@ public class ProjectRequestDto {
     private Long mem_no;
 
     private String prj_auth_cd;
+
+    private String login_id;
 }
