@@ -1,5 +1,7 @@
 package com.kcc.pms.domain.project.controller;
 
+import com.kcc.pms.domain.project.model.dto.Criteria;
+import com.kcc.pms.domain.project.model.dto.PageDto;
 import com.kcc.pms.domain.project.model.dto.ProjectRequestDto;
 import com.kcc.pms.domain.project.service.ProjectService;
 import lombok.RequiredArgsConstructor;
@@ -18,9 +20,15 @@ public class ProjectController {
 
     // 프로젝트 현황
     @GetMapping("/list")
-    public String list(Model model) {
+    public String list(ProjectRequestDto prjReqDto, Criteria cri, Model model) {
         String login_id = "user1";
-        model.addAttribute("projectList", projectService.getProjects(login_id));
+        prjReqDto.setLogin_id(login_id);
+
+        int total = projectService.getProjectCount(prjReqDto);
+
+        model.addAttribute("projectList", projectService.getProjects(prjReqDto, cri));
+        model.addAttribute("pageMaker", new PageDto(cri, total));
+
         return "project/list";
     }
 

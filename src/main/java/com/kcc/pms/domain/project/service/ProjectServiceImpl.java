@@ -1,12 +1,13 @@
 package com.kcc.pms.domain.project.service;
 
 import com.kcc.pms.domain.project.mapper.ProjectMapper;
+import com.kcc.pms.domain.project.model.dto.Criteria;
 import com.kcc.pms.domain.project.model.dto.ProjectRequestDto;
 import com.kcc.pms.domain.project.model.dto.ProjectResponseDto;
-import com.kcc.pms.domain.project.model.vo.ProjectVO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @Service
@@ -25,8 +26,26 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    public List<ProjectResponseDto> getProjects(String loginId) {
-        return projectMapper.getProjects(loginId);
+    public List<ProjectResponseDto> getProjects(ProjectRequestDto prjReqDto, Criteria cri) {
+        List<ProjectResponseDto> projects = projectMapper.getProjects(prjReqDto, cri);
+
+        for (ProjectResponseDto project : projects) {
+            String startDate = project.getSt_dt();
+            String endDate = project.getEnd_dt();
+            if (startDate != null && startDate.length() >= 10) {
+                project.setSt_dt(startDate.substring(0, 10));
+            }
+            if (endDate != null && endDate.length() >= 10) {
+                project.setEnd_dt(endDate.substring(0, 10));
+            }
+        }
+
+        return projects;
+    }
+
+    @Override
+    public int getProjectCount(ProjectRequestDto prjReqDto) {
+        return projectMapper.getProjectCount(prjReqDto);
     }
 
 }

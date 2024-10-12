@@ -2,8 +2,7 @@
 
 <%
     String type = request.getParameter("type");
-    String disabled = ("register".equals(type) || "modify".equals(type)) ? "": "disabled";
-    String projectTitle = ("modify".equals(type)) ? "프로젝트 수정": "프로젝트 정보";
+    String disabled = ("register".equals(type))? "": "";
 
     if ("register".equals(type)) {
 %>
@@ -20,7 +19,7 @@
 
         <% if (!"register".equals(type)) { %>
             <div class="project-content">
-                <div class="project-info"><%=projectTitle%></div>
+                <div class="project-info">프로젝트 정보</div>
                 <div class="project-back"><a href="/projects/list"><i class="fa-solid fa-arrow-left"></i> 목록으로 이동</a></div>
             </div>
         <% } %>
@@ -42,7 +41,7 @@
             <div class="form-row">
                 <div class="form-group group-stat-cd">
                     <label for="stat_cd">상태 <span class="required-icon">*</span></label>
-                    <select id="stat_cd" name="stat_cd" <%=disabled%> required>
+                    <select id="stat_cd" name="stat_cd" <%=disabled%> required onchange="handleStatusChange()">
                         <option value="">선택하세요.</option>
                         <option value="PMS00101">대기</option>
                         <option value="PMS00102">진행중</option>
@@ -52,7 +51,7 @@
                 <div class="form-group group-prg">
                     <label for="prg">진척도 <span class="required-icon">*</span></label>
                     <select id="prg" name="prg" <%=disabled%> required>
-                        <option value="">선택하세요.</option>
+                        <option value="0" selected>0%</option>
                         <option value="10">10%</option>
                         <option value="20">20%</option>
                         <option value="30">30%</option>
@@ -113,7 +112,7 @@
             </div>
 
             <div class="form-actions">
-                <% if ("register".equals(type) || "modify".equals(type) ) { %>
+                <% if ("register".equals(type) || "view".equals(type)) { %>
                     <button type="submit" class="save-btn">
                         <i class="fa-solid fa-check"></i>&nbsp; 저장
                     </button>
@@ -122,11 +121,6 @@
                     </button>
                 <% } %>
                 <% if ("view".equals(type)) { %>
-                    <a href="/projects/info?type=modify" class="modify-btn">
-                        <i class="fa-solid fa-check"></i>&nbsp; 수정
-                    </a>
-                <% } %>
-                <% if ("view".equals(type) || "modify".equals(type) ) { %>
                     <button type="button" class="prj-del-btn">
                         <i class="fa-solid fa-arrow-right-to-bracket"></i>&nbsp; 삭제
                     </button>
@@ -140,6 +134,6 @@
 
 <script src="../../../resources/project/js/info.js"></script>
 
-<% if ("view".equals(type) || "modify".equals(type)) { %>
+<% if ("view".equals(type)) { %>
     <%@ include file="../footer.jsp" %>
 <% } %>
