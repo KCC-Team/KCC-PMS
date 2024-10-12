@@ -20,10 +20,18 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.3.12/jstree.search.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.3.12/jstree.dnd.min.js"></script>
 
+
+<link href="https://cdnjs.cloudflare.com/ajax/libs/jquery.fancytree/2.38.1/skin-win8/ui.fancytree.min.css" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.fancytree/2.38.1/jquery.fancytree-all-deps.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.fancytree/2.38.1/modules/jquery.fancytree.table.min.js"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.fancytree/2.38.1/modules/jquery.fancytree.filter.min.js"></script>
+
 <link rel="stylesheet" href="../../../resources/member/css/list.css">
 <link rel="stylesheet" href="../../../resources/member/css/ax5grid.css">
 
-<!-- 콘텐츠 영역 -->
+
 <main class="content" id="content">
     <div class="main_content">
 
@@ -33,7 +41,21 @@
 
         <div class="container1">
             <div class="left-section">
-                <table class="sidebar-table1">
+                <button id="btnResetSearch" style="font-size: 16px; padding: 0px; display: none">&times;</button>
+                <!-- 검색 바-->
+                <div style="position: sticky; bottom: 0; background-color: #f5f5f5; padding: 3px; display: flex; justify-content: space-between; align-items: center;">
+                    <input type="text" name="search" placeholder="팀명 겸색..." style="font-size: 12px; padding: 5px; width: 40%;">
+                    <div class="btn-group" style="display: flex; align-items: center;">
+                        <span id="matches" style="font-size: 12px; margin-right: 10px;"></span>
+                        <button id="btnEdit" style="font-size: 14px; padding: 5px;">순서 편집</button>
+                    </div>
+                </div>
+                <table id="tree-table" class="fancytree-ext-table">
+                    <colgroup>
+                        <col width="300px">
+                        <col width="200px">
+                        <col width="100px">
+                    </colgroup>
                     <thead>
                     <tr>
                         <th>팀명</th>
@@ -41,10 +63,7 @@
                         <th>인원수</th>
                     </tr>
                     </thead>
-                    <tbody>
-
-
-                    </tbody>
+                    <tbody></tbody>
                 </table>
             </div>
 
@@ -55,7 +74,7 @@
                     <div class="team-overview-title">
                         <div class="team-title">팀 개요</div>
                         <div class="btn-group">
-                            <button class="" onclick="openGroupPopup()">그룹등록</button>
+                            <button class="">그룹등록</button>
                             <button class="">수정</button>
                             <button class="">삭제</button>
                         </div>
@@ -64,19 +83,19 @@
                     <table class="overview-table">
                         <tr>
                             <td class="text-align-right">팀명</td>
-                            <td colspan="3">개발팀</td>
+                            <td colspan="3" id="team-name">-</td>
                         </tr>
                         <tr>
                             <td class="text-align-right">상위 팀</td>
-                            <td>PMS25프로젝트</td>
+                            <td id="parent-team-name">-</td>
                             <td class="text-align-right">시스템/업무</td>
-                            <td>철도업무시스템</td>
+                            <td id="system-name">-</td>
                         </tr>
                         <tr>
                             <td colspan="4" class="text-align-center">팀 설명</td>
                         </tr>
                         <tr>
-                            <td colspan="4">
+                            <td colspan="4" id="team-description">
                                 -
                             </td>
                         </tr>
@@ -90,7 +109,7 @@
                             <button class="">참여시작</button>
                             <button class="">참여종료</button>
                             <button class="">해제</button>
-                            <button class="">인력등록</button>
+                            <button class="" onclick="openGroupPopup()">인력등록</button>
                         </div>
                     </div>
                     <div style="position: relative;height:270px;" id="grid-parent">
@@ -109,35 +128,35 @@
                     <table class="detail-table">
                         <tr>
                             <td class="text-align-right">성명</td>
-                            <td colspan="3">홍길동</td>
+                            <td colspan="3" id="member-name"></td>
                         </tr>
                         <tr>
                             <td class="text-align-right">프로젝트 권한</td>
-                            <td>팀원</td>
+                            <td id="project-auth"></td>
                             <td class="text-align-right"> 기술등급</td>
-                            <td>초급</td>
+                            <td id="tech-grade"></td>
                         </tr>
                         <tr>
                             <td class="text-align-right">직위</td>
-                            <td colspan="3">사원</td>
+                            <td colspan="3" id="position"></td>
                         </tr>
                         <tr>
                             <td class="text-align-right">예정참여시작일</td>
-                            <td></td>
+                            <td id="pre-start-date"></td>
                             <td class="text-align-right"> 예정참여종료일</td>
-                            <td></td>
+                            <td id="pre-end-date"></td>
                         </tr>
                         <tr>
                             <td class="text-align-right">참여시작일</td>
-                            <td></td>
+                            <td id="start-date"></td>
                             <td class="text-align-right">참여종료일</td>
-                            <td></td>
+                            <td id="end-date"></td>
                         </tr>
                         <tr>
                             <td class="text-align-right">Email</td>
-                            <td></td>
+                            <td id="email"></td>
                             <td class="text-align-right">내선전화</td>
-                            <td></td>
+                            <td id="phone-no"></td>
                         </tr>
                     </table>
 
@@ -145,26 +164,8 @@
                         <div class="team-title">소속팀 목록</div>
                     </div>
                     <table class="team-table">
-                        <tr>
-                            <td>팀명</td>
-                            <td>
-                                <select>
-                                    <option>팀A</option>
-                                    <option>팀B</option>
-                                </select>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>팀명</td>
-                            <td>
-                                <select>
-                                    <option>팀A</option>
-                                    <option>팀B</option>
-                                </select>
-                            </td>
-                        </tr>
-                    </table>
 
+                    </table>
                 </div>
             </div>
         </div>

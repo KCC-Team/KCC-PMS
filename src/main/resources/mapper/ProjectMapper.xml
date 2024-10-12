@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.kcc.pms.domain.project.mapper.ProjectMapper">
+
+    <insert id="saveProject" parameterType="com.kcc.pms.domain.project.model.dto.ProjectRequestDto">
+        <selectKey keyProperty="prj_no" resultType="long" order="BEFORE">
+            SELECT seq_project.nextval FROM dual
+        </selectKey>
+        insert into project
+        (prj_no, prj_title, prj_cont, stat_cd, prg, org, pre_st_dt, pre_end_dt, use_yn,
+        <if test="st_dt != null">st_dt,</if>
+        <if test="end_dt != null">end_dt,</if>
+        reg_id, reg_dt)
+        values (#{prj_no}, #{prj_title}, #{prj_cont}, #{stat_cd}, #{prg}, #{org}, #{pre_st_dt}, #{pre_end_dt}, 'Y',
+        <if test="st_dt != null">#{st_dt},</if>
+        <if test="end_dt != null">#{end_dt},</if>
+        #{reg_id}, SYSDATE)
+    </insert>
+
+    <insert id="saveTeam" parameterType="com.kcc.pms.domain.project.model.dto.ProjectRequestDto">
+        <selectKey keyProperty="tm_no" resultType="long" order="BEFORE">
+            SELECT seq_team.nextval FROM dual
+        </selectKey>
+        insert into team
+        (tm_no, tm_nm, prj_no, use_yn,
+        <if test="tm_cont != null">tm_cont,</if>
+        <if test="par_tm_no != null">par_tm_no,</if>
+        <if test="sys_no != null">sys_no,</if>
+        reg_id, reg_dt)
+        values (#{tm_no}, #{prj_title}, #{prj_no}, 'Y',
+        <if test="tm_cont != null">#{tm_cont},</if>
+        <if test="par_tm_no != null">#{par_tm_no},</if>
+        <if test="sys_no != null">#{sys_no},</if>
+        #{reg_id}, SYSDATE)
+    </insert>
+
+    <insert id="saveProjectMember" parameterType="com.kcc.pms.domain.project.model.dto.ProjectRequestDto">
+        insert into projectmember
+        (mem_no, tm_no, prj_no, prj_auth_cd, use_yn,
+        <if test="pm_pre_start_dt != null">pre_start_dt,</if>
+        <if test="pm_pre_end_dt != null">pre_end_dt,</if>
+        <if test="pm_start_dt != null">start_dt,</if>
+        <if test="pm_end_dt != null">end_dt,</if>
+        reg_id, reg_dt)
+        values (#{mem_no}, #{tm_no}, #{prj_no}, #{prj_auth_cd}, 'Y',
+        <if test="pm_pre_start_dt != null">#{pm_pre_start_dt},</if>
+        <if test="pm_pre_end_dt != null">#{pm_pre_end_dt},</if>
+        <if test="pm_start_dt != null">#{pm_start_dt},</if>
+        <if test="pm_end_dt != null">#{pm_end_dt},</if>
+        #{reg_id}, SYSDATE)
+    </insert>
+
+
+    <resultMap id="projectResultMap" type="com.kcc.pms.domain.project.model.dto.ProjectResponseDto">
+        <result property="project_status" column="project_status"/>
+        <collection property="projectManager" ofType="com.kcc.pms.domain.project.model.dto.ProjectManagerResponseDto"
+                    column="prj_no" javaType="list" select="getProjectManager">
+            <result property="memNo" column="mem_no"/>
+            <result property="memNm" column="mem_nm"/>
+        </collection>
+    </resultMap>
+
+    <select id="getProjects" resultMap="projectResultMap">
+        SELECT
+            P.*,
+            CASE
+                WHEN P.stat_cd = 'PMS00101' THEN '대기'
+                WHEN P.stat_cd = 'PMS00102' THEN '진행중'
+            ELSE '완료'
+        END AS project_status
+        FROM
+            project P
+        JOIN
+            team T ON P.prj_no = T.prj_no
+        JOIN
+            projectmember PM ON P.prj_no = PM.prj_no
+        JOIN
+            member M ON PM.mem_no = M.mem_no
+        WHERE
+            M.login_id = #{login_id}
+        AND
+            PM.prj_auth_cd != 'PMS00205'
+    </select>
+
+    <select id="getProjectManager" resultType="com.kcc.pms.domain.project.model.dto.ProjectManagerResponseDto">
+        SELECT M.mem_no as memNo , M.mem_nm as memNm
+        FROM
+            projectmember PM
+        JOIN
+            member M ON PM.mem_no = M.mem_no
+        WHERE PM.prj_no = #{prj_no}
+        AND PM.prj_auth_cd = 'PMS00201'
+    </select>
+
+
+
+</mapper>

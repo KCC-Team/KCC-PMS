@@ -31,8 +31,7 @@ label {
     color: black;
 }
 
-input[type="text"],
-input[type="date"],
+input[type="date"]
 textarea,
 select {
     width: calc(100% - 10px);
@@ -52,7 +51,25 @@ input[type="date"] {
     font-size: 14px;
 }
 
-#pm_id, #status {
+#prj_title, #prj_cont {
+    width: 100%;
+    padding: 8px;
+    margin-top: 5px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+ #stat_cd, #prg {
+    width: 100%;
+    padding: 8px;
+    margin-top: 5px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+#mem_num {
     width: 49%;
     padding: 8px;
     margin-top: 5px;
@@ -61,7 +78,7 @@ input[type="date"] {
     font-size: 14px;
 }
 
-#organization {
+#org {
     width: 49%;
     padding: 8px;
     margin-top: 5px;
@@ -142,7 +159,7 @@ button {
 }
 
 button.save-btn {
-    background-color: #4CAF50;
+    background-color: #1F80DA;
     color: white;
 }
 
@@ -161,4 +178,31 @@ button.cancel-btn {
 
 .required-icon {
     color: red;
+}
+
+.desc-count {
+    float: left;
+}
+
+.no-period {
+    font-weight: normal !important;
+}
+
+.search-member-btn {
+    padding: 10px 20px;
+    border-radius: 4px;
+    cursor: pointer;
+    border: 1px solid #ddd;
+    background-color: #1F80DA;
+    color: white;
+}
+
+.del-btn {
+    padding: 10px 20px;
+    border-radius: 4px;
+    cursor: pointer;
+    border: 1px solid #ddd;
+    background-color: gray;
+    color: white;
+    width: 78px;
 }
