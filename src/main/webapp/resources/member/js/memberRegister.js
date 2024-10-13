@@ -43,6 +43,8 @@ $(document).ready(function() {
                 console.error('인원 목록을 가져오는 데 실패했습니다: ', error);
             }
         });
+
+        $('#memberList').children().show();
     });
 
     // 검색 기능
@@ -74,4 +76,6 @@ $(document).ready(function() {
         console.log(movedNodeId);
         console.log(newPosition);
     });
+
+    $('#memberList').children().hide();
 });

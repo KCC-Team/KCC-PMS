@@ -12,7 +12,7 @@ public class GroupMembersResponseDto implements Serializable {
     private String memberName;
     private String phoneNo;
     private String email;
-    private String positionName;
-    private String techGrade;
+    private String position;
+    private String tech;
     private String groupName;
 }

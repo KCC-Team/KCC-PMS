@@ -1,6 +1,5 @@
 package com.kcc.pms.domain.team.controller;
 
-import com.kcc.pms.domain.team.model.dto.TeamMemberResponseDto;
 import com.kcc.pms.domain.team.model.dto.TeamResponseDto;
 import com.kcc.pms.domain.team.service.TeamService;
 import lombok.RequiredArgsConstructor;
@@ -22,9 +21,4 @@ public class TeamController {
         return teamService.getTeamList(projectNo);
     }
 
-    @GetMapping("/members")
-    @ResponseBody
-    public List<TeamMemberResponseDto> getMemberList(@RequestParam("teamNo") Long teamNo) {
-        return teamService.getTeamMember(teamNo);
-    }
 }

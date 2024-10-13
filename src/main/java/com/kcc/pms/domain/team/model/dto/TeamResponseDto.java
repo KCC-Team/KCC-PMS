@@ -17,5 +17,6 @@ public class TeamResponseDto implements Serializable {
     private Integer totalCount;
     private String systemName;
     private Integer parentId;
+    private int orderNo;
     private List<TeamResponseDto> children = new ArrayList<>();
 }

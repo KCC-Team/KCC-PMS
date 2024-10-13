@@ -2,6 +2,8 @@ package com.kcc.pms.domain.member.mapper;
 
 import com.kcc.pms.domain.member.model.dto.GroupMembersResponseDto;
 import com.kcc.pms.domain.member.model.dto.GroupResponseDto;
+import com.kcc.pms.domain.member.model.dto.MemberResponseDto;
+import com.kcc.pms.domain.member.model.dto.ProjectMemberResponseDto;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
@@ -10,4 +12,7 @@ import java.util.List;
 public interface MemberMapper {
     List<GroupResponseDto> getGroupList();
     List<GroupMembersResponseDto> getGroupMemberList(Long groupNo);
+    List<ProjectMemberResponseDto> getProjectMemberList(Long projectNo);
+    List<MemberResponseDto> getTeamMember(Long teamNo);
+    MemberResponseDto getMemberDetail(Long memberNo);
 }

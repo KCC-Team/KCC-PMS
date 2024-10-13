@@ -1,16 +1,11 @@
 package com.kcc.pms.domain.team.service;
 
-import com.kcc.pms.domain.member.model.dto.GroupResponseDto;
 import com.kcc.pms.domain.team.mapper.TeamMapper;
-import com.kcc.pms.domain.team.model.dto.TeamMemberResponseDto;
 import com.kcc.pms.domain.team.model.dto.TeamResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -22,10 +17,6 @@ public class TeamServiceImpl implements TeamService{
         return buildTree(mapper.getTeamList(projectNo));
     }
 
-    @Override
-    public List<TeamMemberResponseDto> getTeamMember(Long teamNo) {
-        return mapper.getTeamMember(teamNo);
-    }
 
     public List<TeamResponseDto> buildTree(List<TeamResponseDto> nodeList) {
         Map<Integer, TeamResponseDto> nodeMap = new HashMap<>();
@@ -40,13 +31,16 @@ public class TeamServiceImpl implements TeamService{
             if (node.getParentId() == null) {
                 rootNodes.add(node);
             } else {
-                TeamResponseDto parent = nodeMap.get(node.getParentId()); //부모 존재 시 부모 노드에 자기자신 추가
+                TeamResponseDto parent = nodeMap.get(node.getParentId());
+                // 부모가 존재할 경우 자식으로 추가하고 정렬
                 if (parent != null) {
                     parent.getChildren().add(node);
+                    parent.getChildren().sort(Comparator.comparing(TeamResponseDto::getOrderNo));
                 }
             }
         }
 
+        rootNodes.sort(Comparator.comparing(TeamResponseDto::getOrderNo));
         return rootNodes;
     }
 }

@@ -4,42 +4,12 @@ var addedGrid;
 let isEditing = false;
 let addedMembers = [];
 $(document.body).ready(function () {
-    function updateAddedGrid() {
-        addedGrid.setData(addedMembers);
-    }
-    //프로젝트 권환 공통 코드 가져오기
-    function loadAuthCommonCode() {
-        return new Promise(function(resolve, reject) {
-            $.ajax({
-                url: '/getCommonCodeList',
-                type: 'GET',
-                data: {
-                    commonCodeNo: 'PMS002'
-                },
-                success: function(response) {
-                    var options = response.map(function(item) {
-                        return {
-                            CD: item.codeDetailNo,
-                            NM: item.codeDetailName
-                        };
-                    });
-                    resolve(options);
-                },
-                error: function(xhr, status, error) {
-                    console.error("공통 코드 로드 오류: ", error);
-                    reject(error);
-                }
-            });
-        });
-    }
-
     $('#project_member_total').on('click', function() {
         $('#add-member-by-prjmem').show();
         $('#add-member-by-group').hide();
 
         let $table =  $('#add-member-by-group').find('#y-added-grid');
         $('#grid-parent2').append($table);
-        //updateAddedGrid();
     });
 
     $('#group_total').on('click', function() {
@@ -48,7 +18,6 @@ $(document.body).ready(function () {
 
         let $table =  $('#grid-parent2').find('#y-added-grid');
         $('#grid-parent3').append($table);
-        // updateAddedGrid();
     });
 
 
@@ -99,12 +68,12 @@ $(document.body).ready(function () {
                     name: member.memberName,
                     auth: member.auth ? member.auth : "",
                     group: member.groupName,
-                    position: member.positionName,
-                    pre_st_dt: "",
-                    pre_end_dt: "",
-                    st_dt: "",
-                    end_dt: "",
-                    techGrade: member.techGrade
+                    position: member.position,
+                    pre_st_dt: member.preStartDate ? member.preStartDate : "",
+                    pre_end_dt: member.preEndDate ? member.preEndDate : "",
+                    st_dt: member.startDate ? member.startDate : "",
+                    end_dt: member.endDate ? member.endDate : "",
+                    techGrade: member.tech
                 });
             }
         });
@@ -113,170 +82,16 @@ $(document.body).ready(function () {
     });
 
 
-    groupmemGrid = new ax5.ui.grid();
-
-    groupmemGrid.setConfig({
-        showRowSelector: true,
-        target: $('[data-ax5grid="groupmemGrid"]'),
-        columns: [
-            {key: "memberName", label: "성명", align: "center"},
-            {key: "positionName", label: "직위", align: "center" },
-            {key: "email", width: 220, label: "이메일", align: "center"},
-            {key: "participate_yn", width: 70, label: "참여여부",align: "center"},
-            {key: "techGrade", width: 70, label: "기술등급",align: "center"}
-        ],
-        page: {
-            display: false
-        }
-    });
-
-
-    function initGrid() {
-        loadAuthCommonCode().then(function(commonCodeOptions) {
-            addedGrid = new ax5.ui.grid();
-            addedGrid.setConfig({
-                showRowSelector: true,
-                target: $('[data-ax5grid="added-grid"]'),
-                columns: [
-                    {key: "name", label: "성명", align: "center"},
-                    {
-                        key: "auth",
-                        label: "프로젝트권한",
-                        align: "center",
-                        editor: {
-                            type: "select",
-                            config: {
-                                columnKeys: {
-                                    optionValue: "CD",
-                                    optionText: "NM"
-                                },
-                                options: commonCodeOptions
-                            },
-                            disabled: function () {
-                                return !isEditing;
-                            }
-                        },
-                        formatter: function() {
-                            var selectedOption = commonCodeOptions.find(function(option) {
-                                return option.CD === this.value;
-                            }.bind(this));
-                            return selectedOption ? selectedOption.NM : this.value;
-                        }
-                    },
-                    {key: "group", width: 100, label: "소속", align: "center"},
-                    {key: "position", width: 70, label: "직위", align: "center"},
-                    {key: "pre_st_dt", width: 100, label: "예정시작일", align: "center", editor: {
-                            type: "date",
-                            config: {
-                                content: {
-                                    config: {
-                                        mode: "year", selectMode: "day"
-                                    }
-                                }
-                            },
-                            disabled: function () {
-                                return !isEditing;
-                            }
-                        }
-                    },
-                    {key: "pre_end_dt", width: 100, label: "예정종료일", align: "center", editor: {
-                            type: "date",
-                            config: {
-                                content: {
-                                    config: {
-                                        mode: "year", selectMode: "day"
-                                    }
-                                }
-                            },
-                            disabled: function () {
-                                return !isEditing;
-                            }
-                        }
-                    },
-                    {key: "st_dt", width: 100, label: "참여시작일", align: "center", editor: {
-                            type: "date",
-                            config: {
-                                content: {
-                                    config: {
-                                        mode: "year", selectMode: "day"
-                                    }
-                                }
-                            },
-                            disabled: function () {
-                                return !isEditing;
-                            }
-                        }
-                    },
-                    {key: "end_dt", width: 100, label: "참여종료일", align: "center", editor: {
-                            type: "date",
-                            config: {
-                                content: {
-                                    config: {
-                                        mode: "year", selectMode: "day"
-                                    }
-                                }
-                            },
-                            disabled: function () {
-                                return !isEditing;
-                            }
-                        }
-                    },
-                    {key: "techGrade", width: 70, label: "기술등급", align: "center"}
-                ],
-                page: {
-                    display: false
-                }
-            });
-        }).catch(function(error) {
-            console.error("그리드 초기화 오류: ", error);
-        });
-    }
-
-    initGrid();
-
-    prjmemGrid = new ax5.ui.grid();
-    prjmemGrid.setConfig({
-        showRowSelector: true,
-        target: $('[data-ax5grid="prjmember-grid"]'),
-        columns: [
-            {key: "name", label: "성명", align: "center"},
-            {key: "auth", label: "프로젝트권환", align: "center"},
-            {key: "group", width: 100, label: "소속", align: "center"},
-            {key: "position", width: 70, label: "직위",align: "center"},
-            {key: "pre_st_dt", width: 100, label: "예정시작일",align: "center"},
-            {key: "pre_end_dt", width: 100, label: "예정종료일",align: "center"},
-            {key: "st_dt", width: 100, label: "참여시작일",align: "center"},
-            {key: "end_dt", width: 100, label: "참여종료일",align: "center"},
-            {key: "tech_grd", width: 70, label: "기술등급",align: "center"}
-        ],
-        page: {
-            display: false
-        }
-    });
-
-    prjmemGrid.setData([
-        {id: 101, name: "김연호", auth: "PM", group: "SI 1팀", position: "차장", pre_st_dt: "2024-05-12", pre_end_dt: "2025-05-12", tech_grd: "고급"},
-        {id: 102, name: "이수호", auth: "PL", group: "SI 1팀", position: "차장", pre_st_dt: "2024-05-12", pre_end_dt: "2025-05-12", tech_grd: "고급"},
-        {id: 103, name: "이한희", auth: "PL", group: "SI 1팀", position: "차장", pre_st_dt: "2024-05-12", pre_end_dt: "2025-05-12", tech_grd: "고급"},
-        {id: 104, name: "홍길동", auth: "팀원", group: "SI 1팀", position: "차장", pre_st_dt: "2024-05-12", pre_end_dt: "2025-05-12", tech_grd: "고급"},
-        {id: 105, name: "김연호", auth: "PM", group: "SI 1팀", position: "차장", pre_st_dt: "2024-05-12", pre_end_dt: "2025-05-12", tech_grd: "고급"},
-        {id: 106, name: "이수호", auth: "PL", group: "SI 1팀", position: "차장", pre_st_dt: "2024-05-12", pre_end_dt: "2025-05-12", tech_grd: "고급"},
-        {id: 107, name: "이한희", auth: "PL", group: "SI 1팀", position: "차장", pre_st_dt: "2024-05-12", pre_end_dt: "2025-05-12", tech_grd: "고급"},
-        {id: 108, name: "홍길동", auth: "팀원", group: "SI 1팀", position: "차장", pre_st_dt: "2024-05-12", pre_end_dt: "2025-05-12", tech_grd: "고급"},
-        {id: 109, name: "김연호", auth: "PM", group: "SI 1팀", position: "차장", pre_st_dt: "2024-05-12", pre_end_dt: "2025-05-12", tech_grd: "고급"},
-        {id: 110, name: "이수호", auth: "PL", group: "SI 1팀", position: "차장", pre_st_dt: "2024-05-12", pre_end_dt: "2025-05-12", tech_grd: "고급"},
-        {id: 111, name: "이한희", auth: "PL", group: "SI 1팀", position: "차장", pre_st_dt: "2024-05-12", pre_end_dt: "2025-05-12", tech_grd: "고급"},
-        {id: 112, name: "홍길동", auth: "팀원", group: "SI 1팀", position: "차장", pre_st_dt: "2024-05-12", pre_end_dt: "2025-05-12", tech_grd: "고급"}
-    ]);
-
-    $('#add-member-by-prjmem').hide();
-
 
     // 적용 버튼 클릭
     $('#apply').on('click', function() {
         insertProject();
     });
 
+    initGrid();
+    loadProjectMember();
+
+    $('#add-member-by-prjmem').hide();
 });
 
 checkProject();
@@ -304,4 +119,202 @@ function insertProject() {
             console.log("부모 창을 인식하지 못했습니다.");
         }
     }
+}
+
+
+function updateAddedGrid() {
+    addedGrid.setData(addedMembers);
+}
+
+function loadProjectMember() {
+    //프로젝트 총인원
+    $.ajax({
+        url: '/projects/projectmembers',
+        method: 'GET',
+        data: {
+            projectNo: 1
+        },
+        success: function(response) {
+            prjmemGrid.setData(response);
+        },
+        error: function(error) {
+            console.error("팀원 목록 불러오기 실패:", error);
+        }
+    });
+}
+//프로젝트 권환 공통 코드 가져오기
+function loadAuthCommonCode() {
+    return new Promise(function(resolve, reject) {
+        $.ajax({
+            url: '/getCommonCodeList',
+            type: 'GET',
+            data: {
+                commonCodeNo: 'PMS002'
+            },
+            success: function(response) {
+                var options = response.map(function(item) {
+                    return {
+                        CD: item.codeDetailNo,
+                        NM: item.codeDetailName
+                    };
+                });
+                resolve(options);
+            },
+            error: function(xhr, status, error) {
+                console.error("공통 코드 로드 오류: ", error);
+                reject(error);
+            }
+        });
+    });
+}
+
+
+function initGrid() {
+    groupmemGrid = new ax5.ui.grid();
+    groupmemGrid.setConfig({
+        showRowSelector: true,
+        target: $('[data-ax5grid="groupmemGrid"]'),
+        columns: [
+            {key: "memberName", label: "성명", align: "center"},
+            {key: "position", label: "직위", align: "center" },
+            {key: "email", width: 220, label: "이메일", align: "center"},
+            {key: "participate_yn", width: 70, label: "참여여부",align: "center"},
+            {key: "tech", width: 70, label: "기술등급",align: "center"}
+        ],
+        page: {
+            display: false
+        }
+    });
+
+
+    prjmemGrid = new ax5.ui.grid();
+    prjmemGrid.setConfig({
+        showRowSelector: true,
+        target: $('[data-ax5grid="prjmember-grid"]'),
+        columns: [
+            {key: "memberName", label: "성명", align: "center"},
+            {key: "auth", label: "프로젝트권환", align: "center"},
+            {key: "groupName", width: 100, label: "소속", align: "center"},
+            {key: "position", width: 70, label: "직위",align: "center"},
+            {key: "preStartDate", width: 100, label: "예정시작일",align: "center",formatter: function() {
+                    return this.value ? this.value.substring(0, 10) : '';}},
+            {key: "preEndDate", width: 100, label: "예정종료일",align: "center",formatter: function() {
+                    return this.value ? this.value.substring(0, 10) : '';}},
+            {key: "startDate", width: 100, label: "참여시작일",align: "center",formatter: function() {
+                    return this.value ? this.value.substring(0, 10) : '';}},
+            {key: "endDate", width: 100, label: "참여종료일",align: "center",formatter: function() {
+                    return this.value ? this.value.substring(0, 10) : '';}},
+            {key: "tech", width: 70, label: "기술등급",align: "center"}
+        ],
+        page: {
+            display: false
+        }
+    });
+
+    loadAuthCommonCode().then(function(commonCodeOptions) {
+        addedGrid = new ax5.ui.grid();
+        addedGrid.setConfig({
+            showRowSelector: true,
+            target: $('[data-ax5grid="added-grid"]'),
+            columns: [
+                {key: "name", label: "성명", align: "center"},
+                {
+                    key: "auth",
+                    label: "프로젝트권한",
+                    align: "center",
+                    editor: {
+                        type: "select",
+                        config: {
+                            columnKeys: {
+                                optionValue: "CD",
+                                optionText: "NM"
+                            },
+                            options: commonCodeOptions
+                        },
+                        disabled: function () {
+                            return !isEditing;
+                        }
+                    },
+                    formatter: function() {
+                        var selectedOption = commonCodeOptions.find(function(option) {
+                            return option.CD === this.value;
+                        }.bind(this));
+                        return selectedOption ? selectedOption.NM : this.value;
+                    }
+                },
+                {key: "group", width: 100, label: "소속", align: "center"},
+                {key: "position", width: 70, label: "직위", align: "center"},
+                {key: "pre_st_dt", width: 100, label: "예정시작일", align: "center", editor: {
+                        type: "date",
+                        config: {
+                            content: {
+                                config: {
+                                    mode: "year", selectMode: "day"
+                                }
+                            }
+                        },
+                        disabled: function () {
+                            return !isEditing;
+                        }
+                    },
+                    formatter: function() {
+                        return this.value ? this.value.substring(0, 10) : '';}
+                },
+                {key: "pre_end_dt", width: 100, label: "예정종료일", align: "center", editor: {
+                        type: "date",
+                        config: {
+                            content: {
+                                config: {
+                                    mode: "year", selectMode: "day"
+                                }
+                            }
+                        },
+                        disabled: function () {
+                            return !isEditing;
+                        }
+                    },
+                    formatter: function() {
+                        return this.value ? this.value.substring(0, 10) : '';}
+                },
+                {key: "st_dt", width: 100, label: "참여시작일", align: "center", editor: {
+                        type: "date",
+                        config: {
+                            content: {
+                                config: {
+                                    mode: "year", selectMode: "day"
+                                }
+                            }
+                        },
+                        disabled: function () {
+                            return !isEditing;
+                        },
+                        formatter: function() {
+                            return this.value ? this.value.substring(0, 10) : '';}
+                    }
+                },
+                {key: "end_dt", width: 100, label: "참여종료일", align: "center", editor: {
+                        type: "date",
+                        config: {
+                            content: {
+                                config: {
+                                    mode: "year", selectMode: "day"
+                                }
+                            }
+                        },
+                        disabled: function () {
+                            return !isEditing;
+                        },
+                        formatter: function() {
+                            return this.value ? this.value.substring(0, 10) : '';}
+                    }
+                },
+                {key: "techGrade", width: 70, label: "기술등급", align: "center"}
+            ],
+            page: {
+                display: false
+            }
+        });
+    }).catch(function(error) {
+        console.error("그리드 초기화 오류: ", error);
+    });
 }
