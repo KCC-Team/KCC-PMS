@@ -185,3 +185,7 @@ progress {
 .pull-right {
     margin-bottom: 20px;
 }
+
+.fa-folder-open {
+    display: none;
+}

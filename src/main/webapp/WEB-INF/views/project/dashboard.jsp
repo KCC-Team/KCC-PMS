@@ -22,7 +22,7 @@
                         </div>
                     </div>
                     <div class="card-footer">
-                        <a href="#">View More <span class="arrow">&rarr;</span></a>
+                        <a href="#">더보기 <span class="arrow">&rarr;</span></a>
                     </div>
                 </div>
                 <div class="stat-box">
@@ -34,7 +34,7 @@
                         </div>
                     </div>
                     <div class="card-footer">
-                        <a href="#">View More <span class="arrow">&rarr;</span></a>
+                        <a href="#">더보기 <span class="arrow">&rarr;</span></a>
                     </div>
                 </div>
                 <div class="stat-box">
@@ -46,7 +46,7 @@
                         </div>
                     </div>
                     <div class="card-footer">
-                        <a href="#">View More <span class="arrow">&rarr;</span></a>
+                        <a href="#">더보기 <span class="arrow">&rarr;</span></a>
                     </div>
                 </div>
                 <div class="stat-box">
@@ -58,7 +58,7 @@
                         </div>
                     </div>
                     <div class="card-footer">
-                        <a href="#">View More <span class="arrow">&rarr;</span></a>
+                        <a href="#">더보기 <span class="arrow">&rarr;</span></a>
                     </div>
                 </div>
                 <div class="stat-box">
@@ -70,7 +70,7 @@
                         </div>
                     </div>
                     <div class="card-footer">
-                        <a href="#">View More <span class="arrow">&rarr;</span></a>
+                        <a href="#">더보기 <span class="arrow">&rarr;</span></a>
                     </div>
                 </div>
                 <div class="stat-box">
@@ -82,7 +82,7 @@
                         </div>
                     </div>
                     <div class="card-footer">
-                        <a href="#">View More <span class="arrow">&rarr;</span></a>
+                        <a href="#">더보기 <span class="arrow">&rarr;</span></a>
                     </div>
                 </div>
             </div>

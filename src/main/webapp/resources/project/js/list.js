@@ -55,3 +55,24 @@ $(document).ready(function () {
         actionForm.submit();
     });
 });
+
+
+$(document).on('click', '.project-link', function() {
+    let prjNo = $(this).data('prj-no');
+    let prjTitle = $(this).text();
+
+    $.ajax({
+        url: '/projects/dashboardInfo',
+        type: 'GET',
+        data: {
+            prjNo: prjNo,
+            prjTitle: prjTitle
+        },
+        success: function(response) {
+            window.location.href = '/projects/dashboard';
+        },
+        error: function(xhr, status, error) {
+            console.error('에러 발생:', xhr.responseText);
+        }
+    });
+});

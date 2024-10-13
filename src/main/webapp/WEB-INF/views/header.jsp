@@ -13,6 +13,11 @@
     if (isProjectList) {
         projectTitle = "프로젝트 현황";
     }
+
+    String prjTitle = "";
+    if ((String) session.getAttribute("prjTitle") != null) {
+        prjTitle = (String) session.getAttribute("prjTitle");
+    }
 %>
 
 <!-- header -->
@@ -22,12 +27,10 @@
             <span><%=projectTitle%></span>
         <% } else { %>
             <div class="dropdown header-project-name">
-                <a class="btn dropdown-toggle project-title fw-bold" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                    차세대 프로그램 구축
+                <a class="btn dropdown-toggle common-project-title fw-bold" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    <%=prjTitle%>
                 </a>
-                <ul class="dropdown-menu">
-                    <li><a class="dropdown-item" href="#" onclick="#">B 프로젝트</a></li>
-                    <li><a class="dropdown-item" href="#" onclick="#">C 프로젝트</a></li>
+                <ul class="dropdown-menu ul-prj-title">
                 </ul>
             </div>
         <% } %>

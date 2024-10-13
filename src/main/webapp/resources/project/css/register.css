@@ -1,18 +1,10 @@
-* {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-}
-
 body {
-    font-family: 'Arial', sans-serif;
-    margin: 20px;
     background-color: #fff;
 }
 
 .project-form {
-    max-width: 800px;
-    margin: 0 auto;
+    width: 72%;
+    margin: 30px auto;
     padding: 30px 50px 70px 50px;
     border: 1px solid #ccc;
     border-radius: 8px;
@@ -123,7 +115,7 @@ textarea {
 
 button.pm-search {
     padding: 6px 12px;
-    border: 1px solid #ccc;
+    border: 2px solid #ccc;
     background-color: #f1f1f1;
     cursor: pointer;
     border-radius: 4px;
@@ -134,7 +126,7 @@ button.pm-search:hover {
 }
 
 .char-count {
-    font-size: 13px;
+    font-size: 15px;
     text-align: right;
 }
 
@@ -205,4 +197,49 @@ button.cancel-btn {
     background-color: gray;
     color: white;
     width: 78px;
+}
+
+
+.overview-table, .members-table, .detail-table {
+    margin-top: 10px;
+    width: 100%;
+    border-top: 2px solid #ddd;
+}
+
+.overview-table td {
+    height: 50px;
+    font-size: 15px;
+}
+
+.overview-table td, .members-table th, .members-table td, .detail-table td, .team-table td {
+    border-bottom: 1px solid #ccc;
+    border-left: 1px solid #ccc;
+    border-right: 1px solid #ccc;
+    padding: 9px;
+}
+
+.text-align-right {
+    text-align: right;
+    background-color: #EDF0F5;
+    font-weight: bold;
+}
+
+.text-align-center {
+    text-align: center;
+    background-color: #EDF0F5;
+    font-weight: bold;
+    width: 200px;
+}
+
+.members-table a {
+    text-decoration: none;
+}
+
+.text-align-left {
+    text-align: left;
+    background-color: #EDF0F5;
+}
+
+.fa-folder-open {
+    display: none;
 }
