@@ -76,6 +76,7 @@
     <resultMap id="connectTeams" type="com.kcc.pms.domain.team.model.vo.Team">
         <result column="TM_NO" property="teamNo" />
         <result column="TM_NM" property="teamName" />
+        <result column="ORDER_NO" property="orderNo"/>
     </resultMap>
 
 
@@ -93,7 +94,8 @@
                m.phone_no,
                tech.cd_dtl_nm AS TECH,
                t.tm_no,
-               t.tm_nm
+               t.tm_nm,
+               t.order_no
         FROM projectmember pm,
              member m,
              usergroup g,
@@ -126,14 +128,15 @@
                m.email,
                m.phone_no,
                pmt.tm_no,
-               pmt.tm_nm
+               pmt.tm_nm,
+               pmt.order_no
         FROM projectmember pm,
              member m,
              usergroup gr,
              codedetail auth,
              codedetail pos,
              codedetail tech,
-             (SELECT t.tm_no, t.tm_nm, pm.mem_no
+             (SELECT t.tm_no, t.tm_nm, pm.mem_no, t.order_no
               FROM team t, projectmember pm
               WHERE t.tm_no = pm.tm_no
                 AND t.par_tm_no IS NOT NULL

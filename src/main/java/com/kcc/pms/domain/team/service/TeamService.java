@@ -6,4 +6,5 @@ import java.util.List;
 
 public interface TeamService {
     List<TeamResponseDto> getTeamList(Long projectNo);
+    void updateOrder(Integer teamNo, Integer newParentNo, Integer newPosition);
 }

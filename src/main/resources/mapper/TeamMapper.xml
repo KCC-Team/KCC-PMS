@@ -45,4 +45,32 @@
         ORDER BY NVL(t.par_tm_no, t.tm_no), t.order_no
     </select>
 
+    <select id="getTeamByNo" resultType="com.kcc.pms.domain.team.model.vo.Team">
+        SELECT tm_no AS teamNo,
+               tm_nm AS teamName,
+               par_tm_no AS parentNo,
+               order_no AS orderNo
+        FROM team
+        WHERE tm_no = #{teamNo}
+    </select>
+
+    
+    <select id="getSiblings" resultType="com.kcc.pms.domain.team.model.vo.Team">
+        SELECT tm_no AS teamNo,
+               tm_nm AS teamName,
+               par_tm_no AS parentNo,
+               order_no AS orderNo
+        FROM team
+        WHERE par_tm_no = #{parentNo}
+        ORDER BY order_no ASC
+    </select>
+
+    <update id="updateTeamOrder">
+        UPDATE team
+        SET order_no = #{orderNo}
+        <if test="parentNo != null">
+            , par_tm_no = #{parentNo}
+        </if>
+        WHERE tm_no = #{teamNo}
+    </update>
 </mapper>
