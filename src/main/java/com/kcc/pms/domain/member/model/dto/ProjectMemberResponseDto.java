@@ -1,16 +1,13 @@
-package com.kcc.pms.domain.team.model.dto;
+package com.kcc.pms.domain.member.model.dto;
 
-import com.kcc.pms.domain.team.model.vo.Team;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
 
 @Getter
 @Setter
-public class TeamMemberResponseDto implements Serializable {
+public class ProjectMemberResponseDto implements Serializable {
     private Long id;
     private String memberName;
     private String auth;
@@ -21,7 +18,5 @@ public class TeamMemberResponseDto implements Serializable {
     private String startDate;
     private String endDate;
     private String tech;
-    private String email;
-    private String phoneNo;
-    List<Team> connectTeams = new ArrayList<>();
+    private String teamName;
 }

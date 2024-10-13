@@ -12,14 +12,139 @@
     </select>
 
     <select id="getGroupMemberList" resultType="com.kcc.pms.domain.member.model.dto.GroupMembersResponseDto">
-        select m.grp_no, m.mem_no as id, m.mem_nm as memberName, m.phone_no as phoneNo , m.email, tech_cd.cd_dtl_nm as techGrade,
-               pos_cd.cd_dtl_nm as positionName, g.grp_nm as groupName
+        select m.grp_no, m.mem_no as id, m.mem_nm as memberName, m.phone_no as phoneNo , m.email, tech_cd.cd_dtl_nm as tech,
+               pos_cd.cd_dtl_nm as position, g.grp_nm as groupName
         from member m, codedetail tech_cd, codedetail pos_cd, usergroup g
         where m.tech_grd_cd = tech_cd.cd_dtl_no
           and m.pos_nm = pos_cd.cd_dtl_no
           and m.grp_no = g.grp_no
           and m.grp_no = #{groupNo}
         order by pos_cd.order_no, tech_cd.order_no
+    </select>
+
+
+    <select id="getProjectMemberList" resultType="com.kcc.pms.domain.member.model.dto.ProjectMemberResponseDto">
+        SELECT m.mem_no AS id,
+               m.mem_nm AS memberName,
+               auth.cd_dtl_nm AS auth,
+               g.grp_nm AS groupName,
+               pos.cd_dtl_nm AS position,
+               pm.pre_start_dt AS preStartDate,
+               pm.pre_end_dt AS preEndDate,
+               pm.start_dt AS startDate,
+               pm.end_dt AS endDate,
+               tech.cd_dtl_nm AS tech,
+               t.tm_nm AS teamName
+        FROM projectmember pm,
+             member m,
+             usergroup g,
+             codedetail tech,
+             codedetail pos,
+             codedetail auth,
+             team t
+        WHERE pm.mem_no = m.mem_no
+          AND m.grp_no = g.grp_no
+          AND m.tech_grd_cd = tech.cd_dtl_no
+          AND m.pos_nm = pos.cd_dtl_no
+          AND pm.prj_auth_cd = auth.cd_dtl_no
+          AND pm.tm_no = t.tm_no
+          AND pm.tm_no IN (
+            SELECT t2.tm_no
+            FROM team t2
+            WHERE t2.prj_no = #{projectNo}
+        ) ORDER BY t.tm_no
+    </select>
+
+
+    <resultMap id="memberDetail" type="com.kcc.pms.domain.member.model.dto.MemberResponseDto">
+        <id column="MEM_NO" property="id" />
+        <result column="MEM_NM" property="memberName" />
+        <result column="AUTH" property="auth" />
+        <result column="GRP_NM" property="groupName" />
+        <result column="POSITION" property="position" />
+        <result column="PRE_START_DT" property="preStartDate" />
+        <result column="PRE_END_DT" property="preEndDate" />
+        <result column="START_DT" property="startDate" />
+        <result column="END_DT" property="endDate" />
+        <result column="TECH" property="tech" />
+        <result column="EMAIL" property="email" />
+        <result column="PHONE_NO" property="phoneNo" />
+
+        <collection property="connectTeams" resultMap="connectTeams"/>
+    </resultMap>
+
+    <resultMap id="connectTeams" type="com.kcc.pms.domain.team.model.vo.Team">
+        <result column="TM_NO" property="teamNo" />
+        <result column="TM_NM" property="teamName" />
+    </resultMap>
+
+
+    <select id="getMemberDetail" resultMap="memberDetail">
+        SELECT m.mem_no,
+               m.mem_nm,
+               auth.cd_dtl_nm AS AUTH,
+               g.grp_nm,
+               pos.cd_dtl_nm AS POSITION,
+               pm.pre_start_dt,
+               pm.pre_end_dt,
+               pm.start_dt,
+               pm.end_dt,
+               m.email,
+               m.phone_no,
+               tech.cd_dtl_nm AS TECH,
+               t.tm_no,
+               t.tm_nm
+        FROM projectmember pm,
+             member m,
+             usergroup g,
+             codedetail tech,
+             codedetail pos,
+             codedetail auth,
+             team t
+        WHERE pm.mem_no = m.mem_no
+          AND m.grp_no = g.grp_no
+          AND m.tech_grd_cd = tech.cd_dtl_no
+          AND m.pos_nm = pos.cd_dtl_no
+          AND pm.prj_auth_cd = auth.cd_dtl_no
+          AND pm.tm_no = t.tm_no
+          AND m.mem_no = #{memberNo}
+    </select>
+
+
+
+    <select id="getTeamMember" resultMap="memberDetail">
+        SELECT m.mem_no,
+               m.mem_nm,
+               auth.cd_dtl_nm as AUTH,
+               gr.grp_nm,
+               pos.cd_dtl_nm as POSITION,
+               pm.pre_start_dt,
+               pm.pre_end_dt,
+               pm.start_dt,
+               pm.end_dt,
+               tech.cd_dtl_nm as TECH,
+               m.email,
+               m.phone_no,
+               pmt.tm_no,
+               pmt.tm_nm
+        FROM projectmember pm,
+             member m,
+             usergroup gr,
+             codedetail auth,
+             codedetail pos,
+             codedetail tech,
+             (SELECT t.tm_no, t.tm_nm, pm.mem_no
+              FROM team t, projectmember pm
+              WHERE t.tm_no = pm.tm_no
+                AND t.par_tm_no IS NOT NULL
+             ) pmt
+        WHERE pm.prj_auth_cd = auth.cd_dtl_no AND
+            m.tech_grd_cd = tech.cd_dtl_no AND
+            m.pos_nm = pos.cd_dtl_no AND
+            pm.mem_no = m.mem_no AND
+            m.grp_no = gr.grp_no AND
+            pm.mem_no = pmt.mem_no AND
+            pm.tm_no = #{teamNo}
     </select>
 
 </mapper>
