@@ -4,7 +4,38 @@ var editMode = false;
 let isEditing = false;
 var projectNo = 1;
 $(document).ready(function() {
+    // 동일한 모달을 여는 '그룹등록' 버튼 제어
+    var openModalBtns = document.querySelectorAll(".openModalBtn");
+    var modal = document.getElementById("teamModal");
+    var closeBtn = document.querySelector(".close");
 
+    // 모달 열기 버튼 클릭 시 모달 열기
+    openModalBtns.forEach((btn) => {
+        btn.addEventListener("click", function () {
+            console.log("그룹등록버튼클릭");
+            modal.style.display = "block";
+        });
+    });
+
+    // 모달 닫기 버튼 클릭 시 모달 닫기
+    closeBtn.addEventListener("click", function () {
+        modal.style.display = "none";
+    });
+
+    // 모달 외부 클릭 시 모달 닫기
+    window.onclick = function (event) {
+        if (event.target == modal) {
+            modal.style.display = "none";
+        }
+    };
+
+    // 폼 제출 시 이벤트 처리
+    document.getElementById("teamRegisterForm").addEventListener("submit", function(event) {
+        event.preventDefault();
+        // 서버로 폼 데이터 전송하는 로직 추가
+        alert("팀이 등록되었습니다!");
+        modal.style.display = "none"; // 등록 후 모달 닫기
+    });
 
     $("#btnEdit").click(function () {
         toggleEditMode();  // 편집 모드 토글 함수

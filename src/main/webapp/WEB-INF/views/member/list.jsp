@@ -76,7 +76,7 @@
                         <div class="btn-group">
                             <button class="">삭제</button>
                             <button class="member-edit-button">편집</button>
-                            <button class="">그룹등록</button>
+                            <button class="openModalBtn">그룹등록</button>
                             <button class="" onclick="openGroupPopup()">인력등록</button>
                         </div>
                     </div>
@@ -85,12 +85,57 @@
                     </div>
                 </div>
 
+                <!-- Modal 시작 -->
+                <div id="teamModal" class="modal">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <span class="modal-title">팀 등록</span>
+                            <span class="close">&times;</span>
+                        </div>
+
+                        <div class="modal-form">
+                            <form id="teamRegisterForm">
+                                <div class="form-group">
+                                    <label for="teamName">팀명</label>
+                                    <input type="text" id="teamName" name="teamName" placeholder="팀명을 입력하세요">
+                                </div>
+
+                                <div class="form-group-row">
+                                    <div class="form-group">
+                                        <label for="parentTeam">상위 팀</label>
+                                        <select id="parentTeam" name="parentTeam">
+                                            <option value="">상위 팀 선택</option>
+                                        </select>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="system">시스템/업무</label>
+                                        <select id="system" name="system">
+                                            <option value="">시스템/업무 선택</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="teamDescription">팀 설명</label>
+                                    <textarea id="teamDescription" name="teamDescription" placeholder="팀 설명을 입력하세요"></textarea>
+                                </div>
+
+                                <button type="submit" class="team-rigist-btn">등록</button>
+                            </form>
+                        </div>
+
+                    </div>
+                </div>
+
+
+
 
                 <div class="team-overview">
                     <div class="team-overview-title">
                         <div class="team-title">팀 개요</div>
                         <div class="btn-group">
-                            <button class="">그룹등록</button>
+                            <button class="openModalBtn">그룹등록</button>
                             <button class="">수정</button>
                             <button class="">삭제</button>
                         </div>
