@@ -1,9 +1,7 @@
 package com.kcc.pms.domain.project.model.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import com.kcc.pms.domain.project.model.vo.ProjectVO;
+import lombok.*;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.Date;
@@ -11,13 +9,10 @@ import java.util.List;
 
 @Getter
 @Setter
+@ToString
 @AllArgsConstructor
 @NoArgsConstructor
 public class ProjectResponseDto {
-
-    private String mem_nm;
-
-    private String project_status;
 
     private Long prj_no;
 
@@ -48,6 +43,14 @@ public class ProjectResponseDto {
     private String mod_id;
 
     private String mod_dt;
+
+    private String mem_no;
+
+    private String mem_nm;
+
+    private String project_status;
+
+    private Long prjNo;
 
     private List<ProjectManagerResponseDto> projectManager;
 

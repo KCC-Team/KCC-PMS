@@ -1,60 +1,48 @@
-$(document).ready(function(){
-    $(".char-count").text( $("#prj_cont").val().length );
+var queryString = window.location.search;
+var queryParams = new URLSearchParams(queryString);
+var type = queryParams.get('type');
 
+getStatusCode();
+if (type === 'view') {
+    getProjectResult();
+    $('#type').val('view');
+}
+
+$(document).ready(function () {
     // 프로젝트 기간
-    $('#no_days_period').click(function(){
-        let checked = $('#no_days_period').is(':checked');
-        if (checked) {
-            $("#st_dt").attr("readonly", true).val('').css("background-color", "#e9ecef");
-            $("#end_dt").attr("readonly", true).val('').css("background-color", "#e9ecef");
-        } else {
-            $("#st_dt").removeAttr("readonly").css("background-color", "");
-            $("#end_dt").removeAttr("readonly").css("background-color", "");
-        }
+    $('#no_days_period').click(function () {
+        noPeriodCheck();
     });
 
-    $('#pre_st_dt, #pre_end_dt').on('change', function() {
+    $('#pre_st_dt, #pre_end_dt').on('change', function () {
         calculateDaysBetween('pre');
     });
 
-    $('#st_dt, #end_dt').on('change', function() {
+    $('#st_dt, #end_dt').on('change', function () {
         calculateDaysBetween();
     });
 
-    // 프로젝트 설명 글자수 제한
-    $("#prj_cont").keyup(function (e){
-        let content = $(this).val();
-        if (content.length == 0 || content == "") {
-            $(".char-count").text('0');
-        } else {
-            $(".char-count").text(content.length);
-        }
-        if (content.length > 500) {
-            alert("글자수는 500까지 입력 가능합니다.");
-            return false;
-        }
-    });
-
-    $('#prj_title').on('input', function() {
+    $('#prj_title').on('input', function () {
         let maxByteLength = 200;
         let byteLength = limitByteLength($(this), maxByteLength);
         let targetId = $(this).attr('id');
     });
 
-    $('#org').on('input', function() {
+    $('#org').on('input', function () {
         let maxByteLength = 50;
         let byteLength = limitByteLength($(this), maxByteLength);
         let targetId = $(this).attr('id');
     });
 
-    $('#prj_cont').on('input', function() {
+    $('#prj_cont').on('input', function () {
         let maxByteLength = 1000;
         let byteLength = limitByteLength($(this), maxByteLength);
+        $(".char-count").text(byteLength);
         let targetId = $(this).attr('id');
     });
 
-        // 인원 검색
-    $('.search-member-btn').click(function(){
+    // 인원 검색
+    $('.search-member-btn').click(function () {
         window.open(
             "/projects/addMember?type=project",
             "프로젝트인원등록",
@@ -64,19 +52,85 @@ $(document).ready(function(){
 
 
     // form 전송
-    $('#project_form').on('submit', function(event) {
+    $('#project_form').on('submit', function (event) {
         event.preventDefault();
+
         if ($('#mem_num').val() == '') {
             alert('프로젝트 담당자를 선택해주세요.');
             return false;
         }
-        this.submit();
+
+        // 프로젝트 등록
+        if ($('#type').val() !== 'view') {
+            $.ajax({
+                url: '/projects/api/project',
+                type: 'POST',
+                data: $(this).serialize(),
+                success: function (response) {
+                    alert('프로젝트가 정상 등록되었습니다.');
+                    location.href = "/projects/list";
+                },
+                error: function (xhr, status, error) {
+                    console.error('에러:', xhr.responseText);
+                    alert('저장 중 에러가 발생했습니다. 다시 시도해 주세요.');
+                    return false;
+                }
+            });
+        }
+
+        // 프로젝트 수정
+        if ($('#type').val() == 'view') {
+            $.ajax({
+                url: '/projects/api/project',
+                type: 'Patch',
+                data: $('#project_form').serialize(),
+                success: function(response) {
+                    alert('프로젝트가 정상 수정되었습니다.');
+                },
+                error: function(xhr, status, error) {
+                    console.error('에러:', xhr.responseText);
+                    alert('수정 중 에러가 발생했습니다. 다시 시도해 주세요.');
+                    return false;
+                }
+            });
+        }
     });
 
 });
 
 
-getStatusCode();
+// 데이터 조회
+function getProjectResult() {
+    $.ajax({
+        url: '/projects/api/project',
+        type: 'GET',
+        success: function(response) {
+            $('#prj_no').val(response.project.prj_no);
+            $('#prj_title').val(response.project.prj_title);
+            $('#stat_cd').val(response.project.stat_cd);
+            $('#prg').val(response.project.prg);
+            $('#org').val(response.project.org);
+            $('#pre_st_dt').val(response.project.pre_st_dt);
+            $('#pre_end_dt').val(response.project.pre_end_dt);
+            $('#st_dt').val(response.project.st_dt);
+            $('#end_dt').val(response.project.end_dt);
+            $('#mem_no').val(response.projectManager.memNo);
+            $('#mem_num').val(response.projectManager.memNm);
+            $('#prj_cont').val(response.project.prj_cont);
+
+            if (response.project.st_dt == null || response.project.st_dt == '') {
+                $("#no_days_period").prop('checked', true);
+                $("#st_dt").attr("readonly", true).val('').css("background-color", "#e9ecef");
+                $("#end_dt").attr("readonly", true).val('').css("background-color", "#e9ecef");
+            }
+            $(".char-count").text($("#prj_cont").val().length);
+        },
+        error: function(xhr, status, error) {
+            console.error('에러:', xhr.responseText);
+        }
+    });
+}
+
 
 // 상태 코드 호출
 function getStatusCode() {
@@ -97,6 +151,18 @@ function getStatusCode() {
             console.error(error);
         }
     });
+}
+
+
+function noPeriodCheck() {
+    let checked = $('#no_days_period').is(':checked');
+    if (checked) {
+        $("#st_dt").attr("readonly", true).val('').css("background-color", "#e9ecef");
+        $("#end_dt").attr("readonly", true).val('').css("background-color", "#e9ecef");
+    } else {
+        $("#st_dt").removeAttr("readonly").css("background-color", "");
+        $("#end_dt").removeAttr("readonly").css("background-color", "");
+    }
 }
 
 
@@ -140,6 +206,7 @@ function calculateDaysBetween(division) {
     }
 }
 
+
 // 현재 날짜를 YYYY-MM-DD 형식으로 변환하는 함수
 function getCurrentDate() {
     let today = new Date();
@@ -148,6 +215,7 @@ function getCurrentDate() {
     let day = ('0' + today.getDate()).slice(-2);
     return year + '-' + month + '-' + day;
 }
+
 
 // 바이트 수 제한하는 함수
 function limitByteLength(input, maxByteLength) {
@@ -178,7 +246,8 @@ function limitByteLength(input, maxByteLength) {
 }
 
 
-window.addEventListener('message', function(event) {
+// 팝업 데이터 연결
+window.addEventListener('message', function (event) {
     if (event.origin !== "http://localhost:8085") {
         return;
     }

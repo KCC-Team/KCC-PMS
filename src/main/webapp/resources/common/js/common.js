@@ -33,3 +33,45 @@ document.querySelectorAll('.menu > li > a').forEach(menu => {
     });
 });
 
+commonProjectInfo();
+
+function commonProjectInfo() {
+    $.ajax({
+        url: '/projects',
+        type: 'GET',
+        success: function (response) {
+            let li_project = "";
+            response.forEach(function(project) {
+                li_project += `<li>
+                                <a class="dropdown-item li-project" href="#" data-prj-no="${project.prj_no}">
+                                    ${project.prj_title}
+                                </a>
+                                </li>`;
+            });
+            $(".ul-prj-title").append(li_project);
+        },
+        error: function (xhr, status, error) {
+            console.error('에러:', xhr.responseText);
+        }
+    });
+}
+
+$(document).on('click', '.li-project', function() {
+    let prjNo = $(this).data('prj-no');
+    let prjTitle = $(this).text();
+
+    $.ajax({
+        url: '/commonProjectInfo',
+        type: 'GET',
+        data: {
+            prjNo: prjNo,
+            prjTitle: prjTitle
+        },
+        success: function (response) {
+            location.reload();
+        },
+        error: function (xhr, status, error) {
+            console.error('에러:', xhr.responseText);
+        }
+    });
+});

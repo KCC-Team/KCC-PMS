@@ -1,13 +1,10 @@
 package com.kcc.pms.domain.project.service;
 
 import com.kcc.pms.domain.project.mapper.ProjectMapper;
-import com.kcc.pms.domain.project.model.dto.Criteria;
-import com.kcc.pms.domain.project.model.dto.ProjectRequestDto;
-import com.kcc.pms.domain.project.model.dto.ProjectResponseDto;
+import com.kcc.pms.domain.project.model.dto.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @Service
@@ -23,6 +20,11 @@ public class ProjectServiceImpl implements ProjectService {
         int resultProjectMember = projectMapper.saveProjectMember(project);
 
         return (resultProject > 0 && resultTeam > 0 && resultProjectMember > 0) ? 1 : 0;
+    }
+
+    @Override
+    public int updateProject(ProjectRequestDto project) {
+        return projectMapper.updateProject(project);
     }
 
     @Override
@@ -48,4 +50,30 @@ public class ProjectServiceImpl implements ProjectService {
         return projectMapper.getProjectCount(prjReqDto);
     }
 
+    @Override
+    public CombinedProjectResponseDto findByProject(int prj_no) {
+        ProjectManagerResponseDto projectManager = projectMapper.getProjectManager(prj_no);
+        ProjectResponseDto project = projectMapper.findByProject(prj_no);
+
+        project.setPre_st_dt(project.getPre_st_dt().substring(0, 10));
+        project.setPre_end_dt(project.getPre_end_dt().substring(0, 10));
+
+        if (project.getSt_dt() != null) {
+            project.setSt_dt(project.getSt_dt().substring(0, 10));
+        }
+        if (project.getEnd_dt() != null) {
+            project.setEnd_dt(project.getEnd_dt().substring(0, 10));
+        }
+
+        CombinedProjectResponseDto combinedProject = new CombinedProjectResponseDto();
+        combinedProject.setProjectManager(projectManager);
+        combinedProject.setProject(project);
+
+        return combinedProject;
+    }
+
+    @Override
+    public List<ProjectResponseDto> getCommonProjectList(String login_id) {
+        return projectMapper.getCommonProjectList(login_id);
+    }
 }

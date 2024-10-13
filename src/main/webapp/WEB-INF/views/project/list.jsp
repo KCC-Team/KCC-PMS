@@ -48,7 +48,7 @@
                 <c:if test="${not empty projectList}">
                     <c:forEach items="${projectList}" var="list">
                         <tr>
-                            <td><a href="/projects/dashboard"><c:out value="${list.prj_no}" /><c:out value="${list.prj_title}" /></a></td>
+                            <td><a href="javascript:void(0);" class="project-link" data-prj-no="${list.prj_no}"><c:out value="${list.prj_title}" /></a></td>
                             <td>
                                 <c:if test="${list.project_status == '대기'}">
                                     <span class="status-label status-in-wait">
