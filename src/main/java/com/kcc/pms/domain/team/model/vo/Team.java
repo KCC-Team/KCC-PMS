@@ -8,6 +8,8 @@ import java.io.Serializable;
 @Getter
 @Setter
 public class Team implements Serializable {
-    private Long teamNo;
+    private Integer teamNo;
+    private Integer parentNo;
     private String teamName;
+    private int orderNo;
 }

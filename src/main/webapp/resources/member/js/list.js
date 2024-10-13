@@ -186,9 +186,15 @@ function toggleEditMode() {
                 return true;
             },
             dragDrop: function (node, data) {
+                if ((!node.parent || node.isTopLevel())) {
+                    console.log("최상위 노드 위에 드롭 불가");
+                    return false;
+                }
+
                 if (data.hitMode === "before" || data.hitMode === "after" || data.hitMode === "over") {
                     data.otherNode.moveTo(node, data.hitMode);
                 }
+                updateNodeOrder(data.otherNode, data.node, data.hitMode);
             }
         });
     } else {
@@ -196,6 +202,36 @@ function toggleEditMode() {
         $(".fancytree-container").fancytree("option", "dnd5", null);
         alert("순서가 저장되었습니다");
     }
+}
+
+//팀 순서 업데이트
+function updateNodeOrder(movedNode, targetNode, hitMode) {
+    const movedNodeId = movedNode.key;
+    let newParentId;
+    const newPosition = movedNode.getIndex();
+
+    if (hitMode === 'over') {
+        newParentId = targetNode.key;
+    } else {
+        newParentId = targetNode.parent ? targetNode.parent.key : null;
+    }
+
+    $.ajax({
+        url: '/teams/updateOrder',
+        type: 'POST',
+        contentType: 'application/json',
+        data: JSON.stringify({
+            teamNo: movedNodeId,
+            newParentNo: newParentId,
+            newPosition: newPosition
+        }),
+        success: function(response) {
+            console.log('노드 순서가 성공적으로 반영되었습니다.');
+        },
+        error: function(xhr, status, error) {
+            console.error('노드 순서 변경에 실패했습니다: ', error);
+        }
+    });
 }
 
 
