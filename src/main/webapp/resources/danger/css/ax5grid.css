@@ -1595,13 +1595,13 @@ textarea.input-lg,.input-group-lg>textarea.form-control,.input-group-lg>textarea
 }
 
 [data-ax5grid-column-sort]:before {
-    top: 5px;  /* 여유 공간을 늘려 겹침 방지 */
+    top: 5px;
 }
 
 [data-ax5grid-column-sort]:after {
-    bottom: 5px;  /* 여유 공간을 늘려 겹침 방지 */
+    bottom: 5px;
 }
 
 [data-ax5grid-cellHolder] {
-    padding: 8px 10px;  /* 적절히 패딩을 늘려 겹침 해결 */
+    padding: 8px 10px;
 }
