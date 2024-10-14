@@ -3,7 +3,7 @@ label {
     color: #000;
 }
 
-span {
+.test span {
     display: flex;
     justify-content: center !important;
 }
