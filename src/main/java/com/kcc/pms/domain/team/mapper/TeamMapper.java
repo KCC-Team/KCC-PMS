@@ -13,4 +13,7 @@ public interface TeamMapper {
     Team getTeamByNo(Integer teamNo);
     List<Team> getSiblings(Integer parentNo);
     void updateTeamOrder(@Param("teamNo") Integer teamNo, @Param("parentNo") Integer parentNo, @Param("orderNo") Integer orderNo);
+    List<Team> getTeamByProject(Long projectNo);
+    Integer getMaxOrderNo(Long parentNo);
+    Integer createTeam(Team team);
 }

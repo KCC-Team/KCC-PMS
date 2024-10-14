@@ -5,21 +5,28 @@ let isEditing = false;
 var projectNo = 1;
 $(document).ready(function() {
     // 동일한 모달을 여는 '그룹등록' 버튼 제어
-    var openModalBtns = document.querySelectorAll(".openModalBtn");
-    var modal = document.getElementById("teamModal");
-    var closeBtn = document.querySelector(".close");
+    var openModalBtns = $(".openModalBtn");
+    var modal = $("#teamModal");
 
     // 모달 열기 버튼 클릭 시 모달 열기
-    openModalBtns.forEach((btn) => {
-        btn.addEventListener("click", function () {
-            console.log("그룹등록버튼클릭");
-            modal.style.display = "block";
+    openModalBtns.each(function() {
+        $(this).on("click", function () {
+
+            $("#teamRegisterForm")[0].reset();
+
+            $("#team_title").val("");
+            $("#parent-team").prop('selectedIndex', 0);
+            $("#system-select span:first").text("시스템 선택");
+            $("#team_cont").val("");
+            $(".char-count").text("0");
+
+            modal.show();
         });
     });
 
     // 모달 닫기 버튼 클릭 시 모달 닫기
-    closeBtn.addEventListener("click", function () {
-        modal.style.display = "none";
+    $(".close").on("click", function () {
+        modal.hide();
     });
 
     // 모달 외부 클릭 시 모달 닫기
@@ -28,6 +35,15 @@ $(document).ready(function() {
             modal.style.display = "none";
         }
     };
+
+    fetchMenuData().then(function(menuData) {
+        createMenu(menuData);
+    });
+
+    $('#system-select').click(function() {
+        $('#system-menu').slideToggle();  // 메뉴를 보여주거나 숨기기
+    });
+
 
     $('#team_title').on('input', function () {
         let maxByteLength = 200;
@@ -43,16 +59,18 @@ $(document).ready(function() {
         let targetId = $(this).attr('id');
     });
 
-    // 폼 제출 시 이벤트 처리
-    document.getElementById("teamRegisterForm").addEventListener("submit", function(event) {
-        event.preventDefault();
-        // 서버로 폼 데이터 전송하는 로직 추가
-        alert("팀이 등록되었습니다!");
-        modal.style.display = "none"; // 등록 후 모달 닫기
+    $('#teamRegisterForm').on('submit', function(event) {
+        event.preventDefault(); // 기본 폼 제출 동작 방지
+        const formData = getTeamFormData();
+        console.log(formData);
+        submitTeamCreation(formData);
     });
 
+    loadTeamOptions('#parent-team');
+
+
     $("#btnEdit").click(function () {
-        toggleEditMode();  // 편집 모드 토글 함수
+        toggleEditMode();
     });
 
     // 편집 버튼
@@ -647,4 +665,99 @@ function limitByteLength(input, maxByteLength) {
     input.val(newText);
 
     return byteLength;
+}
+
+// 팀 목록 가져오기
+function loadTeamOptions(selectElementId) {
+    $.ajax({
+        url: '/teamsSelectOptions',
+        type: 'GET',
+        data: {
+            projectNo : projectNo
+        },
+        success: function(response) {
+            const teamSelect = $(selectElementId);
+            teamSelect.empty(); // 기존 옵션 초기화
+            response.forEach(function(team) {
+                teamSelect.append(new Option(team.teamName, team.teamNo));
+            });
+        },
+        error: function(xhr, status, error) {
+            console.error('상위팀 데이터를 가져오는 데 실패했습니다: ', error);
+        }
+    });
+}
+
+
+
+function fetchMenuData() {
+    return $.ajax({
+        url: '/systems',
+        method: 'GET',
+        dataType: 'json',
+        data: { prjNo: projectNo },
+        success: function(response) {
+            console.log(response);
+            return response;
+        },
+        error: function(error) {
+            console.error("Error fetching data:", error);
+        }
+    });
+}
+
+
+function createMenu(menuData) {
+    createMenuHTML(menuData, $('#system-menu'), "");
+}
+
+function createMenuHTML(menuData, parentElement, path) {
+    menuData.forEach(function(menuItem) {
+        const listItem = $('<li class="menu-item"></li>').text(menuItem.systemTitle);
+        const subMenu = $('<ul class="system-submenu"></ul>');
+
+        const currentPath = path ? path + " > " + menuItem.systemTitle : menuItem.systemTitle;
+
+        // 하위 메뉴가 있는 경우
+        if (menuItem.subSystems && menuItem.subSystems.length > 0) {
+            createMenuHTML(menuItem.subSystems, subMenu, currentPath);
+            listItem.append(subMenu);
+        }
+
+        listItem.click(function(event) {
+            event.stopPropagation();
+            $('#system-select span:first-child').text(currentPath);  // 사용자가 선택한 경로 표시
+            $('#systemNo').val(menuItem.systemNo);  // systemNo를 숨겨진 필드에 저장
+            $('.mymenu').slideUp();  // 메뉴 숨기기
+        });
+
+        parentElement.append(listItem);
+    });
+}
+
+function getTeamFormData() {
+    return {
+        teamName: $('#team_title').val(),
+        parentNo: $('#parent-team').val(),
+        systemNo: $('#systemNo').val(),
+        teamContent: $('#team_cont').val(),
+        projectNo: projectNo
+    };
+}
+
+function submitTeamCreation(formData) {
+    $.ajax({
+        url: '/teams',
+        type: 'POST',
+        contentType: 'application/json',
+        data: JSON.stringify(formData),
+        success: function(response) {
+            alert('팀이 성공적으로 생성되었습니다.');
+            location.reload();
+        },
+        error: function(xhr, status, error) {
+            console.error('팀 생성 중 오류 발생: ', error);
+            alert('팀 생성 중 오류가 발생했습니다.');
+        }
+    });
 }

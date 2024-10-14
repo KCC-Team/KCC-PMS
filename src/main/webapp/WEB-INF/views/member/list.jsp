@@ -109,18 +109,24 @@
                                             <label for="parent-team">상위 팀 <span class="required-icon">*</span></label>
                                         </td>
                                         <td>
-                                            <select id="parent-team" name="parent-team" required onchange="handleStatusChange()">
+                                            <select id="parent-team" name="parent-team">
                                                 <option value="">선택하세요.</option>
                                             </select>
                                         </td>
                                         <td class="text-align-center">
-                                            <label for="system">시스템/업무 <span class="required-icon">*</span></label>
+                                            시스템/업무 <span class="required-icon">*</span></label>
                                         </td>
                                         <td>
-                                            <select id="system" name="system" required onchange="handleStatusChange()">
-                                                <option value="">선택하세요.</option>
-                                            </select>
+                                            <div class="system-select-wrapper">
+                                                <button class="system-select-button" id="system-select">
+                                                    <span>시스템/업무 선택</span>
+
+                                                </button>
+                                                <!-- 메뉴 리스트 -->
+                                                <ul class="mymenu" id="system-menu"></ul>
+                                            </div>
                                         </td>
+
                                     </tr>
                                     <tr>
                                         <td class="text-align-center">
@@ -133,6 +139,7 @@
                                         </td>
                                     </tr>
                                 </table>
+                                <input type="hidden" id="systemNo" name="systemNo" value="">
                                 <button type="submit" class="team-rigist-btn">등록</button>
                             </form>
                         </div>
