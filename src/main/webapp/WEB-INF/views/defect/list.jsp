@@ -25,7 +25,7 @@
         <div class="ps-5 pe-5">
             <section>
                 <div class="d-flex justify-content-between align-items-center">
-                    <label class="ms-4 fw-bold fs-2 text-black">
+                    <label class="ms-4 fw-bold text-black" style="font-size: 20px">
                         결함 관리</label>
                     <div class="d-flex justify-content-center">
                         <button type="button" class="btn btn-primary d-flex justify-content-end align-items-center me-4 text-nowrap">
