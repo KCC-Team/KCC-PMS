@@ -2,7 +2,6 @@
 
 <%@ include file="../common.jsp" %>
 
-<script type="text/javascript" src="https://code.jquery.com/jquery-1.12.3.min.js"></script>
 <script type="text/javascript" src="https://cdn.rawgit.com/ax5ui/ax5core/master/dist/ax5core.min.js"></script>
 <script type="text/javascript" src="https://cdn.rawgit.com/ax5ui/ax5ui-grid/master/dist/ax5grid.min.js"></script>
 <link rel="stylesheet" href="../../../resources/danger/css/danger.css">
@@ -21,7 +20,7 @@
                     <option value="2">진행</option>
                     <option value="3">종료</option>
                 </select>
-                <input type="text" name="title" class="search-text" placeholder="프로젝트명을 검색하세요">
+                <input type="text" name="title" class="search-text" placeholder="위험명을 검색하세요">
                 <input type="submit" class="search" value="검색">
             </form>
             <div class="action-buttons">
@@ -39,12 +38,12 @@
             <div class="list_table" data-ax5grid="first-grid"  data-ax5grid-config="{
                 sortable: true,
                 header: {
-                    columnHeight: 60
+                    columnHeight: 50
                 },
                 body: {
-                    columnHeight: 60
+                    columnHeight: 50
                 }
-            }" style="height: 687px; width: 100%;">
+            }" style="height: 600px; width: 97%">
             </div>
         </div>
     </div>

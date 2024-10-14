@@ -225,7 +225,7 @@ button.cancel-btn {
 }
 
 .text-align-center {
-    text-align: center;
+    text-align: left;
     background-color: #EDF0F5;
     font-weight: bold;
     width: 200px;

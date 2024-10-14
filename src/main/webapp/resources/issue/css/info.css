@@ -4,11 +4,13 @@
 }
 
 .project-info {
-    width: 75%;
-    margin: 5px 20px 10px 47px;
-    font-size: 17px;
+    width: 97%;
+    margin: 4px 0px 20px 20px;
+    font-size: 20px;
     font-weight: bold;
     color: black;
+    border-bottom: 1px solid #989898;
+    padding-bottom: 5px;
 }
 
 .project-back {
@@ -20,7 +22,7 @@
 }
 
 .project-form {
-    width: 90%;
+    width: 95%;
     margin: 0 auto;
     border-top: 1px solid #ccc;
 }
@@ -35,9 +37,8 @@ label {
     display: block;
     margin-bottom: 5px;
     margin-right: 5px;
-    font-weight: 500;
+    font-weight: bold;
     font-size: 14px;
-    color: black;
     width: auto;
 }
 
@@ -69,8 +70,8 @@ input[type="text"] {
     font-size: 14px;
 }
 
-#rick_cont, #risk_plan {
-    width: 485px;
+#rick_cont,#risk_plan {
+    width: 100%;
     height: 70px;
     padding: 8px;
     margin-top: 5px;
@@ -165,6 +166,7 @@ button {
 button.save-btn {
     background-color: gray;
     color: white;
+    margin-right: 10px;
 }
 
 button.modify-btn {
@@ -180,6 +182,7 @@ button.del-btn {
     background-color: red;
     color: white;
     margin-left: 10px;
+    margin-right: 10px;
 }
 
 .no-period {
@@ -303,10 +306,9 @@ input:disabled, select:disabled, textarea:disabled {
     width: 100% !important;
 }
 
-
 .history-section {
-    max-width: 900px;
-    margin: 100px auto 20px 50px;
+    width: 95%;
+    margin: 100px auto 20px 30px;
 }
 
 .history-title {
@@ -346,4 +348,139 @@ input:disabled, select:disabled, textarea:disabled {
 .history-content {
     font-size: 13px;
     color: #333;
+}
+
+
+
+.overview-table, .members-table, .detail-table {
+    width: 100%;
+}
+
+.overview-table td {
+    height: 60px;
+    font-size: 15px;
+}
+
+.overview-table td, .members-table th, .members-table td, .detail-table td, .team-table td {
+    border-bottom: 1px solid #ccc;
+    border-left: 1px solid #ccc;
+    border-right: 1px solid #ccc;
+    padding: 9px;
+}
+
+.text-align-right {
+    text-align: right;
+    background-color: #EDF0F5;
+    font-weight: bold;
+}
+
+.text-align-left {
+    text-align: left;
+    background-color: #EDF0F5;
+    font-weight: bold;
+    width: 250px;
+}
+
+.members-table a {
+    text-decoration: none;
+}
+
+.text-align-left {
+    text-align: left;
+    background-color: #EDF0F5;
+}
+
+#mem_no {
+    width: 200px;
+    padding: 8px;
+    margin-top: 5px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+
+.file-zone_1 .select-box, .file-zone_2 .select-box {
+    margin-left: 20px;
+    width: 250px;
+    height: 150px;
+    padding: 10px;
+    overflow-y: auto;
+}
+
+.file-zone_1 .dropzone, .file-zone_2 .dropzone {
+    border-radius: 5px;
+    width: 100%;
+    min-height: 30px;
+    padding: 10px;
+}
+
+.dropzone {
+    height: 50px;
+}
+
+.dropzone div {
+    margin: 0 !important;
+}
+
+.file-zone_1 .dropzone-preview .dz-preview, .file-zone_2 .dropzone-preview .dz-preview {
+    width: 150px;
+    margin: 5px;
+}
+
+.file-zone_1 .dropzone-preview .dz-preview .dz-filename, .file-zone_2 .dropzone-preview .dz-preview .dz-filename {
+    font-size: 12px;
+}
+
+.file-zone_1 .dropzone-preview .dz-preview .dz-size,
+.file-zone_1 .dropzone-preview .dz-preview .dz-error-message,
+.file-zone_2 .dropzone-preview .dz-preview .dz-size,
+.file-zone_2 .dropzone-preview .dz-preview .dz-error-message
+{
+    font-size: 10px;
+}
+
+.file-zone_1 .dropzone-preview li.dz-preview, .file-zone_2 .dropzone-preview li.dz-preview {
+    width: 100%;
+    margin: 5px 0;
+}
+
+.file-zone_1 .dropzone-preview .dz-preview, .file-zone_2 .dropzone-preview .dz-preview {
+    width: 100%;
+}
+
+.file-zone_1 .dropzone-preview .dz-preview .dz-image, .file-zone_2 .dropzone-preview .dz-preview .dz-image {
+    flex: 0 0 auto;
+    margin-right: 15px;
+}
+
+.file-zone_1 .dz-image img, .file-zone_2 .dz-image img {
+    width: 40px !important;
+    height: 40px;
+}
+
+.file-zone_1 .dropzone-preview .dz-preview .dz-details, .file-zone_2 .dropzone-preview .dz-preview .dz-details {
+    flex: 1 1 auto;
+    overflow: hidden;
+}
+
+.file-zone_1 .dropzone-preview .dz-preview .dz-remove, .file-zone_2 .dropzone-preview .dz-preview .dz-remove {
+    flex: 0 0 auto;
+    margin-left: 15px;
+}
+
+.file-zone_1 .dropzone-preview .dz-preview .dz-filename,
+.file-zone_1 .dropzone-preview .dz-preview .dz-size,
+.file-zone_2 .dropzone-preview .dz-preview .dz-filename,
+.file-zone_2 .dropzone-preview .dz-preview .dz-size {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.file-zone_1 .file-section, .file-zone_2 .file-section {
+    height: 150px;
+    border: 1px solid #C5C5C5;
+    padding: 10px;
+    overflow-y: auto;
 }
