@@ -4,159 +4,175 @@
 
 <%
     String type = request.getParameter("type");
-    String disabled = ("register".equals(type) || "modify".equals(type)) ? "": "disabled";
     String titleName = "위험 상세 정보";
     if ("register".equals(type)) {
         titleName = "위험 등록";
-    } else if ("modify".equals(type)) {
-        titleName = "위험 수정";
     }
 %>
 
 <link rel="stylesheet" href="../../../resources/issue/css/info.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.9.3/min/dropzone.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.9.3/min/dropzone.min.css" />
 
-<!-- 콘텐츠 영역 -->
 <main class="content" id="content">
     <div class="main_content">
 
         <div class="project-content">
             <div class="project-info"><%=titleName%></div>
-            <a href="/projects/dangers" class="btn btn-back"><i class="fa-solid fa-arrow-left"></i> 목록으로 돌아가기</a>
         </div>
 
         <form class="project-form" action="#" method="post" enctype="multipart/form-data">
-            <input type="hidden" name="prj_no" value="">
-            <input type="hidden" name="type_cd" value="001">
-            <div class="form-group group-row">
-                <div class="form-group main-text">
-                    <label>제목 <span class="required-icon">*</span></label>
-                    <input type="text" id="risk_ttl" name="risk_ttl" value="" required <%=disabled%> >
-                </div>
-                <div class="form-group main-text">
-                    <label>위험분류 <span class="required-icon">*</span></label>
-                    <select id="class_cd" name="class_cd" required <%=disabled%> >
-                        <option value="">선택하세요.</option>
-                        <option value="001">고객 변심</option>
-                        <option value="002">일정 지연</option>
-                        <option value="003">품질 문제</option>
-                        <option value="004">범위 관련</option>
-                        <option value="005">위험 관련</option>
-                        <option value="006">규정 관련</option>
-                    </select>
-                </div>
-                <div class="form-group main-text">
-                    <label>시스템 분류</label>
-                    <select id="sys_no" name="sys_no" <%=disabled%>>
-                        <option value="">선택하세요.</option>
-                        <option value="001">A업무시스템</option>
-                        <option value="002">B업무시스템</option>
-                        <option value="003">C업무시스템</option>
-                    </select>
+            <input type="hidden" name="type_cd" value="PMS00302">
+
+            <table class="overview-table">
+                <tr>
+                    <td class="text-align-left">
+                        <label for="risk_ttl">제목 <span class="required-icon">*</span></label>
+                    </td>
+                    <td>
+                        <input type="text" id="risk_ttl" name="risk_ttl" value="" required>
+                    </td>
+                    <td class="text-align-left">
+                        <label for="class_cd">위험분류 <span class="required-icon">*</span></label>
+                    </td>
+                    <td>
+                        <select id="class_cd" name="class_cd" required>
+                            <option value="">선택하세요.</option>
+                            <option value="001">고객 변심</option>
+                            <option value="002">일정 지연</option>
+                            <option value="003">품질 문제</option>
+                            <option value="004">범위 관련</option>
+                            <option value="005">위험 관련</option>
+                            <option value="006">규정 관련</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="text-align-left">
+                        <label for="risk_id">위험 ID <span class="required-icon">*</span></label>
+                    </td>
+                    <td>
+                        <input type="text" id="risk_id" name="risk_id" value="" required>
+                    </td>
+                    <td class="text-align-left">
+                        <label for="pri_cd">우선순위 <span class="required-icon">*</span></label>
+                    </td>
+                    <td>
+                        <select id="pri_cd" name="pri_cd" required>
+                            <option value="">선택하세요.</option>
+                            <option value="001">즉시</option>
+                            <option value="002">긴급</option>
+                            <option value="003">높음</option>
+                            <option value="004">보통</option>
+                            <option value="005">낮음</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="text-align-left">
+                        <label for="rick_cont">위험내용 <span class="required-icon">*</span></label>
+                    </td>
+                    <td colspan="4">
+                        <textarea id="rick_cont" name="rick_cont" required></textarea>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="text-align-left">
+                        <label for="risk_plan">위험완화계획 </label>
+                    </td>
+                    <td colspan="4">
+                        <textarea id="risk_plan" name="risk_plan"></textarea>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="text-align-left">
+                        <label for="due_dt">조치희망일 <span class="required-icon">*</span></label>
+                    </td>
+                    <td>
+                        <input type="date" id="due_dt" name="due_dt" value="" required>
+                    </td>
+                    <td class="text-align-left">
+                        <label for="compl_date">조치완료일</label>
+                    </td>
+                    <td>
+                        <input type="date" id="compl_date" name="compl_date" value="">
+                    </td>
+                </tr>
+                <tr>
+                    <td class="text-align-left">
+                        <label for="stat_cd">위험상태 <span class="required-icon">*</span></label>
+                    </td>
+                    <td>
+                        <select id="stat_cd" name="stat_cd" required>
+                            <option value="">선택하세요.</option>
+                            <option value="001">신규</option>
+                            <option value="002">진행</option>
+                            <option value="003">조치완료</option>
+                        </select>
+                    </td>
+                    <td class="text-align-left">
+                        <label for="mem_no">발견자 <span class="required-icon">*</span></label>
+                    </td>
+                    <td>
+                        <input type="text" id="mem_no" name="mem_no" value="" required>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="text-align-left">
+                        <label for="sys_no">시스템/업무</label>
+                    </td>
+                    <td colspan="4">
+                        <select id="sys_no" name="sys_no">
+                            <option value="">선택하세요.</option>
+                            <option value="001">A업무시스템</option>
+                            <option value="002">B업무시스템</option>
+                            <option value="003">C업무시스템</option>
+                        </select>
+                    </td>
+                </tr>
+            </table>
+
+
+            <div class="file-zone_1 w-100">
+                <div class="file-section mt-3">
+                    <div class="info-item d-flex flex-column align-items-start">
+                        <div class="mb-2"><label>위험 발견 첨부파일</label></div>
+                        <div id="df-insert-file-dropzone_1" class="dropzone"></div>
+                        <jsp:include page="../output/file/file.jsp" />
+                    </div>
                 </div>
             </div>
 
-            <div class="form-row group-row">
-                <div class="form-group main-text">
-                    <label>위험 ID <span class="required-icon">*</span></label>
-                    <input type="text" id="risk_id" name="risk_id" value="" required <%=disabled%> >
-                </div>
-                <div class="form-group main-text">
-                    <label>우선순위 <span class="required-icon">*</span></label>
-                    <select id="pri_cd" name="pri_cd" required <%=disabled%> >
-                        <option value="">선택하세요.</option>
-                        <option value="001">즉시</option>
-                        <option value="002">긴급</option>
-                        <option value="003">높음</option>
-                        <option value="004">보통</option>
-                        <option value="005">낮음</option>
-                    </select>
-                </div>
-            </div>
-
-            <div class="form-row group-row">
-                <div class="form-group description-area">
-                    <label>위험내용 <span class="required-icon">*</span></label>
-                    <textarea id="rick_cont" name="rick_cont" required <%=disabled%> ></textarea>
-                </div>
-            </div>
-
-            <div class="form-row group-row">
-                <div class="form-group description-area">
-                    <label>위험완화계획</label>
-                    <textarea id="risk_plan" name="risk_plan" <%=disabled%> ></textarea>
-                </div>
-            </div>
-
-            <div class="form-row group-row gap-row">
-                <div class="form-group">
-                    <label> 조치 희망일 <span class="required-icon">*</span></label>
-                    <input type="date" id="due_dt" name="due_dt" value="" required <%=disabled%> >
-                </div>
-                <div class="form-group">
-                    <label>조치 완료일</label>
-                    <input type="date" id="compl_date" name="compl_date" value="" <%=disabled%> >
-                </div>
-            </div>
-
-            <div class="form-row group-row gap-row">
-                <div class="form-group">
-                    <label>위험 상태 <span class="required-icon">*</span></label>
-                    <select id="stat_cd" name="stat_cd" required <%=disabled%>>
-                        <option value="">선택하세요.</option>
-                        <option value="001">신규</option>
-                        <option value="002">진행</option>
-                        <option value="003">조치완료</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label>발견자</label>
-                    <select id="mem_no" name="mem_no" <%=disabled%>>
-                        <option value="">선택하세요.</option>
-                    </select>
-                </div>
-            </div>
-
-            <div class="file-section">
-                <label>위험 발견 첨부파일</label>
-                <div class="file-grid" id="fdFile">
-                    <% if (type != null) { %>
-                    <div class="file-box plus" onclick="addFileBox('fdFile');">+</div>
-                    <% } %>
-                </div>
-            </div>
-
-            <div class="file-section">
-                <label>위험 조치 첨부파일</label>
-                <div class="file-grid" id="actFile">
-                    <% if (type != null) { %>
-                    <div class="file-box plus" onclick="addFileBox('actFile');">+</div>
-                    <% } %>
+            <div class="file-zone_2 w-100">
+                <div class="file-section mt-3">
+                    <div class="info-item d-flex flex-column align-items-start">
+                        <div class="mb-2"><label>위험 조치 첨부파일</label></div>
+                        <div id="df-insert-file-dropzone_2" class="dropzone"></div>
+                        <jsp:include page="../output/file/file.jsp" />
+                    </div>
                 </div>
             </div>
 
             <div class="btn-actions">
-                <% if ("modify".equals(type) || type == null) { %>
-                    <button type="button" class="action-btn" data-bs-toggle="modal" data-bs-target="#exampleModal">
-                        <i class="fa-solid fa-check"></i>&nbsp; 위험조치
-                    </button>
-                <% } %>
-                <% if ("register".equals(type) || "modify".equals(type)) { %>
-                    <button type="submit" class="save-btn">
-                        <i class="fa-solid fa-check"></i>&nbsp; 저장
-                    </button>
-                <% } %>
                 <% if (type == null) { %>
-                    <button type="button" class="modify-btn" onclick="window.location.href='/projects/dangerInfo?type=modify'">
-                        <i class="fa-solid fa-check"></i>&nbsp; 수정
-                    </button>
+                <button type="button" class="action-btn" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                    <i class="fa-solid fa-check"></i>&nbsp; 위험조치
+                </button>
                 <% } %>
-                <% if ("modify".equals(type) || type == null) { %>
-                    <button class="del-btn" onclick="info_del();">
-                        <i class="fa-solid fa-check"></i>&nbsp; 삭제
-                    </button>
+                <button type="submit" class="save-btn">
+                    <i class="fa-solid fa-check"></i>&nbsp; 저장
+                </button>
+                <% if (type == null) { %>
+                <button class="del-btn">
+                    삭제
+                </button>
                 <% } %>
+                <button class="cancel-btn" onclick="history.back()">
+                    취소
+                </button>
             </div>
         </form>
+
 
         <% if (type == null) { %>
         <div class="history-section">
@@ -168,7 +184,7 @@
                     <div class="history-date">2022-05-17</div>
                 </div>
                 <div class="history-content">
-                    이슈조치내용이슈조치내용이슈조치내용이슈조치내용이슈조치내용이슈조치내용이슈조치내용
+                    위험조치내용위험조치내용위험조치내용위험조치내용위험조치내용위험조치내용위험조치내용
                 </div>
             </div>
 
@@ -178,7 +194,7 @@
                     <div class="history-date">2022-05-17</div>
                 </div>
                 <div class="history-content">
-                    이슈조치내용이슈조치내용이슈조치내용이슈조치내용이슈조치내용이슈조치내용이슈조치내용
+                    위험조치내용위험조치내용위험조치내용위험조치내용위험조치내용위험조치내용위험조치내용
                 </div>
             </div>
         </div>

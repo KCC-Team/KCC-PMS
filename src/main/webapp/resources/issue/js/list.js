@@ -4,17 +4,17 @@ $(document.body).ready(function () {
     firstGrid.setConfig({
         target: $('[data-ax5grid="first-grid"]'),
         columns: [
-            {key: "title", label: "이슈명", align: "center", width: 276, formatter: function() {
+            {key: "title", label: "이슈명", align: "center", width: 274, formatter: function() {
                     var title = this.value;
                     return '<a href="/projects/issueInfo?title=' + encodeURIComponent(title) + '" class="danger-title" style="color: #0044cc; font-size: 13px; font-weight: bold; text-decoration: none;">' + title + '</a>';
                 }},
-            {key: "type", label: "이슈구분", width: 160, align: "center", formatter: function (){
+            {key: "type", label: "이슈구분", width: 150, align: "center", formatter: function (){
                     return '<span style="font-size: 13px;">' + this.value + '</span>';
                 }},
-            {key: "priority", label: "우선순위", width: 150, align: "center" , formatter: function (){
+            {key: "priority", label: "우선순위", width: 100, align: "center" , formatter: function (){
                     return '<span style="font-size: 13px;">' + this.value + '</span>';
                 }},
-            {key: "status", label: "상태", width: 150, align: "center", formatter: function (){
+            {key: "status", label: "상태", width: 100, align: "center", formatter: function (){
                     var status = this.value;
                     var statusClass = 'status-label ';  // 기본 클래스
 
@@ -29,13 +29,13 @@ $(document.body).ready(function () {
 
                     return '<span class="' + statusClass + '" style="font-size: 13px;">' + status + '</span>';
                 }},
-            {key: "register", label: "발견자", width: 150, align: "center", formatter: function (){
+            {key: "register", label: "발견자", width: 130, align: "center", formatter: function (){
                     return '<span style="font-size: 13px;">' + this.value + '</span>';
                 }},
-            {key: "due_date", label: "조치희망일", width: 200, align: "center", formatter: function (){
+            {key: "due_date", label: "조치희망일", width: 130, align: "center", formatter: function (){
                     return '<span style="font-size: 13px;">' + this.value + '</span>';
                 }},
-            {key: "completion_date", label: "조치완료일", width: 200, align: "center", formatter: function (){
+            {key: "completion_date", label: "조치완료일", width: 130, align: "center", formatter: function (){
                     return '<span style="font-size: 13px;">' + this.value + '</span>';
                 }}
         ],
@@ -43,16 +43,16 @@ $(document.body).ready(function () {
     });
 
     var gridList = [
-        {title: "위험제목", type: "인력관련", priority: "보통", status: "발생전", register: "이수호", due_date: "2024-06-12", completion_date: "2024-06-12"},
-        {title: "위험제목", type: "인력관련", priority: "보통", status: "발생전", register: "이한희", due_date: "2024-06-12", completion_date: "2024-06-12"},
-        {title: "위험제목", type: "인력관련", priority: "긴급", status: "발생전", register: "김연호", due_date: "2024-06-12", completion_date: "2024-06-12"},
-        {title: "위험제목", type: "일정관련", priority: "즉시", status: "진행", register: "김연호", due_date: "2024-06-12", completion_date: "2024-06-12"},
-        {title: "위험제목", type: "일정관련", priority: "보통", status: "진행", register: "이수호", due_date: "2024-06-12", completion_date: "2024-06-12"},
-        {title: "위험제목", type: "일정관련", priority: "보통", status: "완료", register: "이수호", due_date: "2024-06-12", completion_date: "2024-06-12"},
-        {title: "위험제목", type: "기타", priority: "긴급", status: "완료", register: "김연호", due_date: "2024-06-12", completion_date: "2024-06-12"},
-        {title: "위험제목", type: "기타", priority: "보통", status: "완료", register: "이한희", due_date: "2024-06-12", completion_date: "2024-06-12"},
-        {title: "위험제목", type: "기타", priority: "보통", status: "진행", register: "이한희", due_date: "2024-06-12", completion_date: "2024-06-12"},
-        {title: "위험제목", type: "기타", priority: "보통", status: "진행", register: "이한희", due_date: "2024-06-12", completion_date: "2024-06-12"}
+        {title: "이슈제목", type: "인력관련", priority: "보통", status: "발생전", register: "이수호", due_date: "2024-06-12", completion_date: "2024-06-12"},
+        {title: "이슈제목", type: "인력관련", priority: "보통", status: "발생전", register: "이한희", due_date: "2024-06-12", completion_date: "2024-06-12"},
+        {title: "이슈제목", type: "인력관련", priority: "긴급", status: "발생전", register: "김연호", due_date: "2024-06-12", completion_date: "2024-06-12"},
+        {title: "이슈제목", type: "일정관련", priority: "즉시", status: "진행", register: "김연호", due_date: "2024-06-12", completion_date: "2024-06-12"},
+        {title: "이슈제목", type: "일정관련", priority: "보통", status: "진행", register: "이수호", due_date: "2024-06-12", completion_date: "2024-06-12"},
+        {title: "이슈제목", type: "일정관련", priority: "보통", status: "완료", register: "이수호", due_date: "2024-06-12", completion_date: "2024-06-12"},
+        {title: "이슈제목", type: "기타", priority: "긴급", status: "완료", register: "김연호", due_date: "2024-06-12", completion_date: "2024-06-12"},
+        {title: "이슈제목", type: "기타", priority: "보통", status: "완료", register: "이한희", due_date: "2024-06-12", completion_date: "2024-06-12"},
+        {title: "이슈제목", type: "기타", priority: "보통", status: "진행", register: "이한희", due_date: "2024-06-12", completion_date: "2024-06-12"},
+        {title: "이슈제목", type: "기타", priority: "보통", status: "진행", register: "이한희", due_date: "2024-06-12", completion_date: "2024-06-12"}
     ];
     firstGrid.setData(gridList);
 
