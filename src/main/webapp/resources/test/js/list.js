@@ -4,9 +4,9 @@ $(function () {
     testGrid.setConfig({
         target: $('[data-ax5grid="first-grid"]'),
         columns: [
-            {key: "test_id", label: "테스트 ID", align: "center", width: 200, formatter: function() {
-                    let title = this.value;
-                    return '<a href="/projects/defects?title=' + encodeURIComponent(title) + '" class="defect-title" style="color: #2383f8; font-size: 13px; font-weight: bold; text-decoration: none;">' + title + '</a>';
+            {key: "test_id", label: "테스트 ID", align: "center", width: 150, formatter: function() {
+                    let item = this.value;
+                    return '<a href="/projects/tests/' + encodeURIComponent(item.id) + '" class="defect-title" style="color: #2383f8; font-size: 13px; font-weight: bold; text-decoration: none;">' + item.value + '</a>';
                 }},
             {key: "test_type", label: "테스트 구분", width: 80, align: "center", formatter: function (){
                     return '<span style="font-size: 13px;">' + this.value + '</span>';
@@ -20,7 +20,7 @@ $(function () {
             {key: "test_period", label: "테스트 기간", width: 200, align: "center", formatter: function (){
                     return '<span style="font-size: 13px;">' + this.value + '</span>';
                 }},
-            {key: "case_cnt", label: "결함", width: 70, align: "center", formatter: function (){
+            {key: "case_cnt", label: "테스트 케이스", width: 100, align: "center", formatter: function (){
                     return '<span style="font-size: 13px;">' + this.value + '</span>';
                 }},
             {key: "defect_cnt", label: "결함", width: 70, align: "center", formatter: function (){
@@ -47,7 +47,10 @@ $(function () {
     });
 
     let testResponses = [
-        {test_id: "UTC_RSTR110", test_type: "단위", test_title: "열차고장신고등록 단위 테스트", class_type: "차량검수", test_period: "2024.01.07 ~ 2024.01.11", case_cnt: "5", defect_cnt: "1", test_status: "신규"},
+        {test_id: {
+                value: "TT-AD-01",
+                id: 1
+            }, test_type: "단위", test_title: "열차고장신고등록 단위 테스트", class_type: "차량검수", test_period: "2024.01.07 ~ 2024.01.11", case_cnt: "5", defect_cnt: "1", test_status: "신규"},
         {test_id: "TT-AD-01", test_type: "통합", test_title: "A 업무시스템 연간감사 통합 테스트", class_type: "연간감사", test_period: "2024.01.02 ~ 2024.01.06", case_cnt: "5", defect_cnt: "0", test_status: "진행중"},
         {test_id: "UTC_RSTR110", test_type: "단위", test_title: "열차고장신고등록 단위 테스트", class_type: "차량검수", test_period: "2024.01.07 ~ 2024.01.11", case_cnt: "5", defect_cnt: "1", test_status: "해결"},
         {test_id: "UTC_RSTR110", test_type: "단위", test_title: "열차고장신고등록 단위 테스트", class_type: "차량검수", test_period: "2024.01.07 ~ 2024.01.11", case_cnt: "5", defect_cnt: "1", test_status: "취소"},
@@ -70,4 +73,8 @@ $(function () {
         }
     });
     */
+
+    $('.test-add-btn').on('click', function () {
+        location.href = '/projects/tests/register';
+    });
 });

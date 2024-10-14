@@ -22,13 +22,13 @@
 <main class="content" id="content">
     <div class="main_content">
         <br>
-        <div class="ps-5 pe-5">
+        <div class="test ps-5 pe-5">
             <section>
                 <div class="d-flex justify-content-between align-items-center">
-                    <label class="ms-4 fw-bold fs-2 text-black">
+                    <label class="ms-4 fw-bold text-black" style="font-size: 20px">
                         테스트 관리</label>
                     <div class="d-flex justify-content-center">
-                        <button type="button" class="btn btn-primary d-flex justify-content-end align-items-center me-4 text-nowrap">
+                        <button type="button" class="test-add-btn btn btn-primary d-flex justify-content-end align-items-center me-4 text-nowrap">
                             <i class="fas fa-plus"></i>&nbsp;&nbsp;테스트 등록</button>
                         <input type="text" class="form-control" id="searchTest" placeholder="테스트를 검색하세요." style="height: 40px;">
                         &nbsp;&nbsp;
@@ -83,16 +83,16 @@
             </section>
             <section>
                 <div class="d-flex justify-content-center">
-                    <div style="width: 91.5%;">
+                    <div style="width: 90%;">
                         <div style="position: relative;height:100%;" id="test-grid-parent">
                             <div class="list_table" data-ax5grid="first-grid"  data-ax5grid-config="{
-                            header: {
-                                columnHeight: 50,
-                            },
-                            body: {
-                                columnHeight: 50
-                            }
-                        }" style="height: 575px;">
+                                header: {
+                                    columnHeight: 50,
+                                },
+                                body: {
+                                    columnHeight: 50
+                                }
+                                }" style="height: 575px;">
                             </div>
                         </div>
                     </div>

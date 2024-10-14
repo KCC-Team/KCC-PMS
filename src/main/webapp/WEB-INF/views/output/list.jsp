@@ -35,7 +35,7 @@
     <div class="main_content">
         <br>
         <div class="ps-5 pe-5">
-            <label class="ms-4 fw-bold fs-2 text-black">
+            <label class="ms-4 fw-bold text-black" style="font-size: 20px">
                 프로젝트 산출물</label>
             <hr>
             <div class="d-flex justify-content-center">
