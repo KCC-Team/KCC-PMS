@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
 @NoArgsConstructor
-@RequestMapping("/projects/{projectId}/defects")
+@RequestMapping("/projects/defects")
 public class DefectController {
 
     @GetMapping
