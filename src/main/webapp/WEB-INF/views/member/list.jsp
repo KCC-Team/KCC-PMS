@@ -95,36 +95,47 @@
 
                         <div class="modal-form">
                             <form id="teamRegisterForm">
-                                <div class="form-group">
-                                    <label for="teamName">팀명</label>
-                                    <input type="text" id="teamName" name="teamName" placeholder="팀명을 입력하세요">
-                                </div>
-
-                                <div class="form-group-row">
-                                    <div class="form-group">
-                                        <label for="parentTeam">상위 팀</label>
-                                        <select id="parentTeam" name="parentTeam">
-                                            <option value="">상위 팀 선택</option>
-                                        </select>
-                                    </div>
-
-                                    <div class="form-group">
-                                        <label for="system">시스템/업무</label>
-                                        <select id="system" name="system">
-                                            <option value="">시스템/업무 선택</option>
-                                        </select>
-                                    </div>
-                                </div>
-
-                                <div class="form-group">
-                                    <label for="teamDescription">팀 설명</label>
-                                    <textarea id="teamDescription" name="teamDescription" placeholder="팀 설명을 입력하세요"></textarea>
-                                </div>
-
+                                <table class="overview-table">
+                                    <tr>
+                                        <td class="text-align-center">
+                                            <label for="team_title">팀명 <span class="required-icon">*</span></label>
+                                        </td>
+                                        <td colspan="3">
+                                            <input type="text" id="team_title" name="team_title" value="" required>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="text-align-center">
+                                            <label for="parent-team">상위 팀 <span class="required-icon">*</span></label>
+                                        </td>
+                                        <td>
+                                            <select id="parent-team" name="parent-team" required onchange="handleStatusChange()">
+                                                <option value="">선택하세요.</option>
+                                            </select>
+                                        </td>
+                                        <td class="text-align-center">
+                                            <label for="system">시스템/업무 <span class="required-icon">*</span></label>
+                                        </td>
+                                        <td>
+                                            <select id="system" name="system" required onchange="handleStatusChange()">
+                                                <option value="">선택하세요.</option>
+                                            </select>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="text-align-center">
+                                            <label for="team_cont">팀 설명</label>
+                                        </td>
+                                        <td colspan="3">
+                                            <textarea id="team_cont" name="team_cont" required></textarea>
+                                            <span class="desc-count">
+                                            <span class="char-count">0</span> / 1000</span>
+                                        </td>
+                                    </tr>
+                                </table>
                                 <button type="submit" class="team-rigist-btn">등록</button>
                             </form>
                         </div>
-
                     </div>
                 </div>
 
