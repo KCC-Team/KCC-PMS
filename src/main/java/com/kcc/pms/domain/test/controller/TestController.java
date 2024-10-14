@@ -20,11 +20,12 @@ public class TestController {
     public String findAll(
             Model model,
             HttpSession session,
-            @RequestParam(value = "system") Integer systemId,
+            @RequestParam(value = "system", defaultValue = "0") Long systemId,
             @RequestParam(value = "work", defaultValue = "all") String work_type,
             @RequestParam(value = "test", defaultValue = "all") String test_type,
             @RequestParam(value = "page", defaultValue = "1") int page) {
-        model.addAttribute("testList", testService.getTestList(systemId, work_type, test_type, page));
+        Long prj_no = (Long) session.getAttribute("prjNo");
+        model.addAttribute("testList", testService.getTestList(prj_no, systemId, work_type, test_type, page));
         return "test/list";
     }
 

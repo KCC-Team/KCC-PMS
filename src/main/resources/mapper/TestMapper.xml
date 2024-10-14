@@ -6,5 +6,16 @@
 <mapper namespace="com.kcc.pms.domain.test.mapper.TestMapper">
     <cache />
 
-<!--    <select id="findTests"-->
+    <select id="getTestsByOptions" parameterType="Map" resultType="TestListVO">
+        select t.test_no, t.test_id, type, t.test_name, work_class, t.test_st_dt, t.test_end_dt,
+        (
+            select count(*) from tc where t.test_no = tc.test_no
+            )
+               , defect_cnt, status_code
+        from test t
+        left join test_case tc on t.test_no = tc.test_no
+        left join common_code cc on t.status_code = cc.code
+        where t.project_no = #{projectNo}
+
+    </select>
 </mapper>

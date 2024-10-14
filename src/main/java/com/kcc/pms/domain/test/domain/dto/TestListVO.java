@@ -9,7 +9,7 @@ import java.time.LocalDate;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class TestListResponseDto {
+public class TestListVO {
     private String test_no;
     private String test_id;
     private String test_type;

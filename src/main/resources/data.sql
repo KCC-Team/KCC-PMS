@@ -140,6 +140,7 @@ CREATE TABLE CodeDetail (
 
 CREATE TABLE TestMaster (
     test_no	number NOT NULL,
+    test_id VARCHAR2(100) NOT NULL,
     test_title VARCHAR2(200) NOT NULL,
     test_cont VARCHAR2(100) NOT NULL,
     stat_cd	CHAR(8) NOT NULL,
@@ -148,7 +149,9 @@ CREATE TABLE TestMaster (
     prj_no NUMBER NOT NULL,
     test_st_dt DATE NULL,
     test_end_dt	DATE NULL,
-    created_date DATE NOT NULL
+    created_date DATE NOT NULL,
+    sys_no NUMBER NULL,
+    sys_work_no NUMBER NULL
 );
 
 CREATE TABLE TestDetail (
@@ -164,9 +167,7 @@ CREATE TABLE TestDetail (
     test_result_cd CHAR(8) NULL,
     mem_no NUMBER	NULL,
     pre_cond VARCHAR2(1000)	NULL,
-    note VARCHAR2(1000)	NULL,
-    sys_no NUMBER NOT NULL,
-    sys_work_no NUMBER NOT NULL
+    note VARCHAR2(1000)	NULL
 );
 
 ----------------------------------------------------------------------------------------------------------------------
@@ -206,13 +207,13 @@ ALTER TABLE CodeDetail ADD CONSTRAINT FK_CommonCode_TO_CodeDetail FOREIGN KEY (c
 
 ALTER TABLE TestMaster ADD CONSTRAINT pk_tes_no_001 PRIMARY KEY (test_no);
 ALTER TABLE TestMaster ADD CONSTRAINT fk_prj_no_tm_002 FOREIGN KEY (prj_no) REFERENCES Project (prj_no);
+ALTER TABLE TestMaster ADD CONSTRAINT fk_sys_no_003 FOREIGN KEY (sys_no) REFERENCES System (sys_no);
+ALTER TABLE TestMaster ADD CONSTRAINT fk_sys_work_no_004 FOREIGN KEY (sys_work_no) REFERENCES System (sys_no);
 
 ALTER TABLE TestDetail ADD CONSTRAINT pk_tes_dtl_no_001 PRIMARY KEY (test_dtl_no);
 ALTER TABLE TestDetail ADD CONSTRAINT fk_tes_no_002 FOREIGN KEY (test_no) REFERENCES TestMaster (test_no);
 ALTER TABLE TestDetail ADD CONSTRAINT fk_test_dtl_no_003 FOREIGN KEY (par_test_dtl_no) REFERENCES TestDetail (test_dtl_no);
 ALTER TABLE TestDetail ADD CONSTRAINT fk_mem_no_004 FOREIGN KEY (mem_no) REFERENCES Member (mem_no);
-ALTER TABLE TestDetail ADD CONSTRAINT fk_sys_no_005 FOREIGN KEY (sys_no) REFERENCES System (sys_no);
-ALTER TABLE TestDetail ADD CONSTRAINT fk_sys_work_no_006 FOREIGN KEY (sys_work_no) REFERENCES System (sys_no);
 ----------------------------------------------------------------------------------------------------------------------
 -- INDEX
 ----------------------------------------------------------------------------------------------------------------------
@@ -329,28 +330,91 @@ INSERT INTO CodeDetail VALUES ('PMS01705', 'PMS017', '주임', 5, 'Y');
 INSERT INTO CodeDetail VALUES ('PMS01706', 'PMS017', '사원', 6, 'Y');
 
 INSERT INTO Member (mem_no, grp_no, login_id, pw, mem_nm, phone_no, email, auth_cd, pos_nm, birth_dt, tech_grd_cd, org, use_yn, rec_prj)
-VALUES (1, 3, 'user1', 'pw1', '홍길동', '010-1234-5678', 'hong@example.com', 'PMS01501', 'PMS01706', '1990-01-01', 'PMS01503', '공공', 'Y', NULL);
+VALUES (seq_member.nextval, 3, 'user1', 'pw1', '홍길동', '010-1234-5678', 'hong@example.com', 'PMS01501', 'PMS01706', '1990-01-01', 'PMS01503', '공공', 'Y', NULL);
 
 INSERT INTO project (prj_no, prj_title, prj_cont, stat_cd, prg, org, pre_st_dt, pre_end_dt, st_dt, end_dt, use_yn, reg_id, reg_dt, mod_dt)
-VALUES (1, '프로젝트1', '프로젝트1 내용', 'PMS00101', 0, '공공', '2021-01-01', '2021-01-01', '2021-01-01', '2021-01-01', 'Y', 'user1', '2021-01-01', '2021-01-01');
+VALUES (seq_project.nextval, '프로젝트1', '프로젝트1 내용', 'PMS00101', 0, '공공', '2021-01-01', '2021-01-01', '2021-01-01', '2021-01-01', 'Y', 'user1', '2021-01-01', '2021-01-01');
 
 INSERT INTO team (tm_no, tm_nm, tm_cont, use_yn, par_tm_no, prj_no, sys_no, reg_id, reg_dt, mod_id, mod_dt)
-VALUES (1, '팀1', '팀1 내용', 'Y', NULL, 1, NULL, 'user1', '2021-01-01', NULL, NULL);
+VALUES (seq_team.nextval, '팀1', '팀1 내용', 'Y', NULL, 1, NULL, 'user1', '2021-01-01', NULL, NULL);
 
 INSERT INTO projectMember (mem_no, tm_no, prj_no, prj_auth_cd, pre_start_dt, pre_end_dt, start_dt, end_dt, use_yn, reg_id, reg_dt, mod_id, mod_dt)
 VALUES (1, 1, 1, 'PMS00203', '2021-01-01', '2021-01-01', '2021-01-01', '2021-01-01', 'Y', 'user1', '2021-01-01', NULL, NULL);
 
 INSERT INTO System (sys_no, sys_ttl, sys_cont, use_yn, prj_no, par_sys_no)
-VALUES (1, 'A 업무 시스템', '시스템1 내용', 'Y', 1, NULL);
+VALUES (seq_system.nextval, 'A 업무 시스템', '시스템1 내용', 'Y', 1, NULL);
+INSERT INTO System (sys_no, sys_ttl, sys_cont, use_yn, prj_no, par_sys_no)
+VALUES (seq_system.nextval, 'B 업무 시스템', '시스템2 내용', 'Y', 1, NULL);
+INSERT INTO System (sys_no, sys_ttl, sys_cont, use_yn, prj_no, par_sys_no)
+VALUES (seq_system.nextval, 'C 업무 시스템', '시스템3 내용', 'Y', 1, NULL);
+INSERT INTO System (sys_no, sys_ttl, sys_cont, use_yn, prj_no, par_sys_no)
+VALUES (seq_system.nextval, 'D 업무 시스템', '시스템4 내용', 'Y', 1, NULL);
+-- 업무
+INSERT INTO System (sys_no, sys_ttl, sys_cont, use_yn, prj_no, par_sys_no)
+VALUES (seq_system.nextval, '범위관리', '시스템1 내용', 'Y', 1, 1);
+INSERT INTO System (sys_no, sys_ttl, sys_cont, use_yn, prj_no, par_sys_no)
+VALUES (seq_system.nextval, '일정관리', '시스템2 내용', 'Y', 1, 1);
+INSERT INTO System (sys_no, sys_ttl, sys_cont, use_yn, prj_no, par_sys_no)
+VALUES (seq_system.nextval, '비용관리', '시스템3 내용', 'Y', 1, 1);
+INSERT INTO System (sys_no, sys_ttl, sys_cont, use_yn, prj_no, par_sys_no)
+VALUES (seq_system.nextval, '품질관리', '시스템4 내용', 'Y', 1, 2);
+INSERT INTO System (sys_no, sys_ttl, sys_cont, use_yn, prj_no, par_sys_no)
+VALUES (seq_system.nextval, '인적자원관리', '시스템5 내용', 'Y', 1, 2);
+INSERT INTO System (sys_no, sys_ttl, sys_cont, use_yn, prj_no, par_sys_no)
+VALUES (seq_system.nextval, '통신관리', '시스템6 내용', 'Y', 1, 3);
+INSERT INTO System (sys_no, sys_ttl, sys_cont, use_yn, prj_no, par_sys_no)
+VALUES (seq_system.nextval, '위험관리', '시스템7 내용', 'Y', 1, 3);
+INSERT INTO System (sys_no, sys_ttl, sys_cont, use_yn, prj_no, par_sys_no)
+VALUES (seq_system.nextval, '조달관리', '시스템8 내용', 'Y', 1, 4);
+INSERT INTO System (sys_no, sys_ttl, sys_cont, use_yn, prj_no, par_sys_no)
+VALUES (seq_system.nextval, '통합관리', '시스템9 내용', 'Y', 1, 4);
 
 INSERT INTO Feature (feat_no, feat_id, feat_title, feat_cont, pre_st_dt, pre_end_dt, st_dt, end_dt, stat_cd, pri_cd, prg, diff_cd, use_yn, sys_no, mem_no, tm_no, prj_no)
-VALUES (1, 'F001', '기능1', '기능1 내용', '2021-01-01', '2021-01-01', '2021-01-01', '2021-01-01', 'PMS00901', 'PMS00603', 0, 'PMS01103', 'Y', 1, 1, 1, 1);
+VALUES (seq_feature.nextval, 'F001', '기능1', '기능1 내용', '2021-01-01', '2021-01-01', '2021-01-01', '2021-01-01', 'PMS00901', 'PMS00603', 0, 'PMS01103', 'Y', 1, 1, 1, 1);
 
-INSERT INTO TestMaster (test_no, test_title, test_cont, stat_cd, type_cd, class_cd, prj_no, test_st_dt, test_end_dt, created_date)
-VALUES (1, '테스트1', '테스트1 내용', '001', '001', '001', 1, '2021-01-01', '2021-01-01', '2021-01-01');
+INSERT INTO TestMaster (test_no, test_id, test_title, test_cont, stat_cd, type_cd, class_cd, prj_no, test_st_dt, test_end_dt, created_date, sys_no, sys_work_no)
+VALUES (seq_testmaster.nextval, 't_001', '테스트1', '테스트1 내용', '001', '001', '001', 1, '2021-01-01', '2021-01-01', '2021-01-01', 5, 1);
+INSERT INTO TestMaster (test_no, test_id, test_title, test_cont, stat_cd, type_cd, class_cd, prj_no, test_st_dt, test_end_dt, created_date, sys_no, sys_work_no)
+VALUES (seq_testmaster.nextval, 't_002','테스트2', '테스트2 내용', '001', '001', '001', 1, '2021-01-01', '2021-01-01', '2021-01-01', 6, 1);
+INSERT INTO TestMaster (test_no, test_id, test_title, test_cont, stat_cd, type_cd, class_cd, prj_no, test_st_dt, test_end_dt, created_date, sys_no, sys_work_no)
+VALUES (seq_testmaster.nextval, 't_003','테스트3', '테스트3 내용', '001', '001', '001', 1, '2021-01-01', '2021-01-01', '2021-01-01', 7, 1);
+INSERT INTO TestMaster (test_no, test_id, test_title, test_cont, stat_cd, type_cd, class_cd, prj_no, test_st_dt, test_end_dt, created_date, sys_no, sys_work_no)
+VALUES (seq_testmaster.nextval, 't_004','테스트4', '테스트4 내용', '001', '001', '001', 1, '2021-01-01', '2021-01-01', '2021-01-01', 8, 1);
+INSERT INTO TestMaster (test_no, test_id, test_title, test_cont, stat_cd, type_cd, class_cd, prj_no, test_st_dt, test_end_dt, created_date, sys_no, sys_work_no)
+VALUES (seq_testmaster.nextval, 't_005','테스트5', '테스트5 내용', '001', '001', '001', 1, '2021-01-01', '2021-01-01', '2021-01-01', 9, 2);
+INSERT INTO TestMaster (test_no, test_id, test_title, test_cont, stat_cd, type_cd, class_cd, prj_no, test_st_dt, test_end_dt, created_date, sys_no, sys_work_no)
+VALUES (seq_testmaster.nextval, 't_006','테스트6', '테스트6 내용', '001', '001', '001', 1, '2021-01-01', '2021-01-01', '2021-01-01',  10, 2);
+INSERT INTO TestMaster (test_no, test_id, test_title, test_cont, stat_cd, type_cd, class_cd, prj_no, test_st_dt, test_end_dt, created_date, sys_no, sys_work_no)
+VALUES (seq_testmaster.nextval, 't_007','테스트7', '테스트7 내용', '001', '001', '001', 1, '2021-01-01', '2021-01-01', '2021-01-01', 10, 2);
+INSERT INTO TestMaster (test_no, test_id, test_title, test_cont, stat_cd, type_cd, class_cd, prj_no, test_st_dt, test_end_dt, created_date, sys_no, sys_work_no)
+VALUES (seq_testmaster.nextval, 't_008','테스트8', '테스트8 내용', '001', '001', '001', 1, '2021-01-01', '2021-01-01', '2021-01-01', 11, 3);
+INSERT INTO TestMaster (test_no, test_id, test_title, test_cont, stat_cd, type_cd, class_cd, prj_no, test_st_dt, test_end_dt, created_date, sys_no, sys_work_no)
+VALUES (seq_testmaster.nextval, 't_009','테스트9', '테스트9 내용', '001', '001', '001', 1, '2021-01-01', '2021-01-01', '2021-01-01',11, 3);
+INSERT INTO TestMaster (test_no, test_id, test_title, test_cont, stat_cd, type_cd, class_cd, prj_no, test_st_dt, test_end_dt, created_date, sys_no, sys_work_no)
+VALUES (seq_testmaster.nextval, 't_010','테스트10', '테스트10 내용', '001', '001', '001', 1, '2021-01-01', '2021-01-01', '2021-01-01', 11, 3);
+INSERT INTO TestMaster (test_no, test_id, test_title, test_cont, stat_cd, type_cd, class_cd, prj_no, test_st_dt, test_end_dt, created_date, sys_no, sys_work_no)
+VALUES (seq_testmaster.nextval, 't_011','테스트11', '테스트11 내용', '001', '001', '001', 1, '2021-01-01', '2021-01-01', '2021-01-01', 11, 3);
+INSERT INTO TestMaster (test_no, test_id, test_title, test_cont, stat_cd, type_cd, class_cd, prj_no, test_st_dt, test_end_dt, created_date, sys_no, sys_work_no)
+VALUES (seq_testmaster.nextval, 't_012','테스트12', '테스트12 내용', '001', '001', '001', 1, '2021-01-01', '2021-01-01', '2021-01-01', 12, 3);
+INSERT INTO TestMaster (test_no, test_id, test_title, test_cont, stat_cd, type_cd, class_cd, prj_no, test_st_dt, test_end_dt, created_date, sys_no, sys_work_no)
+VALUES (seq_testmaster.nextval, 't_013','테스트13', '테스트13 내용', '001', '001', '001', 1, '2021-01-01', '2021-01-01', '2021-01-01', 12, 3);
+INSERT INTO TestMaster (test_no, test_id, test_title, test_cont, stat_cd, type_cd, class_cd, prj_no, test_st_dt, test_end_dt, created_date, sys_no, sys_work_no)
+VALUES (seq_testmaster.nextval, 't_014','테스트14', '테스트14 내용', '001', '001', '001', 1, '2021-01-01', '2021-01-01', '2021-01-01', 12, 3);
+INSERT INTO TestMaster (test_no, test_id, test_title, test_cont, stat_cd, type_cd, class_cd, prj_no, test_st_dt, test_end_dt, created_date, sys_no, sys_work_no)
+VALUES (seq_testmaster.nextval, 't_015','테스트15', '테스트15 내용', '001', '001', '001', 1, '2021-01-01', '2021-01-01', '2021-01-01', 13, 4);
+INSERT INTO TestMaster (test_no, test_id, test_title, test_cont, stat_cd, type_cd, class_cd, prj_no, test_st_dt, test_end_dt, created_date, sys_no, sys_work_no)
+VALUES (seq_testmaster.nextval, 't_016','테스트16', '테스트16 내용', '001', '001', '001', 1, '2021-01-01', '2021-01-01', '2021-01-01', 13, 4);
+INSERT INTO TestMaster (test_no, test_id, test_title, test_cont, stat_cd, type_cd, class_cd, prj_no, test_st_dt, test_end_dt, created_date, sys_no, sys_work_no)
+VALUES (seq_testmaster.nextval, 't_017','테스트17', '테스트17 내용', '001', '001', '001', 1, '2021-01-01', '2021-01-01', '2021-01-01', 13, 4);
+INSERT INTO TestMaster (test_no, test_id, test_title, test_cont, stat_cd, type_cd, class_cd, prj_no, test_st_dt, test_end_dt, created_date, sys_no, sys_work_no)
+VALUES (seq_testmaster.nextval, 't_018','테스트18', '테스트18 내용', '001', '001', '001', 1, '2021-01-01', '2021-01-01', '2021-01-01', 13, 4);
+INSERT INTO TestMaster (test_no, test_id, test_title, test_cont, stat_cd, type_cd, class_cd, prj_no, test_st_dt, test_end_dt, created_date, sys_no, sys_work_no)
+VALUES (seq_testmaster.nextval, 't_019','테스트19', '테스트19 내용', '001', '001', '001', 1, '2021-01-01', '2021-01-01', '2021-01-01', 13, 4);
+INSERT INTO TestMaster (test_no, test_id, test_title, test_cont, stat_cd, type_cd, class_cd, prj_no, test_st_dt, test_end_dt, created_date, sys_no, sys_work_no)
+VALUES (seq_testmaster.nextval, 't_020','테스트20', '테스트20 내용', '001', '001', '001', 1, '2021-01-01', '2021-01-01', '2021-01-01', 13, 4);
 
-INSERT INTO TestDetail (test_dtl_no, test_dtl_id, wrk_proc_dtl, test_data, prd, test_cont, test_no, test_st_dt, test_result_cd, mem_no, pre_cond, note, sys_no, sys_work_no)
-VALUES (1, 'TD001', '작업절차1', '테스트데이터1', '제품1', '테스트내용1', 1, '2021-01-01', '001', 1, '사전조건1', '비고1', 1, 1);
+INSERT INTO TestDetail (test_dtl_no, test_dtl_id, wrk_proc_dtl, test_data, prd, test_cont, test_no, test_st_dt, test_result_cd, mem_no, pre_cond, note)
+VALUES (seq_testdetail.nextval, 'TD001', '작업절차1', '테스트데이터1', '제품1', '테스트내용1', 1, '2021-01-01', '001', 1, '사전조건1', '비고1');
 
 -----------------------------------------------------------------------------------------------------------------
 COMMIT;
