@@ -29,6 +29,20 @@ $(document).ready(function() {
         }
     };
 
+    $('#team_title').on('input', function () {
+        let maxByteLength = 200;
+        let byteLength = limitByteLength($(this), maxByteLength);
+        let targetId = $(this).attr('id');
+    });
+
+
+    $('#team_cont').on('input', function () {
+        let maxByteLength = 1000;
+        let byteLength = limitByteLength($(this), maxByteLength);
+        $(".char-count").text(byteLength);
+        let targetId = $(this).attr('id');
+    });
+
     // 폼 제출 시 이벤트 처리
     document.getElementById("teamRegisterForm").addEventListener("submit", function(event) {
         event.preventDefault();
@@ -605,4 +619,32 @@ function initGrid() {
     }).catch(function(error) {
         console.error("그리드 초기화 오류: ", error);
     });
+}
+
+// 바이트 수 제한하는 함수
+function limitByteLength(input, maxByteLength) {
+    var text = input.val();
+    var byteLength = 0;
+    var newText = '';
+
+    for (var i = 0; i < text.length; i++) {
+        var char = text.charAt(i);
+        // 한글 또는 특수문자는 3바이트
+        if (escape(char).length > 4) {
+            byteLength += 3;
+        } else {
+            // 영어, 숫자, 기호는 1바이트
+            byteLength += 1;
+        }
+
+        if (byteLength > maxByteLength) {
+            break; // 최대 바이트를 초과하면 반복 중단
+        }
+        newText += char; // 허용되는 범위 내의 문자만 추가
+    }
+
+    // 입력 값을 허용된 범위로 잘라내기
+    input.val(newText);
+
+    return byteLength;
 }

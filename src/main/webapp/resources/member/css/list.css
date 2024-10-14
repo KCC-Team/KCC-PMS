@@ -222,7 +222,7 @@
     margin: 15% auto;
     padding: 20px;
     border: 1px solid #888;
-    width: 500px; /* 모달 너비 */
+    width: 700px; /* 모달 너비 */
     border-radius: 10px; /* 모서리 둥글게 */
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3); /* 그림자 */
 }
@@ -247,41 +247,6 @@ h2 {
     text-align: left;
     font-size: 24px;
 }
-
-
-.form-group {
-    margin-bottom: 15px;
-    flex:1;
-}
-
-.form-group-row {
-    display: flex;
-    justify-content: space-between;
-    gap:10px;
-}
-
-.form-group label {
-    display: block;
-    font-size: 16px;
-    margin-bottom: 5px;
-}
-
-.form-group input,
-.form-group select,
-.form-group textarea {
-    width: 100%;
-    padding: 10px;
-    font-size: 14px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-}
-
-
-textarea {
-    height: 100px;
-}
-
-
 
 .modal-header {
     display: flex;
@@ -315,10 +280,39 @@ textarea {
 .team-rigist-btn {
     display: block;
     margin-left: auto;
-    background-color: #4CAF50;
+    margin-top: 28px;
+    background-color: #1F80DA;
     color: white;
     padding: 10px 20px;
     border: none;
     border-radius: 5px;
     cursor: pointer;
+}
+
+.required-icon {
+    color: red;
+}
+
+textarea,
+select {
+    width: calc(100% - 10px);
+    padding: 8px;
+    margin-top: 5px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+textarea{
+    height: 100px;
+}
+
+.char-count {
+    font-size: 15px;
+    text-align: right;
+}
+
+.desc-count {
+    float: right;
+    margin-right: 10px;
 }
