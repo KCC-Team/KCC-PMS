@@ -13,4 +13,5 @@ public interface MemberService {
     List<ProjectMemberResponseDto> getProjectMemberList(Long projectNo);
     List<MemberResponseDto> getTeamMember(Long teamNo);
     MemberResponseDto getMemberDetail(Long memberNo);
+    Integer memberAssignTeam(Long memberNo, Long teamNo, Integer beforeTeamNo);
 }

@@ -8,6 +8,7 @@ import com.kcc.pms.domain.member.model.dto.ProjectMemberResponseDto;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -43,6 +44,11 @@ public class MemberServiceImpl implements MemberService{
     @Override
     public MemberResponseDto getMemberDetail(Long memberNo) {
         return mapper.getMemberDetail(memberNo);
+    }
+
+    @Override
+    public Integer memberAssignTeam(Long memberNo, Long teamNo, Integer beforeTeamNo) {
+        return mapper.memberAssignTeam(memberNo, teamNo, beforeTeamNo);
     }
 
 

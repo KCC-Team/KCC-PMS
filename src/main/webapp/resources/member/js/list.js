@@ -62,7 +62,6 @@ $(document).ready(function() {
     $('#teamRegisterForm').on('submit', function(event) {
         event.preventDefault(); // 기본 폼 제출 동작 방지
         const formData = getTeamFormData();
-        console.log(formData);
         submitTeamCreation(formData);
     });
 
@@ -92,15 +91,15 @@ $(document).ready(function() {
     initGrid();  // 공통 코드 로드 및 그리드 초기화
     loadTeamData(projectNo);
     loadProjectMembers(projectNo);
-    console.log("======");
     $(document).on('click', '.clickable-name', function() {
         console.log('클릭된 요소:', $(this));
     });
     $(document).on('mousedown', '.clickable-name', function() {
-        const clickedElement = $(this); // 클릭한 요소
+        const clickedElement = $(this);
         const memberName = clickedElement.text();
         const memberId = clickedElement.data('id');
-        console.log(memberId);
+        const beforeTeamNo = clickedElement.data('teamno');
+
         console.log('mousedown클릭된 요소:', $(this));
 
         // 새로운 드래그 가능한 div 생성
@@ -117,8 +116,9 @@ $(document).ready(function() {
                 zIndex: 1000,
                 opacity: 0.8
             })
-            .attr('id', 'dragging-div') // 드래그 중인 요소에 ID 부여
-            .data('member-id', memberId) // 사원의 고유한 ID 값을 저장
+            .attr('id', 'dragging-div')
+            .data('member-id', memberId)
+            .data('before-team-id', beforeTeamNo)
             .appendTo('body');
 
         // 마우스 이동 이벤트로 dragDiv를 움직이게 함
@@ -132,53 +132,23 @@ $(document).ready(function() {
         //드래그가 끝나면(div 제거 및 이벤트 해제)
         $(document).on('mouseup', function(event) {
             var $target = $(event.target);
-            console.log("종료종료종료");
-            console.log($target);
+
             //FancyTree 노드 위에 드롭했는지 확인
             if ($target.closest('.fancytree-node').length > 0) {
                 var teamNode = $.ui.fancytree.getNode($target);
                 var teamId = teamNode.key;
                 var memberId = $('#dragging-div').data('member-id');
-                console.log(teamId);
-                console.log(memberId);
+                var beforeTeamNo = $('#dragging-div').data('before-team-id');
+
+                memberAssignTeam(teamId, memberId, beforeTeamNo);
             }
-            $('#dragging-div').remove(); // 드래그가 끝나면 div 제거
-            $(document).off('mousemove'); // 마우스 이동 이벤트 해제
-            $(document).off('mouseup'); // 마우스 업 이벤트 해제
+            $('#dragging-div').remove();
+            $(document).off('mousemove');
+            $(document).off('mouseup');
         });
     });
 
-    // $(document).on('mouseup', function(event) {
-    //     var $target = $(event.target);
-    //     console.log("종료종료종료");
-    //     console.log($target);
-    //     // FancyTree 노드 위에 드롭했는지 확인
-    //     if ($target.closest('.fancytree-node').length > 0) {
-    //         var teamNode = $.ui.fancytree.getNode($target);
-    //         var teamId = teamNode.key;
-    //         var memberId = $('#dragging-div').data('member-id');
-    //
-    //
-    //     }
-    //     $('#dragging-div').remove();
-    //     $(document).off('mousemove'); // 마우스 이동 이벤트 해제
-    //     $(document).off('mouseup'); // 마우스 업 이벤트 해제
-    // });
-    // $('.clickable-name').each(function() {
-    //     $(this).draggable({
-    //         helper: 'clone',  // 드래그할 때 원본을 그대로 유지하고 복사본을 드래그할 수 있게 함
-    //         start: function(event, ui) {
-    //             var memberId = $(this).data('id');
-    //             console.log("드래그 시작 - 멤버 ID: " + memberId);
-    //
-    //             // 드래그하는 데이터 설정
-    //             ui.helper.data("person-data", {
-    //                 id: memberId,
-    //                 name: $(this).text()
-    //             });
-    //         }
-    //     });
-    // });
+
     $(".team-overview, .team-members").hide();
     $("#project-member-grid-section").show();
 });
@@ -197,6 +167,7 @@ function loadTeamData(projectNo) {
         url: 'http://localhost:8085/teams',
         method: 'GET',
         data: { projectNo: projectNo },
+        cache: false,
         success: function (response) {
             var treeData = response;
             renderTeamTree(treeData);  // FancyTree 초기화 함수 호출
@@ -249,74 +220,83 @@ function setupSearch() {
 
 // FancyTree 초기화 함수
 function renderTeamTree(treeData) {
-    $("#tree-table").fancytree({
-        extensions: ["table", "dnd5", "filter"],
-        checkbox: false,
-        selectMode: 1,
-        quicksearch: true,
-        source: treeData,
-        icon: false,
-        filter: {
-            autoApply: true,
-            autoExpand: true,
-            counter: true,
-            fuzzy: false,
-            hideExpandedCounter: true,
-            hideExpanders: false,
-            highlight: true,
-            leavesOnly: false,
-            nodata: true,
-            mode: "dimm"
-        },
-        table: {
-            indentation: 20,
-            nodeColumnIdx: 0,
-            checkboxColumnIdx: 0
-        },
-        renderColumns: function (event, data) {
-            var node = data.node,
-                $tdList = $(node.tr).find(">td");
+    console.log("트리 데이터: ", treeData);  // 트리 데이터 로그 출력
 
-            $tdList.eq(0).text(node.data.title);
-            $tdList.eq(1).text(node.data.systemName || "-");
-            $tdList.eq(2).text(node.data.totalCount || "-");
-        },
-        dnd5: {
-            autoExpandMS: 400,
-            preventRecursion: false,
-            dragStart: function (node, data) {
-                return false;
+    var tree = $.ui.fancytree.getTree("#tree-table");
+    if(tree){
+        tree.reload(treeData);
+    } else {
+        $("#tree-table").fancytree({
+            extensions: ["table", "dnd5", "filter"],
+            checkbox: false,
+            selectMode: 1,
+            quicksearch: true,
+            source: treeData,
+            icon: false,
+            filter: {
+                autoApply: true,
+                autoExpand: true,
+                counter: true,
+                fuzzy: false,
+                hideExpandedCounter: true,
+                hideExpanders: false,
+                highlight: true,
+                leavesOnly: false,
+                nodata: true,
+                mode: "dimm"
             },
-            dragEnter: function (node, data) {
-                return false;
+            table: {
+                indentation: 20,
+                nodeColumnIdx: 0,
+                checkboxColumnIdx: 0
             },
-            dragDrop: function (node, data) {
-                if (data.hitMode === "before" || data.hitMode === "after" || data.hitMode === "over") {
-                    data.otherNode.moveTo(node, data.hitMode);
+            renderColumns: function (event, data) {
+                var node = data.node,
+                    $tdList = $(node.tr).find(">td");
+
+                $tdList.eq(0).text(node.data.title);
+                $tdList.eq(1).text(node.data.systemName || "-");
+                $tdList.eq(2).text(node.data.totalCount || "-");
+            },
+            dnd5: {
+                autoExpandMS: 400,
+                preventRecursion: false,
+                dragStart: function (node, data) {
+                    return false;
+                },
+                dragEnter: function (node, data) {
+                    return false;
+                },
+                dragDrop: function (node, data) {
+                    if (data.hitMode === "before" || data.hitMode === "after" || data.hitMode === "over") {
+                        data.otherNode.moveTo(node, data.hitMode);
+                    }
                 }
-            }
-        },
-        activate: function(event, data) {
-            var node = data.node;
-            var teamKey = node.key;
-            var teamName = node.title;
+            },
+            activate: function(event, data) {
+                var node = data.node;
+                var teamKey = node.key;
+                var teamName = node.title;
 
-            if(node.data.parentId === null){
-                $(".team-overview, .team-members, .member-detail").hide();
-                $("#project-member-grid-section").show();
-                loadProjectMembers(projectNo);
-            } else {
-                $(".team-overview, .team-members").show();
-                $("#project-member-grid-section").hide();
-                $(".member-detail").hide();
+                if(node.data.parentId === null){
+                    $(".team-overview, .team-members, .member-detail").hide();
+                    $("#project-member-grid-section").show();
+                    loadProjectMembers(projectNo);
+                } else {
+                    $(".team-overview, .team-members").show();
+                    $("#project-member-grid-section").hide();
+                    $(".member-detail").hide();
+                    updateTeamInfo(node.data, teamName);
+                    loadTeamMembers(teamKey);
+                }
+
                 updateTeamInfo(node.data, teamName);
                 loadTeamMembers(teamKey);
             }
+        });
+    }
 
-            updateTeamInfo(node.data, teamName);
-            loadTeamMembers(teamKey);
-        }
-    });
+
 
     setupSearch();
 }
@@ -387,7 +367,6 @@ function updateNodeOrder(movedNode, targetNode, hitMode) {
 
 // 선택된 팀의 정보를 표시하는 함수
 function updateTeamInfo(teamData, teamName) {
-    console.log(teamData);
     $("#team-name").text(teamName || "-");
     $("#parent-team-name").text(teamData.parentTeamName || "-");
     $("#system-name").text(teamData.systemName || "-");
@@ -630,7 +609,8 @@ function initGrid() {
             target: $('[data-ax5grid="projectMemberGrid"]'),
             columns: [
                 {key: "memberName", label: "성명", align: "center", formatter: function() {
-                        return '<div class="clickable-name member-link" data-id="' + this.item.id + '" draggable="true">' + this.value + '</div>';}},
+                        return '<div class="clickable-name member-link" data-id="' + this.item.id + '" data-teamNo="' + this.item.teamNo + '" draggable="true">' + this.value + '</div>'
+                }},
                 {
                     key: "auth",
                     label: "프로젝트권한",
@@ -785,7 +765,6 @@ function fetchMenuData() {
         dataType: 'json',
         data: { prjNo: projectNo },
         success: function(response) {
-            console.log(response);
             return response;
         },
         error: function(error) {
@@ -848,4 +827,26 @@ function submitTeamCreation(formData) {
             alert('팀 생성 중 오류가 발생했습니다.');
         }
     });
+}
+
+
+function memberAssignTeam(teamNo, memberNo, beforeTeamNo){
+    $.ajax({
+        url: '/projects/members/' + memberNo + '/team/' + teamNo,
+        type: 'PATCH',
+        contentType: 'application/json',
+        cache: false,
+        data: JSON.stringify({
+            beforeTeamNo: beforeTeamNo
+        }),
+        success: function (response) {
+            alert('팀 배정에 성공하였습니다');
+            loadTeamData(projectNo);
+            loadProjectMembers(projectNo);
+        },
+        error: function(xhr, status, error) {
+            console.error('팀 배정 중 오류 발생: ', error);
+            alert('팀 배정에 실패하였습니다.');
+        }
+    })
 }

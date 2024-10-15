@@ -19,4 +19,5 @@ public class ProjectMemberResponseDto implements Serializable {
     private String endDate;
     private String tech;
     private String teamName;
+    private Integer teamNo;
 }

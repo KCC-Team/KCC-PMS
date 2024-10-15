@@ -34,7 +34,8 @@
                pm.start_dt AS startDate,
                pm.end_dt AS endDate,
                tech.cd_dtl_nm AS tech,
-               t.tm_nm AS teamName
+               t.tm_nm AS teamName,
+               t.tm_no AS teamNo
         FROM projectmember pm,
              member m,
              usergroup g,
@@ -149,6 +150,10 @@
             pm.mem_no = pmt.mem_no AND
             pm.tm_no = #{teamNo}
     </select>
+
+    <update id="memberAssignTeam">
+        UPDATE projectmember SET tm_no = #{teamNo} WHERE mem_no = #{memberNo} and tm_no = #{beforeTeamNo}
+    </update>
 
 </mapper>
 
