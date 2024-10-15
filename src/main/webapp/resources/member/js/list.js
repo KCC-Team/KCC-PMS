@@ -92,6 +92,93 @@ $(document).ready(function() {
     initGrid();  // 공통 코드 로드 및 그리드 초기화
     loadTeamData(projectNo);
     loadProjectMembers(projectNo);
+    console.log("======");
+    $(document).on('click', '.clickable-name', function() {
+        console.log('클릭된 요소:', $(this));
+    });
+    $(document).on('mousedown', '.clickable-name', function() {
+        const clickedElement = $(this); // 클릭한 요소
+        const memberName = clickedElement.text();
+        const memberId = clickedElement.data('id');
+        console.log(memberId);
+        console.log('mousedown클릭된 요소:', $(this));
+
+        // 새로운 드래그 가능한 div 생성
+        const dragDiv = $('<div></div>')
+            .text(memberName)
+            .css({
+                position: 'absolute',
+                top: event.pageY + 'px',
+                left: event.pageX + 'px',
+                backgroundColor: '#f0f0f0',
+                padding: '10px',
+                border: '1px solid #ccc',
+                borderRadius: '5px',
+                zIndex: 1000,
+                opacity: 0.8
+            })
+            .attr('id', 'dragging-div') // 드래그 중인 요소에 ID 부여
+            .data('member-id', memberId) // 사원의 고유한 ID 값을 저장
+            .appendTo('body');
+
+        // 마우스 이동 이벤트로 dragDiv를 움직이게 함
+        $(document).on('mousemove', function(e) {
+            $('#dragging-div').css({
+                top: e.pageY + 'px',
+                left: e.pageX + 'px'
+            });
+        });
+
+        //드래그가 끝나면(div 제거 및 이벤트 해제)
+        $(document).on('mouseup', function(event) {
+            var $target = $(event.target);
+            console.log("종료종료종료");
+            console.log($target);
+            //FancyTree 노드 위에 드롭했는지 확인
+            if ($target.closest('.fancytree-node').length > 0) {
+                var teamNode = $.ui.fancytree.getNode($target);
+                var teamId = teamNode.key;
+                var memberId = $('#dragging-div').data('member-id');
+                console.log(teamId);
+                console.log(memberId);
+            }
+            $('#dragging-div').remove(); // 드래그가 끝나면 div 제거
+            $(document).off('mousemove'); // 마우스 이동 이벤트 해제
+            $(document).off('mouseup'); // 마우스 업 이벤트 해제
+        });
+    });
+
+    // $(document).on('mouseup', function(event) {
+    //     var $target = $(event.target);
+    //     console.log("종료종료종료");
+    //     console.log($target);
+    //     // FancyTree 노드 위에 드롭했는지 확인
+    //     if ($target.closest('.fancytree-node').length > 0) {
+    //         var teamNode = $.ui.fancytree.getNode($target);
+    //         var teamId = teamNode.key;
+    //         var memberId = $('#dragging-div').data('member-id');
+    //
+    //
+    //     }
+    //     $('#dragging-div').remove();
+    //     $(document).off('mousemove'); // 마우스 이동 이벤트 해제
+    //     $(document).off('mouseup'); // 마우스 업 이벤트 해제
+    // });
+    // $('.clickable-name').each(function() {
+    //     $(this).draggable({
+    //         helper: 'clone',  // 드래그할 때 원본을 그대로 유지하고 복사본을 드래그할 수 있게 함
+    //         start: function(event, ui) {
+    //             var memberId = $(this).data('id');
+    //             console.log("드래그 시작 - 멤버 ID: " + memberId);
+    //
+    //             // 드래그하는 데이터 설정
+    //             ui.helper.data("person-data", {
+    //                 id: memberId,
+    //                 name: $(this).text()
+    //             });
+    //         }
+    //     });
+    // });
     $(".team-overview, .team-members").hide();
     $("#project-member-grid-section").show();
 });
@@ -543,7 +630,7 @@ function initGrid() {
             target: $('[data-ax5grid="projectMemberGrid"]'),
             columns: [
                 {key: "memberName", label: "성명", align: "center", formatter: function() {
-                        return '<a href="#" class="clickable-name member-link" data-id="' + this.item.id + '">' + this.value + '</a>';}},
+                        return '<div class="clickable-name member-link" data-id="' + this.item.id + '" draggable="true">' + this.value + '</div>';}},
                 {
                     key: "auth",
                     label: "프로젝트권한",
@@ -637,6 +724,7 @@ function initGrid() {
     }).catch(function(error) {
         console.error("그리드 초기화 오류: ", error);
     });
+
 }
 
 // 바이트 수 제한하는 함수
