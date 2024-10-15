@@ -200,7 +200,7 @@ $(document).on("click", ".add-wbs", function() {
     window.open(
         "/projects/wbsInfo?tsk_num=" + tsk_num,
         "프로젝트WBS",
-        "width=950, height=350, resizable=yes"
+        "width=970, height=450, resizable=yes"
     );
 });
 

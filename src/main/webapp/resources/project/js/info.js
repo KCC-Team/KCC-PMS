@@ -45,7 +45,7 @@ $(document).ready(function () {
     $('.search-member-btn').click(function () {
         window.open(
             "/projects/addMember?type=project",
-            "프로젝트인원등록",
+            "project",
             "width=1000, height=800, resizable=yes"
         );
     });

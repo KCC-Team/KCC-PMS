@@ -90,3 +90,16 @@
 .modal-footer {
     margin: 10px;
 }
+
+#mem_nm, #sys_no {
+    width: 39%;
+}
+
+input[type="date"] {
+    position: relative;
+}
+
+input[type="date"] {
+    color: black;
+    font-weight: bold;
+}
