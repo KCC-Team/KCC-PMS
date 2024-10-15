@@ -63,8 +63,8 @@
             org = #{org},
             pre_st_dt = #{pre_st_dt},
             pre_end_dt = #{pre_end_dt},
-            st_dt = #{st_dt},
-            end_dt = #{end_dt},
+            <if test="st_dt != null"> st_dt = #{st_dt}, </if>
+            <if test="end_dt != null"> end_dt = #{end_dt}, </if>
             use_yn = #{use_yn},
             mod_id = #{mod_id},
             mod_dt = SYSDATE
