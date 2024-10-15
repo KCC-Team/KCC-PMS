@@ -1,3 +1,5 @@
+const API_SERVER = 'http://localhost:8085';
+
 $(function() {
     function updateButtonVisibility() {
         let selectedOption = $('#test-type').val();
@@ -10,47 +12,48 @@ $(function() {
     updateButtonVisibility();
     $('#test-type').change(updateButtonVisibility);
 
-    let cnt = 1;
+    let testCaseIdx = 0;
     let testCaseCnt = 1;
     let testCnt = 1;
     let workTaskCnt = 1;
     function generateUnitTestcase() {
+        let testCaseId = $('#teat_id').val() + "_" + testCaseIdx;
         return `<section>
                 <div class="d-flex justify-content-start">
                     <div class="me-4">
                         <div class="d-flex justify-content-start"><label>순번</div>
-                        <span>` + cnt + `</span>
+                        <span>` + testCaseIdx + `</span>
                     </div>&nbsp;&nbsp;&nbsp;
                     <div class="ms-4">
                         <div class="d-flex justify-content-start"><label>테스트케이스 ID&nbsp;&nbsp;&nbsp;<span class="es-star">*</span></label></div>
-                        <input type="text" value="" required ` + $('#disabled').val() + `>
+                        <input type="text" name="testCaseList[` + testCaseIdx + `].testCaseId" value="${testCaseId}" disabled >
                     </div>
                 </div>
                 <br>
                 <div class="d-flex justify-content-start">
                     <div class="me-4">
                         <div class="d-flex justify-content-start"><label>사전조건</label></div>
-                        <textarea class="test-data"` + $('#disabled').val() + `></textarea>
+                        <textarea class="test-data" name="testCaseList[` + testCaseIdx + `].preCondition" required ` + $('#disabled').val() + ` ></textarea>
                     </div>&nbsp;&nbsp;&nbsp;
                     <div class="ms-4">
                         <div class="d-flex justify-content-start"><label>테스트케이스 설명&nbsp;&nbsp;&nbsp;<span class="es-star">*</span></label></div>
-                        <textarea class="test-data"` + $('#disabled').val() + `></textarea>
+                        <textarea class="test-data" name="testCaseList[` + testCaseIdx + `].testCaseCont" ` + $('#disabled').val() + ` ></textarea>
                     </div>
                 </div>
                 <div class="d-flex justify-content-start">
                     <div class="me-4">
                         <div class="d-flex justify-content-start"><label>수행절차</div>
-                        <textarea class="test-data"` + $('#disabled').val() + `></textarea>
+                        <textarea class="test-data" name="testCaseList[` + testCaseIdx + `].preoceedCont" ` + $('#disabled').val() + ` ></textarea>
                     </div>&nbsp;&nbsp;&nbsp;
                     <div class="ms-4">
                         <div class="d-flex justify-content-start"><label>테스트 데이터</label></div>
-                        <textarea class="test-data"` + $('#disabled').val() + `></textarea>
+                        <textarea class="test-data" name="testCaseList[` + testCaseIdx + `].testData" ` + $('#disabled').val() + ` ></textarea>
                     </div>
                 </div>
                 <div class="d-flex justify-content-start">
                     <div class="me-4">
-                        <div class="d-flex justify-content-start"><label>수행절차</div>
-                        <textarea class="test-data"></textarea>
+                        <div class="d-flex justify-content-start"><label>예상결과</div>
+                        <textarea class="test-data" name="testCaseList[` + testCaseIdx + `].estimatedResult" ` + $('#disabled').val() + ` ></textarea>
                     </div>&nbsp;&nbsp;&nbsp;
                 </div>
                </section>
@@ -63,7 +66,7 @@ $(function() {
                     <div class="d-flex justify-content-start">
                         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<div class="me-4">
                             <div class="d-flex justify-content-start"><label>순번</div>
-                            <span>` + cnt + `</span>
+                            <span>` + testCaseIdx + `</span>
                         </div>&nbsp;&nbsp;&nbsp;
                         <div class="ms-4">
                             <div class="d-flex justify-content-start"><label>테스트케이스 ID&nbsp;&nbsp;&nbsp;<span class="es-star">*</span></label></div>
@@ -167,7 +170,7 @@ $(function() {
         }
     });
 
-    $('#test-type').change(function() {
+    $('#testType').change(function() {
         updateButtonVisibility();
 
         let selectedOption = $(this).val();
@@ -180,15 +183,14 @@ $(function() {
                <div class="me-4">
                     <div class="d-flex justify-content-start"><label>기능 ID&nbsp;&nbsp;&nbsp;<span class="es-star">*</span></label></div>
                     <div class="d-flex justify-content-start">
-                        <select id="pri_cd" name="pri_cd" required ` + $('#disabled').val() + ` >
-                            <option value="">선택하세요.</option>
-                            <option value="001">즉시</option>
-                            <option value="002">긴급</option>
-                            <option value="003">높음</option>
-                            <option value="004">보통</option>
-                            <option value="005">낮음</option>
-                        </select>&nbsp;&nbsp;&nbsp;
-                        <button class="custom-button">&nbsp;&nbsp;&nbsp;찾기&nbsp;&nbsp;&nbsp;</button>
+                        <select id="feat" name="featId" required ` + $('#disabled').val() + ` >
+                            <option value="" selected disabled>선택하세요.</option>
+                            <option value="RSTR110"></option>
+                            <option value="RSTR111"></option>
+                            <option value="RSTR123"></option>
+                            <option value="RSTR221"></option>
+                            <option value="RSTR222"></option>
+                        </select>
                     </div>
                 </div><br>
             `;
@@ -205,7 +207,7 @@ $(function() {
         $('#dynamic-content').html(html);
         $(document).on('click', '.tc-btn', function() {
             if (selectedOption === '1') {
-                ++cnt;
+                ++testCaseIdx;
                 $('#dynamic-content').append(generateUnitTestcase());
             }
             else if (selectedOption === '2') {
@@ -223,14 +225,12 @@ $(function() {
             workTaskCnt++;
             let newWorkTask = generateWorkTask(testCaseId);
             $(`.add-new-work-task-btn`).remove();
-            console.log(`work-task_${testCaseId}_${workTaskCnt}`);
             $(work_selector).after(newWorkTask);
         });
     });
 
     $('#dynamic-content').on('click', '.add-test-detail', function() {
         let testCaseId = $(`#test_` + testCaseCnt).text();
-        console.log(testCaseId);
         if (testCaseId) {
             let newDetail = generateTestDetails(testCaseId);
             $(this).before(newDetail);
@@ -241,4 +241,92 @@ $(function() {
     $('.add-new-integration-test').on('click', function() {
         $('#dynamic-content').append(generateIntegrationTest());
     });
+
+    function loadFeatureIdList() {
+        $.ajax({
+            url: '/projects/api/functionIds',
+            type: 'GET',
+            dataType: 'json',
+            success: function(data) {
+                populateFunctionIdOptions(data);
+            },
+            error: function(xhr, status, error) {
+                console.error('기능 ID 리스트를 가져오는 중 오류 발생:', error);
+            }
+        });
+    }
+
+    function populateFunctionIdOptions(data) {
+        const $select = $('#feat');
+        $select.empty();
+        $select.append('<option value="선택하세요." selected disabled></option>');
+
+        $.each(data, function(index, item) {
+            $select.append('<option value="' + item.id + '">' + item.name + '</option>');
+        });
+    }
+
+    $('#test-form').submit(function(e) {
+       e.preventDefault();
+
+        let formData = new FormData(this);
+        let jsonObject = {};
+
+        for (let [name, value] of formData.entries()) {
+            let keys = name.match(/[^\[\]]+/g); // 'testCaseList[0].testCaseId' => ['testCaseList', '0', 'testCaseId']
+            assignValue(jsonObject, keys, value);
+        }
+        console.log(JSON.stringify(jsonObject, null, 2))
+
+        $.ajax({
+            url: API_SERVER + '/projects/tests/register',
+            type: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify(jsonObject),
+            success: function(response) {
+                // 성공 처리
+            },
+            error: function(error) {
+                // 에러 처리
+            }
+        });
+    });
+
+    $('.cancel').click(function(e) {
+        e.preventDefault();
+        location.href = '/projects/tests';
+    });
 });
+
+function assignValue(obj, keys, value) {
+    if (keys[0] === 'testCaseList') {
+        // 'testCaseList'를 배열로 처리
+        if (!obj['testCaseList']) {
+            obj['testCaseList'] = [];
+        }
+
+        let index = parseInt(keys[1], 10); // 배열 인덱스
+        let field = keys[2].slice(1); // 필드 이름
+        console.log(field);
+
+        // 인덱스 위치에 객체가 없으면 생성
+        if (!obj['testCaseList'][index]) {
+            obj['testCaseList'][index] = {};
+        }
+
+        obj['testCaseList'][index][field] = value;
+    } else {
+        // 다른 필드들은 일반적으로 처리
+        let lastKey = keys.pop();
+        let pointer = obj;
+
+        keys.forEach(function(key) {
+            if (!pointer[key]) {
+                pointer[key] = {};
+            }
+            pointer = pointer[key];
+        });
+
+        pointer[lastKey] = value;
+    }
+}

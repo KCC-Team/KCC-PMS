@@ -1,5 +1,6 @@
 package com.kcc.pms.domain.test.controller;
 
+import com.kcc.pms.domain.test.domain.dto.TestInsertRequestDto;
 import com.kcc.pms.domain.test.domain.dto.TestVO;
 import com.kcc.pms.domain.test.service.TestService;
 import jakarta.servlet.http.HttpSession;
@@ -10,6 +11,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequestMapping("/projects/tests")
@@ -38,9 +40,26 @@ public class TestController {
     }
 
     @GetMapping("/register")
-    public String create(Model model) {
+    public String showInsertForm(Model model) {
         model.addAttribute("type", "register");
+        model.addAttribute("testReq", new TestInsertRequestDto());
+//        model.addAttribute("testType", testService.getTestType());
+        model.addAttribute("testType", Map.of(
+                0, "테스트를 선택하세요",
+                1, "단위",
+                2, "통합"
+        ));
+        model.addAttribute("workType", List.of("개발", "테스트"));
+        model.addAttribute("systemType", List.of("WEB", "APP"));
+        model.addAttribute("testStatus", List.of("대기", "진행", "완료"));
         return "test/test";
+    }
+
+    @PostMapping("/register")
+    public String insertTest(Model model, @RequestBody TestInsertRequestDto testReq) {
+        System.out.println(testReq);
+        testService.saveTest(testReq);
+        return "redirect:/projects/tests";
     }
 
     @GetMapping("/{id}")

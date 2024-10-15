@@ -9,4 +9,5 @@ import java.util.Map;
 @Mapper
 public interface TestMapper {
     List<TestVO> findAllByOptions(Map<String, Object> parameters);
+    Integer saveTest(Map<String, Object> parameters);
 }

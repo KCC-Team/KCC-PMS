@@ -54,4 +54,22 @@
             t.test_no, t.test_id, cd_type.cd_dtl_nm, t.test_title, sys_work.sys_ttl, t.test_st_dt, t.test_end_dt, cd_stat.cd_dtl_nm
         ORDER BY t.test_no
     </select>
+
+    <insert id="saveTest" parameterType="map">
+        insert into testmaster
+        (test_no, test_id, test_title, test_cont, stat_cd, type_cd, test_st_dt, test_end_dt, created_dt, prj_no, sys_no, sys_work_no)
+        values
+        (#{test_no, jdbcType=INTEGER}, #{test_id, jdbcType=VARCHAR}, #{test_title, jdbcType=VARCHAR}, #{test_cont, jdbcTypeVARCHAR}, #{test_status, jdbcType=CHAR},
+        #{test_type, jdbcType=CHAR}, #{test_st_dt, jdbcType=DATE}, #{test_end_dt, jdbcType=DATE}, sysdate,
+        #{prj_no, jdbcType=INTEGER}, #{sys_no, jdbcType=INTEGER}, #{work_no, jdbcType=INTEGER})
+    </insert>
+
+    <insert id="saveUnitTestDetails" parameterType="map">
+        insert into testdetail
+        (test_dtl_no, test_no, test_dtl_id, test_no, test_dtl_title, test_dtl_cont, test_dtl_st_dt, test_dtl_end_dt, created_dt, prj_no, sys_no, sys_work_no)
+        values
+        (#{test_dtl_no, jdbcType=INTEGER}, #{test_no, jdbcType=INTEGER}, #{test_no, jdbcType=VARCHAR}, #{test_dtl_id, jdbcType=VARCHAR}, #{test_dtl_title, jdbcType=VARCHAR},
+        #{test_dtl_cont, jdbcType=VARCHAR}, #{test_dtl_st_dt, jdbcType=DATE}, #{test_dtl_end_dt, jdbcType=DATE}, sysdate,
+        #{prj_no, jdbcType=INTEGER}, #{sys_no, jdbcType=INTEGER}, #{work_no, jdbcType=INTEGER})
+    </insert>
 </mapper>

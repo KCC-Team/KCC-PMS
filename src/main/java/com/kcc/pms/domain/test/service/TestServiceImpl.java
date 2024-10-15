@@ -1,5 +1,6 @@
 package com.kcc.pms.domain.test.service;
 
+import com.kcc.pms.domain.test.domain.dto.TestInsertRequestDto;
 import com.kcc.pms.domain.test.domain.dto.TestVO;
 import com.kcc.pms.domain.test.mapper.TestMapper;
 import lombok.RequiredArgsConstructor;
@@ -28,5 +29,10 @@ public class TestServiceImpl implements TestService {
         parameters.put("status", status);
         parameters.put("page", page);
         return testMapper.findAllByOptions(parameters);
+    }
+
+    @Override
+    public void saveTest(TestInsertRequestDto testReq) {
+
     }
 }

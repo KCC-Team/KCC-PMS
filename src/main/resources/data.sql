@@ -147,10 +147,10 @@ CREATE TABLE TestMaster (
     test_cont VARCHAR2(100) NOT NULL,
     stat_cd	CHAR(8) NOT NULL,
     type_cd	CHAR(8) NOT NULL,
-    prj_no NUMBER NOT NULL,
     test_st_dt DATE NULL,
     test_end_dt	DATE NULL,
-    created_date DATE NOT NULL,
+    created_dt DATE NOT NULL,
+    prj_no NUMBER NOT NULL,
     sys_no NUMBER NULL,
     sys_work_no NUMBER NULL
 );
@@ -194,17 +194,17 @@ CREATE TABLE Defect (
 
 ----------------------------------------------------------------------------------------------------------------------
 -- SEQUENCE
-CREATE SEQUENCE seq_usergroup START WITH 1 INCREMENT BY 1;
-CREATE SEQUENCE seq_member START WITH 1 INCREMENT BY 1;
-CREATE SEQUENCE seq_team START WITH 1 INCREMENT BY 1;
 CREATE SEQUENCE seq_project START WITH 1 INCREMENT BY 1;
 CREATE SEQUENCE seq_system START WITH 1 INCREMENT BY 1;
 CREATE SEQUENCE seq_feature START WITH 1 INCREMENT BY 1;
+CREATE SEQUENCE seq_testdetail START WITH 1 INCREMENT BY 1;
+CREATE SEQUENCE seq_testmaster START WITH 1 INCREMENT BY 1;
+CREATE SEQUENCE seq_defect START WITH 1 INCREMENT BY 1;
+CREATE SEQUENCE seq_team START WITH 1 INCREMENT BY 1;
+CREATE SEQUENCE seq_member START WITH 1 INCREMENT BY 1;
+CREATE SEQUENCE seq_usergroup START WITH 1 INCREMENT BY 1;
 CREATE SEQUENCE seq_commoncode START WITH 1 INCREMENT BY 1;
 CREATE SEQUENCE seq_codedetail START WITH 1 INCREMENT BY 1;
-CREATE SEQUENCE seq_testmaster START WITH 1 INCREMENT BY 1;
-CREATE SEQUENCE seq_testdetail START WITH 1 INCREMENT BY 1;
-CREATE SEQUENCE seq_defect START WITH 1 INCREMENT BY 1;
 ----------------------------------------------------------------------------------------------------------------------
 -- ALTER TABLE
 ALTER TABLE Member ADD CONSTRAINT PK_MEMBER PRIMARY KEY (mem_no);

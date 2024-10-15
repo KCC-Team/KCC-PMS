@@ -11,22 +11,22 @@
 <%@ page import="java.util.HashMap" %>
 <%@ page import="java.util.Map" %>
 
-<%
-    // 데이터 목록 준비
-    List<String> tasks = new ArrayList<>();
-    tasks.add("");
-    tasks.add("연결 작업 1");
-    tasks.add("연결 작업 2");
-    tasks.add("연결 작업 3");
-    // JSP 페이지의 Attribute로 데이터 목록을 설정
-    request.setAttribute("tasks", tasks);
+<%--<%--%>
+<%--    // 데이터 목록 준비--%>
+<%--    List<String> tasks = new ArrayList<>();--%>
+<%--    tasks.add("");--%>
+<%--    tasks.add("연결 작업 1");--%>
+<%--    tasks.add("연결 작업 2");--%>
+<%--    tasks.add("연결 작업 3");--%>
+<%--    // JSP 페이지의 Attribute로 데이터 목록을 설정--%>
+<%--    request.setAttribute("tasks", tasks);--%>
 
-    Map<Integer, String> testType = new HashMap<>();
-    testType.put(0, "");
-    testType.put(1, "단위 테스트");
-    testType.put(2, "통합 테스트");
-    request.setAttribute("testType", testType);
-%>
+<%--    Map<Integer, String> testType = new HashMap<>();--%>
+<%--    testType.put(0, "");--%>
+<%--    testType.put(1, "단위 테스트");--%>
+<%--    testType.put(2, "통합 테스트");--%>
+<%--    request.setAttribute("testType", testType);--%>
+<%--%>--%>
 
 <c:set var="type" value="${type}" />
 <c:choose>
@@ -61,92 +61,104 @@
                     <label class="ms-4 fw-bold fs-4 text-black">
                         테스트 정보</label>
                 </div>
-                <div class="info-item ms-5">
-                    <div class="d-flex justify-content-start">
-                        <div class="me-4">
-                            <div class="d-flex justify-content-start"><label>테스트 명&nbsp;&nbsp;&nbsp;<span class="es-star">*</span></label></div>
-                            <input type="text" value="" required ${disabled} >
-                        </div>&nbsp;&nbsp;&nbsp;
-                        <div class="ms-3">
-                            <div class="d-flex justify-content-start"><label>테스트 ID&nbsp;&nbsp;&nbsp;<span class="es-star">*</span></label></div>
-                            <input id="teat_id" type="text" value="" required ${disabled} >
+                <form id="test-form">
+                    <div class="info-item ms-5">
+                        <div class="d-flex justify-content-start">
+                            <div class="me-4">
+                                <div class="d-flex justify-content-start"><label>테스트 명&nbsp;&nbsp;&nbsp;<span class="es-star">*</span></label></div>
+                                <input type="text" name="testTitle" value="${testReq.testTitle}" required ${disabled} >
+                            </div>&nbsp;&nbsp;&nbsp;
+                            <div class="ms-3">
+                                <div class="d-flex justify-content-start"><label>테스트 ID&nbsp;&nbsp;&nbsp;<span class="es-star">*</span></label></div>
+                                <input id="teat_id" type="text" name="testId" value="${testReq.testId}" required ${disabled} >
+                            </div>
                         </div>
-                    </div>
-                    <br>
-                    <div class="d-flex justify-content-start">
-                        <div class="me-3">
-                            <div class="d-flex justify-content-start"><label> 테스트 기간&nbsp;&nbsp;&nbsp;<span class="es-star">*</span></label></div>
-                            <input type="date" id="due_dt" name="due_dt" value="" required ${disabled} >
-                        </div><div><div class="fw-bold fs-1 d-flex justify-content-start"><label>&nbsp;</label></div>~</div>&nbsp;&nbsp;&nbsp;
-                        <div class="ms-3">
-                            <div class="d-flex justify-content-start"><label>&nbsp;&nbsp;&nbsp;</label></div>
-                            <input type="date" id="compl_date" name="compl_date" value="" ${disabled} >
+                        <br>
+                        <div class="d-flex justify-content-start">
+                            <div class="me-3">
+                                <div class="d-flex justify-content-start"><label> 테스트 기간&nbsp;&nbsp;&nbsp;<span class="es-star">*</span></label></div>
+                                <input type="date" id="due_dt" name="testStartDate" value="${testReq.testStartDate}" required ${disabled} >
+                            </div><div><div class="fw-bold fs-1 d-flex justify-content-start"><label>&nbsp;</label></div>~</div>&nbsp;&nbsp;&nbsp;
+                            <div class="ms-3">
+                                <div class="d-flex justify-content-start"><label>&nbsp;&nbsp;&nbsp;</label></div>
+                                <input type="date" id="compl_date" name="testEndDate" value="${testReq.testEndDate}" ${disabled} >
+                            </div>
                         </div>
-                    </div>
-                    <br>
-                    <div class="d-flex justify-content-start">
-                        <div class="me-4">
-                            <div class="d-flex justify-content-start"><label>테스트 구분&nbsp;&nbsp;&nbsp;<span class="es-star">*</span></label></div>
-                            <select name="test-type" id="test-type" required ${disabled}>
-                                <c:forEach var="test" items="${testType}">
-                                    <option value="${test.key}" ${test.key == 0 ? 'selected' : ''}>${test.value}</option>
-                                </c:forEach>
-                            </select>
+                        <br>
+                        <div class="d-flex justify-content-start">
+                            <div class="me-4">
+                                <div class="d-flex justify-content-start"><label>테스트 구분&nbsp;&nbsp;&nbsp;<span class="es-star">*</span></label></div>
+                                <select name="testType" id="testType" required ${disabled}>
+                                    <c:forEach var="test" items="${testType}">
+                                        <option value="${test.key}"
+                                                <c:if test="${test.key == 0}">
+                                                    selected disabled
+                                                </c:if>
+                                        >${test.value}</option>
+                                    </c:forEach>
+                                </select>
+                            </div>
+                            <div class="ms-4 me-4">
+                                <div class="d-flex justify-content-start"><label>상태&nbsp;&nbsp;&nbsp;<span class="es-star">*</span></label></div>
+                                <select name="testStatus" required ${disabled} >
+                                    <c:forEach var="stat" items="${testStatus}">
+                                        <option value="${stat}">${stat}</option>
+                                    </c:forEach>
+                                </select>
+                            </div>
+                            <div class="ms-4">
+                                <div class="d-flex justify-content-start"><label>작성자</label></div>
+                                <span>홍길동</span>
+<%--                                <span>${writer}</span>--%>
+                            </div>
                         </div>
-                        <div class="ms-4 me-4">
-                            <div class="d-flex justify-content-start"><label>상태&nbsp;&nbsp;&nbsp;<span class="es-star">*</span></label></div>
-                            <select name="test-status" required ${disabled} >
-                                <c:forEach var="task" items="${tasks}">
-                                    <option value="${task}">${task}</option>
-                                </c:forEach>
-                            </select>
+                        <br>
+                        <div class="d-flex justify-content-start">
+                            <div class="me-4">
+                                <div class="d-flex justify-content-start"><label>시스템 분류</label></div>
+                                <select name="systemType" required ${disabled} >
+                                    <c:forEach var="type" items="${systemType}">
+                                        <option value="${type}">${type}</option>
+                                    </c:forEach>
+                                </select>
+                            </div>
+                            <div class="ms-4 me-4">
+                                <div class="d-flex justify-content-start"><label>업무 구분</label></div>
+                                <select name="workType" required ${disabled} >
+                                    <c:forEach var="type" items="${workType}">
+                                        <option value="${type}">${type}</option>
+                                    </c:forEach>
+                                </select>
+                            </div>
                         </div>
-                        <div class="ms-4">
-                            <div class="d-flex justify-content-start"><label>작성자</label></div>
-                            <span>홍길동</span>
+                        <br><br>
+                        <div class="d-flex justify-content-start">
+                            <div class="me-4">
+                                <div class="d-flex justify-content-start"><label>테스트 설명&nbsp;&nbsp;&nbsp;<span class="es-star">*</span></label></div>
+                                <textarea id="test-txt" name="testCont" required ${disabled} >${testReq.testCont}</textarea>
+                                <div class="word-count">0 / 500</div>
+                            </div>
                         </div>
-                    </div>
-                    <br>
-                    <div class="d-flex justify-content-start">
-                        <div class="me-4">
-                            <div class="d-flex justify-content-start"><label>시스템 분류</label></div>
-                            <select name="system-type" required ${disabled} >
-                                <c:forEach var="task" items="${tasks}">
-                                    <option value="${task}">${task}</option>
-                                </c:forEach>
-                            </select>
-                        </div>
-                        <div class="ms-4 me-4">
-                            <div class="d-flex justify-content-start"><label>업무 구분</label></div>
-                            <select name="work-type" required ${disabled} >
-                                <c:forEach var="task" items="${tasks}">
-                                    <option value="${task}">${task}</option>
-                                </c:forEach>
-                            </select>
+                        <br>
+                        <div id="dynamic-content"></div>
+                        <div class="d-flex justify-content-center" style="display: none;">
+                            <button class="custom-button tc-btn fs-5">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                테스트케이스 추가
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</button>
                         </div>
                     </div>
                     <br><br>
-                    <div class="d-flex justify-content-start">
-                        <div class="me-4">
-                            <div class="d-flex justify-content-start"><label>테스트 설명&nbsp;&nbsp;&nbsp;<span class="es-star">*</span></label></div>
-                            <textarea id="test-txt" name="test-status" required ${disabled} ></textarea>
-                            <div class="word-count">0 / 500</div>
-                        </div>
+                    <div class="d-flex justify-content-end pe-5">
+                        <button type="submit" class="custom-button">&nbsp;&nbsp;&nbsp;&nbsp;제출&nbsp;&nbsp;&nbsp;&nbsp;</button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        <button class="custom-button cancel" style="background-color: #8B8B8B">&nbsp;&nbsp;&nbsp;&nbsp;취소&nbsp;&nbsp;&nbsp;&nbsp;</button>
                     </div>
-                    <br>
-                    <div id="dynamic-content"></div>
-                    <div class="d-flex justify-content-center" style="display: none;">
-                        <button class="custom-button tc-btn">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                            테스트케이스 추가
-                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</button>
-                    </div>
-                </div>
+                </form>
             </section>
         </div>
     </div>
 
 
-
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-serializeJSON/3.2.1/jquery.serializejson.min.js"></script>
     <script src="../../../resources/test/js/test.js"></script>
 </main>
 
