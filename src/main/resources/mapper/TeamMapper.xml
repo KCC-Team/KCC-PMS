@@ -4,7 +4,6 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.kcc.pms.domain.team.mapper.TeamMapper">
-    <cache />
 
     <select id="getTeamList" resultType="com.kcc.pms.domain.team.model.dto.TeamResponseDto">
         SELECT t.tm_no as key,
