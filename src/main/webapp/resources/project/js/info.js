@@ -82,8 +82,8 @@ $(document).ready(function () {
         if ($('#type').val() == 'view') {
             $.ajax({
                 url: '/projects/api/project',
-                type: 'Patch',
-                data: $('#project_form').serialize(),
+                type: 'PUT',
+                data: $(this).serialize(),
                 success: function(response) {
                     alert('프로젝트가 수정되었습니다.');
                 },
