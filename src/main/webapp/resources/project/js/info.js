@@ -67,7 +67,7 @@ $(document).ready(function () {
                 type: 'POST',
                 data: $(this).serialize(),
                 success: function (response) {
-                    alert('프로젝트가 정상 등록되었습니다.');
+                    alert('프로젝트가 등록되었습니다.');
                     location.href = "/projects/list";
                 },
                 error: function (xhr, status, error) {
@@ -85,7 +85,7 @@ $(document).ready(function () {
                 type: 'Patch',
                 data: $('#project_form').serialize(),
                 success: function(response) {
-                    alert('프로젝트가 정상 수정되었습니다.');
+                    alert('프로젝트가 수정되었습니다.');
                 },
                 error: function(xhr, status, error) {
                     console.error('에러:', xhr.responseText);

@@ -10,6 +10,9 @@ gantt.locale = {
     }
 };
 
+gantt.config.row_height = 40;
+gantt.config.scale_height = 40;
+
 gantt.config.date_format = "%Y-%m-%d";  // 날짜 형식을 명시적으로 설정
 gantt.config.date_scale = "%d";  // 날짜 형식 설정
 gantt.config.subscales = [{unit: "month", step: 1, date: "%Y-%m"}];  // 월 단위 보조 스케일
@@ -17,18 +20,18 @@ gantt.config.subscales = [{unit: "month", step: 1, date: "%Y-%m"}];  // 월 단�
 
 // Gantt 그리드 설정
 gantt.config.columns = [
-    {name: "id", label: "순번", width: 50, resize: true},
+    {name: "id", label: "순번", width: 40, resize: true},
     {name: "text", label: "작업명", width: 200, tree: true, resize: true},
-    {name: "tsk_stat_cd", label: "상태", width: 50, resize: true},
+    {name: "tsk_stat_cd", label: "상태", width: 45, resize: true},
     {name: "pre_st_dt", label: "예정 시작일", align: "center", width: 80, resize: true},
     {name: "pre_end_dt", label: "예정 종료일", align: "center", width: 80, resize: true},
     {name: "start_date", label: "시작일", align: "center", width: 80, resize: true},
     {name: "end_date", label: "종료일", align: "center", width: 80, resize: true},
     {name: "progress", label: "진척도", align: "center", width: 60, template: function(task) { return task.progress * 100 + "%"; }, resize: true},
     // {name: "weight_val", label: "가중치", align: "center", width: 70, template: function(task) { return task.weight_val || ""; }, resize: true},
-    {name: "ante_task_no", label: "선행 작업", align: "center", width: 60, template: function(task) { return task.ante_task_no || ""; }, resize: true},
-    {name: "manager", label: "담당자", align: "center", width: 100, template: function(task) { return task.manager || ""; }, resize: true},
-    {name: "addbtn", label: "", width: 44, align: "center", template:
+    {name: "ante_task_no", label: "선행작업", align: "center", width: 47, template: function(task) { return task.ante_task_no || ""; }, resize: true},
+    {name: "manager", label: "담당자", align: "center", width: 90, template: function(task) { return task.manager || ""; }, resize: true},
+    {name: "addbtn", label: "", width: 30, align: "center", template:
             function(task) {
                 return "<button class='add-wbs'><i class=\"fa-regular fa-square-plus\"></i></button>";
             }
@@ -64,11 +67,11 @@ gantt.config.columns = [
 // 샘플 데이터
 var tasks = {
     data: [
-        {id: "1", text: "A업무시스템", pre_st_dt: "2024-02-01", pre_end_dt: "2024-02-28", start_date: "2024-02-28", end_date: "2024-03-03", progress: 0.5, ante_task_no: "", tsk_stat_cd: "001", sys_no: "시스템 A", weight_val: 2, manager: "김철수", rel_out_nm: "문서 A", par_task_no: "부모1 > 자식"},  // 부모 작업
-        {parent: "1", id: "1", text: "A업무시스템 작업1", pre_st_dt: "2024-02-01", pre_end_dt: "2024-02-28", start_date: "2024-02-28", end_date: "2024-03-05", progress: 0.5, ante_task_no: "1", tsk_stat_cd: "001", sys_no: "시스템 A", weight_val: 2, manager: "김철수", rel_out_nm: "문서 A", par_task_no: "부모1 > 자식"},  // 부모 작업
-        {parent: "1", id: "2", text: "A업무시스템 작업2", pre_st_dt: "2024-06-01", pre_end_dt: "2024-06-28", start_date: "2024-06-01", end_date: "2024-06-28", progress: 0.5, ante_task_no: "1.1", tsk_stat_cd: "001", sys_no: "시스템 A", weight_val: 2, manager: "김철수", rel_out_nm: "문서 A", par_task_no: "부모1 > 자식"},  // 부모 작업
-        {id: "2", text: "B업무시스템", pre_st_dt: "2024-02-01", pre_end_dt: "2024-02-28", start_date: "2024-02-28", end_date: "2024-03-05", progress: 0.5, ante_task_no: "1", tsk_stat_cd: "001", sys_no: "시스템 A", weight_val: 2, manager: "김철수", rel_out_nm: "문서 A", par_task_no: "부모1 > 자식"},  // 부모 작업
-        {parent: "2", id: "1", text: "A업무시스템 작업2", pre_st_dt: "2024-06-01", pre_end_dt: "2024-06-28", start_date: "2024-06-01", end_date: "2024-06-28", progress: 0.5, ante_task_no: "1.1", tsk_stat_cd: "001", sys_no: "시스템 A", weight_val: 2, manager: "김철수", rel_out_nm: "문서 A", par_task_no: "부모1 > 자식"},  // 부모 작업
+        {id: "1", text: "A업무시스템", pre_st_dt: "2024-02-01", pre_end_dt: "2024-02-28", start_date: "2024-02-28", end_date: "2024-03-03", progress: 0.5, ante_task_no: "", tsk_stat_cd: "진행중", sys_no: "시스템 A", weight_val: 2, manager: "김철수", rel_out_nm: "문서 A", par_task_no: "부모1 > 자식"},  // 부모 작업
+        {parent: "1", id: "2", text: "A업무시스템 작업1", pre_st_dt: "2024-02-01", pre_end_dt: "2024-02-28", start_date: "2024-02-28", end_date: "2024-03-05", progress: 0.5, ante_task_no: "1", tsk_stat_cd: "진행중", sys_no: "시스템 A", weight_val: 2, manager: "김철수", rel_out_nm: "문서 A", par_task_no: "부모1 > 자식"},  // 부모 작업
+        {parent: "1", id: "3", text: "A업무시스템 작업2", pre_st_dt: "2024-06-01", pre_end_dt: "2024-06-28", start_date: "2024-06-01", end_date: "2024-06-28", progress: 0.5, ante_task_no: "1.1", tsk_stat_cd: "진행중", sys_no: "시스템 A", weight_val: 2, manager: "김철수", rel_out_nm: "문서 A", par_task_no: "부모1 > 자식"},  // 부모 작업
+        {id: "2", text: "B업무시스템", pre_st_dt: "2024-02-01", pre_end_dt: "2024-02-28", start_date: "2024-02-28", end_date: "2024-03-05", progress: 0.5, ante_task_no: "1", tsk_stat_cd: "진행중", sys_no: "시스템 A", weight_val: 2, manager: "김철수", rel_out_nm: "문서 A", par_task_no: "부모1 > 자식"},  // 부모 작업
+        {parent: "2", id: "1", text: "A업무시스템 작업2", pre_st_dt: "2024-06-01", pre_end_dt: "2024-06-28", start_date: "2024-06-01", end_date: "2024-06-28", progress: 0.5, ante_task_no: "1.1", tsk_stat_cd: "진행중", sys_no: "시스템 A", weight_val: 2, manager: "김철수", rel_out_nm: "문서 A", par_task_no: "부모1 > 자식"},  // 부모 작업
     ]
 };
 
@@ -154,6 +157,10 @@ gantt.init("gantt_here");  // Gantt 차트 초기화
 gantt.parse(tasks);  // 작업 데이터 로드
 
 
+gantt.eachTask(function(task) {
+    gantt.open(task.id);  // 각 작업의 트리를 확장
+});
+
 // 변경 사항 확인
 function logCurrentTasks() {
     var currentTasks = gantt.serialize();
@@ -187,11 +194,14 @@ gantt.attachEvent("onGanttRender", function() {
 
 
 $(document).on("click", ".add-wbs", function() {
-    $('.add-wbs-info').trigger("click");
+    // 순번
+    let tsk_num = $(this).parent().parent().parent().find('.gantt_tree_content:eq(0)').text();
 
-    // 자기 자신 번호
-    console.log( $(this).parent().parent().parent().find('.gantt_tree_content:eq(0)').text() );
-    return false;
+    window.open(
+        "/projects/wbsInfo?tsk_num=" + tsk_num,
+        "프로젝트WBS",
+        "width=950, height=350, resizable=yes"
+    );
 });
 
 

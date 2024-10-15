@@ -1,14 +1,14 @@
-DROP TABLE TestDetail;
-DROP TABLE TestMaster;
-DROP TABLE Feature;
-DROP TABLE System;
-DROP TABLE CodeDetail;
-DROP TABLE CommonCode;
-DROP TABLE ProjectMember;
-DROP TABLE Project;
-DROP TABLE Team;
-DROP TABLE Member;
-DROP TABLE UserGroup;
+DROP TABLE TestDetail CASCADE CONSTRAINTS;
+DROP TABLE TestMaster CASCADE CONSTRAINTS;
+DROP TABLE Feature CASCADE CONSTRAINTS;
+DROP TABLE System CASCADE CONSTRAINTS;
+DROP TABLE CodeDetail CASCADE CONSTRAINTS;
+DROP TABLE CommonCode CASCADE CONSTRAINTS;
+DROP TABLE ProjectMember CASCADE CONSTRAINTS;
+DROP TABLE Project CASCADE CONSTRAINTS;
+DROP TABLE Team CASCADE CONSTRAINTS;
+DROP TABLE Member CASCADE CONSTRAINTS;
+DROP TABLE UserGroup CASCADE CONSTRAINTS;
 
 DROP SEQUENCE seq_project;
 DROP SEQUENCE seq_team;
@@ -16,8 +16,6 @@ DROP SEQUENCE seq_member;
 DROP SEQUENCE seq_usergroup;
 DROP SEQUENCE seq_system;
 DROP SEQUENCE seq_feature;
-DROP SEQUENCE seq_commoncode;
-DROP SEQUENCE seq_codedetail;
 DROP SEQUENCE seq_testmaster;
 DROP SEQUENCE seq_testdetail;
 
@@ -177,8 +175,6 @@ CREATE SEQUENCE seq_team START WITH 1 INCREMENT BY 1;
 CREATE SEQUENCE seq_project START WITH 1 INCREMENT BY 1;
 CREATE SEQUENCE seq_system START WITH 1 INCREMENT BY 1;
 CREATE SEQUENCE seq_feature START WITH 1 INCREMENT BY 1;
-CREATE SEQUENCE seq_commoncode START WITH 1 INCREMENT BY 1;
-CREATE SEQUENCE seq_codedetail START WITH 1 INCREMENT BY 1;
 CREATE SEQUENCE seq_testmaster START WITH 1 INCREMENT BY 1;
 CREATE SEQUENCE seq_testdetail START WITH 1 INCREMENT BY 1;
 ----------------------------------------------------------------------------------------------------------------------
@@ -217,14 +213,14 @@ ALTER TABLE TestDetail ADD CONSTRAINT fk_sys_work_no_006 FOREIGN KEY (sys_work_n
 -- INDEX
 ----------------------------------------------------------------------------------------------------------------------
 -- INSERT
-INSERT INTO UserGroup (grp_no, grp_nm, par_grp_no) VALUES (1, '공공', NULL);
-INSERT INTO UserGroup (grp_no, grp_nm, par_grp_no) VALUES (2, 'SI', 1);
-INSERT INTO UserGroup (grp_no, grp_nm, par_grp_no) VALUES (3, 'SI 1팀', 2);
-INSERT INTO UserGroup (grp_no, grp_nm, par_grp_no) VALUES (4, 'SI 2팀', 2);
-INSERT INTO UserGroup (grp_no, grp_nm, par_grp_no) VALUES (5, '금융', NULL);
-INSERT INTO UserGroup (grp_no, grp_nm, par_grp_no) VALUES (6, 'RDD', NULL);
-INSERT INTO UserGroup (grp_no, grp_nm, par_grp_no) VALUES (7, '신사업', NULL);
-INSERT INTO UserGroup (grp_no, grp_nm, par_grp_no) VALUES (8, '클라우드', NULL);
+INSERT INTO UserGroup (grp_no, grp_nm, par_grp_no) VALUES (seq_usergroup.nextval, '공공', NULL);
+INSERT INTO UserGroup (grp_no, grp_nm, par_grp_no) VALUES (seq_usergroup.nextval, 'SI', 1);
+INSERT INTO UserGroup (grp_no, grp_nm, par_grp_no) VALUES (seq_usergroup.nextval, 'SI 1팀', 2);
+INSERT INTO UserGroup (grp_no, grp_nm, par_grp_no) VALUES (seq_usergroup.nextval, 'SI 2팀', 2);
+INSERT INTO UserGroup (grp_no, grp_nm, par_grp_no) VALUES (seq_usergroup.nextval, '금융', NULL);
+INSERT INTO UserGroup (grp_no, grp_nm, par_grp_no) VALUES (seq_usergroup.nextval, 'RDD', NULL);
+INSERT INTO UserGroup (grp_no, grp_nm, par_grp_no) VALUES (seq_usergroup.nextval, '신사업', NULL);
+INSERT INTO UserGroup (grp_no, grp_nm, par_grp_no) VALUES (seq_usergroup.nextval, '클라우드', NULL);
 
 INSERT INTO CommonCode VALUES ('PMS017', '직위코드', 'Y');
 INSERT INTO CommonCode VALUES ('PMS001', '프로젝트상태코드', 'Y');
@@ -329,28 +325,34 @@ INSERT INTO CodeDetail VALUES ('PMS01705', 'PMS017', '주임', 5, 'Y');
 INSERT INTO CodeDetail VALUES ('PMS01706', 'PMS017', '사원', 6, 'Y');
 
 INSERT INTO Member (mem_no, grp_no, login_id, pw, mem_nm, phone_no, email, auth_cd, pos_nm, birth_dt, tech_grd_cd, org, use_yn, rec_prj)
-VALUES (1, 3, 'user1', 'pw1', '홍길동', '010-1234-5678', 'hong@example.com', 'PMS01501', 'PMS01706', '1990-01-01', 'PMS01503', '공공', 'Y', NULL);
+VALUES (seq_member.nextval, 3, 'user1', 'pw1', '홍길동', '010-1234-5678', 'hong@example.com', 'PMS01501', 'PMS01706', '1990-01-01', 'PMS01503', '공공', 'Y', NULL);
+
+INSERT INTO Member (mem_no, grp_no, login_id, pw, mem_nm, phone_no, email, auth_cd, pos_nm, birth_dt, tech_grd_cd, org, use_yn, rec_prj)
+VALUES (seq_member.nextval, 3, 'user2', 'pw2', '김철수', '010-9876-5432', 'kim@example.com', 'PMS01501', 'PMS01703', '1992-05-21', 'PMS01502', 'SI', 'Y', NULL);
+
+INSERT INTO Member (mem_no, grp_no, login_id, pw, mem_nm, phone_no, email, auth_cd, pos_nm, birth_dt, tech_grd_cd, org, use_yn, rec_prj)
+VALUES (seq_member.nextval, 3, 'user3', 'pw2', '박길순', '010-9876-5432', 'kim@example.com', 'PMS01501', 'PMS01703', '1992-05-21', 'PMS01502', 'SI', 'Y', NULL);
 
 INSERT INTO project (prj_no, prj_title, prj_cont, stat_cd, prg, org, pre_st_dt, pre_end_dt, st_dt, end_dt, use_yn, reg_id, reg_dt, mod_dt)
-VALUES (1, '프로젝트1', '프로젝트1 내용', 'PMS00101', 0, '공공', '2021-01-01', '2021-01-01', '2021-01-01', '2021-01-01', 'Y', 'user1', '2021-01-01', '2021-01-01');
+VALUES (seq_project.nextval, '차세대 공공 프로젝트', '프로젝트 내용', 'PMS00102', 0, '공공', '2021-01-01', '2021-01-01', '2021-01-01', '2021-01-01', 'Y', 'user1', '2021-01-01', '2021-01-01');
 
 INSERT INTO team (tm_no, tm_nm, tm_cont, use_yn, par_tm_no, prj_no, sys_no, reg_id, reg_dt, mod_id, mod_dt)
-VALUES (1, '팀1', '팀1 내용', 'Y', NULL, 1, NULL, 'user1', '2021-01-01', NULL, NULL);
+VALUES (seq_team.nextval, '팀1', '팀1 내용', 'Y', NULL, 1, NULL, 'user1', '2021-01-01', NULL, NULL);
 
 INSERT INTO projectMember (mem_no, tm_no, prj_no, prj_auth_cd, pre_start_dt, pre_end_dt, start_dt, end_dt, use_yn, reg_id, reg_dt, mod_id, mod_dt)
-VALUES (1, 1, 1, 'PMS00203', '2021-01-01', '2021-01-01', '2021-01-01', '2021-01-01', 'Y', 'user1', '2021-01-01', NULL, NULL);
+VALUES (1, 1, 1, 'PMS00201', '2021-01-01', '2021-01-01', '2021-01-01', '2021-01-01', 'Y', 'user1', '2021-01-01', NULL, NULL);
 
 INSERT INTO System (sys_no, sys_ttl, sys_cont, use_yn, prj_no, par_sys_no)
-VALUES (1, 'A 업무 시스템', '시스템1 내용', 'Y', 1, NULL);
+VALUES (seq_system.nextval, 'A 업무 시스템', '시스템1 내용', 'Y', 1, NULL);
 
 INSERT INTO Feature (feat_no, feat_id, feat_title, feat_cont, pre_st_dt, pre_end_dt, st_dt, end_dt, stat_cd, pri_cd, prg, diff_cd, use_yn, sys_no, mem_no, tm_no, prj_no)
-VALUES (1, 'F001', '기능1', '기능1 내용', '2021-01-01', '2021-01-01', '2021-01-01', '2021-01-01', 'PMS00901', 'PMS00603', 0, 'PMS01103', 'Y', 1, 1, 1, 1);
+VALUES (seq_feature.nextval, 'F001', '기능1', '기능1 내용', '2021-01-01', '2021-01-01', '2021-01-01', '2021-01-01', 'PMS00901', 'PMS00603', 0, 'PMS01103', 'Y', 1, 1, 1, 1);
 
 INSERT INTO TestMaster (test_no, test_title, test_cont, stat_cd, type_cd, class_cd, prj_no, test_st_dt, test_end_dt, created_date)
-VALUES (1, '테스트1', '테스트1 내용', '001', '001', '001', 1, '2021-01-01', '2021-01-01', '2021-01-01');
+VALUES (seq_testmaster.nextval, '테스트1', '테스트1 내용', '001', '001', '001', 1, '2021-01-01', '2021-01-01', '2021-01-01');
 
 INSERT INTO TestDetail (test_dtl_no, test_dtl_id, wrk_proc_dtl, test_data, prd, test_cont, test_no, test_st_dt, test_result_cd, mem_no, pre_cond, note, sys_no, sys_work_no)
-VALUES (1, 'TD001', '작업절차1', '테스트데이터1', '제품1', '테스트내용1', 1, '2021-01-01', '001', 1, '사전조건1', '비고1', 1, 1);
+VALUES (seq_testdetail.nextval, 'TD001', '작업절차1', '테스트데이터1', '제품1', '테스트내용1', 1, '2021-01-01', '001', 1, '사전조건1', '비고1', 1, 1);
 
 -----------------------------------------------------------------------------------------------------------------
 COMMIT;

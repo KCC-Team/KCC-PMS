@@ -7,7 +7,7 @@
     padding: 6px 10px 6px 20px;
     border-radius: 10px;
     border: 1px #ddd solid;
-    margin: 10px 10px 10px 0px;
+    margin: 10px 0px 10px 0px;
 }
 
 .action-buttons {
@@ -25,7 +25,7 @@
     border-radius: 5px;
     color: white;
     cursor: pointer;
-    background-color: #a0ce4e;
+    background-color: #2898b0;
 }
 
 
@@ -72,83 +72,4 @@
 
 .add-wbs-info {
     display: none;
-}
-
-
-/*modal*/
-.modal-dialog {
-    margin-right: 650px !important;
-}
-
-.modal-content {
-    width: 950px !important;
-    margin-right: 100px !important;
-}
-
-.form-table {
-    width: 100%;
-    border-collapse: collapse;
-}
-
-.form-table td, .form-table th {
-    border: 1px solid #ddd;
-    border-radius: 5px !important;
-    padding: 8px;
-    vertical-align: middle;
-}
-
-.form-table th {
-    background-color: #f2f2f2;
-    text-align: left;
-    width: 140px;
-}
-
-.form-group {
-    margin-bottom: 10px;
-}
-
-.form-table input,
-.form-table select {
-    width: 100%;
-    padding: 5px;
-    box-sizing: border-box;
-    border-radius: 5px !important;
-    border: 2px solid #ddd;
-}
-
-
-.btn-select-user {
-    padding: 5px 9px 5px 9px;
-    border: none;
-    border-radius: 5px;
-    color: white;
-    cursor: pointer;
-    background-color: #a0ce4e;
-    margin-bottom: 5px;
-}
-
-.btn-select-output {
-    padding: 5px 9px 5px 9px;
-    border: none;
-    border-radius: 5px;
-    color: white;
-    cursor: pointer;
-    background-color: #a0ce4e;
-}
-
-.btn-save-wbs {
-    padding: 5px 9px 5px 9px;
-    border: none;
-    border-radius: 5px;
-    color: white;
-    cursor: pointer;
-    background-color: #a0ce4e;
-}
-
-#mem_no {
-    width: 35% !important;
-}
-
-.required-icon {
-    color: red;
 }

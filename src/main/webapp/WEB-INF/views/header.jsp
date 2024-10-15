@@ -14,7 +14,7 @@
         projectTitle = "프로젝트 현황";
     }
 
-    String prjTitle = "";
+    String prjTitle = "차세대 공공 프로젝트";
     if ((String) session.getAttribute("prjTitle") != null) {
         prjTitle = (String) session.getAttribute("prjTitle");
     }
