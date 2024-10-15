@@ -73,7 +73,9 @@ $(document.body).ready(function () {
                     pre_end_dt: member.preEndDate ? member.preEndDate : "",
                     st_dt: member.startDate ? member.startDate : "",
                     end_dt: member.endDate ? member.endDate : "",
-                    techGrade: member.tech
+                    techGrade: member.tech,
+                    teamNo : member.teamNo,
+                    teamName : member.teamName
                 });
             }
         });
@@ -82,9 +84,8 @@ $(document.body).ready(function () {
     });
 
 
-
     // 적용 버튼 클릭
-    $('#apply').on('click', function() {
+    $(document).on('click', '#apply', function() {
         insertProject();
     });
 
@@ -92,32 +93,38 @@ $(document.body).ready(function () {
     loadProjectMember();
 
     $('#add-member-by-prjmem').hide();
-});
 
-checkProject();
+    checkProject();
+});
 
 function checkProject() {
     let urlParams = new URLSearchParams(window.location.search);
     let typeValue = urlParams.get('type');
     if (typeValue === 'project') {
         document.getElementById('project_member_total').hidden = true;
+    } else if (typeValue === 'wbs') {
+        document.getElementById('group_total').hidden = true;
+        $('#project_member_total').trigger('click');
     }
 }
 
 function insertProject() {
-    let urlParams = new URLSearchParams(window.location.search);
-    let typeValue = urlParams.get('type');
-    if (typeValue === 'project') {
-        if (window.opener) {
-            if (addedMembers.length > 1) {
-                alert("PM은 1명만 등록이 가능합니다.")
-                return false;
-            }
-            window.opener.postMessage(addedMembers, "http://localhost:8085");
-            window.close();
-        } else {
-            console.log("부모 창을 인식하지 못했습니다.");
+    var urlParams = new URLSearchParams(window.location.search);
+    var typeValue = urlParams.get('type');
+
+    if (window.opener && (typeValue === 'project' || typeValue === 'wbs')) {
+        if (typeValue === 'project' && addedMembers.length > 1) {
+            alert("PM은 1명만 등록이 가능합니다.")
+            return false;
         }
+        if (typeValue === 'project' && addedMembers[0].auth != 'PMS00201') {
+            alert("PM만 등록 가능합니다.")
+            return false;
+        }
+        window.opener.postMessage(addedMembers, "http://localhost:8085");
+        window.close();
+    } else {
+        console.log("부모 창을 인식하지 못했습니다.");
     }
 }
 

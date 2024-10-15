@@ -3,7 +3,7 @@
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <title>jstree 예제</title>
+    <title>인력 등록</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.3.12/themes/default/style.min.css" />
     <!-- ax5ui -->

@@ -112,8 +112,6 @@
         FROM
             project P
         JOIN
-            team T ON P.prj_no = T.prj_no
-        JOIN
             projectmember PM ON P.prj_no = PM.prj_no
         JOIN
             member M ON PM.mem_no = M.mem_no
@@ -150,11 +148,9 @@
 
     <select id="getProjectCount" resultType="int">
         SELECT
-            COUNT(prj_no)
+            COUNT(P.prj_no)
         FROM
             project P
-        JOIN
-            team T ON P.prj_no = T.prj_no
         JOIN
             projectmember PM ON P.prj_no = PM.prj_no
         JOIN
@@ -188,14 +184,13 @@
         FROM
             project P
         JOIN
-            team T ON P.prj_no = T.prj_no
-        JOIN
             projectmember PM ON P.prj_no = PM.prj_no
         JOIN
             member M ON PM.mem_no = M.mem_no
-        where
-            M.login_id = #{login_id}   -- 로그인 아이디
-            and P.use_yn = 'Y'         -- 사용
+        WHERE
+            M.login_id = #{login_id}
+        AND p.stat_cd IN ('PMS00101', 'PMS00102')
+        AND P.use_yn = 'Y'
         order by P.prj_no desc
     </select>
 
