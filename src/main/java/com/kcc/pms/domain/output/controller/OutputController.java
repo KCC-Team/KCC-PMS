@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping("/outputs")
 public class OutputController {
 
-    @GetMapping("/list")
+    @GetMapping
     public String list() {
         return "output/list";
     }

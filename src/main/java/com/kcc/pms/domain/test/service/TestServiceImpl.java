@@ -1,8 +1,9 @@
 package com.kcc.pms.domain.test.service;
 
-import com.kcc.pms.domain.test.domain.dto.TestListVO;
+import com.kcc.pms.domain.test.domain.dto.TestVO;
 import com.kcc.pms.domain.test.mapper.TestMapper;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -10,6 +11,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
@@ -17,13 +19,14 @@ public class TestServiceImpl implements TestService {
     private final TestMapper testMapper;
 
     @Override
-    public List<TestListVO> getTestList(Long prj_no, Long systemId, String work_type, String test_type, int page) {
-        Map<String, String> parameters = new HashMap<>();
-        parameters.put("prj_no", prj_no.toString());
-        parameters.put("systemId", systemId.toString());
-        parameters.put("work_type", work_type);
+    public List<TestVO> getTestList(Integer prj_no, Integer sys_no, Integer work_no, String test_type, String status, int page) {
+        Map<String, Object> parameters = new HashMap<>();
+        parameters.put("prj_no", prj_no);
+        parameters.put("sys_no", sys_no);
+        parameters.put("work_no", work_no);
         parameters.put("test_type", test_type);
-        parameters.put("page", String.valueOf(page));
-        return testMapper.findAllByOptions(parameters).orElseThrow();
+        parameters.put("status", status);
+        parameters.put("page", page);
+        return testMapper.findAllByOptions(parameters);
     }
 }
