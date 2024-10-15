@@ -117,6 +117,10 @@ function insertProject() {
             alert("PM은 1명만 등록이 가능합니다.")
             return false;
         }
+        if (typeValue === 'project' && addedMembers[0].auth != 'PMS00201') {
+            alert("PM만 등록 가능합니다.")
+            return false;
+        }
         window.opener.postMessage(addedMembers, "http://localhost:8085");
         window.close();
     } else {

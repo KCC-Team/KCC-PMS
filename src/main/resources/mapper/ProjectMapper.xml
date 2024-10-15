@@ -112,8 +112,6 @@
         FROM
             project P
         JOIN
-            team T ON P.prj_no = T.prj_no
-        JOIN
             projectmember PM ON P.prj_no = PM.prj_no
         JOIN
             member M ON PM.mem_no = M.mem_no
@@ -150,11 +148,9 @@
 
     <select id="getProjectCount" resultType="int">
         SELECT
-            COUNT(prj_no)
+            COUNT(P.prj_no)
         FROM
             project P
-        JOIN
-            team T ON P.prj_no = T.prj_no
         JOIN
             projectmember PM ON P.prj_no = PM.prj_no
         JOIN
@@ -187,8 +183,6 @@
             p.prj_title
         FROM
             project P
-        JOIN
-            team T ON P.prj_no = T.prj_no
         JOIN
             projectmember PM ON P.prj_no = PM.prj_no
         JOIN
