@@ -73,4 +73,44 @@
         </if>
         WHERE tm_no = #{teamNo}
     </update>
+
+    <select id="getTeamByProject" resultType="com.kcc.pms.domain.team.model.vo.Team">
+        SELECT tm_no AS teamNo,
+               tm_nm AS teamName,
+               par_tm_no AS parentNo,
+               order_no AS orderNo
+        FROM team
+        WHERE prj_no = #{projectNo}
+    </select>
+
+    <select id="getMaxOrderNo" resultType="Integer">
+        SELECT MAX(order_no) FROM team WHERE par_tm_no = #{parentNo}
+    </select>
+
+    <insert id="createTeam" parameterType="com.kcc.pms.domain.team.model.vo.Team">
+        INSERT INTO team (
+            tm_no,
+            tm_nm,
+            tm_cont,
+            use_yn,
+            par_tm_no,
+            prj_no,
+            sys_no,
+            order_no
+        ) VALUES (
+                     SEQ_TEAM.NEXTVAL,
+                     #{teamName},
+                     #{teamContent},
+                    'Y',
+                     #{parentNo},
+                     #{projectNo},
+                    <if test="systemNo != null">
+                        #{systemNo}
+                    </if>
+                    <if test="systemNo == null">
+                        NULL
+                    </if>,
+                     #{orderNo}
+                 )
+    </insert>
 </mapper>

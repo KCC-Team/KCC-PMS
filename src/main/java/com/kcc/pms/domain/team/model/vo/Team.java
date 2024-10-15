@@ -12,4 +12,7 @@ public class Team implements Serializable {
     private Integer parentNo;
     private String teamName;
     private int orderNo;
+    private Integer systemNo;
+    private String teamContent;
+    private Long projectNo;
 }

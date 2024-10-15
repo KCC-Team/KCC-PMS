@@ -1,6 +1,7 @@
 package com.kcc.pms.domain.team.service;
 
 import com.kcc.pms.domain.team.mapper.TeamMapper;
+import com.kcc.pms.domain.team.model.dto.TeamRequestDto;
 import com.kcc.pms.domain.team.model.dto.TeamResponseDto;
 import com.kcc.pms.domain.team.model.vo.Team;
 import lombok.RequiredArgsConstructor;
@@ -20,10 +21,6 @@ public class TeamServiceImpl implements TeamService{
 
     @Override
     public void updateOrder(Integer teamNo, Integer newParentNo, Integer newPosition) {
-        System.out.println("teamNo = " + teamNo);
-        System.out.println("newParentNo = " + newParentNo);
-        System.out.println("newPosition = " + newPosition);
-
         Team movedTeam = mapper.getTeamByNo(teamNo);
         Integer oldParentId = movedTeam.getParentNo();
 
@@ -70,6 +67,31 @@ public class TeamServiceImpl implements TeamService{
         movedTeam.setOrderNo(newPosition);
 
         mapper.updateTeamOrder(movedTeam.getTeamNo(), newParentNo, newPosition);
+    }
+
+    @Override
+    public List<Team> getTeamByProject(Long projectNo) {
+        return mapper.getTeamByProject(projectNo);
+    }
+
+    @Override
+    public Integer createTeam(TeamRequestDto teamRequestDto) {
+        Team team = new Team();
+        team.setTeamName(teamRequestDto.getTeamName());
+        team.setTeamContent(teamRequestDto.getTeamContent());
+        team.setSystemNo(teamRequestDto.getSystemNo());
+        team.setProjectNo(teamRequestDto.getProjectNo());
+        team.setParentNo(teamRequestDto.getParentNo());
+
+        Integer maxOrderNo = mapper.getMaxOrderNo(Long.valueOf(teamRequestDto.getParentNo()));
+        if(maxOrderNo == null){
+            maxOrderNo = 1;
+        } else {
+            maxOrderNo = maxOrderNo  +1;
+        }
+        team.setOrderNo(maxOrderNo);
+
+        return mapper.createTeam(team);
     }
 
 
