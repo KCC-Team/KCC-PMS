@@ -195,7 +195,6 @@
             member M ON PM.mem_no = M.mem_no
         where
             M.login_id = #{login_id}   -- 로그인 아이디
-            and P.stat_cd = 'PMS00102' -- 진행중
             and P.use_yn = 'Y'         -- 사용
         order by P.prj_no desc
     </select>

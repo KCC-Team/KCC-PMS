@@ -1,69 +1,92 @@
-table {
+.modal-dialog {
+    margin-right: 650px !important;
+}
+
+.modal-content {
+    width: 950px !important;
+    margin-right: 100px !important;
+}
+
+.form-table {
     width: 100%;
     border-collapse: collapse;
-    margin-bottom: 20px;
 }
 
-table th, table td {
+.form-table td, .form-table th {
     border: 1px solid #ddd;
+    border-radius: 5px !important;
     padding: 8px;
-    text-align: left;
+    vertical-align: middle;
 }
 
-table th {
+.form-table th {
     background-color: #f2f2f2;
-}
-
-.right-panel h2 {
-    margin-bottom: 20px;
-}
-
-form {
-    display: grid;
-    grid-template-columns: 1fr 1fr; /* Set two equal columns */
-    gap: 10px; /* Keep the gap between fields */
-}
-
-form label {
-    grid-column: span 1; /* Ensure labels only take up one column */
-    margin-top: 5px;
-    margin-bottom: 5px;
-    color: black;
-}
-
-form input, form select {
-    width: 100%;
-    padding: 6px 6px 6px 6px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-}
-
-.buttons {
-    grid-column: span 2;
-    display: flex;
-    justify-content: flex-end; /* Aligns the buttons to the right */
-    gap: 10px;
-    margin-top: 10px;
-}
-
-.buttons button {
-    padding: 10px 20px;
-    border: none;
-    background-color: gray;
-    color: white;
-    cursor: pointer;
-    border-radius: 4px;
-}
-.buttons button:hover {
-    background-color: gray;
-}
-
-.wbs-detail-title {
-    font-size: 20px;
-    color: black;
+    text-align: left;
+    width: 140px;
+    font-size: 12px;
     font-weight: bold;
 }
 
-#wbs_form {
-    margin-top: 5px;
+.form-group {
+    margin-bottom: 10px;
+}
+
+.form-table input,
+.form-table select {
+    width: 100%;
+    padding: 5px;
+    box-sizing: border-box;
+    border-radius: 5px !important;
+    border: 2px solid #ddd;
+}
+
+.btn-select-user {
+    padding: 5px 9px 5px 9px;
+    border: none;
+    border-radius: 5px;
+    color: white;
+    cursor: pointer;
+    background-color: #2898b0;
+    margin-bottom: 5px;
+}
+
+.btn-select-output {
+    padding: 5px 9px 5px 9px;
+    border: none;
+    border-radius: 5px;
+    color: white;
+    cursor: pointer;
+    background-color: #2898b0;
+}
+
+.btn-save-wbs {
+    padding: 5px 9px 5px 9px;
+    border: none;
+    border-radius: 5px;
+    color: white;
+    cursor: pointer;
+    background-color: #2898b0;
+    float: right;
+}
+
+#mem_no {
+    width: 35% !important;
+}
+
+.required-icon {
+    color: red;
+}
+
+.modal-title {
+    font-weight: bold;
+    font-size: 18px;
+    margin-bottom: 10px;
+}
+
+.modal-header {
+    margin-bottom: 10px;
+}
+
+.modal-footer {
+    margin: 10px;
 }
