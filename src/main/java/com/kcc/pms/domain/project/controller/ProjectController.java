@@ -82,7 +82,7 @@ public class ProjectController {
         }
     }
 
-    @PatchMapping("/api/project")
+    @PutMapping("/api/project")
     @ResponseBody
     public ResponseEntity<String> updateProject(ProjectRequestDto project) {
         String login_id = "user1"; // 회원아이디(세션정보)
