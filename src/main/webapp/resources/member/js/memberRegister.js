@@ -37,7 +37,7 @@ $(document).ready(function() {
             },
             success: function(members) {
                 $('#selectedGroupName').text(members[0].groupName);
-                groupmemGrid.setData(members);
+                reg_groupmemGrid.setData(members);
             },
             error: function(xhr, status, error) {
                 console.error('인원 목록을 가져오는 데 실패했습니다: ', error);
@@ -66,16 +66,7 @@ $(document).ready(function() {
         }, 0);
     });
 
-    $('#jstree').on("move_node.jstree", function (e, data) {
-        const movedNodeId = data.node.id;  // 이동된 노드의 ID
-        const newParentId = data.parent;  // 새 부모 노드의 ID
-        const newPosition = data.position;
-        const is_multi = data.is_multi;
 
-        console.log(newParentId);
-        console.log(movedNodeId);
-        console.log(newPosition);
-    });
 
     $('#memberList').children().hide();
 });

@@ -10,7 +10,7 @@ import java.util.List;
 public interface MemberService {
     List<GroupResponseDto> getGroupList();
     List<GroupMembersResponseDto> getGroupMembers(Long groupNo);
-    List<ProjectMemberResponseDto> getProjectMemberList(Long projectNo);
+    List<MemberResponseDto> getProjectMemberList(Long projectNo);
     List<MemberResponseDto> getTeamMember(Long teamNo);
     MemberResponseDto getMemberDetail(Long memberNo);
     Integer memberAssignTeam(Long memberNo, Long teamNo, Integer beforeTeamNo);

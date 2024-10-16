@@ -1,9 +1,14 @@
-var groupmemGrid;
-var prjmemGrid;
-var addedGrid;
-let isEditing = false;
+var reg_groupmemGrid;
+var reg_prjmemGrid;
+var reg_addedGrid;
+let reg_isEditing = false;
 let addedMembers = [];
+var teamNo;
 $(document.body).ready(function () {
+    var urlParams = new URLSearchParams(window.location.search);
+    teamNo = urlParams.get('teamNo');
+
+
     $('#project_member_total').on('click', function() {
         $('#add-member-by-prjmem').show();
         $('#add-member-by-group').hide();
@@ -22,30 +27,30 @@ $(document.body).ready(function () {
 
 
     // 편집 버튼
-    $('.member-edit-button').on('click', function () {
+    $('.reg-member-edit-button').on('click', function () {
         var currentText = $(this).text();
 
         if (currentText === '편집') {
-            isEditing = true;
+            reg_isEditing = true;
             $(this).text('저장'); // 텍스트를 '저장'으로 변경
         } else {
-            isEditing = false;
+            reg_isEditing = false;
             $(this).text('편집'); // 텍스트를 '편집'으로 변경
         }
 
         // 그리드를 다시 렌더링해서 editor 상태를 반영
-        addedGrid.repaint();
+        reg_addedGrid.repaint();
     });
 
 
     //멤버 제거 버튼
     $('.member-remove-button').on('click', function() {
-        let selectedMembers = addedGrid.getList("selected");  // 추가된 목록에서 선택된 멤버 가져오기
+        let selectedMembers = reg_addedGrid.getList("selected");  // 추가된 목록에서 선택된 멤버 가져오기
         selectedMembers.forEach(member => {
             addedMembers = addedMembers.filter(m => m.id !== member.id);  // id 기준으로 제거
         });
         updateAddedGrid();
-        addedGridMembers.clearSelector();
+        // reg_addedGrid.clearSelector();
     });
 
     // 멤버 추가 버튼
@@ -53,16 +58,22 @@ $(document.body).ready(function () {
         let selectedMembers;
 
         if($(this).parent().parent().parent().attr('id') == 'prjmem_list'){ //총 프로젝트인원 목록에서 추가하기 버튼을 눌렀다면
-            selectedMembers = prjmemGrid.getList("selected");
-            prjmemGrid.clearSelect();
+            selectedMembers = reg_prjmemGrid.getList("selected");
+            reg_prjmemGrid.clearSelect();
         } else {
-            selectedMembers = groupmemGrid.getList("selected");
-            groupmemGrid.clearSelect();
+            selectedMembers = reg_groupmemGrid.getList("selected");
+            reg_groupmemGrid.clearSelect();
         }
 
         selectedMembers.forEach(member => {
+
+
             let exists = addedMembers.some(m => m.id === member.id);
             if (!exists) {
+                console.log(member.preStartDate);
+                console.log(member.preEndDate);
+                console.log(member.startDate);
+                console.log(member.endDate);
                 addedMembers.push({
                     id: member.id,
                     name: member.memberName,
@@ -85,12 +96,13 @@ $(document.body).ready(function () {
 
 
     // 적용 버튼 클릭
-    $(document).on('click', '#apply', function() {
+    $(document).on('click', '.apply', function() {
         insertProject();
+        registerMember();
     });
 
     initGrid();
-    loadProjectMember();
+    reg_loadProjectMember();
 
     $('#add-member-by-prjmem').hide();
 
@@ -130,19 +142,17 @@ function insertProject() {
 
 
 function updateAddedGrid() {
-    addedGrid.setData(addedMembers);
+    reg_addedGrid.setData(addedMembers);
 }
 
-function loadProjectMember() {
+function reg_loadProjectMember() {
     //프로젝트 총인원
     $.ajax({
-        url: '/projects/projectmembers',
+        url: '/projects/projectmembers?projectNo=' + prjNo,
         method: 'GET',
-        data: {
-            projectNo: 1
-        },
         success: function(response) {
-            prjmemGrid.setData(response);
+            console.log("reg_loadProjectMember success" + response);
+            reg_prjmemGrid.setData(response);
         },
         error: function(error) {
             console.error("팀원 목록 불러오기 실패:", error);
@@ -177,8 +187,8 @@ function loadAuthCommonCode() {
 
 
 function initGrid() {
-    groupmemGrid = new ax5.ui.grid();
-    groupmemGrid.setConfig({
+    reg_groupmemGrid = new ax5.ui.grid();
+    reg_groupmemGrid.setConfig({
         showRowSelector: true,
         target: $('[data-ax5grid="groupmemGrid"]'),
         columns: [
@@ -194,24 +204,90 @@ function initGrid() {
     });
 
 
-    prjmemGrid = new ax5.ui.grid();
-    prjmemGrid.setConfig({
+    reg_prjmemGrid = new ax5.ui.grid();
+    reg_prjmemGrid.setConfig({
         showRowSelector: true,
         target: $('[data-ax5grid="prjmember-grid"]'),
         columns: [
             {key: "memberName", label: "성명", align: "center"},
-            {key: "auth", label: "프로젝트권환", align: "center"},
-            {key: "groupName", width: 100, label: "소속", align: "center"},
-            {key: "position", width: 70, label: "직위",align: "center"},
-            {key: "preStartDate", width: 100, label: "예정시작일",align: "center",formatter: function() {
-                    return this.value ? this.value.substring(0, 10) : '';}},
-            {key: "preEndDate", width: 100, label: "예정종료일",align: "center",formatter: function() {
-                    return this.value ? this.value.substring(0, 10) : '';}},
-            {key: "startDate", width: 100, label: "참여시작일",align: "center",formatter: function() {
-                    return this.value ? this.value.substring(0, 10) : '';}},
-            {key: "endDate", width: 100, label: "참여종료일",align: "center",formatter: function() {
-                    return this.value ? this.value.substring(0, 10) : '';}},
-            {key: "tech", width: 70, label: "기술등급",align: "center"}
+            {key: "auth", label: "프로젝트권한", align: "center"},
+            {key: "groupName", width: 90, label: "소속", align: "center"},
+            {key: "position", width: 80, label: "직위", align: "center"},
+            {key: "tech", width: 80, label: "기술등급", align: "center"},
+            {key: "teamName", width: 110, label: "소속팀", align: "center", formatter: function() {
+                    // connectedTeams을 탐색하면서 소속된 팀들 모두 가져옴
+                    if (this.item.connectTeams && this.item.connectTeams.length > 0) {
+                        // 소속팀이 하나뿐이고 parentNo이 null인 경우
+                        if (this.item.connectTeams.length === 1 && this.item.connectTeams[0].parentNo === null) {
+                            return '-'; // 소속팀이 없음을 표시
+                        }
+                        return this.item.connectTeams.map(function(team) {
+                            return team.teamName;
+                        }).join(', '); // 팀 이름을 ', '로 구분하여 표시
+                    } else {
+                        return '-';
+                    }
+            }},
+            {key: "preStartDate", width: 100, label: "예정시작일", align: "center", editor: {
+                    type: "date",
+                    config: {
+                        content: {
+                            config: {
+                                mode: "year", selectMode: "day"
+                            }
+                        }
+                    },
+                    disabled: function () {
+                        return !isEditing;
+                    }
+                }, formatter: function() {
+                    return this.value && this.value.substring(0, 10) !== '2999-12-31' ? this.value.substring(0, 10) : '-';
+                }},
+            {key: "preEndDate", width: 100, label: "예정종료일", align: "center", editor: {
+                    type: "date",
+                    config: {
+                        content: {
+                            config: {
+                                mode: "year", selectMode: "day"
+                            }
+                        }
+                    },
+                    disabled: function () {
+                        return !isEditing;
+                    }
+                },formatter: function() {
+                    return this.value && this.value.substring(0, 10) !== '2999-12-31' ? this.value.substring(0, 10) : '-';
+                }},
+            {key: "startDate", width: 100, label: "참여시작일", align: "center", editor: {
+                    type: "date",
+                    config: {
+                        content: {
+                            config: {
+                                mode: "year", selectMode: "day"
+                            }
+                        }
+                    },
+                    disabled: function () {
+                        return !isEditing;
+                    }
+                }, formatter: function() {
+                    return this.value && this.value.substring(0, 10) !== '2999-12-31' ? this.value.substring(0, 10) : '-';
+                }},
+            {key: "endDate", width: 100, label: "참여종료일", align: "center", editor: {
+                    type: "date",
+                    config: {
+                        content: {
+                            config: {
+                                mode: "year", selectMode: "day"
+                            }
+                        }
+                    },
+                    disabled: function () {
+                        return !isEditing;
+                    }
+                }, formatter: function() {
+                    return this.value && this.value.substring(0, 10) !== '2999-12-31' ? this.value.substring(0, 10) : '-';
+                }},
         ],
         page: {
             display: false
@@ -219,8 +295,8 @@ function initGrid() {
     });
 
     loadAuthCommonCode().then(function(commonCodeOptions) {
-        addedGrid = new ax5.ui.grid();
-        addedGrid.setConfig({
+        reg_addedGrid = new ax5.ui.grid();
+        reg_addedGrid.setConfig({
             showRowSelector: true,
             target: $('[data-ax5grid="added-grid"]'),
             columns: [
@@ -239,7 +315,7 @@ function initGrid() {
                             options: commonCodeOptions
                         },
                         disabled: function () {
-                            return !isEditing;
+                            return !reg_isEditing;
                         }
                     },
                     formatter: function() {
@@ -261,11 +337,12 @@ function initGrid() {
                             }
                         },
                         disabled: function () {
-                            return !isEditing;
+                            return !reg_isEditing;
                         }
                     },
                     formatter: function() {
-                        return this.value ? this.value.substring(0, 10) : '';}
+                        return this.value && this.value.substring(0, 10) !== '2999-12-31' ? this.value.substring(0, 10) : '-';
+                    }
                 },
                 {key: "pre_end_dt", width: 100, label: "예정종료일", align: "center", editor: {
                         type: "date",
@@ -277,11 +354,12 @@ function initGrid() {
                             }
                         },
                         disabled: function () {
-                            return !isEditing;
+                            return !reg_isEditing;
                         }
                     },
                     formatter: function() {
-                        return this.value ? this.value.substring(0, 10) : '';}
+                        return this.value && this.value.substring(0, 10) !== '2999-12-31' ? this.value.substring(0, 10) : '-';
+                    }
                 },
                 {key: "st_dt", width: 100, label: "참여시작일", align: "center", editor: {
                         type: "date",
@@ -293,11 +371,13 @@ function initGrid() {
                             }
                         },
                         disabled: function () {
-                            return !isEditing;
-                        },
+                            return !reg_isEditing;
+                        }},
                         formatter: function() {
-                            return this.value ? this.value.substring(0, 10) : '';}
-                    }
+                            console.log(this.value);
+                            return this.value && this.value.substring(0, 10) !== '2999-12-31' ? this.value.substring(0, 10) : '-';
+                        }
+
                 },
                 {key: "end_dt", width: 100, label: "참여종료일", align: "center", editor: {
                         type: "date",
@@ -309,11 +389,12 @@ function initGrid() {
                             }
                         },
                         disabled: function () {
-                            return !isEditing;
-                        },
+                            return !reg_isEditing;
+                        }},
                         formatter: function() {
-                            return this.value ? this.value.substring(0, 10) : '';}
-                    }
+                            return this.value && this.value.substring(0, 10) !== '2999-12-31' ? this.value.substring(0, 10) : '-';
+                        }
+
                 },
                 {key: "techGrade", width: 70, label: "기술등급", align: "center"}
             ],
@@ -324,4 +405,60 @@ function initGrid() {
     }).catch(function(error) {
         console.error("그리드 초기화 오류: ", error);
     });
+}
+
+
+async function registerMember() {
+    var addedGridData = reg_addedGrid.getList();
+    console.log("Registering members...");
+    loadAuthCommonCode().then(async function(commonCodeOptions) {
+        var members = addedGridData.map(function(member) {
+            var authCode = member.auth;
+            var selectedOption = commonCodeOptions.find(function(option) {
+                return option.NM === authCode;
+            });
+            if (selectedOption) {
+                authCode = selectedOption.CD;
+            }
+
+            return {
+                id: member.id,
+                    auth: authCode,  // auth 값을 코드값으로 변환
+                    pre_st_dt: member.pre_st_dt ? member.pre_st_dt : null,  // pre_st_dt가 있으면 그 값, 없으면 null
+                    pre_end_dt: member.pre_end_dt ? member.pre_end_dt : null,  // pre_end_dt가 있으면 그 값, 없으면 null
+                    st_dt: member.st_dt ? member.st_dt : null,  // st_dt가 있으면 그 값, 없으면 null
+                    end_dt: member.end_dt ? member.end_dt : null  // end_dt가 있으면 그 값, 없으면 null
+            };
+        });
+
+        try {
+            await $.ajax({
+                url: '/team/' + teamNo + '/members?prjNo=' + prjNo,
+                type: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify(members),
+                success: function (response) {
+                    console.log("등록된 팀원 수 : " + response);
+                    console.log("팀원 등록 성공");
+                    closePopupAndUpdateParent();  // 완료 후 부모 페이지 업데이트 및 팝업 닫기
+                },
+            });
+
+
+
+        } catch (error) {
+            console.error("오류 발생:", error);
+            alert('팀원 등록에 실패하였습니다.');
+        }
+    }).catch(function(error) {
+        console.error("공통 코드 로드 오류: ", error);
+        alert("프로젝트 권한 코드를 가져오는 중 오류가 발생했습니다.");
+    });
+}
+
+function closePopupAndUpdateParent() {
+    // 부모 페이지로 메시지 전달
+    window.opener.postMessage({ type: 'updateTree', teamNo: teamNo }, '*');
+    console.log("부모 페이지 업데이트 메시지 전송 완료. 팝업 닫기.");
+    window.close();  // 팝업 닫기
 }
