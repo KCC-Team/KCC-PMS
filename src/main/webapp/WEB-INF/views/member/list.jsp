@@ -1,24 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 
 <%@ include file="../common.jsp" %>
-<!-- ax5ui -->
-<link rel="stylesheet" type="text/css" href="https://cdn.rawgit.com/ax5ui/ax5ui-calendar/master/dist/ax5calendar.css">
-<link rel="stylesheet" type="text/css" href="https://cdn.rawgit.com/ax5ui/ax5ui-picker/master/dist/ax5picker.css">
-<link rel="stylesheet" type="text/css" href="https://cdn.rawgit.com/ax5ui/ax5ui-select/master/dist/ax5select.css">
 
-<%--<script src="https://code.jquery.com/jquery-latest.min.js"></script>--%>
-<script type="text/javascript" src="https://cdn.rawgit.com/ax5ui/ax5core/master/dist/ax5core.min.js"></script>
-<script type="text/javascript" src="https://cdn.rawgit.com/ax5ui/ax5ui-calendar/master/dist/ax5calendar.min.js"></script>
-<script type="text/javascript" src="https://cdn.rawgit.com/ax5ui/ax5ui-picker/master/dist/ax5picker.min.js"></script>
-<script type="text/javascript" src="https://cdn.rawgit.com/ax5ui/ax5ui-formatter/master/dist/ax5formatter.min.js"></script>
-<script type="text/javascript" src="https://cdn.rawgit.com/ax5ui/ax5ui-select/master/dist/ax5select.min.js"></script>
-<script type="text/javascript" src="https://cdn.rawgit.com/ax5ui/ax5ui-grid/master/dist/ax5grid.min.js"></script>
-
-<%--<link href="https://cdnjs.cloudflare.com/ajax/libs/jquery.fancytree/2.38.1/skin-win8/ui.fancytree.min.css" rel="stylesheet">--%>
-<%--<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.fancytree/2.38.1/jquery.fancytree-all-deps.min.js"></script>--%>
-<%--<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.fancytree/2.38.1/modules/jquery.fancytree.table.min.js"></script>--%>
-<%--<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>--%>
-<%--<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.fancytree/2.38.1/modules/jquery.fancytree.filter.min.js"></script>--%>
 
 <link href="https://cdnjs.cloudflare.com/ajax/libs/jquery.fancytree/2.38.1/skin-win8/ui.fancytree.min.css" rel="stylesheet">
 
@@ -69,7 +52,7 @@
 
             <div class="main-content">
                 <h2 class="header1"><span class="member-title">인력</span> </h2>
-
+                <input type="hidden" id="selectedTeamKey">
                 <div id="project-member-grid-section" style="display:none;">
                     <div class="team-overview-title">
                         <div class="team-title">전체 투입 인력 목록</div>

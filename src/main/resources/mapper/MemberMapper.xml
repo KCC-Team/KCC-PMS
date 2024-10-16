@@ -4,7 +4,6 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.kcc.pms.domain.member.mapper.MemberMapper">
-    <cache />
 
     <select id="getGroupList" resultType="com.kcc.pms.domain.member.model.dto.GroupResponseDto">
         SELECT GRP_NO as id, GRP_NM as text, PAR_GRP_NO as parentId
@@ -22,39 +21,6 @@
         order by pos_cd.order_no, tech_cd.order_no
     </select>
 
-
-    <select id="getProjectMemberList" resultType="com.kcc.pms.domain.member.model.dto.ProjectMemberResponseDto">
-        SELECT m.mem_no AS id,
-               m.mem_nm AS memberName,
-               auth.cd_dtl_nm AS auth,
-               g.grp_nm AS groupName,
-               pos.cd_dtl_nm AS position,
-               pm.pre_start_dt AS preStartDate,
-               pm.pre_end_dt AS preEndDate,
-               pm.start_dt AS startDate,
-               pm.end_dt AS endDate,
-               tech.cd_dtl_nm AS tech,
-               t.tm_nm AS teamName,
-               t.tm_no AS teamNo
-        FROM projectmember pm,
-             member m,
-             usergroup g,
-             codedetail tech,
-             codedetail pos,
-             codedetail auth,
-             team t
-        WHERE pm.mem_no = m.mem_no
-          AND m.grp_no = g.grp_no
-          AND m.tech_grd_cd = tech.cd_dtl_no
-          AND m.pos_nm = pos.cd_dtl_no
-          AND pm.prj_auth_cd = auth.cd_dtl_no
-          AND pm.tm_no = t.tm_no
-          AND pm.tm_no IN (
-            SELECT t2.tm_no
-            FROM team t2
-            WHERE t2.prj_no = #{projectNo}
-        ) ORDER BY t.tm_no
-    </select>
 
 
     <resultMap id="memberDetail" type="com.kcc.pms.domain.member.model.dto.MemberResponseDto">
@@ -78,7 +44,45 @@
         <result column="TM_NO" property="teamNo" />
         <result column="TM_NM" property="teamName" />
         <result column="ORDER_NO" property="orderNo"/>
+        <result column="PAR_TM_NO" property="parentNo"/>
     </resultMap>
+
+    <select id="getProjectMemberList" resultMap="memberDetail">
+        SELECT m.mem_no,
+               m.mem_nm,
+               auth.cd_dtl_nm AS AUTH,
+               g.grp_nm,
+               pos.cd_dtl_nm AS POSITION,
+               pm.pre_start_dt,
+               pm.pre_end_dt,
+               pm.start_dt,
+               pm.end_dt,
+               m.email,
+               m.phone_no,
+               tech.cd_dtl_nm AS TECH,
+               t.tm_nm,
+               t.tm_no,
+               t.order_no,
+               t.par_tm_no
+        FROM projectmember pm,
+             member m,
+             usergroup g,
+             codedetail tech,
+             codedetail pos,
+             codedetail auth,
+             team t
+        WHERE pm.mem_no = m.mem_no
+          AND m.grp_no = g.grp_no
+          AND m.tech_grd_cd = tech.cd_dtl_no
+          AND m.pos_nm = pos.cd_dtl_no
+          AND pm.prj_auth_cd = auth.cd_dtl_no
+          AND pm.tm_no = t.tm_no
+          AND pm.tm_no IN (
+            SELECT t2.tm_no
+            FROM team t2
+            WHERE t2.prj_no = #{projectNo}
+        ) ORDER BY t.tm_no
+    </select>
 
 
     <select id="getMemberDetail" resultMap="memberDetail">

@@ -1,11 +1,13 @@
 package com.kcc.pms.domain.team.service;
 
 import com.kcc.pms.domain.team.mapper.TeamMapper;
+import com.kcc.pms.domain.team.model.dto.MemberAddRequestDto;
 import com.kcc.pms.domain.team.model.dto.TeamRequestDto;
 import com.kcc.pms.domain.team.model.dto.TeamResponseDto;
 import com.kcc.pms.domain.team.model.vo.Team;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+
 
 import java.util.*;
 
@@ -87,15 +89,27 @@ public class TeamServiceImpl implements TeamService{
         if(maxOrderNo == null){
             maxOrderNo = 1;
         } else {
-            maxOrderNo = maxOrderNo  +1;
+            maxOrderNo = maxOrderNo  + 1;
         }
+        System.out.println(maxOrderNo);
+        System.out.println(team.getProjectNo());
+        System.out.println(team.getParentNo());
         team.setOrderNo(maxOrderNo);
 
         return mapper.createTeam(team);
     }
 
+    @Override
+    public int addMemberTeam(Long teamNo, Long prjNo, List<MemberAddRequestDto> addMembers) {
+        addMembers.forEach(MemberAddRequestDto::formatDates);
+        for (MemberAddRequestDto addMember : addMembers) {
+            System.out.println("service addMember = " + addMember);
+        }
+        return mapper.addMembersTeam(teamNo, prjNo, addMembers);
+    }
 
-    public List<TeamResponseDto> buildTree(List<TeamResponseDto> nodeList) {
+
+    private List<TeamResponseDto> buildTree(List<TeamResponseDto> nodeList) {
         Map<Integer, TeamResponseDto> nodeMap = new HashMap<>();
 
         for (TeamResponseDto node : nodeList) {

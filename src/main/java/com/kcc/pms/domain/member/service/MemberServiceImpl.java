@@ -4,11 +4,11 @@ import com.kcc.pms.domain.member.mapper.MemberMapper;
 import com.kcc.pms.domain.member.model.dto.GroupMembersResponseDto;
 import com.kcc.pms.domain.member.model.dto.GroupResponseDto;
 import com.kcc.pms.domain.member.model.dto.MemberResponseDto;
-import com.kcc.pms.domain.member.model.dto.ProjectMemberResponseDto;
+
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
+
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -32,7 +32,7 @@ public class MemberServiceImpl implements MemberService{
     }
 
     @Override
-    public List<ProjectMemberResponseDto> getProjectMemberList(Long projectNo) {
+    public List<MemberResponseDto> getProjectMemberList(Long projectNo) {
         return mapper.getProjectMemberList(projectNo);
     }
 

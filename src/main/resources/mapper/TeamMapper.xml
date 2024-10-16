@@ -13,11 +13,8 @@
                NVL(
                        CASE
                            WHEN t.par_tm_no IS NULL THEN
-                               (SELECT SUM(cnt)
-                                FROM (SELECT tm_no, COUNT(*) as cnt
-                                      FROM projectmember
-                                      GROUP BY tm_no
-                                     ) pm
+                               (SELECT COUNT(DISTINCT pm.mem_no)
+                                FROM projectmember pm
                                 WHERE pm.tm_no IN (
                                     SELECT t2.tm_no
                                     FROM team t2
@@ -96,20 +93,31 @@
             prj_no,
             sys_no,
             order_no
-        ) VALUES (
-                     SEQ_TEAM.NEXTVAL,
-                     #{teamName},
-                     #{teamContent},
-                    'Y',
-                     #{parentNo},
-                     #{projectNo},
+        ) VALUES (SEQ_TEAM.NEXTVAL, #{teamName}, #{teamContent},'Y', #{parentNo}, #{projectNo},
                     <if test="systemNo != null">
                         #{systemNo}
                     </if>
                     <if test="systemNo == null">
                         NULL
-                    </if>,
-                     #{orderNo}
+                    </if>
+                     ,#{orderNo}
                  )
+    </insert>
+
+    <insert id="addMembersTeam">
+        INSERT INTO projectmember (tm_no, prj_no, mem_no, prj_auth_cd, pre_start_dt, pre_end_dt, start_dt, end_dt, use_yn)
+        <foreach collection="addMembers" item="member" separator=" UNION ALL ">
+            SELECT
+            #{teamNo},
+            #{prjNo},
+            #{member.id},
+            #{member.auth, jdbcType=VARCHAR},
+            COALESCE(TO_DATE(#{member.pre_st_dt, jdbcType=DATE}, 'YYYY-MM-DD'), TO_DATE('2999-12-31', 'YYYY-MM-DD')),
+            COALESCE(TO_DATE(#{member.pre_end_dt, jdbcType=DATE}, 'YYYY-MM-DD'), TO_DATE('2999-12-31', 'YYYY-MM-DD')),
+            COALESCE(TO_DATE(#{member.st_dt, jdbcType=DATE}, 'YYYY-MM-DD'), TO_DATE('2999-12-31', 'YYYY-MM-DD')),
+            COALESCE(TO_DATE(#{member.end_dt, jdbcType=DATE}, 'YYYY-MM-DD'), TO_DATE('2999-12-31', 'YYYY-MM-DD')),
+            'Y'
+            FROM dual
+        </foreach>
     </insert>
 </mapper>

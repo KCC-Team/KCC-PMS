@@ -83,7 +83,7 @@ body {
     padding: 5px 10px;
 }
 
-.member-remove-button, .member-edit-button  {
+.member-remove-button, .reg-member-edit-button  {
     margin-right: 20px;
     margin-top:10px;
     background-color: #4a4a4a;
@@ -119,7 +119,7 @@ body {
     margin-top: 10px; /* 버튼 위쪽에 여백 추가 */
     margin-bottom: 10px;
 }
-#apply {
+.apply {
     background-color: #4a4a4a;
     color: white;
     border: none;
@@ -130,7 +130,7 @@ body {
     outline: none;
 }
 
-#apply:hover {
+.apply:hover {
     background-color: #3a3a3a;
 }
 
