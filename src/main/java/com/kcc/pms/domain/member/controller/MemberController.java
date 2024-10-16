@@ -65,7 +65,9 @@ public class MemberController {
     @ResponseBody
     public ResponseEntity<String> memberAssignTeam(@PathVariable Long memberNo, @PathVariable Long teamNo, @RequestBody Map<String, Object> payload) {
         Integer beforeTeamNo = (Integer) payload.get("beforeTeamNo");
-
+        System.out.println("beforeTeamNo = " + beforeTeamNo);
+        System.out.println("memberNo = " + memberNo);
+        System.out.println("teamNo = " + teamNo);
         try{
             Integer result = memberService.memberAssignTeam(memberNo, teamNo, beforeTeamNo);
             if(result != null) {
