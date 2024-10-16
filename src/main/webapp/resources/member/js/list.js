@@ -2,8 +2,20 @@ var teamMemberGrid;
 var projectMemberGrid;
 var editMode = false;
 let isEditing = false;
-var projectNo = 1;
+
 $(document).ready(function() {
+    window.addEventListener('message', function(event) {
+        if (event.data && event.data.type === 'updateTree') {
+            // FancyTree를 다시 로드
+            loadProjectMembers(prjNo);
+            loadTeamData(prjNo);
+            loadTeamMembers(event.data.teamNo);
+
+            console.log("팝업으로 받은 팀넘버 : " + event.data.teamNo);
+
+        }
+    });
+
     // 동일한 모달을 여는 '그룹등록' 버튼 제어
     var openModalBtns = $(".openModalBtn");
     var modal = $("#teamModal");
@@ -88,14 +100,25 @@ $(document).ready(function() {
         projectMemberGrid.repaint();
     });
 
-    initGrid();  // 공통 코드 로드 및 그리드 초기화
-    loadTeamData(projectNo);
-    loadProjectMembers(projectNo);
+    initGrid().then(function() {
+        // 그리드가 초기화된 후 프로젝트 멤버 목록 로드
+        loadProjectMembers(prjNo);
+    });
+    loadTeamData(prjNo);
+
     $(document).on('click', '.clickable-name', function() {
         console.log('클릭된 요소:', $(this));
     });
-    $(document).on('mousedown', '.clickable-name', function() {
+    $(document).on('mousedown', '.clickable-name', function(e) {
         const clickedElement = $(this);
+
+        // 여러 팀에 소속된 멤버는 드래그 동작을 막음
+        if (clickedElement.hasClass('disabled')) {
+            e.preventDefault();  // 클릭 시 아무 동작도 하지 않도록 막음
+            alert('이 멤버는 여러 팀에 소속되어 있어 팀 변경이 불가능합니다.');
+            return;   // 이후 로직을 실행하지 않음
+        }
+
         const memberName = clickedElement.text();
         const memberId = clickedElement.data('id');
         const beforeTeamNo = clickedElement.data('teamno');
@@ -107,8 +130,8 @@ $(document).ready(function() {
             .text(memberName)
             .css({
                 position: 'absolute',
-                top: event.pageY + 'px',
-                left: event.pageX + 'px',
+                top: e.pageY + 'px',
+                left: e.pageX + 'px',
                 backgroundColor: '#f0f0f0',
                 padding: '10px',
                 border: '1px solid #ccc',
@@ -129,16 +152,20 @@ $(document).ready(function() {
             });
         });
 
-        //드래그가 끝나면(div 제거 및 이벤트 해제)
+        // 드래그가 끝나면(div 제거 및 이벤트 해제)
         $(document).on('mouseup', function(event) {
             var $target = $(event.target);
 
-            //FancyTree 노드 위에 드롭했는지 확인
+            // FancyTree 노드 위에 드롭했는지 확인
             if ($target.closest('.fancytree-node').length > 0) {
                 var teamNode = $.ui.fancytree.getNode($target);
                 var teamId = teamNode.key;
                 var memberId = $('#dragging-div').data('member-id');
                 var beforeTeamNo = $('#dragging-div').data('before-team-id');
+
+                console.log("이동하려는 팀 : " + teamId);
+                console.log("이동하려는 멤버 : " + memberId);
+                console.log("원래 소속 팀 : " + beforeTeamNo);
 
                 memberAssignTeam(teamId, memberId, beforeTeamNo);
             }
@@ -146,7 +173,9 @@ $(document).ready(function() {
             $(document).off('mousemove');
             $(document).off('mouseup');
         });
+
     });
+
 
 
     $(".team-overview, .team-members").hide();
@@ -154,27 +183,71 @@ $(document).ready(function() {
 });
 
 function openGroupPopup() {
+    var selectedTeamKey = document.getElementById('selectedTeamKey').value;
+
+    if(!selectedTeamKey){
+        fetchTeamNoByPrjNo(prjNo).then(function (teamNo){
+            if(teamNo){
+                openPopup(teamNo);
+            } else{
+                alert("팀 정보를 불러오지 못했습니다");
+            }
+        }).catch(function(error) {
+            console.error("팀 정보 요청 중 에러 발생 : ", error);
+            alert("팀 정보를 불러오는 중 오류 발생");
+        })
+    } else {
+        openPopup(selectedTeamKey);
+    }
+
+}
+
+function openPopup(teamNo){
     window.open(
-        "/projects/addMember",
+        "/projects/addMember?teamNo=" + teamNo,
         "그룹등록",
         "width=1000, height=800, resizable=yes"
     );
 }
 
+// 최상위 팀의 팀번호
+function fetchTeamNoByPrjNo(prjNo) {
+    return new Promise(function (resolve, reject) {
+        $.ajax({
+            url: '/teams', // 팀 번호를 받아오는 API 엔드포인트
+            type: 'GET',
+            data: {projectNo: prjNo},
+            success: function (response) {
+                resolve(response[0].key);
+            },
+            error: function (xhr, status, error) {
+                console.error("teamNo 요청 실패: ", error);
+                reject(error);
+            }
+        });
+    });
+}
+
 // 팀 데이터를 불러오는 함수
-function loadTeamData(projectNo) {
-    $.ajax({
-        url: 'http://localhost:8085/teams',
-        method: 'GET',
-        data: { projectNo: projectNo },
-        cache: false,
-        success: function (response) {
-            var treeData = response;
-            renderTeamTree(treeData);  // FancyTree 초기화 함수 호출
-        },
-        error: function (error) {
-            console.error("데이터를 가져오는 중 오류 발생:", error);
-        }
+async function loadTeamData(prjNo) {
+    console.log("loadTeamData call");
+    return new Promise((resolve, reject) => {
+        $.ajax({
+            url: 'http://localhost:8085/teams',
+            method: 'GET',
+            data: { projectNo: prjNo },
+            cache: false,
+            success: function (response) {
+                console.log("loadTeamData success");
+                var treeData = response;
+                renderTeamTree(treeData);  // FancyTree 초기화 함수 호출
+                resolve();  // 작업 완료 후 resolve 호출
+            },
+            error: function (error) {
+                console.error("데이터를 가져오는 중 오류 발생:", error);
+                reject(error);  // 오류 발생 시 reject 호출
+            }
+        });
     });
 }
 
@@ -218,7 +291,6 @@ function setupSearch() {
     }).attr("disabled", true);
 }
 
-// FancyTree 초기화 함수
 function renderTeamTree(treeData) {
     console.log("트리 데이터: ", treeData);  // 트리 데이터 로그 출력
 
@@ -278,10 +350,13 @@ function renderTeamTree(treeData) {
                 var teamKey = node.key;
                 var teamName = node.title;
 
+                document.getElementById('selectedTeamKey').value = teamKey;
+
+
                 if(node.data.parentId === null){
                     $(".team-overview, .team-members, .member-detail").hide();
                     $("#project-member-grid-section").show();
-                    loadProjectMembers(projectNo);
+                    loadProjectMembers(prjNo);
                 } else {
                     $(".team-overview, .team-members").show();
                     $("#project-member-grid-section").hide();
@@ -291,13 +366,10 @@ function renderTeamTree(treeData) {
                 }
 
                 updateTeamInfo(node.data, teamName);
-                loadTeamMembers(teamKey);
+                //loadTeamMembers(teamKey);
             }
         });
     }
-
-
-
     setupSearch();
 }
 
@@ -458,19 +530,35 @@ function updateMemberDetail(memberData) {
 
 
 // 프로젝트 팀원 목록을 불러오는 함수
-function loadProjectMembers(projectNo) {
-    $.ajax({
-        url: 'http://localhost:8085/projects/projectmembers',
-        method: 'GET',
-        data: { projectNo: projectNo },
-        dataType: 'json',
-        success: function (response) {
-            console.log("프로젝트 팀원 목록 데이터:", response);
-            projectMemberGrid.setData(response);
+function loadProjectMembers(prjNo) {
+    console.log("loadProjectMembers call");
 
-        },
+    // 그리드가 초기화되지 않았을 경우 예외 처리
+    if (!projectMemberGrid) {
+        console.error("projectMemberGrid가 초기화되지 않았습니다.");
+        return;
+    }
+
+    $.ajax({
+        url: 'http://localhost:8085/projects/projectmembers?projectNo=' + prjNo,
+        method: 'GET',
+        dataType: 'json',
+        cache: false,
+        success: function (response) {
+            console.log("loadProjectMember success");
+            console.log("프로젝트 팀원 목록 데이터:", response);
+            if (projectMemberGrid) {
+                projectMemberGrid.setData(response);
+                console.log("총인원수: " + response.length);
+                $(".header1").html('<span class="member-title">인력</span> ' + (response.length || 0));
+                // resolve();
+            } else {
+                console.error("projectMemberGrid가 초기화되지 않았습니다.");
+                reject(new Error("projectMemberGrid가 초기화되지 않았습니다."));
+            }},
         error: function (error) {
-            console.error("프로젝트 팀원 목록 불러오기 실패:", error);
+                console.error("프로젝트 팀원 목록 불러오기 실패:", error);
+                reject(error);
         }
     });
 }
@@ -502,7 +590,7 @@ function loadAuthCommonCode() {
 
 function initGrid() {
     // 공통 코드 가져오기
-    loadAuthCommonCode().then(function(commonCodeOptions) {
+    return loadAuthCommonCode().then(function(commonCodeOptions) {
         // teamMemberGrid 설정
         teamMemberGrid = new ax5.ui.grid();
         teamMemberGrid.setConfig({
@@ -551,7 +639,9 @@ function initGrid() {
                             return !isEditing;
                         }
                     }, formatter: function() {
-                        return this.value ? this.value.substring(0, 10) : '';}},
+                        console.log(this.value);  // 디버그용
+                        return this.value && this.value.substring(0, 10) !== '2999-12-31' ? this.value.substring(0, 10) : '-';
+                    }},
                 {key: "preEndDate", width: 120, label: "예정종료일", align: "center", editor: {
                         type: "date",
                         config: {
@@ -565,7 +655,8 @@ function initGrid() {
                             return !isEditing;
                         }
                     }, formatter: function() {
-                        return this.value ? this.value.substring(0, 10) : '';}},
+                        return this.value && this.value.substring(0, 10) !== '2999-12-31' ? this.value.substring(0, 10) : '-';
+                    }},
                 {key: "startDate", width: 120, label: "참여시작일", align: "center", editor: {
                         type: "date",
                         config: {
@@ -579,7 +670,8 @@ function initGrid() {
                             return !isEditing;
                         }
                     }, formatter: function() {
-                        return this.value ? this.value.substring(0, 10) : '';}},
+                        return this.value && this.value.substring(0, 10) !== '2999-12-31' ? this.value.substring(0, 10) : '-';
+                    }},
                 {key: "endDate", width: 120, label: "참여종료일", align: "center", editor: {
                         type: "date",
                         config: {
@@ -593,7 +685,8 @@ function initGrid() {
                             return !isEditing;
                         }
                     }, formatter: function() {
-                        return this.value ? this.value.substring(0, 10) : '';}},
+                        return this.value && this.value.substring(0, 10) !== '2999-12-31' ? this.value.substring(0, 10) : '-';
+                    }},
                 {key: "tech", width: 80, label: "기술등급", align: "center"}
             ],
             page: {
@@ -603,103 +696,129 @@ function initGrid() {
 
         // projectMemberGrid 설정
         console.log(commonCodeOptions);
-        projectMemberGrid = new ax5.ui.grid();
-        projectMemberGrid.setConfig({
-            showRowSelector: true,
-            target: $('[data-ax5grid="projectMemberGrid"]'),
-            columns: [
-                {key: "memberName", label: "성명", align: "center", formatter: function() {
-                        return '<div class="clickable-name member-link" data-id="' + this.item.id + '" data-teamNo="' + this.item.teamNo + '" draggable="true">' + this.value + '</div>'
-                }},
-                {
-                    key: "auth",
-                    label: "프로젝트권한",
-                    align: "center",
-                    editor: {
-                        type: "select",
-                        config: {
-                            columnKeys: {
-                                optionValue: "CD",
-                                optionText: "NM"
+        if(!projectMemberGrid){
+            projectMemberGrid = new ax5.ui.grid();
+            projectMemberGrid.setConfig({
+                showRowSelector: true,
+                target: $('[data-ax5grid="projectMemberGrid"]'),
+                columns: [
+                    {key: "memberName", label: "성명", align: "center", formatter: function() {
+                            if (this.item.connectTeams && this.item.connectTeams.length > 1) {
+                                // 소속 팀이 여러 개일 경우, 드래그 앤 드롭 비활성화
+                                return '<div class="clickable-name member-link disabled" data-id="' + this.item.id + '" data-teamNo="' + this.item.connectTeams[0].teamNo + '">' + this.value + '</div>';
+                            } else {
+                                // 소속 팀이 하나인 경우, 드래그 앤 드롭 가능
+                                return '<div class="clickable-name member-link" data-id="' + this.item.id + '" data-teamNo="' + this.item.connectTeams[0].teamNo + '" draggable="true">' + this.value + '</div>';
+                            }
+                        }},
+                    {
+                        key: "auth",
+                        label: "프로젝트권한",
+                        align: "center",
+                        editor: {
+                            type: "select",
+                            config: {
+                                columnKeys: {
+                                    optionValue: "CD",
+                                    optionText: "NM"
+                                },
+                                options: commonCodeOptions
                             },
-                            options: commonCodeOptions
+                            disabled: function () {
+                                return !isEditing;
+                            }
                         },
-                        disabled: function () {
-                            return !isEditing;
+                        formatter: function() {
+                            var selectedOption = commonCodeOptions.find(function(option) {
+                                return option.CD === this.value;
+                            }.bind(this));
+                            return selectedOption ? selectedOption.NM : this.value;
                         }
                     },
-                    formatter: function() {
-                        var selectedOption = commonCodeOptions.find(function(option) {
-                            return option.CD === this.value;
-                        }.bind(this));
-                        return selectedOption ? selectedOption.NM : this.value;
-                    }
-                },
-                {key: "groupName", width: 90, label: "소속", align: "center"},
-                {key: "position", width: 80, label: "직위", align: "center"},
-                {key: "tech", width: 80, label: "기술등급", align: "center"},
-                {key: "teamName", width: 110, label: "소속팀", align: "center"},
-                {key: "preStartDate", width: 100, label: "예정시작일", align: "center", editor: {
-                        type: "date",
-                        config: {
-                            content: {
-                                config: {
-                                    mode: "year", selectMode: "day"
+                    {key: "groupName", width: 90, label: "소속", align: "center"},
+                    {key: "position", width: 80, label: "직위", align: "center"},
+                    {key: "tech", width: 80, label: "기술등급", align: "center"},
+                    {key: "teamName", width: 110, label: "소속팀", align: "center", formatter: function() {
+                            // connectedTeams을 탐색하면서 소속된 팀들 모두 가져옴
+                            if (this.item.connectTeams && this.item.connectTeams.length > 0) {
+                                // 소속팀이 하나뿐이고 parentNo이 null인 경우
+                                if (this.item.connectTeams.length === 1 && this.item.connectTeams[0].parentNo === null) {
+                                    return '-'; // 소속팀이 없음을 표시
                                 }
+                                return this.item.connectTeams.map(function(team) {
+                                    return team.teamName;
+                                }).join(', '); // 팀 이름을 ', '로 구분하여 표시
+                            } else {
+                                return '-';
                             }
-                        },
-                        disabled: function () {
-                            return !isEditing;
-                        }
-                    }, formatter: function() {
-                        return this.value ? this.value.substring(0, 10) : '';}},
-                {key: "preEndDate", width: 100, label: "예정종료일", align: "center", editor: {
-                        type: "date",
-                        config: {
-                            content: {
-                                config: {
-                                    mode: "year", selectMode: "day"
+                    }},
+                    {key: "preStartDate", width: 100, label: "예정시작일", align: "center", editor: {
+                            type: "date",
+                            config: {
+                                content: {
+                                    config: {
+                                        mode: "year", selectMode: "day"
+                                    }
                                 }
+                            },
+                            disabled: function () {
+                                return !isEditing;
                             }
-                        },
-                        disabled: function () {
-                            return !isEditing;
-                        }
-                    }, formatter: function() {
-                        return this.value ? this.value.substring(0, 10) : '';}},
-                {key: "startDate", width: 100, label: "참여시작일", align: "center", editor: {
-                        type: "date",
-                        config: {
-                            content: {
-                                config: {
-                                    mode: "year", selectMode: "day"
+                        }, formatter: function() {
+                            return this.value && this.value.substring(0, 10) !== '2999-12-31' ? this.value.substring(0, 10) : '-';
+                        }},
+                    {key: "preEndDate", width: 100, label: "예정종료일", align: "center", editor: {
+                            type: "date",
+                            config: {
+                                content: {
+                                    config: {
+                                        mode: "year", selectMode: "day"
+                                    }
                                 }
+                            },
+                            disabled: function () {
+                                return !isEditing;
                             }
-                        },
-                        disabled: function () {
-                            return !isEditing;
-                        }
-                    }, formatter: function() {
-                        return this.value ? this.value.substring(0, 10) : '';}},
-                {key: "endDate", width: 100, label: "참여종료일", align: "center", editor: {
-                        type: "date",
-                        config: {
-                            content: {
-                                config: {
-                                    mode: "year", selectMode: "day"
+                        }, formatter: function() {
+                            return this.value && this.value.substring(0, 10) !== '2999-12-31' ? this.value.substring(0, 10) : '-';
+                        }},
+                    {key: "startDate", width: 100, label: "참여시작일", align: "center", editor: {
+                            type: "date",
+                            config: {
+                                content: {
+                                    config: {
+                                        mode: "year", selectMode: "day"
+                                    }
                                 }
+                            },
+                            disabled: function () {
+                                return !isEditing;
                             }
-                        },
-                        disabled: function () {
-                            return !isEditing;
-                        }
-                    }, formatter: function() {
-                        return this.value ? this.value.substring(0, 10) : '';}}
-            ],
-            page: {
-                display: false
-            }
-        });
+                        }, formatter: function() {
+                            return this.value && this.value.substring(0, 10) !== '2999-12-31' ? this.value.substring(0, 10) : '-';
+                        }},
+                    {key: "endDate", width: 100, label: "참여종료일", align: "center", editor: {
+                            type: "date",
+                            config: {
+                                content: {
+                                    config: {
+                                        mode: "year", selectMode: "day"
+                                    }
+                                }
+                            },
+                            disabled: function () {
+                                return !isEditing;
+                            }
+                        }, formatter: function() {
+                            return this.value && this.value.substring(0, 10) !== '2999-12-31' ? this.value.substring(0, 10) : '-';
+                        }}
+                ],
+                page: {
+                    display: false
+                }
+            });
+        }
+
 
     }).catch(function(error) {
         console.error("그리드 초기화 오류: ", error);
@@ -741,7 +860,7 @@ function loadTeamOptions(selectElementId) {
         url: '/teamsSelectOptions',
         type: 'GET',
         data: {
-            projectNo : projectNo
+            projectNo : prjNo
         },
         success: function(response) {
             const teamSelect = $(selectElementId);
@@ -763,7 +882,7 @@ function fetchMenuData() {
         url: '/systems',
         method: 'GET',
         dataType: 'json',
-        data: { prjNo: projectNo },
+        data: { prjNo: prjNo },
         success: function(response) {
             return response;
         },
@@ -808,7 +927,7 @@ function getTeamFormData() {
         parentNo: $('#parent-team').val(),
         systemNo: $('#systemNo').val(),
         teamContent: $('#team_cont').val(),
-        projectNo: projectNo
+        projectNo: 1
     };
 }
 
@@ -841,8 +960,8 @@ function memberAssignTeam(teamNo, memberNo, beforeTeamNo){
         }),
         success: function (response) {
             alert('팀 배정에 성공하였습니다');
-            loadTeamData(projectNo);
-            loadProjectMembers(projectNo);
+            loadTeamData(prjNo);
+            loadProjectMembers(prjNo);
         },
         error: function(xhr, status, error) {
             console.error('팀 배정 중 오류 발생: ', error);

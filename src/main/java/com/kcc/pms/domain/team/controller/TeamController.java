@@ -1,11 +1,14 @@
 package com.kcc.pms.domain.team.controller;
 
+import com.kcc.pms.domain.team.model.dto.MemberAddRequestDto;
 import com.kcc.pms.domain.team.model.dto.TeamOrderUpdateRequestDto;
 import com.kcc.pms.domain.team.model.dto.TeamRequestDto;
 import com.kcc.pms.domain.team.model.dto.TeamResponseDto;
 import com.kcc.pms.domain.team.model.vo.Team;
 import com.kcc.pms.domain.team.service.TeamService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -39,6 +42,35 @@ public class TeamController {
     @ResponseBody
     public List<Team> getTeamsByProjectNo(@RequestParam("projectNo") Long projectNo){
         return teamService.getTeamByProject(projectNo);
+    }
+
+    @PostMapping("/team/{teamNo}/members")
+    @ResponseBody
+    public ResponseEntity<String> addMemberTeam(@PathVariable("teamNo") Long teamNo, @RequestParam Long prjNo,
+                              @RequestBody List<MemberAddRequestDto> addMembers){
+        System.out.println("addMemberTEAMcall");
+        System.out.println("teamNo = " + teamNo);
+        System.out.println("prjNo = " + prjNo);
+        for (MemberAddRequestDto addMember : addMembers) {
+            System.out.println("addMember = " + addMember);
+        }
+        try {
+            // 서비스 호출을 통해 팀에 멤버 추가
+            int insertedCount = teamService.addMemberTeam(teamNo, prjNo, addMembers);
+
+            if (insertedCount > 0) {
+                // 성공적으로 삽입된 경우, 성공 메시지와 함께 상태 코드 200 반환
+                return ResponseEntity.ok("팀원 등록이 성공적으로 완료되었습니다." + insertedCount);
+            } else {
+                // 삽입된 항목이 없을 경우, 상태 코드 204 반환
+                return ResponseEntity.status(HttpStatus.NO_CONTENT).body("등록된 팀원이 없습니다.");
+            }
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            // 예외 발생 시, 상태 코드 500과 함께 에러 메시지 반환
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("팀원 등록 중 오류가 발생했습니다: " + e.getMessage());
+        }
     }
 
 }

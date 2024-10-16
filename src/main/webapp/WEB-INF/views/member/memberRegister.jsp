@@ -11,7 +11,7 @@
     <link rel="stylesheet" type="text/css" href="https://cdn.rawgit.com/ax5ui/ax5ui-picker/master/dist/ax5picker.css">
     <link rel="stylesheet" type="text/css" href="https://cdn.rawgit.com/ax5ui/ax5ui-select/master/dist/ax5select.css">
 
-    <script src="https://code.jquery.com/jquery-latest.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script type="text/javascript" src="https://cdn.rawgit.com/ax5ui/ax5core/master/dist/ax5core.min.js"></script>
     <script type="text/javascript" src="https://cdn.rawgit.com/ax5ui/ax5ui-calendar/master/dist/ax5calendar.min.js"></script>
     <script type="text/javascript" src="https://cdn.rawgit.com/ax5ui/ax5ui-picker/master/dist/ax5picker.min.js"></script>
@@ -24,6 +24,9 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.3.12/jstree.dnd.min.js"></script>
     <link rel="stylesheet" href="../../../resources/member/css/memberRegister.css">
     <link rel="stylesheet" href="../../../resources/member/css/ax5grid.css">
+    <script type="text/javascript">
+        var prjNo = 1;
+    </script>
 </head>
 <body>
 <div id="member-apply-title-container">
@@ -66,7 +69,7 @@
                 <h3 class="group-name">추가 인원</h3>
             </div>
             <div class="button-container">
-                <button class="member-edit-button">편집</button>
+                <button class="reg-member-edit-button">편집</button>
                 <button class="member-remove-button">제거하기</button>
             </div>
         </div>
@@ -75,7 +78,7 @@
             <div id="y-added-grid" data-ax5grid="added-grid" data-ax5grid-config="{}" style="height: 100%;"></div>
         </div>
         <div class="button-container">
-            <button id="apply">적용하기</button>
+            <button class="apply">적용하기</button>
         </div>
     </div>
 </div>
@@ -103,7 +106,7 @@
                 <h3 class="group-name">추가 인원</h3>
             </div>
             <div class="button-container">
-                <button class="member-edit-button">편집</button>
+                <button class="reg-member-edit-button">편집</button>
                 <button class="member-remove-button">제거하기</button>
             </div>
         </div>
@@ -112,11 +115,11 @@
             <!--<div class="y-added-grid"  data-ax5grid="added-grid" data-ax5grid-config="{}" style="height: 100%;"></div>-->
         </div>
         <div class="button-container">
-            <button id="apply">적용하기</button>
+            <button class="apply">적용하기</button>
         </div>
     </div>
 </div>
-
+<script src="../../../resources/member/js/list.js"></script>
 <script src="../../../resources/member/js/memberRegisterGrid.js"></script>
 <script src="../../../resources/member/js/memberRegister.js"></script>
 

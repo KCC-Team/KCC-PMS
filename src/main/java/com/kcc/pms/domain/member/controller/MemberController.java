@@ -51,7 +51,7 @@ public class MemberController {
 
     @GetMapping("/projectmembers")
     @ResponseBody
-    public List<ProjectMemberResponseDto> projectMembers(@RequestParam Long projectNo) {
+    public List<MemberResponseDto> projectMembers(@RequestParam Long projectNo) {
         return memberService.getProjectMemberList(projectNo);
     }
 

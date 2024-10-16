@@ -18,21 +18,31 @@
     if ((String) session.getAttribute("prjTitle") != null) {
         prjTitle = (String) session.getAttribute("prjTitle");
     }
+
+    Object prjNo = session.getAttribute("prjNo");
+    Integer prjNoInt = null;
+    if (prjNo instanceof Integer) {
+        prjNoInt = (Integer) prjNo;
+    }
 %>
+
+<script type="text/javascript">
+    var prjNo = '<%= prjNoInt != null ? prjNoInt.toString() : "" %>';
+</script>
 
 <!-- header -->
 <header class="header">
     <div class="header-content">
         <% if (!projectTitle.isEmpty()) { %>
-            <span><%=projectTitle%></span>
+        <span><%=projectTitle%></span>
         <% } else { %>
-            <div class="dropdown header-project-name">
-                <a class="btn dropdown-toggle common-project-title fw-bold" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                    <%=prjTitle%>
-                </a>
-                <ul class="dropdown-menu ul-prj-title">
-                </ul>
-            </div>
+        <div class="dropdown header-project-name">
+            <a class="btn dropdown-toggle common-project-title fw-bold" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                <%=prjTitle%>
+            </a>
+            <ul class="dropdown-menu ul-prj-title">
+            </ul>
+        </div>
         <% } %>
     </div>
     <div class="header-icons">
