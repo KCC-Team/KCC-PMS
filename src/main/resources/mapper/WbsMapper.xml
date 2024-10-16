@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.kcc.pms.domain.wbs.mapper.WbsMapper">
+
+    <insert id="saveWbs" parameterType="com.kcc.pms.domain.wbs.model.dto.WbsRequestDto">
+        <selectKey keyProperty="tsk_no" resultType="long" order="BEFORE">
+            SELECT seq_task.nextval FROM dual
+        </selectKey>
+        insert into task
+        (tsk_no, order_no, tsk_ttl, tsk_stat_cd, pre_st_dt, pre_end_dt, prg, use_yn, prj_no,
+                <if test="st_dt != null">st_dt,</if>
+                <if test="end_dt != null">end_dt,</if>
+                <if test="weight_val != null">weight_val,</if>
+                <if test="rel_out_nm != null">rel_out_nm,</if>
+                <if test="par_task_no != null">par_task_no,</if>
+                <if test="ante_task_no != null">ante_task_no,</if>
+                <if test="sys_no != null">sys_no,</if>
+        reg_id, reg_dt)
+        values (#{tsk_no}, #{order_no}, #{tsk_ttl}, #{tsk_stat_cd}, #{pre_st_dt}, #{pre_end_dt}, #{prg}, 'Y', #{prj_no},
+                <if test="st_dt != null">#{st_dt},</if>
+                <if test="end_dt != null">#{end_dt},</if>
+                <if test="weight_val != null">#{weight_val},</if>
+                <if test="rel_out_nm != null">#{rel_out_nm},</if>
+                <if test="par_task_no != null">#{par_task_no},</if>
+                <if test="ante_task_no != null">#{ante_task_no},</if>
+                <if test="sys_no != null">#{sys_no},</if>
+        #{reg_id}, SYSDATE)
+    </insert>
+
+    <insert id="saveWbsMember" parameterType="com.kcc.pms.domain.wbs.model.dto.WbsRequestDto">
+        insert into taskmember
+        (mem_no, tm_no, prj_no, tsk_no)
+        values (#{memNo}, #{tmNo}, #{prj_no}, #{tsk_no})
+    </insert>
+
+    <select id="getWbsList" resultType="com.kcc.pms.domain.wbs.model.dto.WbsResponseDto">
+        SELECT
+            t.*,
+            CASE
+            WHEN t.tsk_stat_cd = 'PMS00101' THEN '대기'
+            WHEN t.tsk_stat_cd = 'PMS00102' THEN '진행중'
+            ELSE '완료'
+            END AS wbs_status,
+            (
+            SELECT LISTAGG(m.mem_nm, ', ') WITHIN GROUP (ORDER BY m.mem_no)
+            FROM
+                taskmember tm
+            JOIN member m
+                on tm.mem_no = m.mem_no
+            WHERE tm.prj_no = t.prj_no
+            AND tm.tsk_no = t.tsk_no
+            ) AS members
+        FROM task t
+        WHERE t.prj_no = #{prj_no}
+        order by t.order_no
+    </select>
+
+</mapper>
