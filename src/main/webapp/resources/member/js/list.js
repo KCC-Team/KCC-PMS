@@ -4,6 +4,7 @@ var editMode = false;
 let isEditing = false;
 
 $(document).ready(function() {
+
     window.addEventListener('message', function(event) {
         if (event.data && event.data.type === 'updateTree') {
             // FancyTree를 다시 로드
@@ -204,7 +205,7 @@ function openGroupPopup() {
 
 function openPopup(teamNo){
     window.open(
-        "/projects/addMember?teamNo=" + teamNo,
+        "/projects/addMember?teamNo=" + teamNo + '&prjNo=' + prjNo,
         "그룹등록",
         "width=1000, height=800, resizable=yes"
     );
@@ -857,12 +858,10 @@ function limitByteLength(input, maxByteLength) {
 // 팀 목록 가져오기
 function loadTeamOptions(selectElementId) {
     $.ajax({
-        url: '/teamsSelectOptions',
+        url: '/teamsSelectOptions?projectNo=' + prjNo,
         type: 'GET',
-        data: {
-            projectNo : prjNo
-        },
         success: function(response) {
+            console.log("팀 목록 : " + response);
             const teamSelect = $(selectElementId);
             teamSelect.empty(); // 기존 옵션 초기화
             response.forEach(function(team) {
@@ -879,11 +878,11 @@ function loadTeamOptions(selectElementId) {
 
 function fetchMenuData() {
     return $.ajax({
-        url: '/systems',
+        url: '/systems?prjNo=' + prjNo,
         method: 'GET',
         dataType: 'json',
-        data: { prjNo: prjNo },
         success: function(response) {
+            console.log("systems: " + response);
             return response;
         },
         error: function(error) {
@@ -927,7 +926,7 @@ function getTeamFormData() {
         parentNo: $('#parent-team').val(),
         systemNo: $('#systemNo').val(),
         teamContent: $('#team_cont').val(),
-        projectNo: 1
+        projectNo: prjNo
     };
 }
 

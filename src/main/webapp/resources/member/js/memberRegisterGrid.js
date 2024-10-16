@@ -4,10 +4,13 @@ var reg_addedGrid;
 let reg_isEditing = false;
 let addedMembers = [];
 var teamNo;
+var prjNo;
 $(document.body).ready(function () {
     var urlParams = new URLSearchParams(window.location.search);
     teamNo = urlParams.get('teamNo');
+    prjNo = urlParams.get('prjNo');
 
+    console.log(prjNo);
 
     $('#project_member_total').on('click', function() {
         $('#add-member-by-prjmem').show();
