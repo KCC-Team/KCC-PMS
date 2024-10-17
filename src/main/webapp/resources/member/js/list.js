@@ -4,6 +4,7 @@ var editMode = false;
 let isEditing = false;
 
 $(document).ready(function() {
+
     window.addEventListener('message', function(event) {
         if (event.data && event.data.type === 'updateTree') {
             // FancyTree를 다시 로드
@@ -204,7 +205,7 @@ function openGroupPopup() {
 
 function openPopup(teamNo){
     window.open(
-        "/projects/addMember?teamNo=" + teamNo,
+        "/projects/addMember?teamNo=" + teamNo + '&prjNo=' + prjNo,
         "그룹등록",
         "width=1000, height=800, resizable=yes"
     );
@@ -453,9 +454,8 @@ function loadTeamMembers(teamKey) {
     console.log("선택한 팀의 key: " + teamKey);
 
     $.ajax({
-        url: 'http://localhost:8085/projects/members/team',
+        url: '/projects/' + prjNo + '/members/team/' + teamKey,
         method: 'GET',
-        data: {teamNo: teamKey},
         dataType: 'json',
         success: function(response) {
             console.log("팀원 목록 데이터:", response);
@@ -484,15 +484,17 @@ $(document).on("click", ".member-link", function(e) {
 
 function loadMemberDetails(memberNo) {
     $.ajax({
-        url: '/projects/members/detail',
+        url: '/projects/' + prjNo + '/members/' + memberNo,
         method: 'GET',
-        data: { memberNo: memberNo },
         dataType: 'json',
         success: function(response) {
+            console.log("memberDetail" + response);
             updateMemberDetail(response);
         },
-        error: function(error) {
-            console.error("인력 상세 정보 불러오기 실패:", error);
+        error: function(xhr, status, error) {
+            console.error( error);
+            console.error(xhr);
+
         }
     });
 }
@@ -857,12 +859,10 @@ function limitByteLength(input, maxByteLength) {
 // 팀 목록 가져오기
 function loadTeamOptions(selectElementId) {
     $.ajax({
-        url: '/teamsSelectOptions',
+        url: '/teamsSelectOptions?projectNo=' + prjNo,
         type: 'GET',
-        data: {
-            projectNo : prjNo
-        },
         success: function(response) {
+            console.log("팀 목록 : " + response);
             const teamSelect = $(selectElementId);
             teamSelect.empty(); // 기존 옵션 초기화
             response.forEach(function(team) {
@@ -879,11 +879,11 @@ function loadTeamOptions(selectElementId) {
 
 function fetchMenuData() {
     return $.ajax({
-        url: '/systems',
+        url: '/systems?prjNo=' + prjNo,
         method: 'GET',
         dataType: 'json',
-        data: { prjNo: prjNo },
         success: function(response) {
+            console.log("systems: " + response);
             return response;
         },
         error: function(error) {
@@ -927,7 +927,7 @@ function getTeamFormData() {
         parentNo: $('#parent-team').val(),
         systemNo: $('#systemNo').val(),
         teamContent: $('#team_cont').val(),
-        projectNo: 1
+        projectNo: prjNo
     };
 }
 

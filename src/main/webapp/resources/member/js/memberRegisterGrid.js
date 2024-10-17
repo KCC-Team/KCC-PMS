@@ -4,10 +4,13 @@ var reg_addedGrid;
 let reg_isEditing = false;
 let addedMembers = [];
 var teamNo;
+var prjNo;
 $(document.body).ready(function () {
     var urlParams = new URLSearchParams(window.location.search);
     teamNo = urlParams.get('teamNo');
+    prjNo = urlParams.get('prjNo');
 
+    console.log(prjNo);
 
     $('#project_member_total').on('click', function() {
         $('#add-member-by-prjmem').show();
@@ -66,7 +69,7 @@ $(document.body).ready(function () {
         }
 
         selectedMembers.forEach(member => {
-
+            console.log("추가된 멤버 : " + JSON.stringify(member, null, 2));
 
             let exists = addedMembers.some(m => m.id === member.id);
             if (!exists) {
@@ -74,6 +77,7 @@ $(document.body).ready(function () {
                 console.log(member.preEndDate);
                 console.log(member.startDate);
                 console.log(member.endDate);
+                console.log(member.connectTeams);
                 addedMembers.push({
                     id: member.id,
                     name: member.memberName,
@@ -85,9 +89,9 @@ $(document.body).ready(function () {
                     st_dt: member.startDate ? member.startDate : "",
                     end_dt: member.endDate ? member.endDate : "",
                     techGrade: member.tech,
-                    teamNo : member.teamNo,
-                    teamName : member.teamName
+                    connectTeams: member.connectTeams
                 });
+
             }
         });
 
@@ -411,8 +415,14 @@ function initGrid() {
 async function registerMember() {
     var addedGridData = reg_addedGrid.getList();
     console.log("Registering members...");
+
+    let unassignedMembers = [];  // 어느팀에도 소속되지 않은 데이터
+    let assignedMembers = [];    // 1개의 팀이라도 소속되어 있는 데이터
+
+    console.log("register call addedMembers" + addedMembers);
     loadAuthCommonCode().then(async function(commonCodeOptions) {
-        var members = addedGridData.map(function(member) {
+        addedMembers.map(function(member) {
+            console.log(JSON.stringify(member));
             var authCode = member.auth;
             var selectedOption = commonCodeOptions.find(function(option) {
                 return option.NM === authCode;
@@ -421,30 +431,65 @@ async function registerMember() {
                 authCode = selectedOption.CD;
             }
 
-            return {
+            let memberData = {
                 id: member.id,
-                    auth: authCode,  // auth 값을 코드값으로 변환
-                    pre_st_dt: member.pre_st_dt ? member.pre_st_dt : null,  // pre_st_dt가 있으면 그 값, 없으면 null
-                    pre_end_dt: member.pre_end_dt ? member.pre_end_dt : null,  // pre_end_dt가 있으면 그 값, 없으면 null
-                    st_dt: member.st_dt ? member.st_dt : null,  // st_dt가 있으면 그 값, 없으면 null
-                    end_dt: member.end_dt ? member.end_dt : null  // end_dt가 있으면 그 값, 없으면 null
+                auth: authCode,
+                pre_st_dt: member.preStartDate ? member.preStartDate : null,
+                pre_end_dt: member.preEndDate ? member.preEndDate : null,
+                st_dt: member.startDate ? member.startDate : null,
+                end_dt: member.endDate ? member.endDate : null,
+                connectFirstTeamNo: member.connectTeams ? member.connectTeams[0].teamNo : null
             };
+
+            if (member.connectTeams && member.connectTeams.length === 1 && member.connectTeams[0].parentNo === null) {
+                unassignedMembers.push(memberData);
+            } else {
+                assignedMembers.push(memberData);
+            }
         });
 
         try {
-            await $.ajax({
-                url: '/team/' + teamNo + '/members?prjNo=' + prjNo,
-                type: 'POST',
-                contentType: 'application/json',
-                data: JSON.stringify(members),
-                success: function (response) {
-                    console.log("등록된 팀원 수 : " + response);
-                    console.log("팀원 등록 성공");
-                    closePopupAndUpdateParent();  // 완료 후 부모 페이지 업데이트 및 팝업 닫기
-                },
-            });
+            let assignedMembersPromise = Promise.resolve();  // 기본값으로 비어있는 Promise 생성
 
+            if (assignedMembers.length > 0) {
+                assignedMembersPromise = $.ajax({
+                    url: '/team/' + teamNo + '/members?prjNo=' + prjNo,
+                    type: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify(assignedMembers),
+                    success: function (response) {
+                        console.log("등록된 팀원 수 : " + response);
+                        console.log("팀원 등록 성공");
+                    },
+                });
+            }
 
+            let unassignedMembersPromise = Promise.resolve();  // 기본값으로 비어있는 Promise 생성
+
+            if (unassignedMembers.length > 0) {
+                // 모든 비배정 팀원의 팀 배정 요청을 저장할 배열
+                const requests = unassignedMembers.map(memberData => {
+                    console.log("update" + memberData.id);
+                    console.log("update beforeteamno" + memberData.connectFirstTeamNo);
+                    console.log("update teamNo" + teamNo);
+                    return $.ajax({
+                        url: '/projects/members/' + memberData.id + '/team/' + teamNo,
+                        type: 'PATCH',
+                        contentType: 'application/json',
+                        cache: false,
+                        data: JSON.stringify({
+                            beforeTeamNo: memberData.connectFirstTeamNo
+                        })
+                    });
+                });
+
+                unassignedMembersPromise = Promise.all(requests);
+            }
+
+            // 두 비동기 작업이 모두 완료되었을 때 closePopupAndUpdateParent 실행
+            await Promise.all([assignedMembersPromise, unassignedMembersPromise]);
+            alert('모든 작업이 성공적으로 완료되었습니다');
+            closePopupAndUpdateParent();  // 완료 후 부모 페이지 업데이트 및 팝업 닫기
 
         } catch (error) {
             console.error("오류 발생:", error);
@@ -455,6 +500,7 @@ async function registerMember() {
         alert("프로젝트 권한 코드를 가져오는 중 오류가 발생했습니다.");
     });
 }
+
 
 function closePopupAndUpdateParent() {
     // 부모 페이지로 메시지 전달

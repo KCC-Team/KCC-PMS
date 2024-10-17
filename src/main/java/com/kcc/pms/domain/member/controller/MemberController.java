@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @Controller
 @RequiredArgsConstructor
@@ -43,10 +44,10 @@ public class MemberController {
         return memberService.getGroupMembers(groupNo);
     }
 
-    @GetMapping("/members/team")
+    @GetMapping("/{projectNo}/members/team/{teamNo}")
     @ResponseBody
-    public List<MemberResponseDto> teamMembers(@RequestParam Long teamNo) {
-        return memberService.getTeamMember(teamNo);
+    public List<MemberResponseDto> teamMembers(@PathVariable("projectNo") Long projectNo, @PathVariable("teamNo") Long teamNo) {
+        return memberService.getTeamMember(projectNo, teamNo);
     }
 
     @GetMapping("/projectmembers")
@@ -55,17 +56,24 @@ public class MemberController {
         return memberService.getProjectMemberList(projectNo);
     }
 
-    @GetMapping("/members/detail")
+    @GetMapping("/{projectNo}/members/{memberNo}")
     @ResponseBody
-    public MemberResponseDto memberDetail(@RequestParam Long memberNo) {
-        return memberService.getMemberDetail(memberNo);
+    public ResponseEntity<MemberResponseDto> memberDetail(@PathVariable("projectNo") Long projectNo, @PathVariable("memberNo") Long memberNo) {
+        System.out.println("MemberController.memberDetail");
+        System.out.println("projectNo = " + projectNo);
+        System.out.println("memberNo = " + memberNo);
+        MemberResponseDto memberDetail = memberService.getMemberDetail(projectNo, memberNo);
+        System.out.println("memberDetail = " + memberDetail);
+        return ResponseEntity.ok(memberDetail);
     }
 
     @PatchMapping("/members/{memberNo}/team/{teamNo}")
     @ResponseBody
     public ResponseEntity<String> memberAssignTeam(@PathVariable Long memberNo, @PathVariable Long teamNo, @RequestBody Map<String, Object> payload) {
         Integer beforeTeamNo = (Integer) payload.get("beforeTeamNo");
-
+        System.out.println("beforeTeamNo = " + beforeTeamNo);
+        System.out.println("memberNo = " + memberNo);
+        System.out.println("teamNo = " + teamNo);
         try{
             Integer result = memberService.memberAssignTeam(memberNo, teamNo, beforeTeamNo);
             if(result != null) {

@@ -24,9 +24,6 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.3.12/jstree.dnd.min.js"></script>
     <link rel="stylesheet" href="../../../resources/member/css/memberRegister.css">
     <link rel="stylesheet" href="../../../resources/member/css/ax5grid.css">
-    <script type="text/javascript">
-        var prjNo = 1;
-    </script>
 </head>
 <body>
 <div id="member-apply-title-container">
