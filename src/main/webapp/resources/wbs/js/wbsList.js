@@ -19,7 +19,13 @@ gantt.config.subscales = [{unit: "month", step: 1, date: "%Y-%m"}];  // 월 단�
 
 // Gantt 그리드 설정
 gantt.config.columns = [
-    {name: "id", label: "순번", align: "center", width: 40, resize: true},
+    {name: "id", label: "순번", align: "center", width: 40, resize: true, template: function (task) {
+        if (String(task.id).includes("0")) {
+            let taskId = String(task.id).replace(/0/g, "."); // 모든 "0"을 "."으로 변경
+            return taskId;
+        }
+        return task.id;
+    }},
     {name: "text", label: "작업명", align: "left", width: 200, tree: true, resize: true},
     {name: "tsk_stat_cd", label: "상태", width: 45, resize: true},
     {name: "pre_st_dt", label: "예정 시작일", align: "center", width: 80, resize: true},
@@ -245,6 +251,11 @@ gantt.attachEvent("onContextMenu", function (id, linkId, e) {
     // 마지막 자식 ID 가져오기
     var lastChildId = children.length > 0 ? children[children.length - 1] : "0";
 
+    let additionalButton = '';
+    if (id.length < 5) {
+        additionalButton = `<input type=button value="하위로 추가" class="btn-task" onclick="wbsInfoPopup('child', ${lastChildId}, ${id})"><br/>`;
+    }
+
     // 커스텀 메뉴 생성
     const contextMenu = `
     <div
@@ -254,8 +265,7 @@ gantt.attachEvent("onContextMenu", function (id, linkId, e) {
     >
       <input type=button value="아래에 추가" class="btn-task" onclick="wbsInfoPopup('new', ${id}, ${parentTaskId})">
       <br/>
-      <input type=button value="하위로 추가" class="btn-task" onclick="wbsInfoPopup('child', ${lastChildId}, ${id})">
-      <br/>
+      ${additionalButton}
       <input type=button value="상세 정보" class="btn-task" onclick="wbsInfoPopup('view', ${id}, ${id})">
     </div>
     `;
@@ -352,6 +362,7 @@ $(document).ready(function() {
             // 그리드를 숨기고 타임라인을 크게 표시
             ganttContainer.classList.add("grid_hidden");
             document.getElementById("toggle-grid").innerText = "기본 화면으로 보기";
+            $(".btn-modify-wbs").hide();
         } else {
             // 그리드를 다시 표시하고 기본 상태로 복원
             ganttContainer.classList.remove("grid_hidden");
