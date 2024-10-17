@@ -454,9 +454,8 @@ function loadTeamMembers(teamKey) {
     console.log("선택한 팀의 key: " + teamKey);
 
     $.ajax({
-        url: 'http://localhost:8085/projects/members/team',
+        url: '/projects/' + prjNo + '/members/team/' + teamKey,
         method: 'GET',
-        data: {teamNo: teamKey},
         dataType: 'json',
         success: function(response) {
             console.log("팀원 목록 데이터:", response);
@@ -485,15 +484,17 @@ $(document).on("click", ".member-link", function(e) {
 
 function loadMemberDetails(memberNo) {
     $.ajax({
-        url: '/projects/members/detail',
+        url: '/projects/' + prjNo + '/members/' + memberNo,
         method: 'GET',
-        data: { memberNo: memberNo },
         dataType: 'json',
         success: function(response) {
+            console.log("memberDetail" + response);
             updateMemberDetail(response);
         },
-        error: function(error) {
-            console.error("인력 상세 정보 불러오기 실패:", error);
+        error: function(xhr, status, error) {
+            console.error( error);
+            console.error(xhr);
+
         }
     });
 }

@@ -37,13 +37,13 @@ public class MemberServiceImpl implements MemberService{
     }
 
     @Override
-    public List<MemberResponseDto> getTeamMember(Long teamNo) {
-        return mapper.getTeamMember(teamNo);
+    public List<MemberResponseDto> getTeamMember(Long projectNo, Long teamNo) {
+        return mapper.getTeamMember(projectNo, teamNo);
     }
 
     @Override
-    public MemberResponseDto getMemberDetail(Long memberNo) {
-        return mapper.getMemberDetail(memberNo);
+    public MemberResponseDto getMemberDetail(Long projectNo, Long memberNo) {
+        return mapper.getMemberDetail(projectNo, memberNo);
     }
 
     @Override

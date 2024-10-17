@@ -114,7 +114,7 @@
           AND m.pos_nm = pos.cd_dtl_no
           AND pm.prj_auth_cd = auth.cd_dtl_no
           AND pm.tm_no = t.tm_no
-          AND m.mem_no = #{memberNo}
+          AND m.mem_no = #{memberNo} AND t.prj_no = #{projectNo}
     </select>
 
 
@@ -144,6 +144,7 @@
              (SELECT t.tm_no, t.tm_nm, pm.mem_no, t.order_no
               FROM team t, projectmember pm
               WHERE t.tm_no = pm.tm_no
+                AND pm.prj_no = #{projectNo}
                 AND t.par_tm_no IS NOT NULL
              ) pmt
         WHERE pm.prj_auth_cd = auth.cd_dtl_no AND
