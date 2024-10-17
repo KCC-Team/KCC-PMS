@@ -10,6 +10,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -28,14 +29,13 @@ public class TestController {
     @ResponseBody
     public ResponseEntity<List<TestVO>> findAll(
             HttpSession session,
-            @RequestParam(value = "sys", defaultValue = "0") Integer sys_no,
             @RequestParam(value = "work", defaultValue = "0") Integer work_no,
             @RequestParam(value = "test", defaultValue = "all") String test_type,
             @RequestParam(value = "status", defaultValue = "all") String status,
             @RequestParam(value = "page", defaultValue = "1") int page) {
 //        Integer prj_no = (int) session.getAttribute("prjNo");
         Integer prj_no = 1;
-        List<TestVO> testList = testService.getTestList(prj_no, sys_no, work_no, test_type, status, page);
+        List<TestVO> testList = testService.getTestList(prj_no, work_no, test_type, status, page);
         return ResponseEntity.ok().body(testList);
     }
 
@@ -56,12 +56,12 @@ public class TestController {
                 7, "테스트관리",
                 8, "인적자원관리"
                 ));
-        model.addAttribute("systemType", Map.of(
-                0, "시스템을 선택하세요",
-                1, "A 업무 시스템",
-                2, "B 업무 시스템",
-                3, "C 업무 시스템"
-        ));
+//        model.addAttribute("systemType", Map.of(
+//                0, "시스템을 선택하세요",
+//                1, "A 업무 시스템",
+//                2, "B 업무 시스템",
+//                3, "C 업무 시스템"
+//        ));
         model.addAttribute("testStatus", Map.of(
                 0, "상태를 선택하세요",
                 1, "진행전",
@@ -95,19 +95,19 @@ public class TestController {
                 7, "테스트관리",
                 8, "인적자원관리"
         ));
-        model.addAttribute("systemType", Map.of(
-                0, "시스템을 선택하세요",
-                1, "A 업무 시스템",
-                2, "B 업무 시스템",
-                3, "C 업무 시스템"
-        ));
-        model.addAttribute("testStatus", Map.of(
-                0, "상태를 선택하세요",
-                1, "진행전",
-                2, "진행중",
-                3, "결함발생",
-                4, "진행완료"
-        ));
+//        model.addAttribute("systemType", Map.of(
+//                0, "시스템을 선택하세요",
+//                1, "A 업무 시스템",
+//                2, "B 업무 시스템",
+//                3, "C 업무 시스템"
+//        ));
+
+        Map<String, Object> parameters = new HashMap<>();
+        parameters.put("0", "상태를 선택하세요");
+        for (String s : testService.getTestStatus()) {
+            parameters.put(s, s);
+        }
+        model.addAttribute("testStatus", parameters);
         return "test/test";
     }
 

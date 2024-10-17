@@ -15,4 +15,5 @@ public interface TestMapper {
     TestRequestDto getUnitTest(Integer testNo);
     Integer updateTest(Map<String, Object> parameters);
     Integer deleteTest(Integer testNo);
+    List<String> getTestStatus();
 }

@@ -133,26 +133,26 @@
                         </div>
                         <br>
                         <div class="d-flex justify-content-start">
-                            <div class="me-4">
-                                <div class="d-flex justify-content-start"><label>시스템 분류</label></div>
-                                <select name="systemType" id="systemType" required ${disabled}>
-                                    <c:forEach var="type" items="${systemType}">
-                                        <c:choose>
-                                            <c:when test="${type.value == testReq.systemType}">
-                                                <option value="${type.key}" selected>${type.value}</option>
-                                            </c:when>
-                                            <c:when test="${type.key == 0}">
-                                                <option value="${type.key}" selected disabled>${type.value}</option>
-                                            </c:when>
-                                            <c:otherwise>
-                                                <option value="${type.key}">${type.value}</option>
-                                            </c:otherwise>
-                                        </c:choose>
-                                    </c:forEach>
-                                </select>
-                            </div>
+<%--                            <div class="me-4">--%>
+<%--                                <div class="d-flex justify-content-start"><label>시스템 분류</label></div>--%>
+<%--                                <select name="systemType" id="systemType" required ${disabled}>--%>
+<%--                                    <c:forEach var="type" items="${systemType}">--%>
+<%--                                        <c:choose>--%>
+<%--                                            <c:when test="${type.value == testReq.systemType}">--%>
+<%--                                                <option value="${type.key}" selected>${type.value}</option>--%>
+<%--                                            </c:when>--%>
+<%--                                            <c:when test="${type.key == 0}">--%>
+<%--                                                <option value="${type.key}" selected disabled>${type.value}</option>--%>
+<%--                                            </c:when>--%>
+<%--                                            <c:otherwise>--%>
+<%--                                                <option value="${type.key}">${type.value}</option>--%>
+<%--                                            </c:otherwise>--%>
+<%--                                        </c:choose>--%>
+<%--                                    </c:forEach>--%>
+<%--                                </select>--%>
+<%--                            </div>--%>
                             <div class="ms-4 me-4">
-                                <div class="d-flex justify-content-start"><label>업무 구분</label></div>
+                                <div class="d-flex justify-content-start"><label>시스템-업무 구분</label></div>
                                 <select name="workType" id="workType" required ${disabled}>
                                     <c:forEach var="type" items="${workType}">
                                         <c:choose>

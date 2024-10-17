@@ -25,10 +25,9 @@ public class TestServiceImpl implements TestService {
     private final SqlSessionFactory sqlSessionFactory;
 
     @Override
-    public List<TestVO> getTestList(Integer prj_no, Integer sys_no, Integer work_no, String test_type, String status, int page) {
+    public List<TestVO> getTestList(Integer prj_no, Integer work_no, String test_type, String status, int page) {
         Map<String, Object> parameters = new HashMap<>();
         parameters.put("prj_no", prj_no);
-        parameters.put("sys_no", sys_no);
         parameters.put("work_no", work_no);
         parameters.put("test_type", test_type);
         parameters.put("status", status);
@@ -87,5 +86,10 @@ public class TestServiceImpl implements TestService {
     @Override
     public void deleteTest(Integer testNo) {
         testMapper.deleteTest(testNo);
+    }
+
+    @Override
+    public List<String> getTestStatus() {
+        return testMapper.getTestStatus();
     }
 }

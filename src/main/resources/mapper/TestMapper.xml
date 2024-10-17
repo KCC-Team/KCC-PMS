@@ -36,7 +36,6 @@
         <result property="testEndDate" column="testEndDate"/>
         <result property="testType" column="testType"/>
         <result property="testStatus" column="testStatus"/>
-        <result property="systemType" column="systemType"/>
         <result property="workType" column="workType"/>
         <result property="testCont" column="testCont"/>
         <result property="memberName" column="memberName"/>
@@ -58,13 +57,9 @@
         left join codedetail cd_type on t.type_cd = cd_type.cd_dtl_no
         left join codedetail cd_stat on t.stat_cd = cd_stat.cd_dtl_no
         left join defect d on td.test_dtl_no = d.test_dtl_no
-        left join system sys ON sys.sys_no = t.sys_no
         left join system sys_work ON sys_work.sys_no = t.sys_work_no
         where t.prj_no = 1
         and t.use_yn = 'Y'
-        <if test="sys_no != 0">
-            and t.sys_no = #{sys_no, jdbcType=INTEGER}
-        </if>
         <if test="work_no != 0">
             and t.sys_work_no = #{work_no, jdbcType=INTEGER}
         </if>
@@ -86,12 +81,12 @@
 
         INSERT INTO testmaster
         (test_no, test_id, test_title, test_cont, stat_cd, type_cd,
-        test_st_dt, test_end_dt, prj_no, sys_no, sys_work_no, reg_id, reg_dt, use_yn)
+        test_st_dt, test_end_dt, prj_no, sys_work_no, reg_id, reg_dt, use_yn)
         VALUES
         (#{testNo, jdbcType=INTEGER}, #{testId, jdbcType=VARCHAR}, #{testTitle, jdbcType=VARCHAR},
         #{testCont, jdbcType=VARCHAR}, #{testStatus, jdbcType=CHAR},
         #{testType, jdbcType=CHAR}, #{testStartDate, jdbcType=DATE}, #{testEndDate, jdbcType=DATE},
-        #{prj_no, jdbcType=INTEGER}, #{systemType, jdbcType=INTEGER}, #{workType, jdbcType=INTEGER},
+        #{prj_no, jdbcType=INTEGER}, #{workType, jdbcType=INTEGER},
         'admin',
         sysdate, 'Y')
     </insert>
@@ -134,7 +129,6 @@
             t.test_end_dt AS testEndDate,
             TRIM(cd_type.cd_dtl_nm) AS testType,
             TRIM(cd_stat.cd_dtl_nm) AS testStatus,
-            sys.sys_ttl AS systemType,
             sys_work.sys_ttl AS workType,
             t.test_cont AS testCont,
 --             m.mem_nm AS memberName,
@@ -151,7 +145,6 @@
                  left join codedetail cd_type on t.type_cd = cd_type.cd_dtl_no
                  left join codedetail cd_stat on t.stat_cd = cd_stat.cd_dtl_no
                  left join defect d on td.test_dtl_no = d.test_dtl_no
-                 left join system sys ON sys.sys_no = t.sys_no
                  left join system sys_work ON sys_work.sys_no = t.sys_work_no
                  left join member m ON m.mem_no = td.mem_no
                  left join featureTest ft ON ft.test_dtl_no = td.test_dtl_no
@@ -163,4 +156,8 @@
     <update id="deleteTest" parameterType="int">
         update testmaster t set t.use_yn = 'N' where test_no = #{testNo, jdbcType=INTEGER}
     </update>
+
+    <select id="getTestStatus" parameterType="String" resultType="list">
+        select cd.cd_dtl_no, cd.cd_dtl_nm from codedetail cd where cd.common_Cd_no = 'PMS013' order by cd_dtl_no
+    </select>
 </mapper>

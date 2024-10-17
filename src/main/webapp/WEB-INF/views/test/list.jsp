@@ -40,7 +40,7 @@
             <section>
                 <div class="d-flex justify-content-end align-items-center me-5">
                     <div class="me-4">
-                        <label>시스템 분류</label>&nbsp;&nbsp;&nbsp;
+                        <label>시스템-업무 분류</label>&nbsp;&nbsp;&nbsp;
                         <label>
                             <select name="taskSelect" class="form-select">
                                 <c:forEach var="task" items="${tasks}">
