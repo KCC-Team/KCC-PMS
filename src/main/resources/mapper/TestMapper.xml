@@ -86,7 +86,7 @@
 
         INSERT INTO testmaster
         (test_no, test_id, test_title, test_cont, stat_cd, type_cd,
-        test_st_dt, test_end_dt, prj_no, sys_no, sys_work_no, created_id, created_dt, use_yn)
+        test_st_dt, test_end_dt, prj_no, sys_no, sys_work_no, reg_id, reg_dt, use_yn)
         VALUES
         (#{testNo, jdbcType=INTEGER}, #{testId, jdbcType=VARCHAR}, #{testTitle, jdbcType=VARCHAR},
         #{testCont, jdbcType=VARCHAR}, #{testStatus, jdbcType=CHAR},

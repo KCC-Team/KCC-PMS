@@ -83,6 +83,11 @@ public class TestController {
     public String showUpdateForm(Model model, @PathVariable Long id) {
         model.addAttribute("type", "update");
 //        model.addAttribute("testReq", testService.getTest(id));
+        model.addAttribute("testType", Map.of(
+                "0", "테스트를 선택하세요",
+                "PMS01201", "단위",
+                "PMS01202", "통합"
+        ));
         model.addAttribute("workType", Map.of(
                 0, "업무를 선택하세요",
                 5, "범위관리",

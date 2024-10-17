@@ -79,7 +79,7 @@ $(function() {
     }
 
     function generateIntegrationTest() {
-        let testCaseId = $('#teat_id').val() + "_" + testCaseCnt;
+        let testCaseId = $('#test_id').val() + "_" + testCaseCnt;
         return `<section class="integration-test">
                     <div class="d-flex justify-content-start">
                         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<div class="me-4">
@@ -213,7 +213,7 @@ $(function() {
                     </div>
                 </div><br>
             `;
-            html += generateUnitTestcase();
+            html += generateUnitTestcase(testCaseIdx, {});
         } else if (selectedOption === 'PMS01202') {
             $('.tc-area').show();
             html = `
@@ -228,7 +228,7 @@ $(function() {
         $(document).on('click', '.tc-btn', function() {
             if (selectedOption === 'PMS01201') {
                 ++testCaseIdx;
-                $('#dynamic-content').append(generateUnitTestcase());
+                $('#dynamic-content').append(generateUnitTestcase(testCaseIdx, {}));
             }
             else if (selectedOption === 'PMS01202') {
                 ++testCaseCnt;

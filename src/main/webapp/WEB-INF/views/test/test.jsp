@@ -71,7 +71,7 @@
                             </div>&nbsp;&nbsp;&nbsp;
                             <div class="ms-3">
                                 <div class="d-flex justify-content-start"><label>테스트 ID&nbsp;&nbsp;&nbsp;<span class="es-star">*</span></label></div>
-                                <input id="teat_id" type="text" name="testId" value="${testReq.testId}" required ${disabled} >
+                                <input id="test_id" type="text" name="testId" value="${testReq.testId}" required ${disabled} >
                             </div>
                         </div>
                         <br>
@@ -95,12 +95,12 @@
                                                 selected disabled
                                             </c:if>
                                     >선택</option>
-                                    <option value="1"
+                                    <option value="PMS01201"
                                             <c:if test="${testReq.testType == '단위'}">
                                                 selected
                                             </c:if>
                                     >단위 테스트</option>
-                                    <option value="2"
+                                    <option value="PMS01202"
                                             <c:if test="${testReq.testType == '통합'}">
                                                 selected
                                             </c:if>

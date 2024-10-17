@@ -396,6 +396,14 @@ body {
     font-size: 12px;
 }
 
+.gray-status {
+    background-color: #8B8B8B;
+    color: #fff;
+    padding: 5px 5px;
+    border-radius: 5px;
+    font-size: 12px;
+}
+
 .es-star {
     margin-right: 10px !important;
     color: red !important;
