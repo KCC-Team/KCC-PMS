@@ -1,12 +1,18 @@
 package com.kcc.pms.domain.test.mapper;
 
-import com.kcc.pms.domain.test.domain.dto.TestListResponseDto;
+import com.kcc.pms.domain.test.domain.dto.TestRequestDto;
+import com.kcc.pms.domain.test.domain.dto.TestVO;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
-import java.util.Optional;
+import java.util.Map;
 
 @Mapper
 public interface TestMapper {
-    Optional<List<TestListResponseDto>> findAllByOptions(Integer systemId, String work_type, String test_type, int page);
+    List<TestVO> findAllByOptions(Map<String, Object> parameters);
+    Integer saveTest(Map<String, Object> parameters);
+    Integer saveUnitTestDetails(Map<String, Object> parameters);
+    TestRequestDto getUnitTest(Integer testNo);
+    Integer updateTest(Map<String, Object> parameters);
+    Integer deleteTest(Integer testNo);
 }

@@ -1,9 +1,14 @@
 package com.kcc.pms.domain.test.service;
 
-import com.kcc.pms.domain.test.domain.dto.TestListResponseDto;
+import com.kcc.pms.domain.test.domain.dto.TestRequestDto;
+import com.kcc.pms.domain.test.domain.dto.TestVO;
 
 import java.util.List;
 
 public interface TestService {
-    List<TestListResponseDto> getTestList(Integer systemId, String work_type, String test_type, int page);
+    List<TestVO> getTestList(Integer prj_no, Integer sys_no, Integer work_no, String test_type, String status, int page);
+    void saveTest(TestRequestDto testReq);
+    TestRequestDto getTestDetail(Integer testNo);
+    void updateTest(TestRequestDto testReq);
+    void deleteTest(Integer testNo);
 }
