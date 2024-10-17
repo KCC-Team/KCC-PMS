@@ -105,15 +105,23 @@
                 </tr>
                 <tr>
                     <td class="text-align-left">
-                        <label for="sys_no">시스템/업무</label>
+                        <label>시스템/업무</label>
                     </td>
                     <td colspan="4">
-                        <select id="sys_no" name="sys_no">
-                            <option value="">선택하세요.</option>
-                            <option value="001">A업무시스템</option>
-                            <option value="002">B업무시스템</option>
-                            <option value="003">C업무시스템</option>
-                        </select>
+                        <div class="system-select-wrapper">
+                            <button class="system-select-button" id="system-select">
+                                <span>시스템/업무 선택</span>
+
+                            </button>
+                            <!-- 메뉴 리스트 -->
+                            <ul class="mymenu" id="system-menu"></ul>
+                        </div>
+<%--                        <select id="sys_no" name="sys_no">--%>
+<%--                            <option value="">선택하세요.</option>--%>
+<%--                            <option value="001">A업무시스템</option>--%>
+<%--                            <option value="002">B업무시스템</option>--%>
+<%--                            <option value="003">C업무시스템</option>--%>
+<%--                        </select>--%>
                     </td>
                 </tr>
             </table>
