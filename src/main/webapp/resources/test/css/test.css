@@ -3,9 +3,10 @@ label {
     color: #000;
 }
 
-input, select {
+input, select, textarea {
     width: 200px;
     height: 30px;
+    padding: 5px;
 }
 
 #test-txt {
