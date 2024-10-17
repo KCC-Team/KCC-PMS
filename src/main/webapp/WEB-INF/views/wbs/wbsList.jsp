@@ -13,10 +13,15 @@
 
         <div class="filter-section">
             <div class="action-buttons">
+                <button class="add-save-wbs" onclick="wbsInfoPopup('new');">작업 추가</button>
                 <button class="btn-modify-wbs">순서 변경</button>
                 <button class="btn-save-wbs-sort">저장</button>
                 <button id="toggle-grid">간트 차트 크게 보기</button>
             </div>
+        </div>
+
+        <div id="gantt_no_data">
+            등록된 작업이 없습니다. 작업을 추가해주세요.
         </div>
 
         <div id="gantt_here"></div>

@@ -37,7 +37,6 @@
     <link rel="stylesheet" type="text/css" href="https://cdn.rawgit.com/ax5ui/ax5ui-select/master/dist/ax5select.css">
 
     <script src="../../../resources/output/js/jstree.js"></script>
-
 </head>
 <body>
 

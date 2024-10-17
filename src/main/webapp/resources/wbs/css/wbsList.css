@@ -10,6 +10,21 @@
     margin: 10px 0px 10px 0px;
 }
 
+#gantt_no_data {
+    width: 100%;
+    background-color: #EAEEEF;
+    padding: 6px 10px 6px 20px;
+    border-radius: 10px;
+    border: 1px #ddd solid;
+    text-align: center;
+    font-size: 15px;
+    height: 250px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+
 .action-buttons {
     display: flex;
     gap: 10px;
@@ -71,5 +86,23 @@
 }
 
 .add-wbs-info {
+    display: none;
+}
+
+
+.context_menu {
+    position: absolute;
+    background-color: white;
+    border: 1px solid #ccc;
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
+    padding: 10px;
+    z-index: 1000;  /* 높은 z-index 설정 */
+}
+
+.btn-task {
+    margin-bottom: 5px;
+}
+
+#gantt_here, .btn-modify-wbs, #toggle-grid {
     display: none;
 }

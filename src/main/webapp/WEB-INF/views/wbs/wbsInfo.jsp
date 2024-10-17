@@ -23,6 +23,9 @@
                 <div class="modal-body">
 
                     <form id="wbs_form" action="#" method="post">
+                        <input type="hidden" id="order_no" name="order_no" value="">
+                        <input type="hidden" id="mem_no" name="mem_no" value="">
+                        <input type="hidden" id="tm_no" name="tm_no" value="">
                         <input type="hidden" id="par_task_no" name="par_task_no" value="">
 
                         <table class="form-table">
@@ -33,7 +36,9 @@
                                 <td>
                                     <select id="tsk_stat_cd" name="tsk_stat_cd" required>
                                         <option value="">선택하세요.</option>
-                                        <option value="11">대기</option>
+                                        <option value="PMS00101">대기</option>
+                                        <option value="PMS00102">진행중</option>
+                                        <option value="PMS00103">완료</option>
                                     </select>
                                 </td>
                             </tr>
@@ -100,7 +105,7 @@
                                 <th>시스템/업무</th>
                                 <td colspan="3">
                                     <select id="sys_no" name="sys_no">
-                                        <option>선택하세요.</option>
+                                        <option value="">선택하세요.</option>
                                     </select>
                                 </td>
                             </tr>
