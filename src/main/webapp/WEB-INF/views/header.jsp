@@ -52,7 +52,7 @@
         <i class="fa-regular fa-envelope"></i>      <!-- 이메일 메뉴 아이콘 -->
         <div class="dropdown header-user-name">
             <a class="btn dropdown-toggle project-user-name" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                홍길동 주임
+                홍길동 사원
             </a>
             <ul class="dropdown-menu">
                 <li><a class="dropdown-item" href="#">내 정보</a></li>

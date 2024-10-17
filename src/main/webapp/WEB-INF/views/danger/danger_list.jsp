@@ -9,7 +9,9 @@
 
 <main class="content" id="content">
     <div class="main_content">
-        <h5>위험현황</h5>
+        <div class="danger-content">
+            <div class="danger-info">위험현황</div>
+        </div>
 
         <div class="filter-section">
             <form action="#" method="post">

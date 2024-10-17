@@ -7,10 +7,30 @@
     background: white !important;
 }
 
+.danger-content, .issue-content {
+    display: flex;
+    padding-top: 15px;
+    align-items: center;
+    overflow: hidden;
+}
+
+.danger-info, .issue-info {
+    width: 91%;
+    margin: 4px 0px 20px 57px;
+    font-size: 20px;
+    font-weight: bold;
+    color: black;
+    border-bottom: 1px solid #989898;
+    padding-bottom: 5px;
+    float: left; /* 왼쪽 정렬 */
+
+}
+
 h5 {
     font-family: NanumGothic,NanumBarunGothic,"Apple SD Gothic Neo","Malgun Gothic",Dotum,sans-serif !important;
     padding: 20px 20px 20px 60px;
     color: black;
+    border-bottom: 1px solid;
 }
 
 .danger-title:hover {
