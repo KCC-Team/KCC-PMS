@@ -29,22 +29,23 @@ $(function () {
                     return '<span style="font-size: 13px;">' + this.value + '</span>';
                 }},
             {key: "testStatus", label: "상태", width: 100, align: "center", formatter: function (){
-                    const status = this.value;
+                const status = this.value;
 
-                    let statusClass;
-                    if (status === '진행중') {
-                        statusClass = 'green-status';
-                    } else if (status === '해결') {
-                        statusClass = 'blue-status';
-                    } else if (status === '취소') {
-                        statusClass = 'cancel-status';
-                    } else {
-                        statusClass = 'red-status';
-                    }
+                let statusClass;
+                if (status === '진행전') {
+                    statusClass = 'gray-status';
+                } else if (status === '진행중') {
+                    statusClass = 'green-status';
+                } else if (status === '결함발생') {
+                    statusClass = 'red-status';
+                } else if (status === '진행완료') {
+                    statusClass = 'blue-status';
+                } else {
+                    statusClass = 'red-status';
+                }
 
-
-                    return '<span class="' + statusClass + '" style="font-size: 12px;">' + this.value + '</span>';
-                }}
+                return '<span class="' + statusClass + '" style="font-size: 12px;">' + this.value + '</span>';
+            }}
         ],
     });
 
