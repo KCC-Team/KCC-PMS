@@ -18,9 +18,8 @@ public class ProjectController {
     private final ProjectService projectService;
 
     @GetMapping("/list")
-    public String list(Criteria cri, Model model) {
+    public String list(ProjectRequestDto prjReqDto, Criteria cri, Model model) {
         String login_id = "user1"; // 회원아이디(세션정보)
-        ProjectRequestDto prjReqDto = new ProjectRequestDto();
         prjReqDto.setLogin_id(login_id);
 
         int total = projectService.getProjectCount(prjReqDto);
