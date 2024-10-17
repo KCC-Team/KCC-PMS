@@ -2,7 +2,7 @@ const API_SERVER = 'http://localhost:8085';
 
 $(function() {
     function updateButtonVisibility() {
-        let selectedOption = $('#test-type').val();
+        let selectedOption = $('#testType').val();
         if (selectedOption === '0') {
             $('.tc-btn').hide();
         } else {
@@ -10,54 +10,72 @@ $(function() {
         }
     }
     updateButtonVisibility();
-    $('#test-type').change(updateButtonVisibility);
+    $('#testType').change(updateButtonVisibility);
 
     let testCaseIdx = 0;
     let testCaseCnt = 1;
     let testCnt = 1;
     let workTaskCnt = 1;
-    function generateUnitTestcase() {
-        let testCaseId = $('#teat_id').val() + "_" + testCaseIdx;
+
+    function generateUnitTestcase(index, testCase) {
+        // 조회 모드인지 여부에 따라 disabled 속성 설정
+        let disabledAttr = isViewMode === 'true' ? 'disabled' : '';
+
+        // 테스트 케이스 ID 설정
+        let testCaseId = testCase && testCase.testDtlId ? testCase.testDtlId : $('#test_id').val() + "_" + (index + 1);
+
+        // 각 필드의 값 설정 (조회 모드일 경우 데이터 사용, 생성 모드일 경우 빈 문자열)
+        let preCondition = testCase && testCase.preCondition ? testCase.preCondition : '';
+        let testCaseCont = testCase && testCase.testCaseCont ? testCase.testCaseCont : '';
+        let preoceedCont = testCase && testCase.preoceedCont ? testCase.preoceedCont : '';
+        let testData = testCase && testCase.testData ? testCase.testData : '';
+        let estimatedResult = testCase && testCase.estimatedResult ? testCase.estimatedResult : '';
+        let note = testCase && testCase.note ? testCase.note : '';
+
         return `<section>
                 <div class="d-flex justify-content-start">
                     <div class="me-4">
                         <div class="d-flex justify-content-start"><label>순번</div>
-                        <span>` + testCaseIdx + `</span>
+                        <span>${index + 1}</span>
                     </div>&nbsp;&nbsp;&nbsp;
                     <div class="ms-4">
                         <div class="d-flex justify-content-start"><label>테스트케이스 ID&nbsp;&nbsp;&nbsp;<span class="es-star">*</span></label></div>
-                        <input type="text" name="testCaseList[` + testCaseIdx + `].testCaseId" value="${testCaseId}" disabled >
+                        <input type="text" name="testCaseList[${index}].testDtlId" value="${testCaseId}" readonly>
                     </div>
                 </div>
                 <br>
                 <div class="d-flex justify-content-start">
                     <div class="me-4">
                         <div class="d-flex justify-content-start"><label>사전조건</label></div>
-                        <textarea class="test-data" name="testCaseList[` + testCaseIdx + `].preCondition" required ` + $('#disabled').val() + ` ></textarea>
+                        <textarea class="test-data" name="testCaseList[${index}].preCondition" ${disabledAttr} >${preCondition}</textarea>
                     </div>&nbsp;&nbsp;&nbsp;
                     <div class="ms-4">
                         <div class="d-flex justify-content-start"><label>테스트케이스 설명&nbsp;&nbsp;&nbsp;<span class="es-star">*</span></label></div>
-                        <textarea class="test-data" name="testCaseList[` + testCaseIdx + `].testCaseCont" ` + $('#disabled').val() + ` ></textarea>
+                        <textarea class="test-data" name="testCaseList[${index}].testCaseCont" ${disabledAttr} >${testCaseCont}</textarea>
                     </div>
                 </div>
                 <div class="d-flex justify-content-start">
                     <div class="me-4">
                         <div class="d-flex justify-content-start"><label>수행절차</div>
-                        <textarea class="test-data" name="testCaseList[` + testCaseIdx + `].preoceedCont" ` + $('#disabled').val() + ` ></textarea>
+                        <textarea class="test-data" name="testCaseList[${index}].preoceedCont" ${disabledAttr} >${preoceedCont}</textarea>
                     </div>&nbsp;&nbsp;&nbsp;
                     <div class="ms-4">
                         <div class="d-flex justify-content-start"><label>테스트 데이터</label></div>
-                        <textarea class="test-data" name="testCaseList[` + testCaseIdx + `].testData" ` + $('#disabled').val() + ` ></textarea>
+                        <textarea class="test-data" name="testCaseList[${index}].testData" ${disabledAttr} >${testData}</textarea>
                     </div>
                 </div>
                 <div class="d-flex justify-content-start">
                     <div class="me-4">
                         <div class="d-flex justify-content-start"><label>예상결과</div>
-                        <textarea class="test-data" name="testCaseList[` + testCaseIdx + `].estimatedResult" ` + $('#disabled').val() + ` ></textarea>
+                        <textarea class="test-data" name="testCaseList[${index}].estimatedResult" ${disabledAttr} >${estimatedResult}</textarea>
                     </div>&nbsp;&nbsp;&nbsp;
+                    <div class="ms-4">
+                        <div class="d-flex justify-content-start"><label>비고</label></div>
+                        <textarea class="test-data" name="testCaseList[${index}].note" ${disabledAttr} >${note}</textarea>
+                    </div>
                 </div>
-               </section>
-               <br><hr>`;
+            </section>
+            <br><hr>`;
     }
 
     function generateIntegrationTest() {
@@ -175,7 +193,8 @@ $(function() {
 
         let selectedOption = $(this).val();
         let html;
-        if (selectedOption === '1') {
+        if (selectedOption === 'PMS01201') {
+            $('.tc-area').show();
             html = `
                 <label class="ms-4 fw-bold fs-2 text-black">
                        단위 테스트 등록</label>
@@ -183,19 +202,20 @@ $(function() {
                <div class="me-4">
                     <div class="d-flex justify-content-start"><label>기능 ID&nbsp;&nbsp;&nbsp;<span class="es-star">*</span></label></div>
                     <div class="d-flex justify-content-start">
-                        <select id="feat" name="featId" required ` + $('#disabled').val() + ` >
+                        <select id="feat" name="testCaseList[` + testCaseIdx + `].featNo" required ` + $('#disabled').val() + ` >
                             <option value="" selected disabled>선택하세요.</option>
-                            <option value="RSTR110"></option>
-                            <option value="RSTR111"></option>
-                            <option value="RSTR123"></option>
-                            <option value="RSTR221"></option>
-                            <option value="RSTR222"></option>
+                            <option value="1">RSTR110</option>
+                            <option value="2">RSTR111</option>
+                            <option value="3">RSTR123</option>
+                            <option value="4">RSTR221</option>
+                            <option value="5">RSTR222</option>
                         </select>
                     </div>
                 </div><br>
             `;
             html += generateUnitTestcase();
-        } else if (selectedOption === '2') {
+        } else if (selectedOption === 'PMS01202') {
+            $('.tc-area').show();
             html = `
                 <label class="ms-4 fw-bold fs-2 text-black">
                        통합 테스트 등록</label>
@@ -206,11 +226,11 @@ $(function() {
 
         $('#dynamic-content').html(html);
         $(document).on('click', '.tc-btn', function() {
-            if (selectedOption === '1') {
+            if (selectedOption === 'PMS01201') {
                 ++testCaseIdx;
                 $('#dynamic-content').append(generateUnitTestcase());
             }
-            else if (selectedOption === '2') {
+            else if (selectedOption === 'PMS01202') {
                 ++testCaseCnt;
                 $('#dynamic-content').append(generateIntegrationTest());
             }
@@ -276,7 +296,6 @@ $(function() {
             let keys = name.match(/[^\[\]]+/g); // 'testCaseList[0].testCaseId' => ['testCaseList', '0', 'testCaseId']
             assignValue(jsonObject, keys, value);
         }
-        console.log(JSON.stringify(jsonObject, null, 2))
 
         $.ajax({
             url: API_SERVER + '/projects/tests/register',
@@ -284,10 +303,10 @@ $(function() {
             contentType: 'application/json',
             data: JSON.stringify(jsonObject),
             success: function(response) {
-                // 성공 처리
+                location.href = '/projects/tests';
             },
             error: function(error) {
-                // 에러 처리
+                alert('테스트 등록 중 오류가 발생했습니다.');
             }
         });
     });
@@ -296,27 +315,69 @@ $(function() {
         e.preventDefault();
         location.href = '/projects/tests';
     });
+
+    let path = window.location.pathname;
+    const regex = /tests\/(\d+)$/;
+    let match = path.match(regex);
+    if (match){
+        let testNo = match[1];
+        $.ajax({
+            url: `${API_SERVER}/projects/tests/api/${testNo}`,
+            type: 'GET',
+            success: function (data) {
+                console.log(data);
+                if (data.testCaseList && data.testCaseList.length > 0) {
+                    data.testCaseList.forEach(function (testCase, index) {
+                        let testCaseHtml = generateUnitTestcase(index, testCase);
+                        $('#dynamic-content').append(testCaseHtml);
+                        $(`input[name="testCaseList[${index}].testDtlId"]`).val(testCase.testDtlId);
+                        $(`textarea[name="testCaseList[${index}].preCondition"]`).val(testCase.preCondition);
+                    });
+                }
+
+                $('input, select, textarea').attr('disabled', true);
+                $('.tc-btn').hide();
+                $('.cancel').hide();
+                $('button').attr('disabled', true);
+            },
+            error: function (error) {
+                console.error('테스트 데이터를 가져오는 중 오류 발생:', error);
+                alert('데이터를 가져오는 중 오류가 발생했습니다.');
+            }
+        });
+    }
+
+    $('.delete-btn').click(function() {
+        let testNo = $('#testNo').val();
+        $.ajax({
+            url: `${API_SERVER}/projects/tests/${testNo}`,
+            type: 'DELETE',
+            success: function(response) {
+                location.href = '/projects/tests';
+            },
+            error: function(error) {
+                alert('테스트 삭제 중 오류가 발생했습니다.');
+            }
+        });
+    });
 });
 
 function assignValue(obj, keys, value) {
     if (keys[0] === 'testCaseList') {
-        // 'testCaseList'를 배열로 처리
         if (!obj['testCaseList']) {
             obj['testCaseList'] = [];
         }
 
-        let index = parseInt(keys[1], 10); // 배열 인덱스
-        let field = keys[2].slice(1); // 필드 이름
+        let index = parseInt(keys[1], 10);
+        let field = keys[2].slice(1);
         console.log(field);
 
-        // 인덱스 위치에 객체가 없으면 생성
         if (!obj['testCaseList'][index]) {
             obj['testCaseList'][index] = {};
         }
 
         obj['testCaseList'][index][field] = value;
     } else {
-        // 다른 필드들은 일반적으로 처리
         let lastKey = keys.pop();
         let pointer = obj;
 

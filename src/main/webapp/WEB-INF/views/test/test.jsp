@@ -65,6 +65,7 @@
                     <div class="info-item ms-5">
                         <div class="d-flex justify-content-start">
                             <div class="me-4">
+                                <input type="hidden" name="testNo" id="testNo" value="${testReq.testNo}" >
                                 <div class="d-flex justify-content-start"><label>테스트 명&nbsp;&nbsp;&nbsp;<span class="es-star">*</span></label></div>
                                 <input type="text" name="testTitle" value="${testReq.testTitle}" required ${disabled} >
                             </div>&nbsp;&nbsp;&nbsp;
@@ -89,20 +90,38 @@
                             <div class="me-4">
                                 <div class="d-flex justify-content-start"><label>테스트 구분&nbsp;&nbsp;&nbsp;<span class="es-star">*</span></label></div>
                                 <select name="testType" id="testType" required ${disabled}>
-                                    <c:forEach var="test" items="${testType}">
-                                        <option value="${test.key}"
-                                                <c:if test="${test.key == 0}">
-                                                    selected disabled
-                                                </c:if>
-                                        >${test.value}</option>
-                                    </c:forEach>
+                                    <option value="0"
+                                            <c:if test="${empty testReq.testType}">
+                                                selected disabled
+                                            </c:if>
+                                    >선택</option>
+                                    <option value="1"
+                                            <c:if test="${testReq.testType == '단위'}">
+                                                selected
+                                            </c:if>
+                                    >단위 테스트</option>
+                                    <option value="2"
+                                            <c:if test="${testReq.testType == '통합'}">
+                                                selected
+                                            </c:if>
+                                    >통합 테스트</option>
                                 </select>
                             </div>
                             <div class="ms-4 me-4">
                                 <div class="d-flex justify-content-start"><label>상태&nbsp;&nbsp;&nbsp;<span class="es-star">*</span></label></div>
-                                <select name="testStatus" required ${disabled} >
-                                    <c:forEach var="stat" items="${testStatus}">
-                                        <option value="${stat}">${stat}</option>
+                                <select name="testStatus" id="testStatus" required ${disabled}>
+                                    <c:forEach var="stat" items="${testStatus}" varStatus="loop">
+                                        <c:choose>
+                                            <c:when test="${stat.value == testReq.testStatus}">
+                                                <option value="${stat.key}" selected disabled>${stat.value}</option>
+                                            </c:when>
+                                            <c:when test="${stat.key == 0}">
+                                                <option value="${stat.key}" selected disabled>${stat.value}</option>
+                                            </c:when>
+                                            <c:otherwise>
+                                                <option value="${stat.key}">${stat.value}</option>
+                                            </c:otherwise>
+                                        </c:choose>
                                     </c:forEach>
                                 </select>
                             </div>
@@ -116,17 +135,37 @@
                         <div class="d-flex justify-content-start">
                             <div class="me-4">
                                 <div class="d-flex justify-content-start"><label>시스템 분류</label></div>
-                                <select name="systemType" required ${disabled} >
+                                <select name="systemType" id="systemType" required ${disabled}>
                                     <c:forEach var="type" items="${systemType}">
-                                        <option value="${type}">${type}</option>
+                                        <c:choose>
+                                            <c:when test="${type.value == testReq.systemType}">
+                                                <option value="${type.key}" selected>${type.value}</option>
+                                            </c:when>
+                                            <c:when test="${type.key == 0}">
+                                                <option value="${type.key}" selected disabled>${type.value}</option>
+                                            </c:when>
+                                            <c:otherwise>
+                                                <option value="${type.key}">${type.value}</option>
+                                            </c:otherwise>
+                                        </c:choose>
                                     </c:forEach>
                                 </select>
                             </div>
                             <div class="ms-4 me-4">
                                 <div class="d-flex justify-content-start"><label>업무 구분</label></div>
-                                <select name="workType" required ${disabled} >
+                                <select name="workType" id="workType" required ${disabled}>
                                     <c:forEach var="type" items="${workType}">
-                                        <option value="${type}">${type}</option>
+                                        <c:choose>
+                                            <c:when test="${type.value == testReq.workType}">
+                                                <option value="${type.key}" selected>${type.value}</option>
+                                            </c:when>
+                                            <c:when test="${type.key == 0}">
+                                                <option value="${type.key}" selected disabled>${type.value}</option>
+                                            </c:when>
+                                            <c:otherwise>
+                                                <option value="${type.key}">${type.value}</option>
+                                            </c:otherwise>
+                                        </c:choose>
                                     </c:forEach>
                                 </select>
                             </div>
@@ -141,23 +180,34 @@
                         </div>
                         <br>
                         <div id="dynamic-content"></div>
-                        <div class="d-flex justify-content-center" style="display: none;">
-                            <button class="custom-button tc-btn fs-5">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        <div class="tc-area d-flex justify-content-center" style="display: none !important;">
+                            <button type="button" class="custom-button tc-btn fs-5">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                 테스트케이스 추가
                                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</button>
                         </div>
                     </div>
                     <br><br>
                     <div class="d-flex justify-content-end pe-5">
-                        <button type="submit" class="custom-button">&nbsp;&nbsp;&nbsp;&nbsp;제출&nbsp;&nbsp;&nbsp;&nbsp;</button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                        <button class="custom-button cancel" style="background-color: #8B8B8B">&nbsp;&nbsp;&nbsp;&nbsp;취소&nbsp;&nbsp;&nbsp;&nbsp;</button>
+                        <c:choose>
+                            <c:when test="${type eq 'register' || type eq 'modify'}">
+                                <button type="submit" class="custom-button" style="background-color: #62ce66">&nbsp;&nbsp;&nbsp;&nbsp;저장&nbsp;&nbsp;&nbsp;&nbsp;</button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                <button type="button" class="custom-button cancel" style="background-color: #8B8B8B">&nbsp;&nbsp;&nbsp;&nbsp;취소&nbsp;&nbsp;&nbsp;&nbsp;</button>
+                            </c:when>
+                            <c:otherwise>
+                                <button type="button" class="custom-button modify-btn" style="background-color: #1c9aef">&nbsp;&nbsp;&nbsp;&nbsp;수정&nbsp;&nbsp;&nbsp;&nbsp;</button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                <button type="button" class="custom-button delete-btn" style="background-color: #f13737">&nbsp;&nbsp;&nbsp;&nbsp;삭제&nbsp;&nbsp;&nbsp;&nbsp;</button>
+                            </c:otherwise>
+                        </c:choose>
                     </div>
+
                 </form>
             </section>
         </div>
     </div>
 
-
+    <script type="text/javascript">
+        let isViewMode = <% out.print(request.getParameter("type") == null ? "true" : "false"); %>;
+    </script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-serializeJSON/3.2.1/jquery.serializejson.min.js"></script>
     <script src="../../../resources/test/js/test.js"></script>
 </main>
