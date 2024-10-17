@@ -1,28 +1,30 @@
-DROP TABLE FeatureTest CASCADE CONSTRAINTS;
-DROP TABLE Defect CASCADE CONSTRAINTS;
-DROP TABLE TestDetail CASCADE CONSTRAINTS;
-DROP TABLE TestMaster CASCADE CONSTRAINTS;
-DROP TABLE Feature CASCADE CONSTRAINTS;
-DROP TABLE System CASCADE CONSTRAINTS;
-DROP TABLE CodeDetail CASCADE CONSTRAINTS;
-DROP TABLE CommonCode CASCADE CONSTRAINTS;
-DROP TABLE ProjectMember CASCADE CONSTRAINTS;
-DROP TABLE Project CASCADE CONSTRAINTS;
-DROP TABLE Team CASCADE CONSTRAINTS;
-DROP TABLE Member CASCADE CONSTRAINTS;
-DROP TABLE UserGroup CASCADE CONSTRAINTS;
-DROP TABLE TaskMember CASCADE CONSTRAINTS;
-DROP TABLE Task CASCADE CONSTRAINTS;
-DROP TABLE FeatureTest CASCADE CONSTRAINTS;
-DROP TABLE Output CASCADE CONSTRAINTS;
-DROP TABLE TaskOutput CASCADE CONSTRAINTS;
-DROP TABLE FileMaster CASCADE CONSTRAINTS;
-DROP TABLE FileDetail CASCADE CONSTRAINTS;
-DROP TABLE Request CASCADE CONSTRAINTS;
-DROP TABLE RequestFeature CASCADE CONSTRAINTS;
-DROP TABLE RequestTest CASCADE CONSTRAINTS;
-DROP TABLE Risk CASCADE CONSTRAINTS;
-DROP TABLE History CASCADE CONSTRAINTS;
+DROP TABLE FeatureTest;
+DROP TABLE RequestTest;
+DROP TABLE RequestFeature;
+DROP TABLE TaskMember;
+DROP TABLE TaskOutput;
+DROP TABLE History;
+DROP TABLE Defect;
+DROP TABLE FileDetail;
+
+DROP TABLE TestDetail;
+DROP TABLE Risk;
+DROP TABLE Feature;
+DROP TABLE Request;
+DROP TABLE Task;
+DROP TABLE FileMaster;
+
+DROP TABLE Output;
+DROP TABLE TestMaster;
+DROP TABLE ProjectMember;
+DROP TABLE Team;
+DROP TABLE System;
+
+DROP TABLE Member;
+DROP TABLE Project;
+DROP TABLE UserGroup;
+DROP TABLE CodeDetail;
+DROP TABLE CommonCode;
 
 DROP SEQUENCE seq_project;
 DROP SEQUENCE seq_team;
@@ -44,300 +46,300 @@ DROP SEQUENCE seq_history;
 ----------------------------------------------------------------------------------------------------------------------
 -- CREATE TABLE
 CREATE TABLE UserGroup (
-    grp_no number NOT NULL,
-    grp_nm VARCHAR2(50) NOT NULL,
-    par_grp_no NUMBER NULL
+                           grp_no number NOT NULL,
+                           grp_nm VARCHAR2(50) NOT NULL,
+                           par_grp_no NUMBER NULL
 );
 
 CREATE TABLE Member (
-    mem_no number NOT NULL,
-    grp_no NUMBER NULL,
-    login_id VARCHAR2(20) NOT NULL,
-    pw VARCHAR2(30) NOT NULL,
-    mem_nm VARCHAR2(10) NOT NULL,
-    phone_no VARCHAR2(15) NOT NULL,
-    email VARCHAR2(50) NOT NULL,
-    auth_cd CHAR(8) NOT NULL,
-    pos_nm VARCHAR2(8) NULL,
-    birth_dt VARCHAR2(10) NULL,
-    tech_grd_cd CHAR(8) NULL,
-    org VARCHAR2(70) NULL,
-    use_yn VARCHAR2(1) NOT NULL,
-    rec_prj NUMBER NULL
+                        mem_no number NOT NULL,
+                        grp_no NUMBER NULL,
+                        login_id VARCHAR2(20) NOT NULL,
+                        pw VARCHAR2(30) NOT NULL,
+                        mem_nm VARCHAR2(10) NOT NULL,
+                        phone_no VARCHAR2(15) NOT NULL,
+                        email VARCHAR2(50) NOT NULL,
+                        auth_cd CHAR(8) NOT NULL,
+                        pos_nm VARCHAR2(8) NULL,
+                        birth_dt VARCHAR2(10) NULL,
+                        tech_grd_cd CHAR(8) NULL,
+                        org VARCHAR2(70) NULL,
+                        use_yn VARCHAR2(1) NOT NULL,
+                        rec_prj NUMBER NULL
 );
 
 CREATE TABLE team (
-    tm_no number NOT NULL,
-    tm_nm VARCHAR2(200) NOT NULL,
-    tm_cont VARCHAR2(200) NULL,
-    use_yn VARCHAR2(1) NULL,
-    par_tm_no NUMBER NULL,
-    order_no NUMBER NULL,
-    prj_no NUMBER NOT NULL,
-    sys_no NUMBER NULL,
-    reg_id VARCHAR2(100) NULL,
-    reg_dt DATE NULL,
-    mod_id VARCHAR2(100) NULL,
-    mod_dt DATE NULL
+                      tm_no number NOT NULL,
+                      tm_nm VARCHAR2(200) NOT NULL,
+                      tm_cont VARCHAR2(200) NULL,
+                      use_yn VARCHAR2(1) NULL,
+                      par_tm_no NUMBER NULL,
+                      order_no NUMBER NULL,
+                      prj_no NUMBER NOT NULL,
+                      sys_no NUMBER NULL,
+                      reg_id VARCHAR2(100) NULL,
+                      reg_dt DATE NULL,
+                      mod_id VARCHAR2(100) NULL,
+                      mod_dt DATE NULL
 );
 
 CREATE TABLE projectMember (
-    mem_no NUMBER NOT NULL,
-    tm_no NUMBER NOT NULL,
-    prj_no NUMBER NOT NULL,
-    prj_auth_cd CHAR(8) NOT NULL,
-    pre_start_dt DATE NULL,
-    pre_end_dt DATE NULL,
-    start_dt DATE NULL,
-    end_dt DATE NULL,
-    use_yn VARCHAR2(1) NOT NULL,
-    reg_id VARCHAR2(100) NULL,
-    reg_dt DATE NULL,
-    mod_id VARCHAR2(100) NULL,
-    mod_dt DATE NULL
+                               mem_no NUMBER NOT NULL,
+                               tm_no NUMBER NOT NULL,
+                               prj_no NUMBER NOT NULL,
+                               prj_auth_cd CHAR(8) NOT NULL,
+                               pre_start_dt DATE NULL,
+                               pre_end_dt DATE NULL,
+                               start_dt DATE NULL,
+                               end_dt DATE NULL,
+                               use_yn VARCHAR2(1) NOT NULL,
+                               reg_id VARCHAR2(100) NULL,
+                               reg_dt DATE NULL,
+                               mod_id VARCHAR2(100) NULL,
+                               mod_dt DATE NULL
 );
 
 CREATE TABLE project (
-    prj_no number NOT NULL,
-    prj_title VARCHAR2(200) NOT NULL,
-    prj_cont VARCHAR2(1000) NOT NULL,
-    stat_cd CHAR(8) NOT NULL,
-    prg number NOT NULL,
-    org VARCHAR2(50) NOT NULL,
-    pre_st_dt DATE NOT NULL,
-    pre_end_dt DATE NOT NULL,
-    st_dt DATE NULL,
-    end_dt DATE NULL,
-    use_yn VARCHAR2(1) NOT NULL,
-    reg_id VARCHAR2(100) NOT NULL,
-    reg_dt DATE NOT NULL,
-    mod_id VARCHAR2(100) NULL,
-    mod_dt DATE NULL
+                         prj_no number NOT NULL,
+                         prj_title VARCHAR2(200) NOT NULL,
+                         prj_cont VARCHAR2(1000) NOT NULL,
+                         stat_cd CHAR(8) NOT NULL,
+                         prg number NOT NULL,
+                         org VARCHAR2(50) NOT NULL,
+                         pre_st_dt DATE NOT NULL,
+                         pre_end_dt DATE NOT NULL,
+                         st_dt DATE NULL,
+                         end_dt DATE NULL,
+                         use_yn VARCHAR2(1) NOT NULL,
+                         reg_id VARCHAR2(100) NOT NULL,
+                         reg_dt DATE NOT NULL,
+                         mod_id VARCHAR2(100) NULL,
+                         mod_dt DATE NULL
 );
 
 CREATE TABLE System (
-    sys_no number NOT NULL,
-    sys_ttl	VARCHAR2(100) NOT NULL,
-    sys_cont VARCHAR2(1000) NOT NULL,
-    prj_no NUMBER NOT NULL,
-    par_sys_no NUMBER NULL,
-    sys_yn VARCHAR2(10) NOT NULL,
-    use_yn VARCHAR2(1) NOT NULL
+                        sys_no number NOT NULL,
+                        sys_ttl	VARCHAR2(100) NOT NULL,
+                        sys_cont VARCHAR2(1000) NOT NULL,
+                        prj_no NUMBER NOT NULL,
+                        par_sys_no NUMBER NULL,
+                        sys_yn VARCHAR2(10) NOT NULL,
+                        use_yn VARCHAR2(1) NOT NULL
 );
 
 CREATE TABLE Task (
-    tsk_no number NOT NULL,
-    order_no NUMBER NOT NULL,
-    tsk_ttl VARCHAR2(100) NOT NULL,
-    tsk_stat_cd CHAR(8) NOT NULL,
-    pre_st_dt DATE NOT NULL,
-    pre_end_dt DATE NOT NULL,
-    st_dt DATE NULL,
-    end_dt DATE NULL,
-    weight_val NUMBER NULL,
-    prg NUMBER NOT NULL,
-    rel_out_nm VARCHAR2(100) NULL,
-    use_yn VARCHAR2(1) NOT NULL,
-    par_task_no NUMBER NULL,
-    ante_task_no NUMBER NULL,
-    prj_no NUMBER NOT NULL,
-    sys_no NUMBER NULL,
-    reg_id VARCHAR2(100) NOT NULL,
-    reg_dt DATE NOT NULL,
-    mod_id VARCHAR2(100) NULL,
-    mod_dt DATE NULL
+                      tsk_no number NOT NULL,
+                      order_no NUMBER NOT NULL,
+                      tsk_ttl VARCHAR2(100) NOT NULL,
+                      tsk_stat_cd CHAR(8) NOT NULL,
+                      pre_st_dt DATE NOT NULL,
+                      pre_end_dt DATE NOT NULL,
+                      st_dt DATE NULL,
+                      end_dt DATE NULL,
+                      weight_val NUMBER NULL,
+                      prg NUMBER NOT NULL,
+                      rel_out_nm VARCHAR2(100) NULL,
+                      use_yn VARCHAR2(1) NOT NULL,
+                      par_task_no NUMBER NULL,
+                      ante_task_no NUMBER NULL,
+                      prj_no NUMBER NOT NULL,
+                      sys_no NUMBER NULL,
+                      reg_id VARCHAR2(100) NOT NULL,
+                      reg_dt DATE NOT NULL,
+                      mod_id VARCHAR2(100) NULL,
+                      mod_dt DATE NULL
 );
 
 CREATE TABLE TaskMember (
-    mem_no NUMBER NOT NULL,
-    tm_no NUMBER NOT NULL,
-    tsk_no NUMBER NOT NULL,
-    prj_no NUMBER NOT NULL
+                            mem_no NUMBER NOT NULL,
+                            tm_no NUMBER NOT NULL,
+                            tsk_no NUMBER NOT NULL,
+                            prj_no NUMBER NOT NULL
 );
 
 CREATE TABLE Feature (
-    feat_no	number NOT NULL,
-    feat_id	VARCHAR2(20) NOT NULL,
-    feat_title VARCHAR2(100) NOT NULL,
-    feat_cont VARCHAR2(500) NOT NULL,
-    pre_st_dt DATE NOT NULL,
-    pre_end_dt DATE NOT NULL,
-    st_dt DATE NULL,
-    end_dt DATE NULL,
-    stat_cd CHAR(8) NOT NULL,
-    pri_cd CHAR(8) NOT NULL,
-    prg	NUMBER NOT NULL,
-    diff_cd CHAR(8) NOT NULL,
-    use_yn VARCHAR2(1) NOT NULL,
-    sys_no NUMBER NULL,
-    mem_no NUMBER NOT NULL,
-    tm_no NUMBER NOT NULL,
-    prj_no NUMBER NOT NULL
+                         feat_no	number NOT NULL,
+                         feat_id	VARCHAR2(20) NOT NULL,
+                         feat_title VARCHAR2(100) NOT NULL,
+                         feat_cont VARCHAR2(500) NOT NULL,
+                         pre_st_dt DATE NOT NULL,
+                         pre_end_dt DATE NOT NULL,
+                         st_dt DATE NULL,
+                         end_dt DATE NULL,
+                         stat_cd CHAR(8) NOT NULL,
+                         pri_cd CHAR(8) NOT NULL,
+                         prg	NUMBER NOT NULL,
+                         diff_cd CHAR(8) NOT NULL,
+                         use_yn VARCHAR2(1) NOT NULL,
+                         sys_no NUMBER NULL,
+                         mem_no NUMBER NOT NULL,
+                         tm_no NUMBER NOT NULL,
+                         prj_no NUMBER NOT NULL
 );
 
 CREATE TABLE CommonCode (
-    common_cd_no CHAR(6) NOT NULL,
-    cd_nm VARCHAR2(40) NOT NULL,
-    use_yn VARCHAR2(1) NOT NULL
+                            common_cd_no CHAR(6) NOT NULL,
+                            cd_nm VARCHAR2(40) NOT NULL,
+                            use_yn VARCHAR2(1) NOT NULL
 );
 
 CREATE TABLE CodeDetail (
-    cd_dtl_no CHAR(8) NOT NULL,
-    common_cd_no CHAR(6) NOT NULL,
-    cd_dtl_nm CHAR(40) NOT NULL,
-    order_no NUMBER NOT NULL,
-    field_1 NUMBER NULL,
-    field_2 VARCHAR2(10) NULL,
-    field_3 VARCHAR2(10) NULL,
-    field_4 VARCHAR2(10) NULL,
-    use_yn VARCHAR2(1) NOT NULL
+                            cd_dtl_no CHAR(8) NOT NULL,
+                            common_cd_no CHAR(6) NOT NULL,
+                            cd_dtl_nm CHAR(40) NOT NULL,
+                            order_no NUMBER NOT NULL,
+                            field_1 NUMBER NULL,
+                            field_2 VARCHAR2(10) NULL,
+                            field_3 VARCHAR2(10) NULL,
+                            field_4 VARCHAR2(10) NULL,
+                            use_yn VARCHAR2(1) NOT NULL
 );
 
 CREATE TABLE Output (
-    opt_no number NOT NULL,
-    opt_ttl VARCHAR2(50) NOT NULL,
-    depth NUMBER NOT NULL,
-    prj_no NUMBER NOT NULL,
-    high_folder_no NUMBER NULL,
-    fld_yn VARCHAR2(1) NOT NULL,
-    use_yn VARCHAR2(1) NOT NULL
+                        opt_no number NOT NULL,
+                        opt_ttl VARCHAR2(50) NOT NULL,
+                        depth NUMBER NOT NULL,
+                        prj_no NUMBER NOT NULL,
+                        high_folder_no NUMBER NULL,
+                        fld_yn VARCHAR2(1) NOT NULL,
+                        use_yn VARCHAR2(1) NOT NULL
 );
 
 CREATE TABLE TaskOutput (
-    task_no NUMBER NOT NULL,
-    folder_no NUMBER NOT NULL
+                            task_no NUMBER NOT NULL,
+                            folder_no NUMBER NOT NULL
 );
 
 CREATE TABLE TestMaster (
-    test_no	number NOT NULL,
-    test_id VARCHAR2(100) NOT NULL,
-    test_title VARCHAR2(200) NOT NULL,
-    test_cont VARCHAR2(200) NOT NULL,
-    stat_cd	CHAR(8) NOT NULL,
-    type_cd	CHAR(8) NOT NULL,
-    test_st_dt DATE NULL,
-    test_end_dt	DATE NULL,
-    prj_no NUMBER NOT NULL,
-    sys_work_no NUMBER NULL,
-    reg_id VARCHAR2(100) NOT NULL,
-    reg_dt DATE NOT NULL,
-    mod_id VARCHAR2(100) NULL,
-    mod_dt DATE NULL,
-    use_yn VARCHAR2(1) NOT NULL
+                            test_no	number NOT NULL,
+                            test_id VARCHAR2(100) NOT NULL,
+                            test_title VARCHAR2(200) NOT NULL,
+                            test_cont VARCHAR2(200) NOT NULL,
+                            stat_cd	CHAR(8) NOT NULL,
+                            type_cd	CHAR(8) NOT NULL,
+                            test_st_dt DATE NULL,
+                            test_end_dt	DATE NULL,
+                            prj_no NUMBER NOT NULL,
+                            sys_work_no NUMBER NULL,
+                            reg_id VARCHAR2(100) NOT NULL,
+                            reg_dt DATE NOT NULL,
+                            mod_id VARCHAR2(100) NULL,
+                            mod_dt DATE NULL,
+                            use_yn VARCHAR2(1) NOT NULL
 );
 
 CREATE TABLE TestDetail (
-    test_dtl_no	number NOT NULL,
-    test_dtl_id	VARCHAR2(20) NOT NULL,
-    wrk_proc_cont VARCHAR2(1000) NULL,  -- 업무처리내용
-    test_data VARCHAR2(1000) NULL,      -- 테스트데이터
-    estimated_rlt VARCHAR2(1000)	NULL,   -- 예상결과
-    test_detail_cont VARCHAR2(1000) NULL,      -- 테스트상세내용
-    proceed_cont VARCHAR2(1000) NULL,       -- 수행절차
-    pre_cond VARCHAR2(1000)	NULL,           -- 사전조건
-    note VARCHAR2(1000)	NULL,               -- 비고
-    test_st_dt DATE	NULL,                       -- 테스트진행일자
-    test_result_cd CHAR(8) NULL,                -- 테스트결과코드
-    mem_no NUMBER NULL,                         -- 테스트 담당자
-    par_test_dtl_no NUMBER NULL,
-    test_no	NUMBER NOT NULL                 -- 테스트번호
+                            test_dtl_no	number NOT NULL,
+                            test_dtl_id	VARCHAR2(20) NOT NULL,
+                            wrk_proc_cont VARCHAR2(1000) NULL,  -- 업무처리내용
+                            test_data VARCHAR2(1000) NULL,      -- 테스트데이터
+                            estimated_rlt VARCHAR2(1000)	NULL,   -- 예상결과
+                            test_detail_cont VARCHAR2(1000) NULL,      -- 테스트상세내용
+                            proceed_cont VARCHAR2(1000) NULL,       -- 수행절차
+                            pre_cond VARCHAR2(1000)	NULL,           -- 사전조건
+                            note VARCHAR2(1000)	NULL,               -- 비고
+                            test_st_dt DATE	NULL,                       -- 테스트진행일자
+                            test_result_cd CHAR(8) NULL,                -- 테스트결과코드
+                            mem_no NUMBER NULL,                         -- 테스트 담당자
+                            par_test_dtl_no NUMBER NULL,
+                            test_no	NUMBER NOT NULL                 -- 테스트번호
 );
 
 CREATE TABLE Defect (
-    df_no number NOT NULL,
-    df_id VARCHAR(20) NOT NULL,
-    df_ttl VARCHAR2(100) NOT NULL,
-    type_cd CHAR(3) NOT NULL,
-    stat_cd CHAR(3) NOT NULL,
-    pri_cd CHAR(3) NOT NULL,
-    df_cont VARCHAR2(500) NOT NULL,
-    df_fd_dt DATE NOT NULL,
-    due_dt DATE NULL,
-    compl_dt DATE NULL,
-    df_compl_cont VARCHAR2(500) NULL,
-    prj_no NUMBER NOT NULL,
-    sys_no NUMBER NULL,
-    test_dtl_no NUMBER NULL,
-    mem_fd_no NUMBER NOT NULL,
-    mem_act_no NUMBER NULL,
-    fl_ms_act_no NUMBER NULL,
-    fl_ms_fd_no NUMBER NULL
+                        df_no number NOT NULL,
+                        df_id VARCHAR(20) NOT NULL,
+                        df_ttl VARCHAR2(100) NOT NULL,
+                        type_cd CHAR(3) NOT NULL,
+                        stat_cd CHAR(3) NOT NULL,
+                        pri_cd CHAR(3) NOT NULL,
+                        df_cont VARCHAR2(500) NOT NULL,
+                        df_fd_dt DATE NOT NULL,
+                        due_dt DATE NULL,
+                        compl_dt DATE NULL,
+                        df_compl_cont VARCHAR2(500) NULL,
+                        prj_no NUMBER NOT NULL,
+                        sys_no NUMBER NULL,
+                        test_dtl_no NUMBER NULL,
+                        mem_fd_no NUMBER NOT NULL,
+                        mem_act_no NUMBER NULL,
+                        fl_ms_act_no NUMBER NULL,
+                        fl_ms_fd_no NUMBER NULL
 );
 
 CREATE TABLE FeatureTest (
-    feat_no number NOT NULL,
-    test_dtl_no number NOT NULL
+                             feat_no number NOT NULL,
+                             test_dtl_no number NOT NULL
 );
 
 CREATE TABLE Risk (
-    risk_no number NOT NULL,
-    risk_id VARCHAR2(20) NOT NULL,
-    rsk_ttl VARCHAR2(100) NOT NULL,
-    type_cd CHAR(8) NOT NULL,
-    class_cd CHAR(8) NOT NULL,
-    stat_cd CHAR(8) NOT NULL,
-    pri_cd CHAR(8) NOT NULL,
-    risk_cont VARCHAR2(1000) NOT NULL,
-    risk_plan VARCHAR2(1000) NULL,
-    due_dt DATE NULL,
-    compl_dt DATE NULL,
-    prj_no NUMBER NOT NULL,
-    sys_no NUMBER NULL,
-    mem_no NUMBER NOT NULL,
-    fl_ms_act_no NUMBER NULL,
-    fl_ms_fd_no number NULL
+                      risk_no number NOT NULL,
+                      risk_id VARCHAR2(20) NOT NULL,
+                      rsk_ttl VARCHAR2(100) NOT NULL,
+                      type_cd CHAR(8) NOT NULL,
+                      class_cd CHAR(8) NOT NULL,
+                      stat_cd CHAR(8) NOT NULL,
+                      pri_cd CHAR(8) NOT NULL,
+                      risk_cont VARCHAR2(1000) NOT NULL,
+                      risk_plan VARCHAR2(1000) NULL,
+                      due_dt DATE NULL,
+                      compl_dt DATE NULL,
+                      prj_no NUMBER NOT NULL,
+                      sys_no NUMBER NULL,
+                      mem_no NUMBER NOT NULL,
+                      fl_ms_act_no NUMBER NULL,
+                      fl_ms_fd_no number NULL
 );
 
 CREATE TABLE History (
-    history_no number NOT NULL,
-    record_dt DATE NULL,
-    record_cont VARCHAR(500) NOT NULL,
-    risk_no NUMBER NULL,
-    mem_no NUMBER NOT NULL
+                         history_no number NOT NULL,
+                         record_dt DATE NULL,
+                         record_cont VARCHAR(500) NOT NULL,
+                         risk_no NUMBER NULL,
+                         mem_no NUMBER NOT NULL
 );
 
 CREATE TABLE Request (
-    req_no number NOT NULL,
-    req_nm VARCHAR2(50) NOT NULL,
-    use_yn VARCHAR2(1) NOT NULL,
-    prj_no NUMBER NOT NULL,
-    sys_no NUMBER NOT NULL,
-    accept_plan VARCHAR(500) NOT NULL,
-    stat_cd CHAR(8) NOT NULL,
-    category_cd CHAR(8) NOT NULL,
-    accept VARCHAR(1) NOT NULL
+                         req_no number NOT NULL,
+                         req_nm VARCHAR2(50) NOT NULL,
+                         use_yn VARCHAR2(1) NOT NULL,
+                         prj_no NUMBER NOT NULL,
+                         sys_no NUMBER NOT NULL,
+                         accept_plan VARCHAR(500) NOT NULL,
+                         stat_cd CHAR(8) NOT NULL,
+                         category_cd CHAR(8) NOT NULL,
+                         accept VARCHAR(1) NOT NULL
 );
 
 CREATE TABLE RequestFeature (
-    feat_no NUMBER NOT NULL,
-    req_no NUMBER NOT NULL
+                                feat_no NUMBER NOT NULL,
+                                req_no NUMBER NOT NULL
 );
 
 CREATE TABLE RequestTest (
-    req_no NUMBER NOT NULL,
-    test_dtl_no NUMBER NOT NULL
+                             req_no NUMBER NOT NULL,
+                             test_dtl_no NUMBER NOT NULL
 );
 
 CREATE TABLE FileMaster (
-    fl_ms_no number NOT NULL,
-    fl_cd CHAR(8) NOT NULL,
-    opt_no number NULL
+                            fl_ms_no number NOT NULL,
+                            fl_cd CHAR(8) NOT NULL,
+                            opt_no number NULL
 );
 
 CREATE TABLE FileDetail (
-    fl_no number NOT NULL,
-    fl_ttl VARCHAR2(100) NULL,
-    original_ttl VARCHAR2(100) NOT NULL,
-    uuid_ttl VARCHAR2(500) NOT NULL,
-    fl_type VARCHAR2(20) NOT NULL,
-    fl_size NUMBER NOT NULL,
-    version NUMBER NOT NULL,
-    fl_ms_no NUMBER NOT NULL,
-    reg_id VARCHAR2(100) NOT NULL,
-    reg_dt DATE NOT NULL,
-    mod_id VARCHAR2(100) NULL,
-    mod_dt DATE NULL,
-    use_yn VARCHAR2(1) NOT NULL
+                            fl_no number NOT NULL,
+                            fl_ttl VARCHAR2(100) NULL,
+                            original_ttl VARCHAR2(100) NOT NULL,
+                            uuid_ttl VARCHAR2(500) NOT NULL,
+                            fl_type VARCHAR2(20) NOT NULL,
+                            fl_size NUMBER NOT NULL,
+                            version NUMBER NOT NULL,
+                            fl_ms_no NUMBER NOT NULL,
+                            reg_id VARCHAR2(100) NOT NULL,
+                            reg_dt DATE NOT NULL,
+                            mod_id VARCHAR2(100) NULL,
+                            mod_dt DATE NULL,
+                            use_yn VARCHAR2(1) NOT NULL
 );
 
 ----------------------------------------------------------------------------------------------------------------------
@@ -390,8 +392,6 @@ ALTER TABLE ProjectMember ADD CONSTRAINT FK_Project_TO_ProjectMember_1 FOREIGN K
 ALTER TABLE Task ADD CONSTRAINT pk_tsk_no_001 PRIMARY KEY (tsk_no);
 ALTER TABLE Task ADD CONSTRAINT fk_tsk_sys_no_002 FOREIGN KEY (sys_no) REFERENCES System (sys_no);
 ALTER TABLE Task ADD CONSTRAINT fk_tsk_prj_no_003 FOREIGN KEY (prj_no) REFERENCES Project (prj_no);
-ALTER TABLE Task ADD CONSTRAINT fk_tsk_par_task_no_004 FOREIGN KEY (par_task_no) REFERENCES Task (tsk_no);
-ALTER TABLE Task ADD CONSTRAINT fk_tsk_ante_task_no_005 FOREIGN KEY (ante_task_no) REFERENCES Task (tsk_no);
 
 ALTER TABLE TaskMember ADD CONSTRAINT pk_tsk_mem_no_001 PRIMARY KEY (mem_no, tm_no, tsk_no, prj_no);
 ALTER TABLE TaskMember ADD CONSTRAINT fk_tsk_mem_no_002 FOREIGN KEY (mem_no, tm_no, prj_no) REFERENCES ProjectMember (mem_no, tm_no, prj_no);
@@ -989,5 +989,8 @@ VALUES (seq_testdetail.nextval, 'TD003', '테스트상세3', '테스트상세3 �
 INSERT INTO FeatureTest (feat_no, test_dtl_no) VALUES (1, 1);
 INSERT INTO FeatureTest (feat_no, test_dtl_no) VALUES (2, 1);
 INSERT INTO FeatureTest (feat_no, test_dtl_no) VALUES (3, 1);
+
+update codedetail set field_2 = 'Y' where common_cd_no = 'PMS004';
+update codedetail set field_3 = 'Y' where common_cd_no = 'PMS004' and cd_dtl_no IN ('PMS00402', 'PMS00403', 'PMS00404');
 -----------------------------------------------------------------------------------------------------------------
 COMMIT;
