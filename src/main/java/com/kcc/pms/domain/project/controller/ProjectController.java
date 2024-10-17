@@ -1,9 +1,6 @@
 package com.kcc.pms.domain.project.controller;
 
-import com.kcc.pms.domain.project.model.dto.CombinedProjectResponseDto;
-import com.kcc.pms.domain.project.model.dto.Criteria;
-import com.kcc.pms.domain.project.model.dto.PageDto;
-import com.kcc.pms.domain.project.model.dto.ProjectRequestDto;
+import com.kcc.pms.domain.project.model.dto.*;
 import com.kcc.pms.domain.project.service.ProjectService;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
@@ -21,8 +18,9 @@ public class ProjectController {
     private final ProjectService projectService;
 
     @GetMapping("/list")
-    public String list(ProjectRequestDto prjReqDto, Criteria cri, Model model) {
+    public String list(Criteria cri, Model model) {
         String login_id = "user1"; // 회원아이디(세션정보)
+        ProjectRequestDto prjReqDto = new ProjectRequestDto();
         prjReqDto.setLogin_id(login_id);
 
         int total = projectService.getProjectCount(prjReqDto);
@@ -84,13 +82,18 @@ public class ProjectController {
 
     @PutMapping("/api/project")
     @ResponseBody
-    public ResponseEntity<String> updateProject(ProjectRequestDto project) {
+    public ResponseEntity<String> updateProject(ProjectRequestDto project, HttpSession session) {
+        int prjNo = (int)session.getAttribute("prjNo");
         String login_id = "user1"; // 회원아이디(세션정보)
         project.setMod_id(login_id);
 
         try {
             int result = projectService.updateProject(project);
             if (result > 0) {
+                CombinedProjectResponseDto projectInfo = projectService.findByProject(prjNo);
+                String prjTitle = projectInfo.getProject().getPrj_title();
+                session.setAttribute("prjTitle", prjTitle);
+
                 return ResponseEntity.ok("success update project");
             } else {
                 return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("fail update project");

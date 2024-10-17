@@ -86,6 +86,7 @@ $(document).ready(function () {
                 data: $(this).serialize(),
                 success: function(response) {
                     alert('프로젝트가 수정되었습니다.');
+                    location.reload();
                 },
                 error: function(xhr, status, error) {
                     console.error('에러:', xhr.responseText);

@@ -24,7 +24,11 @@ public class ProjectServiceImpl implements ProjectService {
 
     @Override
     public int updateProject(ProjectRequestDto project) {
-        return projectMapper.updateProject(project);
+        int resultProject = projectMapper.updateProject(project);
+        if (resultProject > 0) {
+            int resultTeam = projectMapper.updateTeam(project);
+        }
+        return resultProject;
     }
 
     @Override

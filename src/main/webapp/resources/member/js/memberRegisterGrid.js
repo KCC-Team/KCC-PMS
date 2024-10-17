@@ -68,7 +68,18 @@ $(document.body).ready(function () {
             reg_groupmemGrid.clearSelect();
         }
 
+        var typeValue = urlParams.get('type');
+        if (typeValue == 'project' && selectedMembers.length > 1) {
+            alert("PM은 1명만 등록 가능합니다.");
+            return false;
+        }
+
         selectedMembers.forEach(member => {
+            var typeValue = urlParams.get('type');
+            if (typeValue == 'project') {
+                member.auth = 'PMS00201'
+            }
+
             console.log("추가된 멤버 : " + JSON.stringify(member, null, 2));
 
             let exists = addedMembers.some(m => m.id === member.id);
@@ -102,7 +113,12 @@ $(document.body).ready(function () {
     // 적용 버튼 클릭
     $(document).on('click', '.apply', function() {
         insertProject();
-        registerMember();
+
+        let typeValue = urlParams.get('type');
+        let pageValue = urlParams.get('page');
+        if (typeValue != 'project' && pageValue != 'wbs') {
+            registerMember();
+        }
     });
 
     initGrid();
@@ -129,10 +145,6 @@ function insertProject() {
     var typeValue = urlParams.get('type');
 
     if (window.opener && (typeValue === 'project' || typeValue === 'wbs')) {
-        if (typeValue === 'project' && addedMembers.length > 1) {
-            alert("PM은 1명만 등록이 가능합니다.")
-            return false;
-        }
         if (typeValue === 'project' && addedMembers[0].auth != 'PMS00201') {
             alert("PM만 등록 가능합니다.")
             return false;

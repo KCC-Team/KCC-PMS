@@ -85,8 +85,6 @@ function getProjectResult() {
         type: 'GET',
         success: function(response) {
 
-            console.log(response);
-
             var tasks = {
                 data: [] // 빈 배열로 초기화
             };
@@ -241,6 +239,12 @@ gantt.attachEvent("onContextMenu", function (id, linkId, e) {
     // 부모 작업 ID 가져오기 (최상위 작업일 경우 부모가 없을 수 있음)
     var parentTaskId = task.parent ? task.parent : "null";  // 부모가 없는 경우 '없음' 표시
 
+    // 자식 작업들 가져오기
+    var children = gantt.getChildren(id);
+
+    // 마지막 자식 ID 가져오기
+    var lastChildId = children.length > 0 ? children[children.length - 1] : "0";
+
     // 커스텀 메뉴 생성
     const contextMenu = `
     <div
@@ -250,7 +254,7 @@ gantt.attachEvent("onContextMenu", function (id, linkId, e) {
     >
       <input type=button value="아래에 추가" class="btn-task" onclick="wbsInfoPopup('new', ${id}, ${parentTaskId})">
       <br/>
-      <input type=button value="하위로 추가" class="btn-task" onclick="wbsInfoPopup('child', ${id}, ${id})">
+      <input type=button value="하위로 추가" class="btn-task" onclick="wbsInfoPopup('child', ${lastChildId}, ${id})">
       <br/>
       <input type=button value="상세 정보" class="btn-task" onclick="wbsInfoPopup('view', ${id}, ${id})">
     </div>
@@ -306,7 +310,7 @@ function makeResizableColumns() {
 
 
 function wbsInfoPopup(type, id, parentId) {
-    var url = "/projects/wbsInfo?type=" + type;
+    var url = "/projects/wbsInfo?page=wbs&type=" + type;
     if (id != undefined)  {
         url += "&id=" + id;
     }
