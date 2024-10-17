@@ -29,12 +29,12 @@
         <if test="tm_cont != null">tm_cont,</if>
         <if test="par_tm_no != null">par_tm_no,</if>
         <if test="sys_no != null">sys_no,</if>
-        reg_id, reg_dt)
+        order_no, reg_id, reg_dt)
         values (#{tm_no}, #{prj_title}, #{prj_no}, 'Y',
         <if test="tm_cont != null">#{tm_cont},</if>
         <if test="par_tm_no != null">#{par_tm_no},</if>
         <if test="sys_no != null">#{sys_no},</if>
-        #{reg_id}, SYSDATE)
+        1, #{reg_id}, SYSDATE)
     </insert>
 
     <insert id="saveProjectMember" parameterType="com.kcc.pms.domain.project.model.dto.ProjectRequestDto">
@@ -68,6 +68,12 @@
             use_yn = #{use_yn},
             mod_id = #{mod_id},
             mod_dt = SYSDATE
+        where prj_no = #{prj_no}
+    </update>
+
+    <update id="updateTeam">
+        update team set
+        tm_nm = #{prj_title}
         where prj_no = #{prj_no}
     </update>
 

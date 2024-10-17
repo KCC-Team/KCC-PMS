@@ -89,6 +89,8 @@ window.addEventListener('message', function (event) {
     let teamNo = "";
     let membersName = "";
 
+    console.log(addedMembers);
+
     addedMembers.forEach(function(member) {
         membersId += member.id + ", ";
         teamNo += member.teamNo + ", ";

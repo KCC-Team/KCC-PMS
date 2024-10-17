@@ -49,6 +49,7 @@ function commonProjectInfo() {
                                 </li>`;
             });
             $(".ul-prj-title").append(li_project);
+            $(".common-project-title").text(prjTitle);
         },
         error: function (xhr, status, error) {
             console.error('에러:', xhr.responseText);

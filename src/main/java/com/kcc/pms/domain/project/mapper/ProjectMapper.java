@@ -15,6 +15,7 @@ public interface ProjectMapper {
     int saveTeam(ProjectRequestDto team);
     int saveProjectMember(ProjectRequestDto projectMember);
     int updateProject(ProjectRequestDto project);
+    int updateTeam(ProjectRequestDto project);
     List<ProjectResponseDto> getProjects(@Param("prjReqDto") ProjectRequestDto prjReqDto, @Param("cri") Criteria cri);
     int getProjectCount(@Param("prjReqDto") ProjectRequestDto prjReqDto);
     ProjectManagerResponseDto getProjectManager(@Param("prj_no") int prj_no);

@@ -1,5 +1,6 @@
 package com.kcc.pms.domain.wbs.service;
 
+import com.kcc.pms.domain.project.model.dto.ProjectResponseDto;
 import com.kcc.pms.domain.wbs.mapper.WbsMapper;
 import com.kcc.pms.domain.wbs.model.dto.WbsRequestDto;
 import com.kcc.pms.domain.wbs.model.dto.WbsResponseDto;
@@ -29,7 +30,28 @@ public class WbsServiceImpl implements WbsService {
 
     @Override
     public List<WbsResponseDto> getWbsList(Long prj_no) {
-        return wbsMapper.getWbsList(prj_no);
+        List<WbsResponseDto> wbsList = wbsMapper.getWbsList(prj_no);
+
+        for (WbsResponseDto wbs : wbsList) {
+            String preStartDate = wbs.getPre_st_dt();
+            String preEndDate = wbs.getPre_end_dt();
+            String startDate = wbs.getSt_dt();
+            String endDate = wbs.getEnd_dt();
+            if (preStartDate != null && preStartDate.length() >= 10) {
+                wbs.setPre_st_dt(preStartDate.substring(0, 10));
+            }
+            if (preEndDate != null && preEndDate.length() >= 10) {
+                wbs.setPre_end_dt(preEndDate.substring(0, 10));
+            }
+            if (startDate != null && startDate.length() >= 10) {
+                wbs.setSt_dt(startDate.substring(0, 10));
+            }
+            if (endDate != null && endDate.length() >= 10) {
+                wbs.setEnd_dt(endDate.substring(0, 10));
+            }
+        }
+
+        return wbsList;
     }
 
     public int addMember(WbsRequestDto wbs) {
