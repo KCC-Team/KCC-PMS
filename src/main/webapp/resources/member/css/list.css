@@ -35,8 +35,8 @@
 .left-section {
     flex: 0.8;
     background-color: white;
-
-    padding-bottom: 20px;
+    border: 1px solid #ccc;
+    padding: 10px
 }
 
 .sidebar-table1 {
