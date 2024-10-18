@@ -33,17 +33,11 @@
                         <input type="text" id="risk_ttl" name="risk_ttl" value="" required>
                     </td>
                     <td class="text-align-left">
-                        <label for="class_cd">위험분류 <span class="required-icon">*</span></label>
+                        <label>위험분류 <span class="required-icon">*</span></label>
                     </td>
                     <td>
-                        <select id="class_cd" name="class_cd" required>
+                        <select id="PMS005" name="class_cd" required>
                             <option value="">선택하세요.</option>
-                            <option value="001">고객 변심</option>
-                            <option value="002">일정 지연</option>
-                            <option value="003">품질 문제</option>
-                            <option value="004">범위 관련</option>
-                            <option value="005">위험 관련</option>
-                            <option value="006">규정 관련</option>
                         </select>
                     </td>
                 </tr>
@@ -55,16 +49,11 @@
                         <input type="text" id="risk_id" name="risk_id" value="" required>
                     </td>
                     <td class="text-align-left">
-                        <label for="pri_cd">우선순위 <span class="required-icon">*</span></label>
+                        <label>우선순위 <span class="required-icon">*</span></label>
                     </td>
                     <td>
-                        <select id="pri_cd" name="pri_cd" required>
+                        <select id="PMS006" name="pri_cd" required>
                             <option value="">선택하세요.</option>
-                            <option value="001">즉시</option>
-                            <option value="002">긴급</option>
-                            <option value="003">높음</option>
-                            <option value="004">보통</option>
-                            <option value="005">낮음</option>
                         </select>
                     </td>
                 </tr>
@@ -100,14 +89,11 @@
                 </tr>
                 <tr>
                     <td class="text-align-left">
-                        <label for="stat_cd">위험상태 <span class="required-icon">*</span></label>
+                        <label>위험상태 <span class="required-icon">*</span></label>
                     </td>
                     <td>
-                        <select id="stat_cd" name="stat_cd" required>
+                        <select id="PMS004" name="stat_cd" required>
                             <option value="">선택하세요.</option>
-                            <option value="001">신규</option>
-                            <option value="002">진행</option>
-                            <option value="003">조치완료</option>
                         </select>
                     </td>
                     <td class="text-align-left">
@@ -119,15 +105,17 @@
                 </tr>
                 <tr>
                     <td class="text-align-left">
-                        <label for="sys_no">시스템/업무</label>
+                        <label>시스템/업무</label>
                     </td>
                     <td colspan="4">
-                        <select id="sys_no" name="sys_no">
-                            <option value="">선택하세요.</option>
-                            <option value="001">A업무시스템</option>
-                            <option value="002">B업무시스템</option>
-                            <option value="003">C업무시스템</option>
-                        </select>
+                        <div class="system-select-wrapper">
+                            <button class="system-select-button" id="system-select">
+                                <span>시스템/업무 선택</span>
+
+                            </button>
+                            <!-- 메뉴 리스트 -->
+                            <ul class="mymenu" id="system-menu"></ul>
+                        </div>
                     </td>
                 </tr>
             </table>
