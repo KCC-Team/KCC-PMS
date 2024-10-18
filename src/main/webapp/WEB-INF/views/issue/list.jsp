@@ -9,7 +9,9 @@
 
 <main class="content" id="content">
     <div class="main_content">
-        <h5>이슈현황</h5>
+        <div class="issue-content">
+            <div class="issue-info">이슈현황</div>
+        </div>
 
         <div class="filter-section">
             <form action="#" method="post" enctype="multipart/form-data">

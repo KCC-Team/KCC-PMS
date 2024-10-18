@@ -3,6 +3,7 @@ var queryParams = new URLSearchParams(queryString);
 var type = queryParams.get('type');
 var id = queryParams.get('id');
 var parentId = queryParams.get('parentId');
+var depth = "";
 
 $(document).ready(function() {
 
@@ -12,19 +13,44 @@ $(document).ready(function() {
         $('#ante_task_no').prop("disabled", true);
     }
 
-    // 하위 작업 생성
-    if (type == 'child' && id != null) {
-        var child_no = parseInt(id) + 0.1;
-        $('#order_no').val(child_no);
-        if (parentId != null) {
-            $('#par_task_no').val(parentId);
+    // 아래에 작업 생성
+    if (type == 'new' && id != null) {
+        $('#order_no').val(getNewOrderno(id));
+        //alert( getNewOrderno(id) );
+    }
+
+    // 하위 작업 생성(신규)
+    if (type == 'child' && id == 0) {
+        var child_no = "";
+        var checkDepth = parentId.length;
+        if (checkDepth == 1) {
+            child_no = (parseFloat(parentId) + 0.1).toFixed(1);
+        } else if (checkDepth == 3) {
+            child_no = (parseFloat(parentId) + 0.001).toFixed(3);
         }
+        //alert( child_no );
+        $('#order_no').val(child_no);
+        $('#par_task_no').val(parentId);
+    }
+
+    // 하위 작업 생성(하위)
+    if (type == 'child' && id != 0) {
+        var child_no = "";
+        var checkDepth = id.length;
+        if (checkDepth == 3) {
+            child_no = (parseFloat(id) + 0.1).toFixed(1);
+        } else if (checkDepth == 5) {
+            child_no = (parseFloat(id) + 0.001).toFixed(3);
+        }
+        alert(child_no);
+        $('#order_no').val(child_no);
+        $('#par_task_no').val(parentId);
     }
 
     // 인원 검색
     $('.btn-select-user').click(function () {
         window.open(
-            "/projects/addMember?type=wbs",
+            "/projects/addMember?prjNo=" + prjNo +"&type=wbs",
             "project",
             "width=1000, height=750, resizable=yes"
         );
@@ -76,6 +102,17 @@ $(document).ready(function() {
         // }
     });
 
+    function checkDepth(id) {
+        let parts = id.split('.').map(Number);
+        if (parts.length === 1) {
+            return "1";
+        } else if (parts.length === 2) {
+            return "2";
+        } else if (parts.length === 3) {
+            return "3";
+        }
+    }
+
 });
 
 // 인력등록 팝업 연결
@@ -93,7 +130,7 @@ window.addEventListener('message', function (event) {
 
     addedMembers.forEach(function(member) {
         membersId += member.id + ", ";
-        teamNo += member.teamNo + ", ";
+        teamNo += member.connectTeams[0].teamNo + ", ";
         membersName += member.name + ", ";
     });
 
@@ -111,3 +148,23 @@ window.addEventListener('message', function (event) {
     $("#tm_no").val(teamNo);
     $("#mem_nm").val(membersName);
 });
+
+
+function getNewOrderno(id) {
+    // 점(.)을 기준으로 버전 문자열을 분리
+    let parts = id.split('.').map(Number);
+
+    if (parts.length === 1) {
+        // 숫자가 하나인 경우에는 1을 더한다 (예: '1' -> '2')
+        parts[0] += 1;
+    } else if (parts.length === 2) {
+        // 두 부분이면 두 번째 부분에 1을 더한다 (예: '1.1' -> '1.2')
+        parts[1] += 1;
+    } else if (parts.length === 3) {
+        // 세 부분이면 세 번째 부분에 1을 더한다 (예: '1.1.1' -> '1.1.2')
+        parts[2] += 1;
+    }
+
+    // 버전 번호를 다시 '.'으로 연결하여 반환
+    return parts.join('.');
+}

@@ -1,45 +1,47 @@
--- DROP TABLE FeatureTest CASCADE CONSTRAINTS;
--- DROP TABLE Defect CASCADE CONSTRAINTS;
--- DROP TABLE TestDetail CASCADE CONSTRAINTS;
--- DROP TABLE TestMaster CASCADE CONSTRAINTS;
--- DROP TABLE Feature CASCADE CONSTRAINTS;
--- DROP TABLE System CASCADE CONSTRAINTS;
--- DROP TABLE CodeDetail CASCADE CONSTRAINTS;
--- DROP TABLE CommonCode CASCADE CONSTRAINTS;
--- DROP TABLE ProjectMember CASCADE CONSTRAINTS;
--- DROP TABLE Project CASCADE CONSTRAINTS;
--- DROP TABLE Team CASCADE CONSTRAINTS;
--- DROP TABLE Member CASCADE CONSTRAINTS;
--- DROP TABLE UserGroup CASCADE CONSTRAINTS;
--- DROP TABLE TaskMember CASCADE CONSTRAINTS;
--- DROP TABLE Task CASCADE CONSTRAINTS;
--- DROP TABLE FeatureTest CASCADE CONSTRAINTS;
--- DROP TABLE Output CASCADE CONSTRAINTS;
--- DROP TABLE TaskOutput CASCADE CONSTRAINTS;
--- DROP TABLE FileMaster CASCADE CONSTRAINTS;
--- DROP TABLE FileDetail CASCADE CONSTRAINTS;
--- DROP TABLE Request CASCADE CONSTRAINTS;
--- DROP TABLE RequestFeature CASCADE CONSTRAINTS;
--- DROP TABLE RequestTest CASCADE CONSTRAINTS;
--- DROP TABLE Risk CASCADE CONSTRAINTS;
--- DROP TABLE History CASCADE CONSTRAINTS;
---
--- DROP SEQUENCE seq_project;
--- DROP SEQUENCE seq_team;
--- DROP SEQUENCE seq_member;
--- DROP SEQUENCE seq_usergroup;
--- DROP SEQUENCE seq_system;
--- DROP SEQUENCE seq_feature;
--- DROP SEQUENCE seq_testmaster;
--- DROP SEQUENCE seq_defect;
--- DROP SEQUENCE seq_testdetail;
--- DROP SEQUENCE seq_task;
--- DROP SEQUENCE seq_output;
--- DROP SEQUENCE seq_filemaster;
--- DROP SEQUENCE seq_filedetail;
--- DROP SEQUENCE seq_request;
--- DROP SEQUENCE seq_risk;
--- DROP SEQUENCE seq_history;
+DROP TABLE FeatureTest;
+DROP TABLE RequestTest;
+DROP TABLE RequestFeature;
+DROP TABLE TaskMember;
+DROP TABLE TaskOutput;
+DROP TABLE History;
+DROP TABLE Defect;
+DROP TABLE FileDetail;
+
+DROP TABLE TestDetail;
+DROP TABLE Risk;
+DROP TABLE Feature;
+DROP TABLE Request;
+DROP TABLE Task;
+DROP TABLE FileMaster;
+
+DROP TABLE Output;
+DROP TABLE TestMaster;
+DROP TABLE ProjectMember;
+DROP TABLE Team;
+DROP TABLE System;
+
+DROP TABLE Member;
+DROP TABLE Project;
+DROP TABLE UserGroup;
+DROP TABLE CodeDetail;
+DROP TABLE CommonCode;
+
+DROP SEQUENCE seq_project;
+DROP SEQUENCE seq_team;
+DROP SEQUENCE seq_member;
+DROP SEQUENCE seq_usergroup;
+DROP SEQUENCE seq_system;
+DROP SEQUENCE seq_feature;
+DROP SEQUENCE seq_testmaster;
+DROP SEQUENCE seq_defect;
+DROP SEQUENCE seq_testdetail;
+DROP SEQUENCE seq_task;
+DROP SEQUENCE seq_output;
+DROP SEQUENCE seq_filemaster;
+DROP SEQUENCE seq_filedetail;
+DROP SEQUENCE seq_request;
+DROP SEQUENCE seq_risk;
+DROP SEQUENCE seq_history;
 
 ----------------------------------------------------------------------------------------------------------------------
 -- CREATE TABLE
@@ -390,8 +392,6 @@ ALTER TABLE ProjectMember ADD CONSTRAINT FK_Project_TO_ProjectMember_1 FOREIGN K
 ALTER TABLE Task ADD CONSTRAINT pk_tsk_no_001 PRIMARY KEY (tsk_no);
 ALTER TABLE Task ADD CONSTRAINT fk_tsk_sys_no_002 FOREIGN KEY (sys_no) REFERENCES System (sys_no);
 ALTER TABLE Task ADD CONSTRAINT fk_tsk_prj_no_003 FOREIGN KEY (prj_no) REFERENCES Project (prj_no);
-ALTER TABLE Task ADD CONSTRAINT fk_tsk_par_task_no_004 FOREIGN KEY (par_task_no) REFERENCES Task (tsk_no);
-ALTER TABLE Task ADD CONSTRAINT fk_tsk_ante_task_no_005 FOREIGN KEY (ante_task_no) REFERENCES Task (tsk_no);
 
 ALTER TABLE TaskMember ADD CONSTRAINT pk_tsk_mem_no_001 PRIMARY KEY (mem_no, tm_no, tsk_no, prj_no);
 ALTER TABLE TaskMember ADD CONSTRAINT fk_tsk_mem_no_002 FOREIGN KEY (mem_no, tm_no, prj_no) REFERENCES ProjectMember (mem_no, tm_no, prj_no);
@@ -989,5 +989,8 @@ VALUES (seq_testdetail.nextval, 'TD003', '테스트상세3', '테스트상세3 �
 INSERT INTO FeatureTest (feat_no, test_dtl_no) VALUES (1, 1);
 INSERT INTO FeatureTest (feat_no, test_dtl_no) VALUES (2, 1);
 INSERT INTO FeatureTest (feat_no, test_dtl_no) VALUES (3, 1);
+
+update codedetail set field_2 = 'Y' where common_cd_no = 'PMS004';
+update codedetail set field_3 = 'Y' where common_cd_no = 'PMS004' and cd_dtl_no IN ('PMS00402', 'PMS00403', 'PMS00404');
 -----------------------------------------------------------------------------------------------------------------
 COMMIT;

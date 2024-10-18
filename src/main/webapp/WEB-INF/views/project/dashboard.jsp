@@ -18,7 +18,7 @@
                         <i class="fas fa-tasks"></i>
                         <div class="stat-box-content">
                             <h3 id="myWorkCount">10</h3>
-                            <p>내 작업</p>
+                            <p>내 기능</p>
                         </div>
                     </div>
                     <div class="card-footer">
@@ -146,25 +146,21 @@
                         <thead>
                         <tr>
                             <th>참여자명</th>
-                            <th>직급</th>
+                            <th>인원수</th>
                         </tr>
                         </thead>
                         <tbody>
                         <tr>
-                            <td>PL01</td>
-                            <td>차장</td>
+                            <td>PM</td>
+                            <td>1명</td>
                         </tr>
                         <tr>
-                            <td>USER01</td>
-                            <td>대리</td>
+                            <td>PL</td>
+                            <td>2명</td>
                         </tr>
                         <tr>
-                            <td>USER02</td>
-                            <td>대리</td>
-                        </tr>
-                        <tr>
-                            <td>USER03</td>
-                            <td>사원</td>
+                            <td>팀원</td>
+                            <td>2명</td>
                         </tr>
                         </tbody>
                     </table>
