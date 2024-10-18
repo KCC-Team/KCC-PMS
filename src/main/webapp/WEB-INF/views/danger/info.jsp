@@ -113,15 +113,9 @@
                                 <span>시스템/업무 선택</span>
 
                             </button>
-                            <!-- 메뉴 리스트 -->
+                            <input type="hidden" value="" name="">
                             <ul class="mymenu" id="system-menu"></ul>
                         </div>
-<%--                        <select id="sys_no" name="sys_no">--%>
-<%--                            <option value="">선택하세요.</option>--%>
-<%--                            <option value="001">A업무시스템</option>--%>
-<%--                            <option value="002">B업무시스템</option>--%>
-<%--                            <option value="003">C업무시스템</option>--%>
-<%--                        </select>--%>
                     </td>
                 </tr>
             </table>
@@ -132,7 +126,20 @@
                     <div class="info-item d-flex flex-column align-items-start">
                         <div class="mb-2"><label>위험 발견 첨부파일</label></div>
                         <div id="df-insert-file-dropzone_1" class="dropzone"></div>
-                        <jsp:include page="../output/file/file.jsp" />
+                        <div id="dropzone1_preview" class="dz-preview dz-file-preview dropzone-previews">
+                            <div class="dz-details">
+                                <div class="dz-filename"><span data-dz-name></span></div>
+                                <div class="dz-size" data-dz-size></div>
+                                <img data-dz-thumbnail />
+                            </div>
+                            <div class="dz-progress"><span class="dz-upload" data-dz-uploadprogress></span></div>
+                            <div class="dz-success-mark"><span>✔</span></div>
+                            <div class="dz-error-mark"><span>✘</span></div>
+                            <div class="dz-error-message"><span data-dz-errormessage></span></div>
+                            <div class="dz-remove">
+                                <button data-dz-remove class="btn btn-sm btn-danger">제거</button>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -142,7 +149,17 @@
                     <div class="info-item d-flex flex-column align-items-start">
                         <div class="mb-2"><label>위험 조치 첨부파일</label></div>
                         <div id="df-insert-file-dropzone_2" class="dropzone"></div>
-                        <jsp:include page="../output/file/file.jsp" />
+                        <div class="dz-preview dz-file-preview">
+                            <div class="dz-details">
+                                <div class="dz-filename"><span data-dz-name></span></div>
+                                <div class="dz-size" data-dz-size></div>
+                                <img data-dz-thumbnail />
+                            </div>
+                            <div class="dz-progress"><span class="dz-upload" data-dz-uploadprogress></span></div>
+                            <div class="dz-success-mark"><span>✔</span></div>
+                            <div class="dz-error-mark"><span>✘</span></div>
+                            <div class="dz-error-message"><span data-dz-errormessage></span></div>
+                        </div>
                     </div>
                 </div>
             </div>
