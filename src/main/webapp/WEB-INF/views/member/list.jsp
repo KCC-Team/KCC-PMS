@@ -12,7 +12,7 @@
 
 <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
 <link rel="stylesheet" href="../../../resources/member/css/list.css">
-<link rel="stylesheet" href="../../../resources/member/css/ax5grid.css">
+<link rel="stylesheet" href="../../../resources/common/css/ax5gridMin.css">
 
 
 <main class="content" id="content">
@@ -30,6 +30,7 @@
                     <input type="text" name="search" placeholder="팀명 겸색..." style="font-size: 12px; padding: 5px; width: 40%;">
                     <div class="btn-group" style="display: flex; align-items: center;">
                         <span id="matches" style="font-size: 12px; margin-right: 10px;"></span>
+                        <button class="openModalBtn">그룹 등록</button>
                         <button id="btnEdit" style="font-size: 14px; padding: 5px;">순서 편집</button>
                     </div>
                 </div>
@@ -59,7 +60,6 @@
                         <div class="btn-group">
                             <button class="">삭제</button>
                             <button class="member-edit-button">편집</button>
-                            <button class="openModalBtn">그룹등록</button>
                             <button class="" onclick="openGroupPopup()">인력등록</button>
                         </div>
                     </div>
@@ -78,9 +78,9 @@
 
                         <div class="modal-form">
                             <form id="teamRegisterForm">
-                                <table class="overview-table">
+                                <table class="group-overview-table">
                                     <tr>
-                                        <td class="text-align-center">
+                                        <td class="text-align-center group-row">
                                             <label for="team_title">팀명 <span class="required-icon">*</span></label>
                                         </td>
                                         <td colspan="3">
@@ -88,7 +88,7 @@
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td class="text-align-center">
+                                        <td class="text-align-center group-row">
                                             <label for="parent-team">상위 팀 <span class="required-icon">*</span></label>
                                         </td>
                                         <td>
@@ -96,7 +96,7 @@
                                                 <option value="">선택하세요.</option>
                                             </select>
                                         </td>
-                                        <td class="text-align-center">
+                                        <td class="text-align-center group-row">
                                             시스템/업무 <span class="required-icon">*</span></label>
                                         </td>
                                         <td>
@@ -112,7 +112,7 @@
 
                                     </tr>
                                     <tr>
-                                        <td class="text-align-center">
+                                        <td class="text-align-center group-row">
                                             <label for="team_cont">팀 설명</label>
                                         </td>
                                         <td colspan="3">
@@ -136,7 +136,6 @@
                     <div class="team-overview-title">
                         <div class="team-title">팀 개요</div>
                         <div class="btn-group">
-                            <button class="openModalBtn">그룹등록</button>
                             <button class="">수정</button>
                             <button class="">삭제</button>
                         </div>
@@ -146,18 +145,20 @@
                         <tr>
                             <td class="text-align-right">팀명</td>
                             <td colspan="3" id="team-name">-</td>
-                        </tr>
-                        <tr>
                             <td class="text-align-right">상위 팀</td>
                             <td id="parent-team-name">-</td>
                             <td class="text-align-right">시스템/업무</td>
                             <td id="system-name">-</td>
                         </tr>
+<%--                        <tr>--%>
+<%--                            <td class="text-align-right">상위 팀</td>--%>
+<%--                            <td id="parent-team-name">-</td>--%>
+<%--                            <td class="text-align-right">시스템/업무</td>--%>
+<%--                            <td id="system-name">-</td>--%>
+<%--                        </tr>--%>
                         <tr>
-                            <td colspan="4" class="text-align-center">팀 설명</td>
-                        </tr>
-                        <tr>
-                            <td colspan="4" id="team-description">
+                            <td class="text-align-right">팀 설명</td>
+                            <td colspan="7" id="team-description">
                                 -
                             </td>
                         </tr>

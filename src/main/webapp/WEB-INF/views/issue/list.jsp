@@ -5,7 +5,7 @@
 <script type="text/javascript" src="https://cdn.rawgit.com/ax5ui/ax5core/master/dist/ax5core.min.js"></script>
 <script type="text/javascript" src="https://cdn.rawgit.com/ax5ui/ax5ui-grid/master/dist/ax5grid.min.js"></script>
 <link rel="stylesheet" href="../../../resources/danger/css/danger.css">
-<link rel="stylesheet" href="../../../resources/danger/css/ax5grid.css">
+<link rel="stylesheet" href="../../../resources/common/css/ax5grid.css">
 
 <main class="content" id="content">
     <div class="main_content">
@@ -35,17 +35,17 @@
             </div>
         </div>
 
-        <div style="position: relative;height:100%; width: 90%;" id="grid-parent">
+        <div style="position: relative;height:100%; width: 94%;" id="grid-parent">
             <!-- 위험 목록 테이블 -->
             <div class="list_table" data-ax5grid="first-grid"  data-ax5grid-config="{
                 sortable: true,
                 header: {
-                    columnHeight: 50
+                    columnHeight: 40
                 },
                 body: {
-                    columnHeight: 50
+                    columnHeight: 40
                 }
-            }" style="height: 600px; width: 97%;">
+            }" style="height: 467px; width: 100%;">
             </div>
         </div>
     </div>

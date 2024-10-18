@@ -4,17 +4,17 @@ $(document.body).ready(function () {
     firstGrid.setConfig({
         target: $('[data-ax5grid="first-grid"]'),
         columns: [
-            {key: "title", label: "위험명", align: "center", width: 295, formatter: function() {
+            {key: "title", label: "위험명", align: "center", width: 310, formatter: function() {
                     var title = this.value;
                     return '<a href="/projects/dangerInfo?title=' + encodeURIComponent(title) + '" class="danger-title" style="color: #0044cc; font-size: 13px; font-weight: bold; text-decoration: none;">' + title + '</a>';
                 }},
-            {key: "type", label: "위험구분", width: 180, align: "center", formatter: function (){
+            {key: "type", label: "위험구분", width: 190, align: "center", formatter: function (){
                 return '<span style="font-size: 13px;">' + this.value + '</span>';
                 }},
             {key: "priority", label: "우선순위", width: 140, align: "center" , formatter: function (){
                     return '<span style="font-size: 13px;">' + this.value + '</span>';
                 }},
-            {key: "status", label: "상태", width: 140, align: "center", formatter: function (){
+            {key: "status", label: "상태", width: 151, align: "center", formatter: function (){
                 var status = this.value;
                 var statusClass = 'status-label ';  // 기본 클래스
 
@@ -32,10 +32,10 @@ $(document.body).ready(function () {
             {key: "register", label: "등록자", width: 170, align: "center", formatter: function (){
                     return '<span style="font-size: 13px;">' + this.value + '</span>';
                 }},
-            {key: "due_date", label: "조치희망일", width: 170, align: "center", formatter: function (){
+            {key: "due_date", label: "조치희망일", width: 200, align: "center", formatter: function (){
                     return '<span style="font-size: 13px;">' + this.value + '</span>';
                 }},
-            {key: "completion_date", label: "조치완료일", width: 170, align: "center", formatter: function (){
+            {key: "completion_date", label: "조치완료일", width: 200, align: "center", formatter: function (){
                     return '<span style="font-size: 13px;">' + this.value + '</span>';
                 }}
         ],

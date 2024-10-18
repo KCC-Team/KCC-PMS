@@ -2,7 +2,7 @@
 
 <%@ include file="../common.jsp" %>
 <%--<link rel="stylesheet" type="text/css" href="https://cdn.rawgit.com/ax5ui/ax5ui-grid/master/dist/ax5grid.css">--%>
-<link rel="stylesheet" type="text/css" href="../../../resources/test/css/ax5grid.css">
+<link rel="stylesheet" type="text/css" href="../../../resources/common/css/ax5grid.css">
 <link rel="stylesheet" type="text/css" href="../../../resources/test/css/test.css">
 
 <!-- 샘플 데이터 -->

@@ -36,7 +36,6 @@
     flex: 0.8;
     background-color: white;
     border: 1px solid #ccc;
-    padding: 10px
 }
 
 .sidebar-table1 {
@@ -79,6 +78,17 @@
     border-collapse: collapse;
 }
 
+.group-overview-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.group-overview-table td {
+    border: 1px solid #ccc;
+    padding: 9px;
+    width: auto;
+}
+
 .team-table {
     width: 50%;
     border-collapse: collapse;
@@ -87,6 +97,17 @@
 .overview-table td, .members-table th, .members-table td, .detail-table td, .team-table td {
     border: 1px solid #ccc;
     padding: 9px;
+}
+
+.overview-table {
+    table-layout: fixed;
+}
+
+.overview-table > tbody > tr > td {
+    width: 100px; /* 원하는 크기로 설정 */
+    white-space: nowrap; /* 텍스트가 한 줄로 고정되도록 설정 */
+    overflow: hidden; /* 텍스트가 넘칠 경우 숨김 */
+    text-overflow: ellipsis; /* 넘친 텍스트에 말줄임 표시 */
 }
 
 .members-table thead th {
@@ -153,16 +174,12 @@
 }
 
 .btn-group > button {
-    padding: 4px 10px 4px 10px;
+    padding: 5px;
     background-color: #8B8B8B;
     color: white;
     border: none;
     border-radius: 5px;
     cursor: pointer;
-}
-
-#btnEdit {
-    margin-left: 85px;
 }
 
 .text-align-right {
@@ -418,3 +435,6 @@ textarea{
     outline: none;
 }
 
+.group-row {
+    width: 90px !important;
+}

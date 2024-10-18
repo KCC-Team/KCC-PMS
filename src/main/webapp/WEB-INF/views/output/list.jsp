@@ -13,7 +13,7 @@
 <link rel="stylesheet" type="text/css" href="https://cdn.rawgit.com/ax5ui/ax5ui-calendar/master/dist/ax5calendar.css">
 <link rel="stylesheet" type="text/css" href="https://cdn.rawgit.com/ax5ui/ax5ui-picker/master/dist/ax5picker.css">
 <link rel="stylesheet" type="text/css" href="https://cdn.rawgit.com/ax5ui/ax5ui-select/master/dist/ax5select.css">
-<link rel="stylesheet" type="text/css" href="../../../resources/output/css/ax5grid.css">
+<link rel="stylesheet" type="text/css" href="../../../resources/common/css/ax5gridMin.css">
 
 <link rel="stylesheet" type="text/css" href="../../../resources/output/css/list.css">
 
