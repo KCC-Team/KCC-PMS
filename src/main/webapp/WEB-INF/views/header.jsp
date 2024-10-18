@@ -27,8 +27,7 @@
 %>
 
 <script type="text/javascript">
-    var prjTitle = '<%= prjTitle != null ? prjTitle : "" %>';
-    var prjNo = '<%= prjNoInt != null ? prjNoInt.toString() : "" %>';
+    let prjNo = '<%= prjNoInt != null ? prjNoInt.toString() : "" %>';
 </script>
 
 <!-- header -->
@@ -47,7 +46,7 @@
         <% } %>
     </div>
     <div class="header-icons">
-        <a href="/outputs"><i class="fa-solid fa-folder-open"></i></a>     <!-- 폴더 아이콘 -->
+        <a href="/projects/outputs"><i class="fa-solid fa-folder-open"></i></a>     <!-- 폴더 아이콘 -->
         <i class="fas fa-bell"></i>                 <!-- 알림 아이콘 -->
         <i class="fa-regular fa-envelope"></i>      <!-- 이메일 메뉴 아이콘 -->
         <div class="dropdown header-user-name">

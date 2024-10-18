@@ -1,55 +1,4 @@
 $(document).ready(function() {
-    // Dropzone 자동 초기화 방지
-    Dropzone.autoDiscover = false;
-
-    // Dropzone 강제 초기화
-    if (!$("#df-insert-file-dropzone_1").hasClass("dz-clickable")) {
-        var discoveryDropzone = new Dropzone("#df-insert-file-dropzone_1", {
-            url: "/api/risk", // 실제 서버 URL 설정
-            autoProcessQueue: false,  // 자동으로 업로드되지 않도록 설정
-            uploadMultiple: true,     // 여러 파일을 동시에 업로드 가능
-            parallelUploads: 100,     // 병렬로 업로드할 수 있는 파일 개수
-            maxFiles: 100,            // 최대 업로드 파일 개수
-            addRemoveLinks: true,     // 파일 제거 링크 추가
-            dictDefaultMessage: "파일을 여기에 드래그하거나 클릭하여 추가하세요.", // 기본 메시지
-            previewsContainer: "#dropzone1_preview", // 미리보기 컨테이너 설정
-            clickable: true,          // 클릭하여 파일 추가 가능
-            init: function() {
-                var dropzoneInstance = this;
-
-                // "업로드" 버튼 클릭 시 Dropzone의 큐 처리
-                $(".save-btn").click(function(e) {
-                    e.preventDefault(); // 기본 폼 동작 방지
-                    dropzoneInstance.processQueue(); // Dropzone 큐 처리 시작
-                });
-
-                // 파일 업로드 시 처리할 내용 추가
-                this.on("addedfile", function(file) {
-                    console.log("파일이 추가되었습니다:", file);
-                });
-
-                this.on("sendingmultiple", function(files, xhr, formData) {
-                    // 여기에 폼 데이터를 추가해서 함께 전송
-                    formData.append("risk_ttl", $("#risk_ttl").val());
-                    formData.append("risk_id", $("#risk_id").val());
-                    // 필요한 다른 폼 필드 추가...
-                });
-
-                // 업로드 성공 이벤트
-                this.on("successmultiple", function(files, response) {
-                    console.log("파일 업로드 성공:", response);
-                    alert("이미지 업로드 완료 (" + files.length + ")");
-                });
-
-                // 업로드 실패 이벤트
-                this.on("errormultiple", function(files, response) {
-                    console.log("파일 업로드 실패:", response);
-                    alert("파일 업로드 중 오류가 발생했습니다.");
-                });
-            }
-        });
-    }
-    
     console.log("prjNo = " + prjNo);
     const dateInput = $('#record_dt');
     if (!dateInput.val()) {
@@ -85,7 +34,52 @@ $(document).ready(function() {
 });
 
 
+document.addEventListener('DOMContentLoaded', function() {
+    var defectActionContent = '${defectActionContent}';
+    var hasDefectActionContent = defectActionContent && defectActionContent.trim() !== '';
 
+    if (Dropzone.instances.length > 0) {
+        Dropzone.instances.forEach(function(dz) {
+            dz.destroy();
+        });
+    }
+
+    // 첫 번째 Dropzone
+    const dropzonePreviewNode = document.querySelector('.file-zone_1 .dropzone-preview-list');
+    if (dropzonePreviewNode) {
+        const previewTemplate = dropzonePreviewNode.parentNode.innerHTML;
+        dropzonePreviewNode.parentNode.removeChild(dropzonePreviewNode);
+        const dropzone = initDropzone('#df-insert-file-dropzone_1', '.file-zone_1', previewTemplate);
+
+        // 미구현 경로 임으로 임시로 처리
+        dropzone.processQueue = function() {
+            this.emit('queuecomplete');
+        };
+
+        $('.save-button').on('click', function(e) {
+            e.preventDefault();
+            dropzone.processQueue();
+        });
+    }
+
+    if (hasDefectActionContent) {
+        const dropzonePreviewNode2 = document.querySelector('.file-zone_2 .dropzone-preview-list');
+        if (dropzonePreviewNode2) {
+            const previewTemplate2 = dropzonePreviewNode2.parentNode.innerHTML;
+            dropzonePreviewNode2.parentNode.removeChild(dropzonePreviewNode2);
+            const dropzone2 = initDropzone('#df-insert-file-dropzone_2', '.file-zone_2', previewTemplate2);
+
+            dropzone2.processQueue = function() {
+                this.emit('queuecomplete');
+            };
+
+            $('.save-button').on('click', function(e) {
+                e.preventDefault();
+                dropzone2.processQueue();
+            });
+        }
+    }
+});
 
 // 오늘 날짜를 "YYYY-MM-DD" 형식으로 반환하는 함수
 function getTodayDate() {
@@ -117,7 +111,9 @@ function fetchOptions() {
         url: '/api/risk/options',
         method: 'GET',
         success: function(data) {
+            console.log(data)
             data.forEach(function(item) {
+                console.log(item);
                 const selectId = '#' + item.common_cd_no;
                 const $selectElement = $(selectId);
 

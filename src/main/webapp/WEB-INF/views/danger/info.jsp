@@ -33,7 +33,7 @@
                         <input type="text" id="risk_ttl" name="risk_ttl" value="" required>
                     </td>
                     <td class="text-align-left">
-                        <label for="PMS005">위험분류 <span class="required-icon">*</span></label>
+                        <label>위험분류 <span class="required-icon">*</span></label>
                     </td>
                     <td>
                         <select id="PMS005" name="class_cd" required>
@@ -49,7 +49,7 @@
                         <input type="text" id="risk_id" name="risk_id" value="" required>
                     </td>
                     <td class="text-align-left">
-                        <label for="PMS006">우선순위 <span class="required-icon">*</span></label>
+                        <label>우선순위 <span class="required-icon">*</span></label>
                     </td>
                     <td>
                         <select id="PMS006" name="pri_cd" required>
@@ -89,7 +89,7 @@
                 </tr>
                 <tr>
                     <td class="text-align-left">
-                        <label for="PMS004">위험상태 <span class="required-icon">*</span></label>
+                        <label>위험상태 <span class="required-icon">*</span></label>
                     </td>
                     <td>
                         <select id="PMS004" name="stat_cd" required>
@@ -113,7 +113,7 @@
                                 <span>시스템/업무 선택</span>
 
                             </button>
-                            <input type="hidden" value="" name="">
+                            <!-- 메뉴 리스트 -->
                             <ul class="mymenu" id="system-menu"></ul>
                         </div>
                     </td>
@@ -126,20 +126,7 @@
                     <div class="info-item d-flex flex-column align-items-start">
                         <div class="mb-2"><label>위험 발견 첨부파일</label></div>
                         <div id="df-insert-file-dropzone_1" class="dropzone"></div>
-                        <div id="dropzone1_preview" class="dz-preview dz-file-preview dropzone-previews">
-                            <div class="dz-details">
-                                <div class="dz-filename"><span data-dz-name></span></div>
-                                <div class="dz-size" data-dz-size></div>
-                                <img data-dz-thumbnail />
-                            </div>
-                            <div class="dz-progress"><span class="dz-upload" data-dz-uploadprogress></span></div>
-                            <div class="dz-success-mark"><span>✔</span></div>
-                            <div class="dz-error-mark"><span>✘</span></div>
-                            <div class="dz-error-message"><span data-dz-errormessage></span></div>
-                            <div class="dz-remove">
-                                <button data-dz-remove class="btn btn-sm btn-danger">제거</button>
-                            </div>
-                        </div>
+                        <jsp:include page="../output/file/file.jsp" />
                     </div>
                 </div>
             </div>
@@ -149,17 +136,7 @@
                     <div class="info-item d-flex flex-column align-items-start">
                         <div class="mb-2"><label>위험 조치 첨부파일</label></div>
                         <div id="df-insert-file-dropzone_2" class="dropzone"></div>
-                        <div class="dz-preview dz-file-preview">
-                            <div class="dz-details">
-                                <div class="dz-filename"><span data-dz-name></span></div>
-                                <div class="dz-size" data-dz-size></div>
-                                <img data-dz-thumbnail />
-                            </div>
-                            <div class="dz-progress"><span class="dz-upload" data-dz-uploadprogress></span></div>
-                            <div class="dz-success-mark"><span>✔</span></div>
-                            <div class="dz-error-mark"><span>✘</span></div>
-                            <div class="dz-error-message"><span data-dz-errormessage></span></div>
-                        </div>
+                        <jsp:include page="../output/file/file.jsp" />
                     </div>
                 </div>
             </div>
