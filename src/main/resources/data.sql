@@ -339,7 +339,9 @@ CREATE TABLE FileDetail (
     reg_dt DATE NOT NULL,
     mod_id VARCHAR2(100) NULL,
     mod_dt DATE NULL,
-    use_yn VARCHAR2(1) NOT NULL
+    use_yn VARCHAR2(1) NOT NULL,
+    rm_id VARCHAR2(100) NULL,
+    rm_dt DATE
 );
 
 ----------------------------------------------------------------------------------------------------------------------
