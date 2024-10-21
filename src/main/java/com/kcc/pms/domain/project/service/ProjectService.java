@@ -12,6 +12,6 @@ public interface ProjectService {
     int updateProject(ProjectRequestDto project);
     List<ProjectResponseDto> getProjects(ProjectRequestDto prjReqDto, Criteria cri);
     int getProjectCount(ProjectRequestDto prjReqDto);
-    CombinedProjectResponseDto findByProject(int prj_no);
+    CombinedProjectResponseDto findByProject(Long prj_no);
     List<ProjectResponseDto> getCommonProjectList(String login_id);
 }

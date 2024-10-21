@@ -20,14 +20,14 @@
     }
 
     Object prjNo = session.getAttribute("prjNo");
-    Integer prjNoInt = null;
-    if (prjNo instanceof Integer) {
-        prjNoInt = (Integer) prjNo;
+    Long prjNoInt = null;
+    if (prjNo instanceof Long) {
+        prjNoInt = (Long) prjNo;
     }
 %>
 
 <script type="text/javascript">
-    let prjNo = '<%= prjNoInt != null ? prjNoInt.toString() : "" %>';
+    let prjNo = '<%= prjNoInt != null ? prjNoInt.toString() : 1 %>';
 </script>
 
 

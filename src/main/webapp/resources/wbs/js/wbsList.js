@@ -12,14 +12,13 @@ gantt.locale = {
 
 gantt.config.row_height = 40;
 gantt.config.scale_height = 40;
-
 gantt.config.date_format = "%Y-%m-%d %H:%i";  // 시간까지 포함한 형식으로 설정
 gantt.config.date_scale = "%d";  // 날짜 형식 설정
 gantt.config.subscales = [{unit: "month", step: 1, date: "%Y-%m"}];  // 월 단위 보조 스케일
 
 // Gantt 그리드 설정
 gantt.config.columns = [
-    {name: "id", label: "순번", align: "center", width: 40, resize: true, template: function (task) {
+    {name: "id", label: "순번", align: "left", width: 40, resize: true, template: function (task) {
         if (String(task.id).includes("0")) {
             let taskId = String(task.id).replace(/0/g, "."); // 모든 "0"을 "."으로 변경
             return taskId;
@@ -61,18 +60,14 @@ function getProjectResult() {
 
             response.forEach(function(item) {
                 let endDate = new Date(item.pre_end_dt);
-
-                // 시간을 23:59로 설정하여 종료일을 해당 날짜 전체로 포함시키기
                 endDate.setHours(23, 59, 59, 999);
-
-                let newEndDate = gantt.date.date_to_str("%Y-%m-%d %H:%i")(endDate); // 시간 포함하여 날짜 변환
+                let newEndDate = gantt.date.date_to_str("%Y-%m-%d %H:%i")(endDate);
 
                 tasks.data.push({
                     parent: item.par_task_no,
-                    id: item.order_no,
+                    id: item.tsk_no,
                     text: item.tsk_ttl,
                     start_date: item.pre_st_dt,
-                    //end_date: item.pre_end_dt,
                     end_date: newEndDate,
                     real_st_dt: item.st_dt || "-",
                     real_end_dt: item.end_dt || "-",
@@ -212,8 +207,32 @@ gantt.attachEvent("onContextMenu", function (id, linkId, e) {
     // 우클릭한 작업의 정보 가져오기
     let task = gantt.getTask(id);
 
+    console.log(task.id);
+
     // 부모 작업 ID 가져오기 (최상위 작업일 경우 부모가 없을 수 있음)
     let parentTaskId = task.parent ? task.parent : "null";  // 부모가 없는 경우 '없음' 표시
+
+    // 부모 작업이 있는 경우 형제 요소들을 구함
+    let lastSiblingId = id;  // 마지막 형제 작업의 ID
+    if (parentTaskId) {
+        // 부모 작업의 모든 자식 작업(형제들) 가져오기
+        let childrenOfParent = gantt.getChildren(parentTaskId);
+
+        // 현재 작업을 제외한 형제 작업들만 필터링
+        let siblings = childrenOfParent.filter(function(childId) {
+            return childId !== id;  // 현재 작업을 제외
+        });
+
+        // 형제 작업 중 마지막 작업의 ID 가져오기
+        if (siblings.length > 0) {
+            lastSiblingId = siblings[siblings.length - 1];  // 배열의 마지막 요소
+        }
+    }
+
+    if (lastSiblingId) {
+        let lastSiblingTask = gantt.getTask(lastSiblingId);
+        lastSiblingId = lastSiblingTask.id;
+    }
 
     // 자식 작업들 가져오기
     let children = gantt.getChildren(id);
@@ -233,7 +252,7 @@ gantt.attachEvent("onContextMenu", function (id, linkId, e) {
         class='context_menu'
         "
     >
-      <input type=button value="아래에 추가" class="btn-task" onclick="wbsInfoPopup('new', ${id}, ${parentTaskId})">
+      <input type=button value="아래에 추가" class="btn-task" onclick="wbsInfoPopup('new', ${lastSiblingId}, ${parentTaskId})">
       <br/>
       ${additionalButton}
       <input type=button value="상세 정보" class="btn-task" onclick="wbsInfoPopup('view', ${id}, ${id})">
@@ -300,7 +319,7 @@ function wbsInfoPopup(type, id, parentId) {
     window.open(
         url,
         "프로젝트WBS",
-        "width=970, height=450, resizable=yes"
+        "width=960, height=480, resizable=yes"
     );
 }
 
@@ -337,6 +356,7 @@ $(document).ready(function() {
             gantt.config.grid_width = 730;
             ganttContainer.classList.remove("grid_hidden");
             document.getElementById("toggle-grid").innerText = "간트 차트 크게 보기";
+            $(".btn-modify-wbs").show();
         }
         gridHidden = !gridHidden;
     });

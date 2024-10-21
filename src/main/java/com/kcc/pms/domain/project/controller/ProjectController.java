@@ -37,13 +37,14 @@ public class ProjectController {
 
     @GetMapping("/dashboard")
     public String dashboardInfo() {
-        //int prj_no = (int)session.getAttribute("prjNo"); // dashboard 정보가져와야함
+//        Integer prjNo = (Integer)session.getAttribute("prjNo");
+//        Long prjNogValue = prjNo.longValue();
 
         return "project/dashboard";
     }
 
     @GetMapping("/dashboardInfo")
-    public String dashboard(@RequestParam int prjNo, @RequestParam String prjTitle, HttpSession session) {
+    public String dashboard(@RequestParam Integer prjNo, @RequestParam String prjTitle, HttpSession session) {
         if (prjNo > 0 && prjTitle != null) {
             session.setAttribute("prjNo", prjNo);
             session.setAttribute("prjTitle", prjTitle);
@@ -55,9 +56,11 @@ public class ProjectController {
     @GetMapping("/api/project")
     @ResponseBody
     public ResponseEntity<CombinedProjectResponseDto> info(HttpSession session) {
-        int prjNo = (int)session.getAttribute("prjNo");
+        Integer prjNo = (Integer)session.getAttribute("prjNo");
+        Long prjNogValue = prjNo.longValue();
 
-        CombinedProjectResponseDto projectInfo = projectService.findByProject(prjNo);
+        CombinedProjectResponseDto projectInfo = projectService.findByProject(prjNogValue);
+        
         return ResponseEntity.ok(projectInfo);
     }
 
@@ -82,14 +85,16 @@ public class ProjectController {
     @PutMapping("/api/project")
     @ResponseBody
     public ResponseEntity<String> updateProject(ProjectRequestDto project, HttpSession session) {
-        int prjNo = (int)session.getAttribute("prjNo");
+        Integer prjNo = (Integer)session.getAttribute("prjNo");
+        Long prjNogValue = prjNo.longValue();
+
         String login_id = "user1"; // 회원아이디(세션정보)
         project.setMod_id(login_id);
 
         try {
             int result = projectService.updateProject(project);
             if (result > 0) {
-                CombinedProjectResponseDto projectInfo = projectService.findByProject(prjNo);
+                CombinedProjectResponseDto projectInfo = projectService.findByProject(prjNogValue);
                 String prjTitle = projectInfo.getProject().getPrj_title();
                 session.setAttribute("prjTitle", prjTitle);
 

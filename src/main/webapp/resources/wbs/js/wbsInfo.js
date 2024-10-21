@@ -11,45 +11,47 @@ $(document).ready(function() {
         dateFormat: "yy-mm-dd"  // 원하는 형식으로 날짜 표시
     });
 
-    // 처음 작업 생성
-    if (type == 'new' && id == null) {
-        $('#order_no').val(1);
-        $('#ante_task_no').prop("disabled", true);
-    }
+    // // 처음 작업 생성
+    // if (type == 'new' && id == null) {
+    //     $('#order_no').val(1);
+    //     $('#ante_task_no').prop("disabled", true);
+    // }
+    //
+    // // 아래에 작업 생성
+    // if (type == 'new' && id != null) {
+    //     $('#order_no').val(getNewOrderno(id));
+    // }
+    // // 아래에 작업 생성
+    // if (type == 'new' && id != null && parentId != null) {
+    //     $('#order_no').val(getNewOrderno(id));
+    //     $('#par_task_no').val(parentId);
+    // }
+    //
+    // // 하위 작업 생성(신규)
+    // if (type == 'child' && id == 0) {
+    //     var child_no = "";
+    //     var checkDepth = parentId.length;
+    //     if (checkDepth == 1) {
+    //         child_no = (parseFloat(parentId) + 0.1).toFixed(1);
+    //     } else if (checkDepth == 3) {
+    //         child_no = (parseFloat(parentId) + 0.001).toFixed(3);
+    //     }
+    //     $('#order_no').val(child_no);
+    //     $('#par_task_no').val(parentId);
+    // }
 
-    // 아래에 작업 생성
-    if (type == 'new' && id != null) {
-        $('#order_no').val(getNewOrderno(id));
-        //alert( getNewOrderno(id) );
-    }
-
-    // 하위 작업 생성(신규)
-    if (type == 'child' && id == 0) {
-        var child_no = "";
-        var checkDepth = parentId.length;
-        if (checkDepth == 1) {
-            child_no = (parseFloat(parentId) + 0.1).toFixed(1);
-        } else if (checkDepth == 3) {
-            child_no = (parseFloat(parentId) + 0.001).toFixed(3);
-        }
-        //alert( child_no );
-        $('#order_no').val(child_no);
-        $('#par_task_no').val(parentId);
-    }
-
-    // 하위 작업 생성(하위)
-    if (type == 'child' && id != 0) {
-        var child_no = "";
-        var checkDepth = id.length;
-        if (checkDepth == 3) {
-            child_no = (parseFloat(id) + 0.1).toFixed(1);
-        } else if (checkDepth == 5) {
-            child_no = (parseFloat(id) + 0.001).toFixed(3);
-        }
-       //alert(child_no);
-        $('#order_no').val(child_no);
-        $('#par_task_no').val(parentId);
-    }
+    // // 하위 작업 생성(하위)
+    // if (type == 'child' && id != 0) {
+    //     var child_no = "";
+    //     var checkDepth = id.length;
+    //     if (checkDepth == 3) {
+    //         child_no = (parseFloat(id) + 0.1).toFixed(1);
+    //     } else if (checkDepth == 5) {
+    //         child_no = (parseFloat(id) + 0.001).toFixed(3);
+    //     }
+    //     $('#order_no').val(child_no);
+    //     $('#par_task_no').val(parentId);
+    // }
 
     // 인원 검색
     $('.btn-select-user').click(function () {
