@@ -4,17 +4,17 @@ $(document.body).ready(function () {
     firstGrid.setConfig({
         target: $('[data-ax5grid="first-grid"]'),
         columns: [
-            {key: "title", label: "위험명", align: "center", width: 310, formatter: function() {
+            {key: "title", label: "위험명", align: "center", width: 290, formatter: function() {
                     var title = this.value;
                     return '<a href="/projects/dangerInfo?title=' + encodeURIComponent(title) + '" class="danger-title" style="color: #0044cc; font-size: 13px; font-weight: bold; text-decoration: none;">' + title + '</a>';
                 }},
             {key: "type", label: "위험구분", width: 190, align: "center", formatter: function (){
                 return '<span style="font-size: 13px;">' + this.value + '</span>';
                 }},
-            {key: "priority", label: "우선순위", width: 140, align: "center" , formatter: function (){
+            {key: "priority", label: "우선순위", width: 141, align: "center" , formatter: function (){
                     return '<span style="font-size: 13px;">' + this.value + '</span>';
                 }},
-            {key: "status", label: "상태", width: 151, align: "center", formatter: function (){
+            {key: "status", label: "상태", width: 152, align: "center", formatter: function (){
                 var status = this.value;
                 var statusClass = 'status-label ';  // 기본 클래스
 
