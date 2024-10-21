@@ -36,7 +36,6 @@
         <result property="testEndDate" column="testEndDate"/>
         <result property="testType" column="testType"/>
         <result property="testStatus" column="testStatus"/>
-        <result property="systemType" column="systemType"/>
         <result property="workType" column="workType"/>
         <result property="testCont" column="testCont"/>
         <result property="memberName" column="memberName"/>
@@ -44,39 +43,47 @@
     </resultMap>
 
     <select id="findAllByOptions" parameterType="map" resultMap="testVO">
-        select
+        SELECT *
+        FROM (
+        SELECT sub.*, ROWNUM rn
+        FROM (
+        SELECT
         t.test_no AS test_no,
         t.test_id AS test_id,
         TRIM(cd_type.cd_dtl_nm) AS test_type,
-        t.test_title, sys_work.sys_ttl AS work_title,
+        t.test_title,
+        sys_work.sys_ttl AS work_title,
         TO_CHAR(t.test_st_dt, 'YYYY-MM-DD') || ' ~ ' || TO_CHAR(t.test_end_dt, 'YYYY-MM-DD') AS test_period,
-        count(distinct td.test_dtl_no) as detail_count, -- 결함 수에 따라 중복되는 테스트 케이스가 있을 수 있으므로 중복 제거
-        count(d.df_no) AS defect_count,
+        COUNT(DISTINCT td.test_dtl_no) AS detail_count,
+        COUNT(d.df_no) AS defect_count,
         TRIM(cd_stat.cd_dtl_nm) AS test_status
-        from testmaster t
-        left join TESTDETAIL td on t.test_no = td.test_no
-        left join codedetail cd_type on t.type_cd = cd_type.cd_dtl_no
-        left join codedetail cd_stat on t.stat_cd = cd_stat.cd_dtl_no
-        left join defect d on td.test_dtl_no = d.test_dtl_no
-        left join system sys ON sys.sys_no = t.sys_no
-        left join system sys_work ON sys_work.sys_no = t.sys_work_no
-        where t.prj_no = 1
-        and t.use_yn = 'Y'
-        <if test="sys_no != 0">
-            and t.sys_no = #{sys_no, jdbcType=INTEGER}
-        </if>
+        FROM testmaster t
+        LEFT JOIN testdetail td ON t.test_no = td.test_no
+        LEFT JOIN codedetail cd_type ON t.type_cd = cd_type.cd_dtl_no
+        LEFT JOIN codedetail cd_stat ON t.stat_cd = cd_stat.cd_dtl_no
+        LEFT JOIN defect d ON td.test_dtl_no = d.test_dtl_no
+        LEFT JOIN system sys_work ON sys_work.sys_no = t.sys_work_no
+        WHERE t.prj_no = 1
+        AND t.use_yn = 'Y'
         <if test="work_no != 0">
-            and t.sys_work_no = #{work_no, jdbcType=INTEGER}
+            AND t.sys_work_no = #{work_no, jdbcType=INTEGER}
         </if>
         <if test="test_type != 'all'">
-            and t.type_cd = #{test_type, jdbcType=CHAR}
+            AND t.type_cd = #{test_type, jdbcType=CHAR}
         </if>
         <if test="status != 'all'">
-            and t.stat_cd = #{status, jdbcType=CHAR}
+            AND t.stat_cd = #{status, jdbcType=CHAR}
         </if>
-        group by
+        GROUP BY
         t.test_no, t.test_id, cd_type.cd_dtl_nm, t.test_title, sys_work.sys_ttl, t.test_st_dt, t.test_end_dt, cd_stat.cd_dtl_nm
         ORDER BY t.test_no
+        ) sub
+        <![CDATA[
+            WHERE ROWNUM <= #{page} * #{limit}
+        ]]>
+        )
+        WHERE rn > (#{page} - 1) * #{limit}
+        ORDER BY test_no
     </select>
 
     <insert id="saveTest" parameterType="map">
@@ -86,12 +93,12 @@
 
         INSERT INTO testmaster
         (test_no, test_id, test_title, test_cont, stat_cd, type_cd,
-        test_st_dt, test_end_dt, prj_no, sys_no, sys_work_no, reg_id, reg_dt, use_yn)
+        test_st_dt, test_end_dt, prj_no, sys_work_no, reg_id, reg_dt, use_yn)
         VALUES
         (#{testNo, jdbcType=INTEGER}, #{testId, jdbcType=VARCHAR}, #{testTitle, jdbcType=VARCHAR},
         #{testCont, jdbcType=VARCHAR}, #{testStatus, jdbcType=CHAR},
         #{testType, jdbcType=CHAR}, #{testStartDate, jdbcType=DATE}, #{testEndDate, jdbcType=DATE},
-        #{prj_no, jdbcType=INTEGER}, #{systemType, jdbcType=INTEGER}, #{workType, jdbcType=INTEGER},
+        #{prj_no, jdbcType=INTEGER}, #{workType, jdbcType=INTEGER},
         'admin',
         sysdate, 'Y')
     </insert>
@@ -125,7 +132,7 @@
             )
     </insert>
 
-    <select id="getUnitTest" parameterType="int" resultMap="TestRequestResultMap">
+    <select id="getUnitTest" parameterType="long" resultMap="TestRequestResultMap">
         select
             t.test_no as testNo,
             t.test_title AS testTitle,
@@ -134,7 +141,6 @@
             t.test_end_dt AS testEndDate,
             TRIM(cd_type.cd_dtl_nm) AS testType,
             TRIM(cd_stat.cd_dtl_nm) AS testStatus,
-            sys.sys_ttl AS systemType,
             sys_work.sys_ttl AS workType,
             t.test_cont AS testCont,
 --             m.mem_nm AS memberName,
@@ -151,7 +157,6 @@
                  left join codedetail cd_type on t.type_cd = cd_type.cd_dtl_no
                  left join codedetail cd_stat on t.stat_cd = cd_stat.cd_dtl_no
                  left join defect d on td.test_dtl_no = d.test_dtl_no
-                 left join system sys ON sys.sys_no = t.sys_no
                  left join system sys_work ON sys_work.sys_no = t.sys_work_no
                  left join member m ON m.mem_no = td.mem_no
                  left join featureTest ft ON ft.test_dtl_no = td.test_dtl_no
@@ -160,7 +165,7 @@
         order by td.test_dtl_no
     </select>
 
-    <update id="deleteTest" parameterType="int">
+    <update id="deleteTest" parameterType="long">
         update testmaster t set t.use_yn = 'N' where test_no = #{testNo, jdbcType=INTEGER}
     </update>
 </mapper>

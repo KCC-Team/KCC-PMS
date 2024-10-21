@@ -2,7 +2,7 @@ package com.kcc.pms.domain.test.service;
 
 import com.kcc.pms.domain.test.domain.dto.TestDetailRequestDto;
 import com.kcc.pms.domain.test.domain.dto.TestRequestDto;
-import com.kcc.pms.domain.test.domain.dto.TestVO;
+import com.kcc.pms.domain.test.domain.vo.TestVO;
 import com.kcc.pms.domain.test.mapper.TestMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -24,17 +24,18 @@ public class TestServiceImpl implements TestService {
     private final TestMapper testMapper;
     private final SqlSessionFactory sqlSessionFactory;
 
+    private final static int LIMIT = 10;
+
     @Override
-    public List<TestVO> getTestList(Integer prj_no, Integer sys_no, Integer work_no, String test_type, String status, int page) {
+    public List<TestVO> getTestList(Long prj_no, Long work_no, String test_type, String status, int page) {
         Map<String, Object> parameters = new HashMap<>();
         parameters.put("prj_no", prj_no);
-        parameters.put("sys_no", sys_no);
         parameters.put("work_no", work_no);
         parameters.put("test_type", test_type);
         parameters.put("status", status);
         parameters.put("page", page);
-        List<TestVO> allByOptions = testMapper.findAllByOptions(parameters);
-        return allByOptions;
+        parameters.put("limit", LIMIT);
+        return testMapper.findAllByOptions(parameters);
     }
 
     @Transactional
@@ -73,7 +74,7 @@ public class TestServiceImpl implements TestService {
     }
 
     @Override
-    public TestRequestDto getTestDetail(Integer testNo) {
+    public TestRequestDto getTestDetail(Long testNo) {
         return testMapper.getUnitTest(testNo);
     }
 
@@ -85,7 +86,7 @@ public class TestServiceImpl implements TestService {
 
     @Transactional
     @Override
-    public void deleteTest(Integer testNo) {
+    public void deleteTest(Long testNo) {
         testMapper.deleteTest(testNo);
     }
 }

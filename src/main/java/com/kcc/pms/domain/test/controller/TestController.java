@@ -1,7 +1,7 @@
 package com.kcc.pms.domain.test.controller;
 
 import com.kcc.pms.domain.test.domain.dto.TestRequestDto;
-import com.kcc.pms.domain.test.domain.dto.TestVO;
+import com.kcc.pms.domain.test.domain.vo.TestVO;
 import com.kcc.pms.domain.test.service.TestService;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
@@ -28,14 +28,14 @@ public class TestController {
     @ResponseBody
     public ResponseEntity<List<TestVO>> findAll(
             HttpSession session,
-            @RequestParam(value = "sys", defaultValue = "0") Integer sys_no,
-            @RequestParam(value = "work", defaultValue = "0") Integer work_no,
+            @RequestParam(value = "work", defaultValue = "0") Long work_no,
             @RequestParam(value = "test", defaultValue = "all") String test_type,
             @RequestParam(value = "status", defaultValue = "all") String status,
             @RequestParam(value = "page", defaultValue = "1") int page) {
 //        Integer prj_no = (int) session.getAttribute("prjNo");
-        Integer prj_no = 1;
-        List<TestVO> testList = testService.getTestList(prj_no, sys_no, work_no, test_type, status, page);
+        Long prj_no = 1L;
+        System.out.print(page);
+        List<TestVO> testList = testService.getTestList(prj_no, work_no, test_type, status, page);
         return ResponseEntity.ok().body(testList);
     }
 
@@ -118,12 +118,12 @@ public class TestController {
 
     @GetMapping("/api/{id}")
     @ResponseBody
-    public ResponseEntity<TestRequestDto> findById(@PathVariable Integer id) {
+    public ResponseEntity<TestRequestDto> findById(@PathVariable Long id) {
         return ResponseEntity.ok().body(testService.getTestDetail(id));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteTest(@PathVariable Integer id) {
+    public ResponseEntity<Void> deleteTest(@PathVariable Long id) {
         testService.deleteTest(id);
         return ResponseEntity.ok().build();
     }

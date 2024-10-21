@@ -10,10 +10,10 @@ $(function () {
                         '<a href="/projects/defects/' + encodeURIComponent(item.id) + '" class="defect-id" style="color: #2383f8; font-size: 13px; font-weight: bold; text-decoration: none;">' + item.value + '</a>';
                 }},
             {key: "defect_title", label: "결함명", width: 400, align: "center" , formatter: function (){
-                    return '<span style="font-size: 13px;">' + this.value + '</span>';
+                    return '<span style="font-size: 12px;">' + this.value + '</span>';
                 }},
             {key: "order", label: "우선순위", width: 100, align: "center", formatter: function (){
-                    return '<span style="font-size: 13px;">' + this.value + '</span>';
+                    return '<span style="font-size: 12px;">' + this.value + '</span>';
                 }},
             {key: "defect_status", label: "상태", width: 101, align: "center", formatter: function (){
                     const status = this.value;
@@ -32,19 +32,19 @@ $(function () {
                 }
             },
             {key: "discover", label: "발견자", width: 101, align: "center", formatter: function (){
-                    return '<span style="font-size: 13px;">' + this.value + '</span>';
+                    return '<span style="font-size: 12px;">' + this.value + '</span>';
                 }},
             {key: "worker", label: "조치자", width: 101, align: "center", formatter: function (){
-                    return '<span style="font-size: 13px;">' + this.value + '</span>';
+                    return '<span style="font-size: 12px;">' + this.value + '</span>';
                 }},
             {key: "discovered_date", label: "발견일자", width: 130, align: "center", formatter: function (){
-                    return '<span style="font-size: 13px;">' + this.value + '</span>';
+                    return '<span style="font-size: 12px;">' + this.value + '</span>';
                 }},
             {key: "sche_work_date", label: "조치예정일자", width: 130, align: "center", formatter: function (){
-                    return '<span style="font-size: 13px;">' + this.value + '</span>';
+                    return '<span style="font-size: 12px;">' + this.value + '</span>';
                 }},
             {key: "work_date", label: "조치일자", width: 130, align: "center", formatter: function (){
-                    return '<span style="font-size: 13px;">' + this.value + '</span>';
+                    return '<span style="font-size: 12px;">' + this.value + '</span>';
                 }}
         ],
     });
@@ -79,6 +79,6 @@ $(function () {
 
     $(document).on('click', '.defect-id', function(e) {
         e.preventDefault();
-       let popup = window.open($(this).attr('href'), 'popup', 'width=800, height=600');
+       let popup = window.open($(this).attr('href'), 'popup', 'width=1100, height=677');
     });
 });

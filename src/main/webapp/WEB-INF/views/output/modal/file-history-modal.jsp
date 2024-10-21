@@ -75,7 +75,7 @@
         position: sticky;
         top: 0;
         background-color: #EDF0F5;
-        z-index: 1; /* 헤더를 본문 위에 표시 */
+        z-index: 1;
     }
 
     .version-history-table th, .version-history-table td {

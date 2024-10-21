@@ -1,7 +1,7 @@
 package com.kcc.pms.domain.test.mapper;
 
 import com.kcc.pms.domain.test.domain.dto.TestRequestDto;
-import com.kcc.pms.domain.test.domain.dto.TestVO;
+import com.kcc.pms.domain.test.domain.vo.TestVO;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
@@ -12,7 +12,7 @@ public interface TestMapper {
     List<TestVO> findAllByOptions(Map<String, Object> parameters);
     Integer saveTest(Map<String, Object> parameters);
     Integer saveUnitTestDetails(Map<String, Object> parameters);
-    TestRequestDto getUnitTest(Integer testNo);
+    TestRequestDto getUnitTest(Long testNo);
     Integer updateTest(Map<String, Object> parameters);
-    Integer deleteTest(Integer testNo);
+    Integer deleteTest(Long testNo);
 }

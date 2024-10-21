@@ -69,24 +69,30 @@ $(function () {
 
         if (isEditing) {
             // 드래그 앤 드롭 활성화
-            $('.jstree-files').jstree(true).settings.dnd.is_draggable = function () { return true; };
+            $('.jstree-files').jstree(true).settings.dnd.is_draggable = function () {
+                return true;
+            };
         } else {
             // 드래그 앤 드롭 비활성화
-            $('.jstree-files').jstree(true).settings.dnd.is_draggable = function () { return false; };
+            $('.jstree-files').jstree(true).settings.dnd.is_draggable = function () {
+                return false;
+            };
         }
     });
 
     // 초기 상태에서 드래그 앤 드롭 비활성화
-    $('.jstree-files').jstree(true).settings.dnd.is_draggable = function () { return false; };
+    $('.jstree-files').jstree(true).settings.dnd.is_draggable = function () {
+        return false;
+    };
 
-    $('#search').on('keypress', function(e) {
+    $('#search').on('keypress', function (e) {
         if (e.which === 13) { // 엔터 키 코드
             let v = $(this).val();
             $('.jstree-files').jstree(true).search(v);
         }
     });
 
-    $('#search-btn').on('click', function() {
+    $('#search-btn').on('click', function () {
         let v = $('#search').val();
         $('.jstree-files').jstree(true).search(v);
     });
@@ -118,11 +124,11 @@ $(function () {
         showRowSelector: true,
         multipleSelect: true,
         columns: [
-            { key: "fileName", label: "파일명", width: 261.6, align: "center" },
-            {key: "fileType", label: "파일형식", width: 80, align: "center" },
-            {key: "size", label: "용량", width: 80, align: "center" },
-            {key: "date", label: "날짜", width: 100, align: "center" },
-            {key: "author", label: "작성자", width: 80, align: "center" },
+            {key: "fileName", label: "파일명", width: 261.6, align: "center"},
+            {key: "fileType", label: "파일형식", width: 80, align: "center"},
+            {key: "size", label: "용량", width: 80, align: "center"},
+            {key: "date", label: "날짜", width: 100, align: "center"},
+            {key: "author", label: "작성자", width: 80, align: "center"},
             {
                 key: null,
                 label: "작업",
@@ -153,11 +159,11 @@ $(function () {
         alert(fileName + ' 업로드 버튼 클릭됨');
     });
 
-    $('.file-insert-btn').on('click', function() {
+    $('.file-insert-btn').on('click', function () {
         $('#insertModal').modal('show');
     });
 
-    $('.file-modify-btn').on('click', function() {
+    $('.file-modify-btn').on('click', function () {
         $('#modifyModal').modal('show');
     });
 
@@ -165,7 +171,7 @@ $(function () {
     const $selectBox = $('.select-box-list');
 
     let selectedOptions = [];
-    $selectElement.on('change', function() {
+    $selectElement.on('change', function () {
         const value = $selectElement.val();
         if (value && !selectedOptions.includes(value)) {
             selectedOptions.push(value);
@@ -186,9 +192,9 @@ $(function () {
             html: '&times;'
         });
 
-        $removeBtn.on('click', function() {
+        $removeBtn.on('click', function () {
             $label.remove();
-            selectedOptions = selectedOptions.filter(function(val) {
+            selectedOptions = selectedOptions.filter(function (val) {
                 return val !== value;
             });
         });
@@ -198,16 +204,16 @@ $(function () {
     }
 });
 
-$(function() {
-    $('#newFolder').on('click', function() {
+$(function () {
+    $('#newFolder').on('click', function () {
         $('#folderModal').modal('show');
     });
 
-    $('#file-insert').on('click', function() {
+    $('#file-insert').on('click', function () {
         $('#fileInsertModal').modal('show');
     });
 
-    $('#file-delete-his-btn').on('click', function() {
+    $('#file-delete-his-btn').on('click', function () {
         openHistoryModal();
     });
 });
@@ -215,12 +221,12 @@ $(function() {
 // 산출물 파일 상세 모달
 function loadVersionHistory(historyElement) {
     const versionHistory = [
-        { fileName: "5차", fileSize: "2.01 MB", deleted_nm: "홍길동", deletedDate: "2024-02-14", fileType: "xls/xlsx" },
-        { fileName: "4차", fileSize: "1.92 MB", deleted_nm: "홍길동", deletedDate: "2024-02-07", fileType: "xls/xlsx" },
-        { fileName: "3차", fileSize: "1.77 MB", deleted_nm: "홍길동", deletedDate: "2024-01-29", fileType: "xls/xlsx" },
-        { fileName: "2차", fileSize: "1.58 MB", deleted_nm: "홍길동", deletedDate: "2024-01-11", fileType: "xls/xlsx" },
-        { fileName: "초안", fileSize: "1.26 MB", deleted_nm: "홍길동", deletedDate: "2024-01-03", fileType: "xls/xlsx" },
-        { fileName: "초안", fileSize: "1.26 MB", deleted_nm: "홍길동", deletedDate: "2024-01-03", fileType: "xls/xlsx" }
+        {fileName: "5차", fileSize: "2.01 MB", deleted_nm: "홍길동", deletedDate: "2024-02-14", fileType: "xls/xlsx"},
+        {fileName: "4차", fileSize: "1.92 MB", deleted_nm: "홍길동", deletedDate: "2024-02-07", fileType: "xls/xlsx"},
+        {fileName: "3차", fileSize: "1.77 MB", deleted_nm: "홍길동", deletedDate: "2024-01-29", fileType: "xls/xlsx"},
+        {fileName: "2차", fileSize: "1.58 MB", deleted_nm: "홍길동", deletedDate: "2024-01-11", fileType: "xls/xlsx"},
+        {fileName: "초안", fileSize: "1.26 MB", deleted_nm: "홍길동", deletedDate: "2024-01-03", fileType: "xls/xlsx"},
+        {fileName: "초안", fileSize: "1.26 MB", deleted_nm: "홍길동", deletedDate: "2024-01-03", fileType: "xls/xlsx"}
     ];
 
     historyElement.empty();
@@ -271,4 +277,17 @@ function openHistoryModal() {
     const $historyModal = $('#historyModal');
     loadVersionHistory($historyModal.find('.versionHistory'));
     $historyModal.modal('show');
+}
+
+Dropzone.autoDiscover = false;
+function initDropzone(selector, preDiv, previewTemplate) {
+    const url = "http://localhost:8085";
+    return new Dropzone(selector, {
+        url: url + "/api/risk",
+        method: "post",
+        contentType: false,
+        autoProcessQueue: false,
+        previewTemplate: previewTemplate,
+        previewsContainer: preDiv + ' .dropzone-preview',
+    });
 }
