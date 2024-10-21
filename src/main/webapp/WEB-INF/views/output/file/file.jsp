@@ -7,6 +7,14 @@
                 <div class="dz-image">
                     <img data-dz-thumbnail alt="Preview" src='../../../../resources/output/images/file-icon.png' style="width: 16px"/>
                 </div>
+                <div class="dz-details flex-grow-1">
+                    <h6 class="font-semibold mb-1 dz-filename" data-dz-name>&nbsp;</h6>
+                    <p class="text-sm text-muted fw-normal dz-size" data-dz-size></p>
+                    <strong class="error text-danger dz-error-message" data-dz-errormessage></strong>
+                </div>
+                <div class="dz-remove">
+                    <button data-dz-remove class="btn btn-sm btn-danger">제거</button>
+                </div>
             </div>
         </div>
     </li>

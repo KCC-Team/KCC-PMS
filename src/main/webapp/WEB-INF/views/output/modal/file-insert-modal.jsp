@@ -120,7 +120,7 @@
     }
 
     .modal-body-in .file-zone .file-section {
-        height: 300px;
+        height: 100%;
         border: 1px solid #C5C5C5;
         padding: 10px;
         overflow-y: auto;
@@ -151,7 +151,8 @@
                                 </div>
                                 <div>
                                     <br>
-                                    <div><label>파일 위치&nbsp;&nbsp;&nbsp;<label class="es-star">*</label></label><span class="file-loc"></span></div>
+                                    <div><label>파일 위치&nbsp;&nbsp;&nbsp;<label class="es-star">*</label></label></div>
+                                    <div><span class="file-loc" style="font-size: 13px"></span>&nbsp;&nbsp;</div>
                                     <div class="jstree-div" style="width: 325px!important; height: 400px">
                                         <jsp:include page="../jstree-folder.jsp" />
                                     </div>
@@ -159,7 +160,7 @@
                             </div>
                         </section>
                         <section class="file-zone w-100 p-2">
-                            <div class="file-section" style="height: 484px">
+                            <div class="file-section" style="height: 506px">
                                 <div class="info-item d-flex flex-column align-items-start">
                                     <div class="mb-2"><label>파일 선택</label></div>
                                     <div id="insert-file-dropzone" class="dropzone"></div>
@@ -223,7 +224,7 @@
             while(parentNode && parentNode !== '#') {
                 let parentNodeData = window.jsTreeInstance.jstree(true).get_node(parentNode);
                 if(parentNodeData && parentNodeData.text) {
-                    path = parentNodeData.text + ' / ' + path;
+                    path = parentNodeData.text + ' > ' + path;
                     parentNode = window.jsTreeInstance.jstree(true).get_parent(parentNodeData);
                 } else {
                     break;

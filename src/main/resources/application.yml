@@ -23,6 +23,20 @@ mybatis:
   mapper-locations: classpath:mapper/*.xml
   type-aliases-package: com.kcc.pms.domain
 
+cloud:
+  aws:
+    s3:
+      bucket: kcc-bucket
+      url: https://kcc-bucket.s3.ap-northeast-2.amazonaws.com/kcc_pms/
+    credentials:
+      access-key: ${cloud.aws.accessKey}
+      secret-key: ${cloud.aws.secretKey}
+    region:
+      static: ap-northeast-2
+      auto: false
+    stack:
+      auto: false
+
 ---
 spring:
   config:
@@ -30,11 +44,11 @@ spring:
       on-profile: dev
   datasource:
     url: jdbc:oracle:thin:@localhost:${db.port}/xe
-    #    url: jdbc:log4jdbc:oracle:thin:@localhost:${db.port}:xe
+#    url: jdbc:log4jdbc:oracle:thin:@localhost:${db.port}:xe
     username: ${db.username}
     password: ${db.password}
     driver-class-name: oracle.jdbc.OracleDriver
-  #    driver-class-name: net.sf.log4jdbc.sql.jdbcapi.DriverSpy
+#    driver-class-name: net.sf.log4jdbc.sql.jdbcapi.DriverSpy
 
 ---
 spring:
