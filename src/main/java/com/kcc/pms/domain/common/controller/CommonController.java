@@ -7,10 +7,10 @@ import com.kcc.pms.domain.project.service.ProjectService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -61,5 +61,13 @@ public class CommonController {
         return commonService.getCommonCodeSelectList(commonCodeNo);
     }
 
-
+    // 파일 업로드 테스트 API
+    @PostMapping("/fileUpload")
+    @ResponseBody
+    public ResponseEntity<Void> fileUpload(HttpSession session, @RequestPart("files") List<MultipartFile> files, @RequestParam(value = "flcd", required = false) String fl_cd) {
+//        Long prjNo = (Long) session.getAttribute("prjNo");
+        Long prjNo = 1L;
+        commonService.fileUpload(files, prjNo, fl_cd);
+        return ResponseEntity.ok().build();
+    }
 }
