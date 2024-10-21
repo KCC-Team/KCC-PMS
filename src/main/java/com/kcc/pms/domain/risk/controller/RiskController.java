@@ -1,6 +1,6 @@
 package com.kcc.pms.domain.risk.controller;
 
-import com.kcc.pms.domain.risk.model.dto.RiskCommonCodeOptions;
+import com.kcc.pms.domain.common.model.dto.CommonCodeOptions;
 import com.kcc.pms.domain.risk.service.RiskService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -20,10 +20,10 @@ public class RiskController {
 
     @GetMapping("/api/risk/options")
     @ResponseBody
-    public ResponseEntity<List<RiskCommonCodeOptions>> getRiskCommonCode(){
+    public ResponseEntity<List<CommonCodeOptions>> getRiskCommonCode(){
         try {
-            List<RiskCommonCodeOptions> riskCommonCodeOptions = service.getRiskCommonCode();
-            return ResponseEntity.ok(riskCommonCodeOptions);
+            List<CommonCodeOptions> commonCodeOptions = service.getRiskCommonCode();
+            return ResponseEntity.ok(commonCodeOptions);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .body(Collections.emptyList());
