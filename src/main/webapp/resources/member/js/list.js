@@ -628,7 +628,8 @@ function initGrid() {
                 },
                 {key: "groupName", width: 110, label: "소속", align: "center"},
                 {key: "position", width: 80, label: "직위", align: "center"},
-                {key: "preStartDate", width: 120, label: "예정시작일", align: "center", editor: {
+                {key: "tech", width: 75, label: "기술등급", align: "center"},
+                {key: "preStartDate", width: 110, label: "예정시작일", align: "center", editor: {
                         type: "date",
                         config: {
                             content: {
@@ -644,7 +645,7 @@ function initGrid() {
                         console.log(this.value);  // 디버그용
                         return this.value && this.value.substring(0, 10) !== '2999-12-31' ? this.value.substring(0, 10) : '-';
                     }},
-                {key: "preEndDate", width: 120, label: "예정종료일", align: "center", editor: {
+                {key: "preEndDate", width: 110, label: "예정종료일", align: "center", editor: {
                         type: "date",
                         config: {
                             content: {
@@ -659,7 +660,7 @@ function initGrid() {
                     }, formatter: function() {
                         return this.value && this.value.substring(0, 10) !== '2999-12-31' ? this.value.substring(0, 10) : '-';
                     }},
-                {key: "startDate", width: 120, label: "참여시작일", align: "center", editor: {
+                {key: "startDate", width: 110, label: "참여시작일", align: "center", editor: {
                         type: "date",
                         config: {
                             content: {
@@ -674,7 +675,7 @@ function initGrid() {
                     }, formatter: function() {
                         return this.value && this.value.substring(0, 10) !== '2999-12-31' ? this.value.substring(0, 10) : '-';
                     }},
-                {key: "endDate", width: 120, label: "참여종료일", align: "center", editor: {
+                {key: "endDate", width: 110, label: "참여종료일", align: "center", editor: {
                         type: "date",
                         config: {
                             content: {
@@ -688,8 +689,7 @@ function initGrid() {
                         }
                     }, formatter: function() {
                         return this.value && this.value.substring(0, 10) !== '2999-12-31' ? this.value.substring(0, 10) : '-';
-                    }},
-                {key: "tech", width: 80, label: "기술등급", align: "center"}
+                    }}
             ],
             page: {
                 display: false
@@ -737,9 +737,9 @@ function initGrid() {
                             return selectedOption ? selectedOption.NM : this.value;
                         }
                     },
-                    {key: "groupName", width: 90, label: "소속", align: "center"},
-                    {key: "position", width: 80, label: "직위", align: "center"},
-                    {key: "tech", width: 80, label: "기술등급", align: "center"},
+                    {key: "groupName", width: 80, label: "소속", align: "center"},
+                    {key: "position", width: 75, label: "직위", align: "center"},
+                    {key: "tech", width: 75, label: "기술등급", align: "center"},
                     {key: "teamName", width: 110, label: "소속팀", align: "center", formatter: function() {
                             // connectedTeams을 탐색하면서 소속된 팀들 모두 가져옴
                             if (this.item.connectTeams && this.item.connectTeams.length > 0) {
@@ -754,7 +754,7 @@ function initGrid() {
                                 return '-';
                             }
                     }},
-                    {key: "preStartDate", width: 100, label: "예정시작일", align: "center", editor: {
+                    {key: "preStartDate", width: 95, label: "예정시작일", align: "center", editor: {
                             type: "date",
                             config: {
                                 content: {
@@ -769,7 +769,7 @@ function initGrid() {
                         }, formatter: function() {
                             return this.value && this.value.substring(0, 10) !== '2999-12-31' ? this.value.substring(0, 10) : '-';
                         }},
-                    {key: "preEndDate", width: 100, label: "예정종료일", align: "center", editor: {
+                    {key: "preEndDate", width: 95, label: "예정종료일", align: "center", editor: {
                             type: "date",
                             config: {
                                 content: {
@@ -784,7 +784,7 @@ function initGrid() {
                         }, formatter: function() {
                             return this.value && this.value.substring(0, 10) !== '2999-12-31' ? this.value.substring(0, 10) : '-';
                         }},
-                    {key: "startDate", width: 100, label: "참여시작일", align: "center", editor: {
+                    {key: "startDate", width: 95, label: "참여시작일", align: "center", editor: {
                             type: "date",
                             config: {
                                 content: {
@@ -799,7 +799,7 @@ function initGrid() {
                         }, formatter: function() {
                             return this.value && this.value.substring(0, 10) !== '2999-12-31' ? this.value.substring(0, 10) : '-';
                         }},
-                    {key: "endDate", width: 100, label: "참여종료일", align: "center", editor: {
+                    {key: "endDate", width: 95, label: "참여종료일", align: "center", editor: {
                             type: "date",
                             config: {
                                 content: {
