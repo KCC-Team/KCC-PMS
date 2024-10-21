@@ -18,8 +18,8 @@
 <main class="content" id="content">
     <div class="main_content">
 
-        <div class="member-content">
-            <div class="member-info"> 투입인력 관리</div>
+        <div class="div-section">
+            <div class="div-info"> 투입인력 관리</div>
         </div>
 
         <div class="container1">
