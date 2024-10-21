@@ -1,5 +1,11 @@
 $(document).ready(function (){
     fetchOptions();
+
+    $("#pre_st_dt, #pre_end_dt, #st_dt, #end_dt").datepicker({
+        dateFormat: "yy-mm-dd"  // 원하는 형식으로 날짜 표시
+    });
+
+
 })
 
 
