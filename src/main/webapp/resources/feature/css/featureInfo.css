@@ -1,0 +1,122 @@
+.modal-dialog {
+    margin-right: 650px !important;
+}
+
+.modal-content {
+    width: 950px !important;
+    margin-right: 100px !important;
+}
+
+.form-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.form-table td, .form-table th {
+    border: 1px solid #ddd;
+    border-radius: 5px !important;
+    padding: 8px;
+    vertical-align: middle;
+}
+
+.form-table th {
+    background-color: #f2f2f2;
+    text-align: left;
+    width: 140px;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.form-group {
+    margin-bottom: 10px;
+}
+
+.form-table input,
+.form-table select {
+    width: 100%;
+    padding: 5px;
+    box-sizing: border-box;
+    border-radius: 5px !important;
+    border: 2px solid #ddd;
+}
+
+.btn-select-user {
+    padding: 5px 9px 5px 9px;
+    border: none;
+    border-radius: 5px;
+    color: white;
+    cursor: pointer;
+    background-color: #2898b0;
+    margin-bottom: 5px;
+}
+
+.btn-select-output {
+    padding: 5px 9px 5px 9px;
+    border: none;
+    border-radius: 5px;
+    color: white;
+    cursor: pointer;
+    background-color: #2898b0;
+}
+
+.btn-save-wbs {
+    padding: 5px 9px 5px 9px;
+    border: none;
+    border-radius: 5px;
+    color: white;
+    cursor: pointer;
+    background-color: #2898b0;
+}
+
+.btn-close-wbs {
+    padding: 5px 9px 5px 9px;
+    border: none;
+    border-radius: 5px;
+    color: white;
+    cursor: pointer;
+    background-color: gray;
+}
+
+#mem_no {
+    width: 35% !important;
+}
+
+.required-icon {
+    color: red;
+}
+
+.modal-title {
+    font-weight: bold;
+    font-size: 18px;
+    margin-bottom: 10px;
+}
+
+.modal-header {
+    margin-bottom: 10px;
+}
+
+.modal-footer {
+    margin: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 12px;
+}
+
+#mem_nm, #sys_no {
+    width: 39%;
+}
+
+input[type="date"] {
+    position: relative;
+}
+
+input[type="date"] {
+    color: black;
+    font-weight: bold;
+}
+
+#feat_cont {
+    width: 39%;
+    height: 100px;
+}
