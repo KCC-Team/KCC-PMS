@@ -14,7 +14,7 @@ public class WbsRequestDto {
 
     private Long tsk_no;
 
-    private double order_no;
+    private Integer order_no;
 
     private String tsk_ttl;
 
@@ -40,7 +40,7 @@ public class WbsRequestDto {
 
     private String use_yn;
 
-    private String par_task_no;
+    private Long par_task_no;
 
     private String ante_task_no;
 
@@ -63,4 +63,7 @@ public class WbsRequestDto {
     private String mod_id;
 
     private Date mod_dt;
+
+    private Long max_order_id;
+
 }

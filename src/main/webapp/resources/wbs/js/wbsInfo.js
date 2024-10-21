@@ -2,7 +2,8 @@ var queryString = window.location.search;
 var queryParams = new URLSearchParams(queryString);
 var type = queryParams.get('type');
 var id = queryParams.get('id');
-var parentId = queryParams.get('parentId');
+var max_order_id = queryParams.get('maxOrderId');
+// var parentId = queryParams.get('parentId');
 var depth = "";
 
 $(document).ready(function() {
@@ -10,6 +11,8 @@ $(document).ready(function() {
     $("#pre_st_dt, #pre_end_dt, #st_dt, #end_dt").datepicker({
         dateFormat: "yy-mm-dd"  // 원하는 형식으로 날짜 표시
     });
+
+
 
     // // 처음 작업 생성
     // if (type == 'new' && id == null) {
@@ -53,6 +56,8 @@ $(document).ready(function() {
     //     $('#par_task_no').val(parentId);
     // }
 
+
+
     // 인원 검색
     $('.btn-select-user').click(function () {
         window.open(
@@ -65,6 +70,8 @@ $(document).ready(function() {
     // form 전송
     $('#wbs_form').on('submit', function (event) {
         event.preventDefault();
+        console.log("max_order_id = " + max_order_id);
+        $('#max_order_id').val(max_order_id);
 
         if ($('#ante_task_no').val().length > 0 && !/^\d+(\.\d+)*$/.test($('#ante_task_no').val())) {
             alert('올바른 선행작업 번호를 입력해주세요.');

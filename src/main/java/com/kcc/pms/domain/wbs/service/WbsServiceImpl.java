@@ -1,9 +1,11 @@
 package com.kcc.pms.domain.wbs.service;
 
 import com.kcc.pms.domain.project.model.dto.ProjectResponseDto;
+import com.kcc.pms.domain.team.model.vo.Team;
 import com.kcc.pms.domain.wbs.mapper.WbsMapper;
 import com.kcc.pms.domain.wbs.model.dto.WbsRequestDto;
 import com.kcc.pms.domain.wbs.model.dto.WbsResponseDto;
+import com.kcc.pms.domain.wbs.model.vo.Wbs;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -17,6 +19,22 @@ public class WbsServiceImpl implements WbsService {
 
     @Override
     public int saveWbs(WbsRequestDto wbs) {
+        Long maxOrderId = wbs.getMax_order_id();
+        if(maxOrderId == null){
+            wbs.setPar_task_no(0L);
+            maxOrderId = 0L;
+        } else {
+            wbs.setPar_task_no(maxOrderId);
+        }
+        Integer maxOrderNo = wbsMapper.getMaxOrderNo(maxOrderId);
+        if(maxOrderNo == null){
+            maxOrderNo = 1;
+        } else {
+            maxOrderNo = maxOrderNo + 1;
+        }
+        wbs.setOrder_no(maxOrderNo);
+        System.out.println(wbs);
+
         int result = wbsMapper.saveWbs(wbs);
 
         if (result > 0
@@ -87,6 +105,57 @@ public class WbsServiceImpl implements WbsService {
         }
 
         return 1;
+    }
+
+
+    @Override
+    public void updateOrder(Integer wbsNo, Integer newParentNo, Integer newPosition) {
+        Wbs movedWbs = wbsMapper.getWbsByNo(wbsNo);
+        Integer oldParentId = movedWbs.getParentNo();
+
+        List<Wbs> oldSiblings = wbsMapper.getSiblings(oldParentId);
+
+
+        List<Wbs> newSiblings = wbsMapper.getSiblings(newParentNo);
+
+        //부모가 동일한 경우 (같은 부모 하위에서 순서만 변경된 경우)
+        if (oldParentId.equals(newParentNo)) {
+            for (Wbs sibling : oldSiblings) {
+                if (!sibling.getWbsNo().equals(wbsNo)) {
+                    if (movedWbs.getOrderNo() < newPosition && sibling.getOrderNo() > movedWbs.getOrderNo() && sibling.getOrderNo() <= newPosition) {
+                        sibling.setOrderNo(sibling.getOrderNo() - 1);  // 한 칸씩 당김
+                        wbsMapper.updateWbsOrder(sibling.getWbsNo(), null, sibling.getOrderNo());
+                    } else if (movedWbs.getOrderNo() > newPosition && sibling.getOrderNo() < movedWbs.getOrderNo() && sibling.getOrderNo() >= newPosition) {
+                        sibling.setOrderNo(sibling.getOrderNo() + 1);  // 한 칸씩 밀어냄
+                        wbsMapper.updateWbsOrder(sibling.getWbsNo(), null, sibling.getOrderNo());
+                    }
+                }
+            }
+        }
+        //부모가 다른 경우 (부모가 변경된 경우)
+        else {
+            // 기존 부모의 형제들의 순서 변경
+            for (Wbs sibling : oldSiblings) {
+                if (sibling.getOrderNo() > movedWbs.getOrderNo()) {
+                    sibling.setOrderNo(sibling.getOrderNo() - 1);
+                    wbsMapper.updateWbsOrder(sibling.getWbsNo(), null, sibling.getOrderNo());
+                }
+            }
+
+            // 새로운 부모의 형제들의 순서 변경
+            for (Wbs sibling : newSiblings) {
+                if (sibling.getOrderNo() >= newPosition) {
+                    sibling.setOrderNo(sibling.getOrderNo() + 1);
+                    wbsMapper.updateWbsOrder(sibling.getWbsNo(), null, sibling.getOrderNo());
+                }
+            }
+
+            movedWbs.setParentNo(newParentNo);
+        }
+
+        movedWbs.setOrderNo(newPosition);
+
+        wbsMapper.updateWbsOrder(movedWbs.getWbsNo(), newParentNo, newPosition);
     }
 
 }
