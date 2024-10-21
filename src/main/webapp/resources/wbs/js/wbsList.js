@@ -187,6 +187,22 @@ gantt.attachEvent("onBeforeTaskDrag", function(id, mode, e) {
 gantt.attachEvent("onAfterTaskMove", function(id, parent, tindex){
     console.log("작업 ID " + id + "이(가) 새로운 위치로 이동됨.");
     console.log("새 부모 ID: " + parent + ", 새로운 인덱스: " + tindex);
+    $.ajax({
+        url: '/projects/wbs/updateOrder',
+        type: 'POST',
+        contentType: 'application/json',
+        data: JSON.stringify({
+            wbsNo: id,
+            newParentNo: parent,
+            newPosition: tindex
+        }),
+        success: function(response) {
+            console.log('노드 순서가 성공적으로 반영되었습니다.');
+        },
+        error: function(xhr, status, error) {
+            console.error('노드 순서 변경에 실패했습니다: ', error);
+        }
+    });
 });
 
 // Gantt가 렌더링된 후 열 크기 조정 기능 활성화
@@ -199,7 +215,7 @@ gantt.attachEvent("onContextMenu", function (id, linkId, e) {
     // 기본 우클릭 메뉴 제거
     e.preventDefault();
     removeContextMenu();
-
+    console.log("taskNo = " + id);
     if (!id) {
         return true;
     }
@@ -234,6 +250,10 @@ gantt.attachEvent("onContextMenu", function (id, linkId, e) {
         lastSiblingId = lastSiblingTask.id;
     }
 
+    //아래에추가 => 클릭한친구의 부모아이디
+    //하위에추가 => 클릭한친구의 아이디
+
+
     // 자식 작업들 가져오기
     let children = gantt.getChildren(id);
 
@@ -242,7 +262,7 @@ gantt.attachEvent("onContextMenu", function (id, linkId, e) {
 
     let additionalButton = '';
     if (id.length < 5) {
-        additionalButton = `<input type=button value="하위로 추가" class="btn-task" onclick="wbsInfoPopup('child', ${lastChildId}, ${id})"><br/>`;
+        additionalButton = `<input type=button value="하위로 추가" class="btn-task" onclick="wbsInfoPopup('child', ${lastChildId}, ${id}, ${task.id})"><br/>`;
     }
 
     // 커스텀 메뉴 생성
@@ -252,7 +272,7 @@ gantt.attachEvent("onContextMenu", function (id, linkId, e) {
         class='context_menu'
         "
     >
-      <input type=button value="아래에 추가" class="btn-task" onclick="wbsInfoPopup('new', ${lastSiblingId}, ${parentTaskId})">
+      <input type=button value="아래에 추가" class="btn-task" onclick="wbsInfoPopup('new', ${lastSiblingId}, ${parentTaskId}, ${task.par_task_no})">
       <br/>
       ${additionalButton}
       <input type=button value="상세 정보" class="btn-task" onclick="wbsInfoPopup('view', ${id}, ${id})">
@@ -308,13 +328,15 @@ function makeResizableColumns() {
 }
 
 
-function wbsInfoPopup(type, id, parentId) {
+function wbsInfoPopup(type, id, parentId, max_order_id) {
     let url = "/projects/wbsInfo?page=wbs&type=" + type;
     if (id != undefined)  {
         url += "&id=" + id;
     }
     if (parentId != undefined)  {
         url += "&parentId=" + parentId;
+    } if(max_order_id != undefined) {
+        url += "&maxOrderId=" + max_order_id;
     }
     window.open(
         url,

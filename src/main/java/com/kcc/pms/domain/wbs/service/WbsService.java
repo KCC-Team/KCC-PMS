@@ -8,4 +8,5 @@ import java.util.List;
 public interface WbsService {
     int saveWbs(WbsRequestDto wbs);
     List<WbsResponseDto> getWbsList(Long prj_no);
+    void updateOrder(Integer wbsNo, Integer newParentNo, Integer newPosition);
 }

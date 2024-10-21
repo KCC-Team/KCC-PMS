@@ -40,6 +40,7 @@
                         <input type="hidden" id="mem_no" name="mem_no" value="">
                         <input type="hidden" id="tm_no" name="tm_no" value="">
                         <input type="hidden" id="par_task_no" name="par_task_no" value="">
+                        <input type="hidden" id="max_order_id" name="max_order_id" value="">
 
                         <table class="form-table">
                             <tr>

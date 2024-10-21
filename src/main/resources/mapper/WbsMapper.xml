@@ -58,4 +58,38 @@
         order by t.order_no
     </select>
 
+    <select id="getMaxOrderNo" resultType="Integer">
+        SELECT MAX(order_no) FROM task WHERE par_task_no = #{parentNo}
+    </select>
+
+
+    <select id="getWbsByNo" resultType="com.kcc.pms.domain.wbs.model.vo.Wbs">
+        SELECT tsk_no AS wbsNo,
+               tsk_ttl AS wbsName,
+               par_task_no AS parentNo,
+               order_no AS orderNo
+        FROM task
+        WHERE tsk_no = #{wbsNo}
+    </select>
+
+
+    <select id="getSiblings" resultType="com.kcc.pms.domain.wbs.model.vo.Wbs">
+        SELECT tsk_no AS wbsNo,
+               tsk_ttl AS wbsName,
+               par_task_no AS parentNo,
+               order_no AS orderNo
+        FROM task
+        WHERE par_task_no = #{parentNo}
+        ORDER BY order_no ASC
+    </select>
+
+
+    <update id="updateWbsOrder">
+        UPDATE task
+        SET order_no = #{orderNo}
+        <if test="parentNo != null">
+            , par_task_no = #{parentNo}
+        </if>
+        WHERE tsk_no = #{wbsNo}
+    </update>
 </mapper>
