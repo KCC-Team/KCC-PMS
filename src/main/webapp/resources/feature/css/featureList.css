@@ -1,0 +1,152 @@
+.project-content {
+    display: flex;
+    padding-top: 15px;
+    align-items: center;
+    overflow: hidden;
+}
+
+.project-info {
+    width: 96.5%;
+    margin: 4px 0px 20px 25px;
+    font-size: 20px;
+    font-weight: bold;
+    color: black;
+    border-bottom: 1px solid #989898;
+    padding-bottom: 5px;
+    float: left;
+}
+
+.feat_content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+}
+
+.feat-info {
+    flex-grow: 1;
+    font-size: 17px;
+    font-weight: bold;
+    color: black;
+    padding-bottom: 5px;
+    margin-left: 25px;
+}
+
+.btn-add-feat {
+    margin-left: auto;
+    margin-right: 20px;
+}
+
+
+.btn-add-feat button {
+    padding: 8px 16px;
+    border: none;
+    border-radius: 5px;
+    color: white;
+    cursor: pointer;
+}
+
+.add-feat {
+    background-color: #5c5c5c;
+    color: white;
+}
+
+.all-container {
+    display: flex;
+    gap: 5px;
+}
+
+.left-section {
+    flex: 1.3;
+    margin: 13px 5px 10px 25px;
+}
+
+.right-section {
+    flex: 2;
+    margin: 13px 19px 10px 5px;
+    border: 1px solid black;
+}
+
+.feat-info-row {
+    border: 1px solid black;
+    padding: 10px;
+    margin-bottom: 13px;
+}
+
+.feat-info-row.on {
+    border: 2px solid black;
+}
+
+.feat-title {
+    flex-grow: 1;
+    font-size: 17px;
+    font-weight: bold;
+    color: black;
+    padding-bottom: 5px;
+}
+
+progress {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 90%;
+    height: 20px;
+}
+
+progress::-webkit-progress-bar {
+    background-color: #eee;
+    border-radius: 0;
+}
+
+progress::-webkit-progress-value {
+    background-color: #1F80DA;
+    border-radius: 0;
+}
+
+.prg-val {
+    margin-left: 3px;
+    margin-bottom: 10px;
+}
+
+.feat-search-section {
+    display: flex;
+    border-bottom: 1px solid black;
+    padding: 10px;
+    justify-content: flex-end;
+}
+
+.feat-select-option {
+    height: 30px;
+    margin-right: 7px;
+    border-radius: 5px;
+    width: 25%;
+}
+
+.row-info {
+    padding: 10px;
+    margin-bottom: 13px;
+    width: 90%;
+}
+
+.feat-total-cnt, .feat-complete-cnt, .feat-continue-cnt {
+    color: black;
+}
+
+.feat-info-table {
+    width: 97%;
+    border-collapse: collapse;
+    border: 1px solid black;
+    margin: 8px;
+}
+
+.feat-info-table td {
+    border-collapse: collapse;
+    border: 1px solid black;
+    text-align: center;
+}
+
+.tr-row {
+    height: 30px;
+    text-align: center;
+    background-color: #EDF0F5;
+    color: black;
+}

@@ -65,7 +65,7 @@
                             <th><label for="pre_st_dt">예정 시작일 <span class="required-icon">*</span></label></th>
                             <td><input type="text" id="pre_st_dt" name="pre_st_dt" placeholder="yyyy-mm-dd" required></td>
                             <th><label for="pre_end_dt">예정 종료일 <span class="required-icon">*</span></label></th>
-                            <td><input type="text" id="pre_end_dt" name="pre_end_dt" placeholder="yyy-mm-dd" required></td>
+                            <td><input type="text" id="pre_end_dt" name="pre_end_dt" placeholder="yyyy-mm-dd" required></td>
                         </tr>
                         <tr>
                             <th>시작일</th>
