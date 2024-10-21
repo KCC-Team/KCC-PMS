@@ -10,8 +10,8 @@
         font-size: 15px;
     }
 
-    .jstree-folder-in {
-        height: 100px;
+    .modal-dialog-centered .jstree-folder-in {
+        height: 300px;
         border: 1px solid #C5C5C5;
         padding: 10px;
         overflow-y: auto;
@@ -22,24 +22,15 @@
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" style="color: #070606; font-weight: bold">새 폴더 만들기</h5>
+                <h5 class="modal-title" style="color: #070606; font-weight: bold">새 폴더 생성</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
                 <section class="info-section d-flex flex-column">
+                    <input type="text" class="form-control mb-1" id="search" placeholder="폴더를 검색하세요." style="width: 270px;">
                     <div>
                         <div class="jstree-folder-in">
                         </div>
-                    </div>
-                    <br>
-                    <div class="d-flex justify-content-start">
-                        <div class="fw-bold me-3"><label style="font-size: 17px;">폴더 구분</label></div>
-                        <form>
-                            <input type="radio" id="folder" name="type" value="folder" checked class="custom-radio" />
-                            <label for="folder" class="custom-label">폴더</label>&nbsp;&nbsp;&nbsp;
-                            <input type="radio" id="output" name="type" value="output" class="custom-radio" />
-                            <label for="output" class="custom-label">산출물</label>
-                        </form>
                     </div>
                     <br>
                     <div class="d-flex justify-content-start">
@@ -53,8 +44,9 @@
                     </div>
                 </section>
             </div>
-            <div class="modal-footer">
-                <button type="button" class="save-button" data-bs-dismiss="modal">&nbsp;&nbsp;저장하기&nbsp;&nbsp;</button>
+            <div class="modal-footer d-flex justify-content-center">
+                <button type="button" class="save-button" data-bs-dismiss="modal">&nbsp;&nbsp;저장하기&nbsp;&nbsp;</button>&nbsp;&nbsp;
+                <button type="button" class="cancel-button" data-bs-dismiss="modal">&nbsp;&nbsp;닫기&nbsp;&nbsp;</button>
             </div>
         </div>
     </div>
@@ -111,9 +103,6 @@
                     "default": {
                         "icon": "fa fa-folder text-warning"
                     },
-                    "output": {
-                        "icon": "fa-solid fa-box-archive text-success"
-                    }
                 }
             });
             $('.jstree-folder-in').jstree('refresh');
@@ -154,12 +143,11 @@
             let newNode = {
                 id: newNodeId,
                 text: folderName,
-                type: $('#output').is(':checked') ? 'output' : 'folder'
+                type: 'folder'
             };
 
             // jsTree에 새 노드 추가
             $('.jstree-folder-in').jstree('create_node', parentNodeId, newNode, "last", function(new_node) {
-                console.log("노드가 추가되었습니다:", new_node);
                 $('.jstree-folder-in').jstree('deselect_all', true);
                 $('.jstree-folder-in').jstree('select_node', new_node);
                 $('.jstree-folder-in').jstree('open_node', parentNodeId);
@@ -188,14 +176,12 @@
             $('#input-area-folder').val('');
         });
 
-        // 모달이 닫힐 때 트리와 입력 필드 초기화
         $('#folderModal').on('hidden.bs.modal', function () {
             $('#input-area-folder').val('');
             $('#folder').prop('checked', true);
             selectedNode = null;
             treeData = JSON.parse(JSON.stringify(initData));
             initializeJsTree(treeData);
-            console.log('모달이 닫혔습니다. jsTree와 입력 필드가 초기화되었습니다.');
         });
     });
 </script>
