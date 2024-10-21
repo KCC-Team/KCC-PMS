@@ -60,11 +60,11 @@ $(function () {
     // 위치 편집 버튼 클릭 이벤트
     $(".modify-btn").on("click", function () {
         // 텍스트 확인하여 상태 변경
-        let isEditing = $(this).text().includes("위치 편집");
+        let isEditing = $(this).text().includes("순서 편집");
         $(this).html(
             isEditing
                 ? "&nbsp;&nbsp;&nbsp;저장&nbsp;&nbsp;&nbsp;"
-                : '&nbsp;<i class="fa-regular fa-folder"></i>&nbsp;&nbsp;위치 편집&nbsp;'
+                : '&nbsp;&nbsp;순서 편집&nbsp;'
         );
 
         if (isEditing) {
@@ -118,20 +118,11 @@ $(function () {
         showRowSelector: true,
         multipleSelect: true,
         columns: [
-            {
-                key: "fileName",
-                label: "파일명",
-                width: 180,
-                align: "center",
-                formatter: function () {
-                    return `<button onclick="openDetailModal('${this.item.fileName}', gridData)" class="btn-link">${this.item.fileName}</button>`;
-                }
-            },
-            {key: "fileType", label: "파일형식", width: 80, align: "center"},
-            {key: "size", label: "용량", width: 80, align: "center"},
-            {key: "version", label: "버전", width: 60, align: "center"},
-            {key: "date", label: "날짜", width: 100, align: "center"},
-            {key: "author", label: "작성자", width: 60, align: "center"},
+            { key: "fileName", label: "파일명", width: 261.6, align: "center" },
+            {key: "fileType", label: "파일형식", width: 80, align: "center" },
+            {key: "size", label: "용량", width: 80, align: "center" },
+            {key: "date", label: "날짜", width: 100, align: "center" },
+            {key: "author", label: "작성자", width: 80, align: "center" },
             {
                 key: null,
                 label: "작업",
@@ -139,11 +130,10 @@ $(function () {
                 align: "center",
                 formatter: function () {
                     return `
-                                <div class="me-5">
-                                    <button class="ms-1 file-btn" data-file="${this.item.fileName}">&nbsp;다운로드&nbsp;</button>
-                                    <button onclick="openReInsertModal('${this.item.fileName}', gridData)" class="file-btn" data-file="${this.item.fileName}">&nbsp;업로드&nbsp;</button>
-                                </div>
-                            `;
+                        <div class="d-flex justify-content-center">
+                            <button class="ms-1 file-btn" data-file="${this.item.fileName}">&nbsp;다운로드&nbsp;</button>
+                        </div>
+                    `;
                 }
             }
         ]
@@ -206,21 +196,6 @@ $(function () {
         $label.append($removeBtn);
         $selectBox.append($label);
     }
-
-    $('#modifyModal').on('show.bs.modal', function() {
-        isSaved = false;
-    });
-
-    $('#modifyModal .save-button').on('click', function() {
-        isSaved = true;
-    });
-
-    $('#modifyModal').on('hidden.bs.modal', function() {
-        if (!isSaved) {
-            selectedOptions = [];
-            $selectBox.empty();
-        }
-    });
 });
 
 $(function() {
@@ -231,88 +206,69 @@ $(function() {
     $('#file-insert').on('click', function() {
         $('#fileInsertModal').modal('show');
     });
+
+    $('#file-delete-his-btn').on('click', function() {
+        openHistoryModal();
+    });
 });
 
 // 산출물 파일 상세 모달
-function loadVersionHistory(fileData) {
+function loadVersionHistory(historyElement) {
     const versionHistory = [
-        { fileName: fileData.fileName + " 5차", fileSize: "2.01 MB", registeredOn: "2024-02-14", fileType: "xls/xlsx", version: "0.5" },
-        { fileName: fileData.fileName + " 4차", fileSize: "1.92 MB", registeredOn: "2024-02-07", fileType: "xls/xlsx", version: "0.4" },
-        { fileName: fileData.fileName + " 3차", fileSize: "1.77 MB", registeredOn: "2024-01-29", fileType: "xls/xlsx", version: "0.3" },
-        { fileName: fileData.fileName + " 2차", fileSize: "1.58 MB", registeredOn: "2024-01-11", fileType: "xls/xlsx", version: "0.2" },
-        { fileName: fileData.fileName + " 초안", fileSize: "1.26 MB", registeredOn: "2024-01-03", fileType: "xls/xlsx", version: "0.1" }
+        { fileName: "5차", fileSize: "2.01 MB", deleted_nm: "홍길동", deletedDate: "2024-02-14", fileType: "xls/xlsx" },
+        { fileName: "4차", fileSize: "1.92 MB", deleted_nm: "홍길동", deletedDate: "2024-02-07", fileType: "xls/xlsx" },
+        { fileName: "3차", fileSize: "1.77 MB", deleted_nm: "홍길동", deletedDate: "2024-01-29", fileType: "xls/xlsx" },
+        { fileName: "2차", fileSize: "1.58 MB", deleted_nm: "홍길동", deletedDate: "2024-01-11", fileType: "xls/xlsx" },
+        { fileName: "초안", fileSize: "1.26 MB", deleted_nm: "홍길동", deletedDate: "2024-01-03", fileType: "xls/xlsx" },
+        { fileName: "초안", fileSize: "1.26 MB", deleted_nm: "홍길동", deletedDate: "2024-01-03", fileType: "xls/xlsx" }
     ];
 
-    const versionHistoryContainer = document.getElementById('versionHistory');
-    versionHistoryContainer.innerHTML = '';
+    historyElement.empty();
+
+    // 테이블 생성
+    const table = $(`
+        <table class="table table-striped version-history-table">
+            <thead>
+                <tr>
+                    <th style="text-align: center;">&nbsp;&nbsp;&nbsp;</th>
+                    <th style="text-align: center;">파일명</th>
+                    <th style="text-align: center;">삭제자</th>
+                    <th style="text-align: center;">삭제일</th>
+                    <th style="text-align: center;">크기</th>
+                    <th style="text-align: center;">형식</th>
+                    <th style="text-align: center;">다운로드</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    `);
+
+    const tbody = table.find('tbody');
 
     versionHistory.forEach(version => {
-        const card = document.createElement('div');
-        card.className = 'card mb-2 shadow-sm';
-        card.innerHTML = `
-            <div class="card-body p-2">
-                <div class="row d-flex justify-content-center">
-                    <div class="d-flex align-items-center">
-                        <div class="d-flex justify-content-center me-4">
-                            <label class="card-title me-1">파일명</label>
-                            <span class="card-text">${version.fileName}</span>
-                        </div>
-                        <div class="d-flex justify-content-center me-4">
-                            <label class="card-title me-1">버전</label>
-                            <span class="card-text">${version.version}</span>
-                        </div>
-                        <div class="d-flex justify-content-center">
-                            <label class="card-title me-1">등록일</label>
-                            <span class="card-text">${version.registeredOn}</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="d-flex">
-                    <div class="me-4">
-                        <label class="card-title me-1">크기</label>
-                        <span class="card-text">${version.fileSize}</span>
-                    </div>
-                    <div class="me-4">
-                        <label class="card-title me-1">형식</label>
-                        <span class="card-text">${version.fileType}</span>
-                    </div>
-                    <div>
-                        <button class="green-btn">&nbsp;&nbsp;&nbsp;다운로드&nbsp;&nbsp;&nbsp;</button>
-                    </div>
-                </div>
-
-            </div>
-        `;
-        versionHistoryContainer.appendChild(card);
+        const row = $(`
+            <tr>
+                <td style="text-align: center;">
+                    <img data-dz-thumbnail src='../../../../resources/output/images/file-icon.png' style="width: 30px;"/>
+                </td>
+                <td style="text-align: left;">${version.fileName}</td>
+                <td style="text-align: center;">${version.deleted_nm}</td>
+                <td style="text-align: center;">${version.deletedDate}</td>
+                <td style="text-align: center;">${version.fileSize}</td>
+                <td style="text-align: center;">${version.fileType}</td>
+                <td style="text-align: center;">
+                    <button class="green-btn">&nbsp;&nbsp;다운로드&nbsp;&nbsp;</button>
+                </td>
+            </tr>
+        `);
+        tbody.append(row);
     });
+
+    historyElement.append(table);
 }
-function openDetailModal(fileName, gridData) {
-    const fileData = gridData.find(item => item.fileName === fileName);
-    if (!fileData) {
-        alert('파일 정보를 찾을 수 없습니다.');
-        return;
-    }
 
-    $('#fileName').text(fileData.fileName);
-    $('#fileSize').text(fileData.size);
-    $('#fileVersion').text(fileData.version);
-    $('#fileType').text(fileData.fileType);
-
-    loadVersionHistory(fileData);
-    $('#detailModal').modal('show');
-}
-function openReInsertModal(fileName, gridData) {
-    const fileData = gridData.find(item => item.fileName === fileName);
-    if (!fileData) {
-        alert('파일 정보를 찾을 수 없습니다.');
-        return;
-    }
-
-    $('#ori-fileName').text(fileData.fileName);
-    $('#ori-fileSize').text(fileData.size);
-    $('#ori-fileVersion').text(fileData.version);
-    $('#ori-fileType').text(fileData.fileType);
-
-    loadVersionHistory(fileData);
-    $('#fileReInsertModal').modal('show');
+function openHistoryModal() {
+    const $historyModal = $('#historyModal');
+    loadVersionHistory($historyModal.find('.versionHistory'));
+    $historyModal.modal('show');
 }

@@ -311,7 +311,6 @@ body {
 
 .green-btn:hover {
     background-color: #5BAD5E;
-    animation: pulse 2s infinite;
 }
 
 .red-btn {
@@ -346,13 +345,27 @@ body {
     font-size: 16px;
 }
 
+.cancel-button {
+    display: flex;
+    align-items: center;
+    background-color: #888888;
+    color: white;
+    padding: 14px 20px;
+    margin: 8px 0;
+    border: none;
+    cursor: pointer;
+    height: 30px;
+    border-radius: 5px;
+    font-size: 16px;
+}
+
 .custom-button {
     display: flex;
     justify-content: center;
     align-items: center;
     height: 35px;
     padding: 5px 5px;
-    background-color: #646464;
+    background-color: #8B8B8B;
     border-radius: 2px;
     color: white;
     border: none;
@@ -361,7 +374,7 @@ body {
 }
 
 .custom-button:hover {
-    background-color: #8B8B8B;
+    background-color: #565656;
 }
 
 .div-section {
@@ -378,6 +391,7 @@ body {
     margin: 4px 0px 20px 40px;
     padding-bottom: 5px;
     float: left;
+    color: #000;
 }
 
 .filter-section {
