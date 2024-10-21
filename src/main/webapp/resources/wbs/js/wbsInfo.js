@@ -7,6 +7,10 @@ var depth = "";
 
 $(document).ready(function() {
 
+    $("#pre_st_dt, #pre_end_dt, #st_dt, #end_dt").datepicker({
+        dateFormat: "yy-mm-dd"  // 원하는 형식으로 날짜 표시
+    });
+
     // 처음 작업 생성
     if (type == 'new' && id == null) {
         $('#order_no').val(1);
@@ -42,7 +46,7 @@ $(document).ready(function() {
         } else if (checkDepth == 5) {
             child_no = (parseFloat(id) + 0.001).toFixed(3);
         }
-        alert(child_no);
+       //alert(child_no);
         $('#order_no').val(child_no);
         $('#par_task_no').val(parentId);
     }

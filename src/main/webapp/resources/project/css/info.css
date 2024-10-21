@@ -1,7 +1,12 @@
+* {
+    box-sizing: border-box;
+}
+
 .main_content {
     background-color: white;
-    height: 95%;
+    height: calc(100vh - 120px);
     margin: 81px 20px 50px 15px !important;
+    overflow-y: auto;
 }
 
 body {
@@ -54,7 +59,7 @@ select {
     font-size: 14px;
 }
 
-input[type="date"] {
+#pre_st_dt, #pre_end_dt, #st_dt, #end_dt {
     width: 22%;
     padding: 8px;
     margin-top: 5px;

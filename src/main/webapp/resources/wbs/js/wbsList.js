@@ -13,7 +13,7 @@ gantt.locale = {
 gantt.config.row_height = 40;
 gantt.config.scale_height = 40;
 
-gantt.config.date_format = "%Y-%m-%d";  // 날짜 형식을 명시적으로 설정
+gantt.config.date_format = "%Y-%m-%d %H:%i";  // 시간까지 포함한 형식으로 설정
 gantt.config.date_scale = "%d";  // 날짜 형식 설정
 gantt.config.subscales = [{unit: "month", step: 1, date: "%Y-%m"}];  // 월 단위 보조 스케일
 
@@ -26,15 +26,15 @@ gantt.config.columns = [
         }
         return task.id;
     }},
-    {name: "text", label: "작업명", align: "left", width: 200, tree: true, resize: true},
-    {name: "tsk_stat_cd", label: "상태", width: 45, resize: true},
-    {name: "pre_st_dt", label: "예정 시작일", align: "center", width: 80, resize: true},
-    {name: "pre_end_dt", label: "예정 종료일", align: "center", width: 80, resize: true},
-    {name: "start_date", label: "시작일", align: "center", width: 80, resize: true},
-    {name: "end_date", label: "종료일", align: "center", width: 80, resize: true},
+    {name: "text", label: "작업명", align: "left", width: 180, tree: true, resize: true},
+    {name: "tsk_stat_cd", label: "상태", width: 45, align: "center", resize: true},
+    {name: "start_date", label: "예정 시작일", align: "center", width: 80, resize: true},
+    {name: "end_date", label: "예정 종료일", align: "center", width: 80, resize: true},
+    {name: "real_st_dt", label: "시작일", align: "center", width: 80, resize: true},
+    {name: "real_end_dt", label: "종료일", align: "center", width: 80, resize: true},
     {name: "progress", label: "진척도", align: "center", width: 60, template: function(task) { return task.progress * 100 + "%"; }, resize: true},
     // {name: "weight_val", label: "가중치", align: "center", width: 70, template: function(task) { return task.weight_val || ""; }, resize: true},
-    {name: "ante_task_no", label: "선행작업", align: "center", width: 47, template: function(task) { return task.ante_task_no || ""; }, resize: true},
+    // {name: "ante_task_no", label: "선행작업", align: "center", width: 47, template: function(task) { return task.ante_task_no || ""; }, resize: true},
     {name: "manager", label: "담당자", align: "center", width: 90, template: function(task) { return task.manager || ""; }, resize: true},
     // {name: "addbtn", label: "", width: 30, align: "center", template:
     //         function(task) {
@@ -43,46 +43,10 @@ gantt.config.columns = [
     // }
 ];
 
-// // Lightbox에 표시할 필드 설정
-// gantt.config.lightbox.sections = [
-//     {name: "text", height: 35, map_to: "text", type: "textarea", focus: true, label: "작업명"},  // "text" 필드와 매핑
-//     {name: "tsk_stat_cd", height: 35, map_to: "tsk_stat_cd", type: "select", options: [
-//         {key: "001", label: "발생전"},
-//         {key: "002", label: "진행중"},
-//         {key: "003", label: "조치완료"},
-//         {key: "004", label: "취소"}
-//     ], label: "상태"},
-//     {name: "par_task_no", height: 30, map_to: "par_task_no", type: "textarea", label: "상위작업"},
-//     //  {name: "pre_st_dt", height: 38, map_to: "pre_st_dt", type: "date", label: "예정 시작일"},
-//     //  {name: "pre_end_dt", height: 38, map_to: "pre_end_dt", type: "date", label: "예정 종료일"},
-//     //  {name: "start_date", height: 38, map_to: "start_date", type: "date", label: "시작일"},
-//     //  {name: "end_date", height: 38, map_to: "end_date", type: "date", label: "종료일"},
-//     {name: "pre_st_dt", type: "duration", map_to: "pre_st_dt", label: "기간22"},
-//     {name: "pre_end_dt", type: "duration", map_to: "pre_end_dt", label: "기간33"},
-//     {name: "start_date", type: "date",  map_to: "start_date", label: "기간",},
-//     {name: "end_date", type: "date", map_to: "end_date", label: "기간1"},
-//     {name: "system", height: 38, map_to: "system", type: "textarea", label: "시스템/업무"},
-//     {name: "progress", height: 38, map_to: "progress", type: "textarea", label: "진척도"},
-//     {name: "weight_val", height: 38, map_to: "weight_val", type: "textarea", label: "가중치"},
-//     {name: "manager", height: 38, map_to: "manager", type: "textarea", label: "담당자"},
-//     {name: "rel_out_nm", height: 38, map_to: "rel_out_nm", type: "textarea", label: "관련 산출물"},
-//     {name: "ante_task_no", height: 38, map_to: "ante_task_no", type: "textarea", label: "선행 작업"}
-// ];
 
-// // 샘플 데이터
-// var tasks = {
-//     data: []
-//
-//     // data: [
-//     //     {id: "1", text: "A업무시스템", pre_st_dt: "2024-09-30", pre_end_dt: "2024-10-05", start_date: "2024-09-30", end_date: "2024-10-05", progress: 0.5, ante_task_no: "", tsk_stat_cd: "진행중", sys_no: "시스템 A", weight_val: 2, manager: "김철수", rel_out_nm: "문서 A", par_task_no: "부모1 > 자식"},  // 부모 작업
-//     //     {parent: "1", id: "2", text: "A업무시스템 작업1", pre_st_dt: "2024-09-30", pre_end_dt: "2024-10-06", start_date: "2024-09-30", end_date: "2024-10-06", progress: 0.5, ante_task_no: "1", tsk_stat_cd: "진행중", sys_no: "시스템 A", weight_val: 2, manager: "김철수", rel_out_nm: "문서 A", par_task_no: "부모1 > 자식"},  // 부모 작업
-//     //     {parent: "1", id: "3", text: "A업무시스템 작업2", pre_st_dt: "2024-09-30", pre_end_dt: "2024-10-07", start_date: "2024-09-30", end_date: "2024-10-07", progress: 0.5, ante_task_no: "1.1", tsk_stat_cd: "진행중", sys_no: "시스템 A", weight_val: 2, manager: "김철수", rel_out_nm: "문서 A", par_task_no: "부모1 > 자식"},  // 부모 작업
-//     //     {id: "2", text: "B업무시스템", pre_st_dt: "2024-09-30", pre_end_dt: "2024-10-08", start_date: "2024-09-30", end_date: "2024-10-08", progress: 0.5, ante_task_no: "1", tsk_stat_cd: "진행중", sys_no: "시스템 A", weight_val: 2, manager: "김철수", rel_out_nm: "문서 A", par_task_no: "부모1 > 자식"},  // 부모 작업
-//     //     {parent: "2", id: "1", text: "A업무시스템 작업2", pre_st_dt: "2024-09-30", pre_end_dt: "2024-10-09", start_date: "2024-09-30", end_date: "2024-10-09", progress: 0.5, ante_task_no: "1.1", tsk_stat_cd: "진행중", sys_no: "시스템 A", weight_val: 2, manager: "김철수", rel_out_nm: "문서 A", par_task_no: "부모1 > 자식"},  // 부모 작업
-//     // ]
-// };
-
-getProjectResult();
+if (prjNo != undefined) {
+    getProjectResult();
+}
 
 // 데이터 조회
 function getProjectResult() {
@@ -91,21 +55,27 @@ function getProjectResult() {
         type: 'GET',
         success: function(response) {
 
-            var tasks = {
+            let tasks = {
                 data: [] // 빈 배열로 초기화
             };
 
             response.forEach(function(item) {
+                let endDate = new Date(item.pre_end_dt);
+
+                // 시간을 23:59로 설정하여 종료일을 해당 날짜 전체로 포함시키기
+                endDate.setHours(23, 59, 59, 999);
+
+                let newEndDate = gantt.date.date_to_str("%Y-%m-%d %H:%i")(endDate); // 시간 포함하여 날짜 변환
+
                 tasks.data.push({
                     parent: item.par_task_no,
                     id: item.order_no,
                     text: item.tsk_ttl,
-                    pre_st_dt: item.pre_st_dt,
-                    pre_end_dt: item.pre_end_dt,
-                    // start_date: item.st_dt,
-                    // end_date: item.end_dt,
-                    start_date: item.st_dt || item.pre_st_dt,
-                    end_date: item.end_dt || item.pre_end_dt,
+                    start_date: item.pre_st_dt,
+                    //end_date: item.pre_end_dt,
+                    end_date: newEndDate,
+                    real_st_dt: item.st_dt || "-",
+                    real_end_dt: item.end_dt || "-",
                     progress: item.prg / 100,
                     ante_task_no: item.ante_task_no,
                     tsk_stat_cd: item.wbs_status,
@@ -177,7 +147,7 @@ gantt.attachEvent("onBeforeTaskDrag", function(id, mode, e) {
 // gantt.attachEvent("onLightboxSave", function(id, task, is_new) {
 //
 //     // console.log(task);
-//     // var taskId = gantt.addTask({
+//     // let taskId = gantt.addTask({
 //     //     id: 3,
 //     //     parent: 2,
 //     //     text: "Task #3",
@@ -240,16 +210,16 @@ gantt.attachEvent("onContextMenu", function (id, linkId, e) {
     }
 
     // 우클릭한 작업의 정보 가져오기
-    var task = gantt.getTask(id);
+    let task = gantt.getTask(id);
 
     // 부모 작업 ID 가져오기 (최상위 작업일 경우 부모가 없을 수 있음)
-    var parentTaskId = task.parent ? task.parent : "null";  // 부모가 없는 경우 '없음' 표시
+    let parentTaskId = task.parent ? task.parent : "null";  // 부모가 없는 경우 '없음' 표시
 
     // 자식 작업들 가져오기
-    var children = gantt.getChildren(id);
+    let children = gantt.getChildren(id);
 
     // 마지막 자식 ID 가져오기
-    var lastChildId = children.length > 0 ? children[children.length - 1] : "0";
+    let lastChildId = children.length > 0 ? children[children.length - 1] : "0";
 
     let additionalButton = '';
     if (id.length < 5) {
@@ -293,7 +263,7 @@ document.addEventListener("click", removeContextMenu);
 
 // 변경 사항 확인
 function logCurrentTasks() {
-    var currentTasks = gantt.serialize();
+    let currentTasks = gantt.serialize();
     console.log(JSON.stringify(currentTasks, null, 2));
 }
 
@@ -320,7 +290,7 @@ function makeResizableColumns() {
 
 
 function wbsInfoPopup(type, id, parentId) {
-    var url = "/projects/wbsInfo?page=wbs&type=" + type;
+    let url = "/projects/wbsInfo?page=wbs&type=" + type;
     if (id != undefined)  {
         url += "&id=" + id;
     }
@@ -353,18 +323,18 @@ $(document).ready(function() {
     });
 
     // 그리드 숨김 상태를 추적할 변수
-    var gridHidden = false;
+    let gridHidden = false;
     // 토글 버튼 클릭 시 이벤트 처리
     document.getElementById("toggle-grid").addEventListener("click", function () {
-        var ganttContainer = document.getElementById("gantt_here");
+        let ganttContainer = document.getElementById("gantt_here");
 
         if (!gridHidden) {
-            // 그리드를 숨기고 타임라인을 크게 표시
+            gantt.config.grid_width = 0;
             ganttContainer.classList.add("grid_hidden");
             document.getElementById("toggle-grid").innerText = "기본 화면으로 보기";
             $(".btn-modify-wbs").hide();
         } else {
-            // 그리드를 다시 표시하고 기본 상태로 복원
+            gantt.config.grid_width = 730;
             ganttContainer.classList.remove("grid_hidden");
             document.getElementById("toggle-grid").innerText = "간트 차트 크게 보기";
         }

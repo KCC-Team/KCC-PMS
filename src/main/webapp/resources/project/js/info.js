@@ -9,6 +9,11 @@ if (type === 'view') {
 }
 
 $(document).ready(function () {
+
+    $("#pre_st_dt, #pre_end_dt, #st_dt, #end_dt").datepicker({
+        dateFormat: "yy-mm-dd"  // 원하는 형식으로 날짜 표시
+    });
+
     // 프로젝트 기간
     $('#no_days_period').click(function () {
         noPeriodCheck();
