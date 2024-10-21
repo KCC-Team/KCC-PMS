@@ -3,24 +3,24 @@ $(function() {
         {
             id: "1",
             text: "차세대 프로그램 구축",
-            type: "folder",
+            type: "Y",
             children: [
                 {
                     id: "1.1",
                     text: "요구사항 정의서",
-                    type: "folder",
+                    type: "Y",
                 },
                 {
                     id: "1.2",
                     text: "요구사항추적표(설계)",
-                    type: "folder",
+                    type: "Y",
                 },
             ],
         },
         {
             id: "2",
             text: "B 프로그램 구축",
-            type: "folder",
+            type: "Y",
             children: [
                 {
                     id: "2.1",
@@ -35,40 +35,40 @@ $(function() {
         {
             id: "1",
             text: "차세대 프로그램 구축",
-            type: "folder",
+            type: "Y",
             children: [
                 {
                     id: "1.1",
                     text: "요구사항 정의서",
-                    type: "folder",
+                    type: "Y",
                     children: [
-                        { id: "1.1.1", text: "A 업무 시스템 요구사항 정의서", type: "file" },
-                        { id: "1.1.2", text: "B 업무 시스템 요구사항 정의서", type: "file" },
+                        { id: "1.1.1", text: "A 업무 시스템 요구사항 정의서", type: "N" },
+                        { id: "1.1.2", text: "B 업무 시스템 요구사항 정의서", type: "N" },
                     ],
                 },
                 {
                     id: "1.2",
                     text: "요구사항추적표(설계)",
-                    type: "folder",
+                    type: "Y",
                 },
             ],
         },
         {
             id: "2",
             text: "B 프로그램 구축",
-            type: "folder",
+            type: "Y",
             children: [
                 {
                     id: "2.1",
                     text: "개발환경 설치 작업계획서",
-                    type: "folder",
+                    type: "Y",
                 },
             ],
         },
         {
             id: "3",
             text: "ProjectExcelDown_초기 프로젝트 등록 테스트",
-            type: "file",
+            type: "N",
         },
     ];
 
@@ -79,7 +79,10 @@ $(function() {
                 id: node.id,
                 parent: parentId || '#',
                 text: node.text,
-                type: node.type
+                type: node.type,
+                state: {
+                    opened: true
+                }
             };
             jsTreeData.push(jsTreeNode);
             if (node.children && node.children.length > 0) {
@@ -101,7 +104,7 @@ $(function() {
             "default": {
                 "icon": "fa fa-folder text-warning"
             },
-            "file": {
+            "N": {
                 "icon": "fa fa-file text-info"
             },
         }
@@ -119,7 +122,7 @@ $(function() {
             "default": {
                 "icon": "fa fa-folder text-warning"
             },
-            "file": {
+            "N": {
                 "icon": "fa fa-file text-info"
             },
         }
