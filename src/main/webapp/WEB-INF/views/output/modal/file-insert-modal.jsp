@@ -5,24 +5,24 @@
 
 <meta charset="UTF-8">
 <style>
-    .modal-content {
+    .modal-content-in {
         background-color: #F6F6F6;
     }
 
-    .modal-dialog {
-        max-width: 850px;
+    .modal-dialog-in {
+        max-width: 800px !important;
         margin: auto;
     }
 
-    .modal-body .info-section {
+    .modal-body-in .info-section {
         margin-bottom: 20px;
     }
 
-    .modal-body .info-item {
-        min-width: 370px;
+    .modal-body-in .info-item {
+        min-width: 330px !important;
     }
 
-    .modal-body .info-item label {
+    .modal-body-in .info-item label {
         flex: 0 0 50px;
         margin: 0;
         color: #070606;
@@ -30,11 +30,11 @@
         font-size: 15px;
     }
 
-    .info-section span {
+    .modal-body-in .info-section span {
         font-size: 15px;
     }
 
-    .txt-area {
+    .modal-body-in .txt-area {
         padding: 4px;
         font-size: 17px;
         width: 240px;
@@ -42,11 +42,11 @@
         overflow-y: hidden;
     }
 
-    .jstree-div {
+    .modal-body-in .jstree-div {
         border: 1px solid #ced4da;
     }
 
-    .file-zone .select-box {
+    .modal-body-in .file-zone .select-box {
         margin-left: 20px;
         width: 250px;
         height: 150px;
@@ -54,71 +54,79 @@
         overflow-y: auto;
     }
 
-    .file-zone .dropzone {
+    .modal-body-in .file-zone .dropzone {
         border-radius: 5px;
         width: 100%;
-        min-height: 30px;
-        padding: 10px;
+        min-height: 30px !important;
+        max-height: 60px;
     }
 
-    .file-zone .dropzone-preview .dz-preview {
+    .modal-body-in .file-zone .dropzone .dz-message {
+        margin: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .modal-body-in.file-zone .dropzone-preview .dz-preview {
         width: 150px;
         margin: 5px;
     }
 
-    .file-zone  .dropzone-preview .dz-preview .dz-filename {
+    .modal-body-in .file-zone  .dropzone-preview .dz-preview .dz-filename {
         font-size: 12px;
+        width: 200px;
     }
 
-    .file-zone .dropzone-preview .dz-preview .dz-size,
-    .file-zone .dropzone-preview .dz-preview .dz-error-message {
+    .modal-body-in .file-zone .dropzone-preview .dz-preview .dz-size,
+    .modal-body-in .file-zone .dropzone-preview .dz-preview .dz-error-message {
         font-size: 10px;
     }
 
-    .file-zone .dropzone-preview li.dz-preview {
+    .modal-body-in .file-zone .dropzone-preview li.dz-preview {
         width: 100%;
         margin: 5px 0;
     }
 
-    .file-zone .dropzone-preview .dz-preview {
+    .modal-body-in .file-zone .dropzone-preview .dz-preview {
         width: 100%;
     }
 
-    .file-zone .dropzone-preview .dz-preview .dz-image {
+    .modal-body-in .file-zone .dropzone-preview .dz-preview .dz-image {
         flex: 0 0 auto;
         margin-right: 15px;
     }
 
-    .file-zone .dz-image img {
+    .modal-body-in .file-zone .dz-image img {
         width: 40px !important;
         height: 40px;
     }
 
-    .file-zone .dropzone-preview .dz-preview .dz-details {
+    .modal-body-in .file-zone .dropzone-preview .dz-preview .dz-details {
         flex: 1 1 auto;
         overflow: hidden;
     }
 
-    .file-zone .dropzone-preview .dz-preview .dz-remove {
+    .modal-body-in .file-zone .dropzone-preview .dz-preview .dz-remove {
         flex: 0 0 auto;
         margin-left: 15px;
     }
 
-    .file-zone .dropzone-preview .dz-preview .dz-filename,
-    .file-zone .dropzone-preview .dz-preview .dz-size {
+    .modal-body-in .file-zone .dropzone-preview .dz-preview .dz-filename,
+    .modal-body-in .file-zone .dropzone-preview .dz-preview .dz-size {
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
     }
 
-    .file-zone .file-section {
+    .modal-body-in .file-zone .file-section {
         height: 300px;
         border: 1px solid #C5C5C5;
         padding: 10px;
         overflow-y: auto;
     }
 
-    .jstree-folder {
+    .modal-body-in .jstree-folder {
         height: 100px;
         border: 1px solid #C5C5C5;
         padding: 10px;
@@ -126,57 +134,45 @@
     }
 </style>
 <div class="modal fade" id="insertModal" tabindex="-1" aria-labelledby="fileModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
+    <div class="modal-dialog modal-dialog-in modal-dialog-centered">
+        <div class="modal-content modal-content-in">
             <div class="modal-header">
                 <h5 class="modal-title" id="fileModalLabel" style="color: #070606; font-weight: bold">새 산출물 등록</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <div class="modal-body">
+            <div class="modal-body modal-body-in">
                 <section class="info-section">
                     <div class="d-flex justify-content-between">
-                        <div class="info-item">
-                            <div class="info-item d-flex flex-column align-items-start ms-3">
+                        <section class="info-item p-2 me-3">
+                            <div class="info-item d-flex flex-column align-items-start">
                                 <div class="d-flex justify-content-start">
                                     <div><label class="text-nowrap">제목&nbsp;&nbsp;&nbsp;<span class="es-star">*</span></label></div>
-                                    <span><textarea class="txt-area"></textarea></span>
+                                    <span><textarea class="txt-area" style="width: 270px"></textarea></span>
                                 </div>
                                 <div>
                                     <br>
                                     <div><label>파일 위치&nbsp;&nbsp;&nbsp;<label class="es-star">*</label></label><span class="file-loc"></span></div>
-                                    <div class="jstree-div" style="width: 350px !important;">
+                                    <div class="jstree-div" style="width: 325px!important; height: 400px">
                                         <jsp:include page="../jstree-folder.jsp" />
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="info-item d-flex flex-column align-items-start">
-                            <div class="d-flex justify-content-start">
-                                <div><label class="text-nowrap">연결 작업 선택&nbsp;&nbsp;&nbsp;</label></div>
-                                <select class="form-select" aria-label="Multiple select example" id="task-select">
-                                    <option value="" selected disabled>작업 선택하기</option>
-                                    <option value="1">현행 업무분석</option>
-                                    <option value="2">업무 프로세스 분석</option>
-                                </select>
+                        </section>
+                        <section class="file-zone w-100 p-2">
+                            <div class="file-section" style="height: 484px">
+                                <div class="info-item d-flex flex-column align-items-start">
+                                    <div class="mb-2"><label>파일 선택</label></div>
+                                    <div id="insert-file-dropzone" class="dropzone"></div>
+                                    <jsp:include page="../file/file.jsp" />
+                                </div>
                             </div>
-                            <div class="select-box">
-                            </div>
-                        </div>
+                        </section>
                     </div>
-
                 </section>
-                <div class="file-zone w-100">
-                    <div class="file-section mt-3">
-                        <div class="info-item d-flex flex-column align-items-start">
-                            <div class="mb-2"><label>파일 선택</label></div>
-                                <div id="insert-file-dropzone" class="dropzone"></div>
-                                <jsp:include page="../file/file.jsp" />
-                        </div>
-                    </div>
-                </div>
             </div>
-            <div class="modal-footer">
-                <button type="button" class="save-button" data-bs-dismiss="modal">&nbsp;&nbsp;저장하기&nbsp;&nbsp;</button>
+            <div class="modal-footer d-flex justify-content-center">
+                <button type="button" class="save-button" data-bs-dismiss="modal">&nbsp;&nbsp;저장하기&nbsp;&nbsp;</button>&nbsp;&nbsp;
+                <button type="button" class="cancel-button" data-bs-dismiss="modal">&nbsp;&nbsp;닫기&nbsp;&nbsp;</button>
             </div>
         </div>
     </div>

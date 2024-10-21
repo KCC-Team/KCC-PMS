@@ -4,6 +4,20 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.9.3/min/dropzone.min.css" />
 
 <style>
+    .modal-dialog-ouput .modal-content {
+        height: 600px;
+        background-color: #F6F6F6;
+    }
+
+    .modal-dialog-ouput .modal-dialog {
+        max-width: 800px !important;
+        margin: auto;
+    }
+
+    .modal-dialog-ouput .modal-body .info-section {
+        margin-bottom: 20px;
+    }
+
     .file-style .select-box-list {
         margin-left: 20px;
         width: 250px;
@@ -11,11 +25,25 @@
         overflow-y: auto;
     }
 
-    .file-style .dropzone {
+    .file-style #output-file-dropzone {
         border-radius: 5px;
         width: 100%;
-        min-height: 30px;
+        min-height: 30px !important;
         padding: 10px;
+    }
+
+    .modal-body-output .file-zone #output-file-dropzone {
+        border-radius: 5px;
+        width: 100%;
+        min-height: 50px !important;
+        max-height: 50px !important;
+    }
+
+    #output-file-dropzone > .dz-message {
+        margin: 5px !important;
+        display: flex;
+        align-items: center;
+        justify-content: center;
     }
 
     .file-style .dropzone-preview .dz-preview {
@@ -68,8 +96,8 @@
         text-overflow: ellipsis;
     }
 
-    .file-style .file-section {
-        height: 230px;
+    .modal-body-output .file-style .file-section {
+        height: 350px;
         border: 1px solid #C5C5C5;
         padding: 10px;
         overflow-y: auto;
@@ -77,13 +105,13 @@
 </style>
 
 <div class="modal fade" id="fileInsertModal" tabindex="-1" aria-labelledby="fileModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-ouput">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" style="color: #070606; font-weight: bold">산출물 파일 등록</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <div class="modal-body">
+            <div class="modal-body modal-body-output">
                 <section class="info-section">
                     <div class="d-flex justify-content-between">
                         <div class="info-item">
@@ -124,8 +152,9 @@
                     </div>
                 </section>
             </div>
-            <div class="modal-footer">
-                <button type="button" class="save-button" data-bs-dismiss="modal">&nbsp;&nbsp;저장하기&nbsp;&nbsp;</button>
+            <div class="modal-footer d-flex justify-content-center">
+                <button type="button" class="save-button" data-bs-dismiss="modal">&nbsp;저장하기&nbsp;</button>&nbsp;&nbsp;
+                <button type="button" class="cancel-button" data-bs-dismiss="modal">&nbsp;&nbsp;닫기&nbsp;&nbsp;</button>
             </div>
         </div>
     </div>
