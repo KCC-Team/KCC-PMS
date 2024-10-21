@@ -12,9 +12,9 @@ DROP TABLE Risk;
 DROP TABLE Feature;
 DROP TABLE Request;
 DROP TABLE Task;
+DROP TABLE Output;
 DROP TABLE FileMaster;
 
-DROP TABLE Output;
 DROP TABLE TestMaster;
 DROP TABLE ProjectMember;
 DROP TABLE Team;
@@ -195,6 +195,25 @@ CREATE TABLE CodeDetail (
     use_yn VARCHAR2(1) NOT NULL
 );
 
+CREATE TABLE FileMaster (
+    fl_ms_no number NOT NULL,
+    fl_cd CHAR(8) NULL,
+    use_yn VARCHAR2(1) NOT NULL
+);
+
+CREATE TABLE FileDetail (
+    fl_no number NOT NULL,
+    original_ttl VARCHAR2(100) NOT NULL,
+    file_path VARCHAR2(500) NOT NULL,
+    fl_type VARCHAR2(20) NOT NULL,
+    fl_size VARCHAR2(20) NOT NULL,
+    fl_ms_no NUMBER NOT NULL,
+    reg_id VARCHAR2(100) NOT NULL,
+    reg_dt DATE NOT NULL,
+    mod_id VARCHAR2(100) NULL,
+    mod_dt DATE NULL
+);
+
 CREATE TABLE Output (
     opt_no number NOT NULL,
     opt_ttl VARCHAR2(50) NOT NULL,
@@ -202,7 +221,8 @@ CREATE TABLE Output (
     prj_no NUMBER NOT NULL,
     high_folder_no NUMBER NULL,
     fld_yn VARCHAR2(1) NOT NULL,
-    use_yn VARCHAR2(1) NOT NULL
+    use_yn VARCHAR2(1) NOT NULL,
+    fl_ms_no NUMBER NULL
 );
 
 CREATE TABLE TaskOutput (
@@ -320,30 +340,6 @@ CREATE TABLE RequestTest (
     test_dtl_no NUMBER NOT NULL
 );
 
-CREATE TABLE FileMaster (
-    fl_ms_no number NOT NULL,
-    fl_cd CHAR(8) NOT NULL,
-    opt_no number NULL
-);
-
-CREATE TABLE FileDetail (
-    fl_no number NOT NULL,
-    fl_ttl VARCHAR2(100) NULL,
-    original_ttl VARCHAR2(100) NOT NULL,
-    uuid_ttl VARCHAR2(500) NOT NULL,
-    fl_type VARCHAR2(20) NOT NULL,
-    fl_size NUMBER NOT NULL,
-    version NUMBER NOT NULL,
-    fl_ms_no NUMBER NOT NULL,
-    reg_id VARCHAR2(100) NOT NULL,
-    reg_dt DATE NOT NULL,
-    mod_id VARCHAR2(100) NULL,
-    mod_dt DATE NULL,
-    use_yn VARCHAR2(1) NOT NULL,
-    rm_id VARCHAR2(100) NULL,
-    rm_dt DATE
-);
-
 ----------------------------------------------------------------------------------------------------------------------
 -- SEQUENCE
 CREATE SEQUENCE seq_project START WITH 1 INCREMENT BY 1;
@@ -425,15 +421,15 @@ ALTER TABLE FeatureTest ADD CONSTRAINT pk_ft_feat_test_no_001 PRIMARY KEY (feat_
 ALTER TABLE FeatureTest ADD CONSTRAINT fk_ft_feat_no_002 FOREIGN KEY (feat_no) REFERENCES Feature (feat_no);
 ALTER TABLE FeatureTest ADD CONSTRAINT fk_ft_feat_test_dtl_no_003 FOREIGN KEY (test_dtl_no) REFERENCES TestDetail (test_dtl_no);
 
-ALTER TABLE Output ADD CONSTRAINT pk_opt_no_001 PRIMARY KEY (opt_no);
-ALTER TABLE Output ADD CONSTRAINT fk_opt_high_folder_no_002 FOREIGN KEY (high_folder_no) REFERENCES Output (opt_no);
-ALTER TABLE Output ADD CONSTRAINT fk_opt_prj_no_003 FOREIGN KEY (prj_no) REFERENCES Project (prj_no);
-
 ALTER TABLE FileMaster ADD CONSTRAINT pk_fl_ms_no_001 PRIMARY KEY (fl_ms_no);
-ALTER TABLE FileMaster ADD CONSTRAINT fk_fl_ms_opt_no_003 FOREIGN KEY (opt_no) REFERENCES Output (opt_no);
 
 ALTER TABLE FileDetail ADD CONSTRAINT pk_fl_no_001 PRIMARY KEY (fl_no);
 ALTER TABLE FileDetail ADD CONSTRAINT fk_fl_ms_no_002 FOREIGN KEY (fl_ms_no) REFERENCES FileMaster (fl_ms_no);
+
+ALTER TABLE Output ADD CONSTRAINT pk_opt_no_001 PRIMARY KEY (opt_no);
+ALTER TABLE Output ADD CONSTRAINT fk_opt_high_folder_no_002 FOREIGN KEY (high_folder_no) REFERENCES Output (opt_no);
+ALTER TABLE Output ADD CONSTRAINT fk_opt_prj_no_003 FOREIGN KEY (prj_no) REFERENCES Project (prj_no);
+ALTER TABLE Output ADD CONSTRAINT fk_opt_fl_ms_no_004 FOREIGN KEY (fl_ms_no) REFERENCES FileMaster (fl_ms_no);
 
 ALTER TABLE Risk ADD CONSTRAINT pk_risk_no_001 PRIMARY KEY (risk_no);
 ALTER TABLE Risk ADD CONSTRAINT fk_risk_prj_no_002 FOREIGN KEY (prj_no) REFERENCES Project (prj_no);
@@ -994,5 +990,20 @@ INSERT INTO FeatureTest (feat_no, test_dtl_no) VALUES (3, 1);
 
 update codedetail set field_2 = 'Y' where common_cd_no = 'PMS004';
 update codedetail set field_3 = 'Y' where common_cd_no = 'PMS004' and cd_dtl_no IN ('PMS00402', 'PMS00403', 'PMS00404');
+
+INSERT INTO Output (opt_no, opt_ttl, depth, prj_no, high_folder_no, fld_yn, use_yn)
+VALUES (seq_output.nextval, '차세대 공공 프로젝트', 1, 1, NULL, 'Y', 'Y');
+
+INSERT INTO FileMaster (fl_ms_no, use_yn)
+VALUES (seq_filemaster.nextval, 'Y');
+
+INSERT INTO FileDetail (fl_no, original_ttl, file_path, fl_type, fl_size, fl_ms_no, reg_id, reg_dt)
+VALUES (seq_filedetail.nextval, '노트북_123123123라이언', 'https://kcc-bucket.s3.ap-northeast-2.amazonaws.com/kcc_pms/1/%EB%85%B8%ED%8A%B8%EB%B6%81_123123123%EB%9D%BC%EC%9D%B4%EC%96%B8.png', 'png', '7.1KB', 1, '홍길동', sysdate);
+INSERT INTO FileDetail (fl_no, original_ttl, file_path, fl_type, fl_size, fl_ms_no, reg_id, reg_dt)
+VALUES (seq_filedetail.nextval, 'spri123123123123ngboot ', 'https://kcc-bucket.s3.ap-northeast-2.amazonaws.com/kcc_pms/1/spri123123123123ngboot.png', 'png', '24.7KB', 1, '홍길동', sysdate);
+
+INSERT INTO Output (opt_no, opt_ttl, depth, prj_no, high_folder_no, fld_yn, use_yn, fl_ms_no)
+VALUES (seq_output.nextval, 'A 업무 요구사항 정의서', 2, 1, 1, 'N', 'Y', 1);
+
 -----------------------------------------------------------------------------------------------------------------
 COMMIT;
