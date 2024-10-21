@@ -21,6 +21,22 @@
     <link rel="stylesheet" href="../../../resources/defect/css/defect.css">
     <script src="../../../resources/defect/js/defect.js"></script>
 </head>
+
+<style>
+    .popup-header {
+        margin-bottom: 10px;
+    }
+
+    .popup-title {
+        display: block;
+        color: #000;
+        font-weight: bold;
+        font-size: 18px;
+        margin-bottom: 10px;
+        width: 100%;
+        border-bottom: 1px solid #000;
+    }
+</style>
 <body>
 <!-- 샘플 데이터 -->
 <%@ page import="java.util.List" %>
@@ -49,21 +65,12 @@
 <c:choose>
     <c:when test="${type eq 'register'}">
         <c:set var="titleName" value="결함 등록" />
-        <c:set var="disabled" value="" />
         <c:set var="save" value="저장" />
-        <c:set var="cancel" value="취소" />
-    </c:when>
-    <c:when test="${type eq 'modify'}">
-        <c:set var="titleName" value="결함 수정" />
-        <c:set var="disabled" value="" />
-        <c:set var="save" value="저장" />
-        <c:set var="cancel" value="취소" />
     </c:when>
     <c:otherwise>
         <c:set var="titleName" value="결함 상세" />
-        <c:set var="disabled" value="disabled" />
         <c:set var="work" value="조치" />
-        <c:set var="modify" value="수정" />
+        <c:set var="save" value="저장" />
     </c:otherwise>
 </c:choose>
 
@@ -71,122 +78,115 @@
 <c:choose>
     <c:when test="${type eq 'register'}">
         <c:set var="titleName" value="결함 등록" />
-        <c:set var="disabled" value="" />
-    </c:when>
-    <c:when test="${type eq 'modify'}">
-        <c:set var="titleName" value="결함 수정" />
-        <c:set var="disabled" value="" />
     </c:when>
     <c:otherwise>
         <c:set var="titleName" value="결함 상세" />
-        <c:set var="disabled" value="disabled" />
     </c:otherwise>
 </c:choose>
-<input type="hidden" class="disabled-val" value="${disabled}" />
+    <div class="popup-header">
+        <span class="popup-title">결함 정보</span>
+    </div>
+    <section style="height: 600px">
+        <div class="d-flex justify-content-left">
+            <div class="me-4" style="width: 550px !important;">
+                <table class="defect-table w-100">
+                    <tr>
+                        <td class="td-title">결함 명&nbsp;&nbsp;&nbsp;<span class="es-star">*</span></td>
+                        <td class="font-nowrap">
+                            <input type="text" class="defect-name" value="요구사항정의서 ID미부여 항목 발견" required >
+                        </td>
+                        <td class="td-title">시스템 분류</td>
+                        <td>
+                            <select name="sys-type" class="type" required >
+                                <c:forEach var="sys" items="${sys_type}">
+                                    <option value="${sys.key}" ${sys.key == 0 ? 'selected' : ''}>${sys.value}</option>
+                                </c:forEach>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="td-title">결함 ID&nbsp;&nbsp;&nbsp;<span class="es-star">*</span></td>
+                        <td>
+                            <input type="text" class="defect-id" value="TT-123-asd-1-df_1" required >
+                        </td>
+                        <td class="td-title">테스트 ID</td>
+                        <td>
+                            <input type="text" class="defect-id" value="TT-123-asd-1" required >
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="4" class="td-title">결함 설명&nbsp;&nbsp;&nbsp;<span class="es-star">*</span></td>
+                    </tr>
+                    <tr>
+                        <td colspan="4">
+                            <textarea class="defect-desc" required ></textarea>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="td-title">우선순위&nbsp;&nbsp;&nbsp;<span class="es-star">*</span></td>
+                        <td>
+                            <select name="sys-type" class="type" required >
+                                <c:forEach var="sys" items="${sys_type}">
+                                    <option value="${sys.key}" ${sys.key == 0 ? 'selected' : ''}>${sys.value}</option>
+                                </c:forEach>
+                            </select>
+                        </td>
+                        <td class="td-title">상태&nbsp;&nbsp;&nbsp;<span class="es-star">*</span></td>
+                        <td>
+                            <select name="sys-type" class="type" required >
+                                <c:forEach var="sys" items="${sys_type}">
+                                    <option value="${sys.key}" ${sys.key == 0 ? 'selected' : ''}>${sys.value}</option>
+                                </c:forEach>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="td-title">발견자&nbsp;&nbsp;&nbsp;<span class="es-star">*</span></td>
+                        <td>
+                            <span>홍길동</span>
+                        </td>
+                        <td class="td-title">발견일자&nbsp;&nbsp;&nbsp;<span class="es-star">*</span></td>
+                        <td>
+                            <input type="date" class="date" name="date" value="" required >
+                        </td>
+                    </tr>
+                    <tr>
 
-    <section class="d-flex justify-content-between align-items-center">
-        <label class="ms-4 fw-bold fs-3 text-black">
-            ${titleName}</label>
-    </section>
-    <hr>
-    <section>
-        <table class="defect-table">
-            <tr>
-                <td class="td-title">결함 명</td>
-                <td class="font-nowrap">
-                    <input type="text" class="defect-name" value="요구사항정의서 ID미부여 항목 발견" required ${disabled} >
-                </td>
-                <td class="td-title">시스템 분류</td>
-                <td>
-                    <select name="sys-type" class="type" required ${disabled} >
-                        <c:forEach var="sys" items="${sys_type}">
-                            <option value="${sys.key}" ${sys.key == 0 ? 'selected' : ''}>${sys.value}</option>
-                        </c:forEach>
-                    </select>
-                </td>
-            </tr>
-            <tr>
-                <td class="td-title">결함 ID</td>
-                <td ${disabled}>
-                    <input type="text" class="defect-id" value="TT-123-asd-1-df_1" required ${disabled} >
-                </td>
-                <td class="td-title">테스트 ID</td>
-                <td ${disabled}>
-                    <input type="text" class="defect-id" value="TT-123-asd-1" required ${disabled} >
-                </td>
-            </tr>
-            <tr>
-                <td colspan="4" class="td-title">결함 설명</td>
-            </tr>
-            <tr>
-                <td colspan="4">
-                    <textarea class="defect-desc" required ${disabled} ></textarea>
-                </td>
-            </tr>
-            <tr>
-                <td class="td-title">우선순위</td>
-                <td>
-                    <select name="sys-type" class="type" required ${disabled} >
-                        <c:forEach var="sys" items="${sys_type}">
-                            <option value="${sys.key}" ${sys.key == 0 ? 'selected' : ''}>${sys.value}</option>
-                        </c:forEach>
-                    </select>
-                </td>
-                <td class="td-title">상태</td>
-                <td>
-                    <select name="sys-type" class="type" required ${disabled} >
-                        <c:forEach var="sys" items="${sys_type}">
-                            <option value="${sys.key}" ${sys.key == 0 ? 'selected' : ''}>${sys.value}</option>
-                        </c:forEach>
-                    </select>
-                </td>
-            </tr>
-            <tr>
-                <td class="td-title">발견자</td>
-                <td>
-                    <span>홍길동</span>
-                </td>
-            </tr>
-            <tr>
-                <td class="td-title">발견일자</td>
-                <td>
-                    <input type="date" class="date" name="date" value="" required ${disabled} >
-                </td>
-                <td class="td-title">조치희망일</td>
-                <td>
-                    <input type="date" class="date" name="date" value="" required ${disabled} >
-                </td>
-            </tr>
-            <tr>
-                <td class="td-title">조치일자</td>
-                <td>
-                    <input type="date" class="date" name="date" value="" required ${disabled} >
-                </td>
-            </tr>
-        </table>
-        <div class="file-zone_1 w-100">
-            <div class="file-section mt-3">
-                <div class="info-item d-flex flex-column align-items-start">
-                    <div class="mb-2"><label>결함 발견 첨부파일</label></div>
-                    <div id="df-insert-file-dropzone_1" class="dropzone"></div>
-                    <jsp:include page="../output/file/file.jsp" />
+                        <td class="td-title">조치희망일</td>
+                        <td>
+                            <input type="date" class="date" name="date" value="" required >
+                        </td>
+                        <td class="td-title">조치일자</td>
+                        <td>
+                            <input type="date" class="date" name="date" value="" required >
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <div class="file-zone_1" style="width: 500px">
+                <div class="file-section">
+                    <div class="info-item d-flex flex-column align-items-start">
+                        <div class="mb-2"><label>결함 발견 첨부파일</label></div>
+                        <div id="df-insert-file-dropzone_1" class="dropzone"></div>
+                        <jsp:include page="../output/file/file-task.jsp" />
+                    </div>
                 </div>
             </div>
         </div>
         <br>
-        <c:if test="${not empty defectActionContent and defectActionContent != ''}">
-            <section class="defect-table work-info w-100">
+        <c:if test="${not empty defectAct and defectAct != ''}">
+            <section class="defect-table work-info">
                 <table>
                     <tr>
                         <td colspan="4" class="td-title text-center">결함 조치 내용</td>
                     </tr>
                     <tr>
                         <td colspan="4">
-                            <textarea class="defect-desc" required ${disabled} >${defectActionContent}</textarea>
-                        </td>
+                            <textarea class="defect-desc" required >${defectAct}</textarea>
+                        </td>ss
                     </tr>
                 </table>
-                <div class="file-zone_2 w-100">
+                <div class="file-zone_2">
                     <div class="file-section mt-3">
                         <div class="info-item d-flex flex-column align-items-start">
                             <div class="mb-2"><label>결함 발견 첨부파일</label></div>
@@ -197,19 +197,17 @@
                 </div>
             </section>
         </c:if>
-        <section class="btn-sec d-flex justify-content-end">
+        <section class="btn-sec d-flex justify-content-center">
             <c:choose>
-                <c:when test="${type eq 'register' or type eq 'modify'}">
-                    <button class="btn btn-success" id="save">&nbsp;&nbsp;&nbsp;${save}&nbsp;&nbsp;&nbsp;</button>&nbsp;&nbsp;&nbsp;
-                    <button class="btn btn-secondary me-3" id="cancel">&nbsp;&nbsp;&nbsp;${cancel}&nbsp;&nbsp;&nbsp;</button>
+                <c:when test="${isAction != null}">
+                    <button class="btn btn-secondary me-3" id="modify">&nbsp;&nbsp;&nbsp;${save}&nbsp;&nbsp;&nbsp;</button>
                 </c:when>
                 <c:otherwise>
                     <button class="btn btn-primary" id="work">&nbsp&nbsp;&nbsp;${work}&nbsp;&nbsp;&nbsp;</button>&nbsp;&nbsp;&nbsp;
-                    <button class="btn btn-secondary me-3" id="modify">&nbsp;&nbsp;&nbsp;${modify}&nbsp;&nbsp;&nbsp;</button>
+                    <button class="btn btn-secondary me-3" id="modify">&nbsp;&nbsp;&nbsp;${save}&nbsp;&nbsp;&nbsp;</button>
                 </c:otherwise>
             </c:choose>
         </section>
-        <br><br><br>
     </section>
 </body>
 </html>

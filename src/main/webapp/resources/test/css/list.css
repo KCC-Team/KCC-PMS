@@ -2,8 +2,3 @@ label {
     font-size: 15px;
     color: #000;
 }
-
-.test span {
-    display: flex;
-    justify-content: center !important;
-}

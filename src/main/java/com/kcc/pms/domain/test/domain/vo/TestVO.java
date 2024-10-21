@@ -1,9 +1,8 @@
-package com.kcc.pms.domain.test.domain.dto;
+package com.kcc.pms.domain.test.domain.vo;
 
 import lombok.*;
 
 import java.io.Serializable;
-import java.time.LocalDate;
 
 import static lombok.AccessLevel.*;
 
