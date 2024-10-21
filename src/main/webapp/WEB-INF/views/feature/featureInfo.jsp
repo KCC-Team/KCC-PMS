@@ -32,14 +32,10 @@
                             <td><input type="text" id="feat_id" name="feat_id" value="" required></td>
                         </tr>
                         <tr>
-                            <th><label for="feat_class_cd">기능분류 <span class="required-icon">*</span></label></th>
+                            <th><label>기능분류 <span class="required-icon">*</span></label></th>
                             <td>
-                                <select id="feat_class_cd" name="feat_class_cd">
-                                    <option value="0" selected>선택</option>
-                                    <option value="1">화면</option>
-                                    <option value="1">인터페이스</option>
-                                    <option value="1">프로그램</option>
-                                    <option value="1">보고서</option>
+                                <select id="PMS010" name="feat_class_cd">
+
                                 </select>
                             </td>
                             <th><label for="system">시스템/업무분류</label></th>
@@ -50,26 +46,18 @@
                             </td>
                         </tr>
                         <tr>
-                            <th><label for="pri_cd">우선순위 <span class="required-icon">*</span></label></th>
+                            <th><label>우선순위 <span class="required-icon">*</span></label></th>
                             <td>
-                                <select id="pri_cd" name="pri_cd">
+                                <select id="PMS006" name="pri_cd">
                                     <option value="0" selected>선택</option>
-                                    <option value="1">즉시</option>
-                                    <option value="1">긴급</option>
-                                    <option value="1">높음</option>
-                                    <option value="1">보통</option>
-                                    <option value="1">낮음</option>
+
                                 </select>
                             </td>
-                            <th><label for="diff_cd">난이도</label></th>
+                            <th><label>난이도</label></th>
                             <td>
-                                <select id="diff_cd" name="diff_cd">
+                                <select id="PMS011" name="diff_cd">
                                     <option value="0" selected>선택</option>
-                                    <option value="1">매우높음</option>
-                                    <option value="1">높음</option>
-                                    <option value="1">중간</option>
-                                    <option value="1">낮음</option>
-                                    <option value="1">매우낮음</option>
+
                                 </select>
                             </td>
                         </tr>
@@ -86,16 +74,11 @@
                             <td><input type="text" id="end_dt" name="end_dt" placeholder="yyyy-mm-dd"></td>
                         </tr>
                         <tr>
-                            <th><label for="stat_cd">상태 <span class="required-icon">*</span></label></th>
+                            <th><label>상태 <span class="required-icon">*</span></label></th>
                             <td>
-                                <select id="stat_cd" name="stat_cd" required>
+                                <select id="PMS009" name="stat_cd" required>
                                     <option value="">선택하세요.</option>
-                                    <option value="">신규</option>
-                                    <option value="">개발중</option>
-                                    <option value="">개발완료</option>
-                                    <option value="">단위테스트완료</option>
-                                    <option value="">PL확인</option>
-                                    <option value="">고객확인</option>
+
                                 </select>
                             </td>
                             <th><label for="prg">진척도 <span class="required-icon">*</span></label></th>
@@ -150,7 +133,7 @@
 </div>
 <!-- wbs Info Modal -->
 
-<script src="../../../resources/wbs/js/wbsInfo.js"></script>
+<script src="../../../resources/feature/js/featureInfo.js"></script>
 </body>
 </html>
 
