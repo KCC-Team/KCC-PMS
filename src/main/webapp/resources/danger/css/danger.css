@@ -23,7 +23,6 @@
     border-bottom: 1px solid #989898;
     padding-bottom: 5px;
     float: left;
-
 }
 
 h5 {
@@ -72,32 +71,6 @@ h5 {
     width: 120px;
 }
 
-.action-buttons {
-    margin-left: auto;
-    display: flex;
-    gap: 10px;
-    align-self: flex-end;
-}
-
-.action-buttons a {
-    border-radius: 5px;
-}
-
-.action-buttons button {
-    padding: 10px 20px;
-    border: none;
-    border-radius: 5px;
-    color: white;
-    cursor: pointer;
-}
-
-
-.add-project {
-    background-color: #5c5c5c;
-    color: white;
-}
-
-
 .status-label {
     display: inline-block;
     padding: 5px 10px;
@@ -116,8 +89,4 @@ h5 {
 
 .status-before {
     background-color: #888;
-}
-
-.danger-export-excel {
-    background-color: #4caf50;
 }
