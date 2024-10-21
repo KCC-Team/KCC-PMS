@@ -8,12 +8,12 @@ $(function() {
                 {
                     id: "1.1",
                     text: "요구사항 정의서",
-                    type: "output",
+                    type: "folder",
                 },
                 {
                     id: "1.2",
                     text: "요구사항추적표(설계)",
-                    type: "output",
+                    type: "folder",
                 },
             ],
         },
@@ -25,7 +25,7 @@ $(function() {
                 {
                     id: "2.1",
                     text: "개발환경 설치 작업계획서",
-                    type: "output",
+                    type: "folder",
                 },
             ],
         },
@@ -40,7 +40,7 @@ $(function() {
                 {
                     id: "1.1",
                     text: "요구사항 정의서",
-                    type: "output",
+                    type: "folder",
                     children: [
                         { id: "1.1.1", text: "A 업무 시스템 요구사항 정의서", type: "file" },
                         { id: "1.1.2", text: "B 업무 시스템 요구사항 정의서", type: "file" },
@@ -49,7 +49,7 @@ $(function() {
                 {
                     id: "1.2",
                     text: "요구사항추적표(설계)",
-                    type: "output",
+                    type: "folder",
                 },
             ],
         },
@@ -61,7 +61,7 @@ $(function() {
                 {
                     id: "2.1",
                     text: "개발환경 설치 작업계획서",
-                    type: "output",
+                    type: "folder",
                 },
             ],
         },
@@ -104,9 +104,6 @@ $(function() {
             "file": {
                 "icon": "fa fa-file text-info"
             },
-            "output": {
-                "icon": "fa-solid fa-box-archive text-success"
-            }
         }
     });
 
@@ -125,9 +122,6 @@ $(function() {
             "file": {
                 "icon": "fa fa-file text-info"
             },
-            "output": {
-                "icon": "fa-solid fa-box-archive text-success"
-            }
         }
     });
 });
