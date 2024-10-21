@@ -40,12 +40,12 @@
             <div class="list_table" data-ax5grid="first-grid"  data-ax5grid-config="{
                 sortable: true,
                 header: {
-                    columnHeight: 40
+                    columnHeight: 50
                 },
                 body: {
-                    columnHeight: 40
+                    columnHeight: 48
                 }
-            }" style="height: 467px; width: 100%;">
+            }" style="height: 557px; width: 100%;">
             </div>
         </div>
     </div>
