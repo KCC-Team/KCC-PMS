@@ -55,7 +55,7 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    public CombinedProjectResponseDto findByProject(int prj_no) {
+    public CombinedProjectResponseDto findByProject(Long prj_no) {
         ProjectManagerResponseDto projectManager = projectMapper.getProjectManager(prj_no);
         ProjectResponseDto project = projectMapper.findByProject(prj_no);
 

@@ -31,7 +31,7 @@ public class CommonController {
 
 
     @GetMapping("/commonProjectInfo")
-    public String getCommonProject(@RequestParam int prjNo, @RequestParam String prjTitle,
+    public String getCommonProject(@RequestParam Integer prjNo, @RequestParam String prjTitle,
                                    HttpSession session, HttpServletRequest request) {
         session.setAttribute("prjNo", prjNo);
         session.setAttribute("prjTitle", prjTitle);

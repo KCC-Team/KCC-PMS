@@ -18,7 +18,7 @@ public interface ProjectMapper {
     int updateTeam(ProjectRequestDto project);
     List<ProjectResponseDto> getProjects(@Param("prjReqDto") ProjectRequestDto prjReqDto, @Param("cri") Criteria cri);
     int getProjectCount(@Param("prjReqDto") ProjectRequestDto prjReqDto);
-    ProjectManagerResponseDto getProjectManager(@Param("prj_no") int prj_no);
-    ProjectResponseDto findByProject(@Param("prj_no") int prj_no);
+    ProjectManagerResponseDto getProjectManager(@Param("prj_no") Long prj_no);
+    ProjectResponseDto findByProject(@Param("prj_no") Long prj_no);
     List<ProjectResponseDto> getCommonProjectList(@Param("login_id") String login_id);
 }
