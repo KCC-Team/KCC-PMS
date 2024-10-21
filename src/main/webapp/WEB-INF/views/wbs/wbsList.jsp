@@ -11,6 +11,10 @@
 <main class="content" id="content">
     <div class="main_content">
 
+        <div class="project-content">
+            <div class="project-info">프로젝트 WBS</div>
+        </div>
+
         <div class="filter-section">
             <div class="action-buttons">
                 <button class="add-save-wbs" onclick="wbsInfoPopup('new');">작업 추가</button>

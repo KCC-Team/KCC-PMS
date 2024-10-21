@@ -12,6 +12,8 @@
     var prjNo = '<%= prjNoInt != null ? prjNoInt.toString() : "" %>';
 </script>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+<link rel="stylesheet" href="https://code.jquery.com/ui/1.13.2/themes/smoothness/jquery-ui.css">
 <link rel="stylesheet" href="../../../resources/wbs/css/wbsInfo.css">
 
 <!DOCTYPE html>
@@ -55,15 +57,15 @@
                             </tr>
                             <tr>
                                 <th><label for="pre_st_dt">예정 시작일 <span class="required-icon">*</span></label></th>
-                                <td><input type="date" id="pre_st_dt" name="pre_st_dt" value="" required></td>
+                                <td><input type="text" id="pre_st_dt" name="pre_st_dt" placeholder="yyyy-mm-dd" required></td>
                                 <th><label for="pre_end_dt">예정 종료일 <span class="required-icon">*</span></label></th>
-                                <td><input type="date" id="pre_end_dt" name="pre_end_dt" value="" required></td>
+                                <td><input type="text" id="pre_end_dt" name="pre_end_dt" placeholder="yyy-mm-dd" required></td>
                             </tr>
                             <tr>
                                 <th>시작일</th>
-                                <td><input type="date" id="st_dt" name="st_dt" value=""></td>
+                                <td><input type="text" id="st_dt" name="st_dt" placeholder="yyyy-mm-dd"></td>
                                 <th>종료일</th>
-                                <td><input type="date" id="end_dt" name="end_dt" value=""></td>
+                                <td><input type="text" id="end_dt" name="end_dt" placeholder="yyyy-mm-dd"></td>
                             </tr>
                             <tr>
                                 <th><label for="prg">진척도 <span class="required-icon">*</span></label></th>
@@ -123,7 +125,7 @@
                             <tr>
                                 <th>산출물</th>
                                 <td>
-                                    <button type="button" class="btn-select-output">산출물 등록</button>
+                                    <button type="button" class="btn-select-output">산출물 연결</button>
                                 </td>
                                 <th>관련 산출물명</th>
                                 <td>
@@ -135,6 +137,7 @@
 
                         <div class="modal-footer">
                             <button type="submit" class="btn-save-wbs">저장</button>
+                            <button onclick="window.close();" class="btn-close-wbs">닫기</button>
                         </div>
                     </form>
 

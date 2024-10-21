@@ -11,6 +11,9 @@
     <link rel="stylesheet" href="../../../resources/project/css/info.css">
 <% } %>
 
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+<link rel="stylesheet" href="https://code.jquery.com/ui/1.13.2/themes/smoothness/jquery-ui.css">
+
 <!-- 콘텐츠 영역 -->
 <main class="content" id="content">
     <div class="main_content">
@@ -83,9 +86,9 @@
                         <label >프로젝트 예정 기간 <span class="required-icon">*</span></label>
                     </td>
                     <td colspan="3">
-                        <input type="date" id="pre_st_dt" name="pre_st_dt" value="" required>
+                        <input type="text" id="pre_st_dt" name="pre_st_dt" placeholder="yyyy-mm-dd" required>
                         <span>~</span>
-                        <input type="date" id="pre_end_dt" name="pre_end_dt" value="" required>
+                        <input type="text" id="pre_end_dt" name="pre_end_dt" placeholder="yyyy-mm-dd" required>
                         <span class="pre_days">(0일)</span>
                     </td>
                 </tr>
@@ -94,9 +97,9 @@
                         <label>프로젝트 기간</label>
                     </td>
                     <td colspan="3">
-                        <input type="date" id="st_dt" name="st_dt" value="">
+                        <input type="text" id="st_dt" name="st_dt" placeholder="yyyy-mm-dd">
                         <span>~</span>
-                        <input type="date" id="end_dt" name="end_dt" value="">
+                        <input type="text" id="end_dt" name="end_dt" placeholder="yyyy-mm-dd">
                         <span class="days">(0일)</span>
                         <input type="checkbox" id="no_days_period" name="no_days_period">
                         <span class="no-period">기간없음</span>

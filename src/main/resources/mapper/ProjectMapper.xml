@@ -75,6 +75,7 @@
         update team set
         tm_nm = #{prj_title}
         where prj_no = #{prj_no}
+        and par_tm_no IS NUll
     </update>
 
 

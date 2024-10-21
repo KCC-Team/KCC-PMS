@@ -34,8 +34,8 @@ select {
     font-size: 14px;
 }
 
-input[type="date"] {
-    width: 23%;
+#pre_st_dt, #pre_end_dt, #st_dt, #end_dt {
+    width: 22%;
     padding: 8px;
     margin-top: 5px;
     border: 1px solid #ccc;
@@ -156,8 +156,8 @@ button.save-btn {
 }
 
 button.cancel-btn {
-    background-color: #ccc;
-    color: black;
+    background-color: #8B8B8B;
+    color: white;
 }
 
 .no-period {
