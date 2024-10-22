@@ -132,28 +132,23 @@
                tech.cd_dtl_nm as TECH,
                m.email,
                m.phone_no,
-               pmt.tm_no,
-               pmt.tm_nm,
-               pmt.order_no
+               t.tm_no,
+               t.tm_nm,
+               t.order_no
         FROM projectmember pm,
              member m,
              usergroup gr,
              codedetail auth,
              codedetail pos,
              codedetail tech,
-             (SELECT t.tm_no, t.tm_nm, pm.mem_no, t.order_no
-              FROM team t, projectmember pm
-              WHERE t.tm_no = pm.tm_no
-                AND pm.prj_no = #{projectNo}
-                AND t.par_tm_no IS NOT NULL
-             ) pmt
+             team t
         WHERE pm.prj_auth_cd = auth.cd_dtl_no AND
             m.tech_grd_cd = tech.cd_dtl_no AND
             m.pos_nm = pos.cd_dtl_no AND
             pm.mem_no = m.mem_no AND
             m.grp_no = gr.grp_no AND
-            pm.mem_no = pmt.mem_no AND
-            pm.tm_no = #{teamNo}
+            pm.tm_no = t.tm_no AND
+            t.tm_no = #{teamNo}
     </select>
 
     <update id="memberAssignTeam">

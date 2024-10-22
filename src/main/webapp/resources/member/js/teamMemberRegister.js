@@ -9,12 +9,14 @@ $(document).ready(function() {
         }
         return node;
     }
-    //조직도 가져오기
+    //팀 트리 가져오기
     $.ajax({
-        url: '/projects/getGroupList',
+        url: '/teams/tree',
         method: 'GET',
         success: function(response) {
             const treeDataWithIcons = response.map(addIcons);
+            console.log("response = " + JSON.stringify(response));
+            console.log("treeDataWithIcons=" + treeDataWithIcons);
             $('#jstree').jstree({
                 'core': {
                     'data': treeDataWithIcons,
@@ -25,27 +27,26 @@ $(document).ready(function() {
         },
     });
 
-    // //부서 인원 목록 가져오기
-    // $('#jstree').on("select_node.jstree", function (e, data) {
-    //     const selectedNodeId = data.node.id;
-    //
-    //     $.ajax({
-    //         url: "/projects/members/groups",
-    //         type: 'GET',
-    //         data: {
-    //             groupNo: selectedNodeId
-    //         },
-    //         success: function(members) {
-    //             $('#selectedGroupName').text(members[0].groupName);
-    //             reg_groupmemGrid.setData(members);
-    //         },
-    //         error: function(xhr, status, error) {
-    //             console.error('인원 목록을 가져오는 데 실패했습니다: ', error);
-    //         }
-    //     });
-    //
-    //     $('#memberList').children().show();
-    // });
+    //팀 인원 목록 가져오기
+    $('#jstree').on("select_node.jstree", function (e, data) {
+        const teamNo = data.node.id;
+        console.log("teamNo = " + teamNo);
+        const cleanText = $('<div>' + data.node.text + '</div>').text();
+        $.ajax({
+            url: "/team/" + teamNo + "/members",
+            type: 'GET',
+            success: function(members) {
+                console.log(members);
+                $('#selectedGroupName').text(cleanText);
+                team_reg_groupmemGrid.setData(members);
+            },
+            error: function(xhr, status, error) {
+                console.error('인원 목록을 가져오는 데 실패했습니다: ', error);
+            }
+        });
+
+        $('#memberList').children().show();
+    });
 
     // 검색 기능
     $('#search').on('keyup', function () {

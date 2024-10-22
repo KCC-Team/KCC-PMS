@@ -29,10 +29,7 @@
 <div id="member-apply-title-container">
     <span class="mem-apply-title">인력등록</span>
 </div>
-<div class="option-btn-container">
-    <button id="group_total">조직도에서찾기</button>
-    <button id="project_member_total">목록으로 찾기</button>
-</div>
+
 
 <div id="add-member-by-group">
     <div id="usergroup-memberList-content">
@@ -54,7 +51,7 @@
 
             <div class="member-grid">
                 <div style="position: relative;height:270px;" id="grid-parent">
-                    <div data-ax5grid="groupmemGrid" data-ax5grid-config="{}" style="height: 100%;"></div>
+                    <div data-ax5grid="team-groupmemGrid" data-ax5grid-config="{}" style="height: 100%;"></div>
                 </div>
             </div>
         </div>
@@ -66,13 +63,12 @@
                 <h3 class="group-name">추가 인원</h3>
             </div>
             <div class="button-container">
-                <button class="reg-member-edit-button">편집</button>
                 <button class="member-remove-button">제거하기</button>
             </div>
         </div>
 
         <div style="position: relative;height:270px;" id="grid-parent3">
-            <div id="y-added-grid" data-ax5grid="added-grid" data-ax5grid-config="{}" style="height: 100%;"></div>
+            <div id="y-added-grid" data-ax5grid="team-added-grid" data-ax5grid-config="{}" style="height: 100%;"></div>
         </div>
         <div class="button-container">
             <button class="apply">적용하기</button>
@@ -80,44 +76,8 @@
     </div>
 </div>
 
-
-<div id="add-member-by-prjmem">
-    <div id="prjmem_list">
-        <div class="memberList-title-area">
-            <div>
-                <h3 class="group-name">프로젝트 인원</h3>
-            </div>
-            <div class="button-container">
-                <button class="member-add-button">추가하기</button>
-            </div>
-        </div>
-
-
-        <div style="position: relative;height:270px;" id="grid-parent5">
-            <div data-ax5grid="prjmember-grid" data-ax5grid-config="{}" style="height: 100%;"></div>
-        </div>
-    </div>
-    <div class="addedMembersList">
-        <div class="memberList-title-area">
-            <div>
-                <h3 class="group-name">추가 인원</h3>
-            </div>
-            <div class="button-container">
-                <button class="reg-member-edit-button">편집</button>
-                <button class="member-remove-button">제거하기</button>
-            </div>
-        </div>
-
-        <div style="position: relative;height:270px;" id="grid-parent2">
-            <!--<div class="y-added-grid"  data-ax5grid="added-grid" data-ax5grid-config="{}" style="height: 100%;"></div>-->
-        </div>
-        <div class="button-container">
-            <button class="apply">적용하기</button>
-        </div>
-    </div>
-</div>
-<script src="../../../resources/member/js/list.js"></script>
-<%--<script src="../../../resources/member/js/memberRegisterGrid.js"></script>--%>
+<%--<script src="../../../resources/member/js/list.js"></script>--%>
+<script src="../../../resources/member/js/teamMemberRegisterGrid.js"></script>
 <script src="../../../resources/member/js/teamMemberRegister.js"></script>
 
 </body>

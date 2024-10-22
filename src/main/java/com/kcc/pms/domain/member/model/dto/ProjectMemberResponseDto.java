@@ -4,7 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.io.Serializable;
-
+//사용X
 @Getter
 @Setter
 public class ProjectMemberResponseDto implements Serializable {
