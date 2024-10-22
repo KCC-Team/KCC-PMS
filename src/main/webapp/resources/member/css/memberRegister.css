@@ -176,6 +176,8 @@ body {
 .tab-container {
     display: flex;
     border-bottom: 1px solid #ccc;
+    margin-bottom: 10px;
+    width: 23%;
 }
 
 .tab-btn {
