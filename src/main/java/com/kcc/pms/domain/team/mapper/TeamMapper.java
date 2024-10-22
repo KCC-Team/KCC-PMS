@@ -2,6 +2,7 @@ package com.kcc.pms.domain.team.mapper;
 
 import com.kcc.pms.domain.team.model.dto.MemberAddRequestDto;
 import com.kcc.pms.domain.team.model.dto.TeamResponseDto;
+import com.kcc.pms.domain.team.model.dto.TeamTreeResponseDto;
 import com.kcc.pms.domain.team.model.vo.Team;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -19,4 +20,5 @@ public interface TeamMapper {
     Integer createTeam(Team team);
     int addMembersTeam(@Param("teamNo") Long teamNo, @Param("prjNo") Long prjNo,
                        @Param("addMembers") List<MemberAddRequestDto> addMembers);
+    List<TeamTreeResponseDto> getTeamTree(Long prjNo);
 }

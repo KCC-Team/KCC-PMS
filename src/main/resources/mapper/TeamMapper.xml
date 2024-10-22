@@ -120,4 +120,11 @@
             FROM dual
         </foreach>
     </insert>
+
+    <select id="getTeamTree" resultType="com.kcc.pms.domain.team.model.dto.TeamTreeResponseDto">
+        SELECT tm_no as id, tm_nm as text, par_tm_no as parentId, order_no as orderNo
+        FROM team
+        WHERE prj_no = #{prjNo}
+        order by NVL(par_tm_no, tm_no), order_no
+    </select>
 </mapper>
