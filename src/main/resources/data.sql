@@ -217,7 +217,6 @@ CREATE TABLE FileDetail (
 CREATE TABLE Output (
     opt_no number NOT NULL,
     opt_ttl VARCHAR2(50) NOT NULL,
-    depth NUMBER NOT NULL,
     prj_no NUMBER NOT NULL,
     high_folder_no NUMBER NULL,
     fld_yn VARCHAR2(1) NOT NULL,
@@ -991,8 +990,8 @@ INSERT INTO FeatureTest (feat_no, test_dtl_no) VALUES (3, 1);
 update codedetail set field_2 = 'Y' where common_cd_no = 'PMS004';
 update codedetail set field_3 = 'Y' where common_cd_no = 'PMS004' and cd_dtl_no IN ('PMS00402', 'PMS00403', 'PMS00404');
 
-INSERT INTO Output (opt_no, opt_ttl, depth, prj_no, high_folder_no, fld_yn, use_yn)
-VALUES (seq_output.nextval, '차세대 공공 프로젝트', 1, 1, NULL, 'Y', 'Y');
+INSERT INTO Output (opt_no, opt_ttl, prj_no, high_folder_no, fld_yn, use_yn)
+VALUES (seq_output.nextval, '차세대 공공 프로젝트', 1, NULL, 'Y', 'Y');
 
 INSERT INTO FileMaster (fl_ms_no, use_yn)
 VALUES (seq_filemaster.nextval, 'Y');
@@ -1002,8 +1001,8 @@ VALUES (seq_filedetail.nextval, '노트북_123123123라이언', 'https://kcc-buc
 INSERT INTO FileDetail (fl_no, original_ttl, file_path, fl_type, fl_size, fl_ms_no, reg_id, reg_dt)
 VALUES (seq_filedetail.nextval, 'spri123123123123ngboot ', 'https://kcc-bucket.s3.ap-northeast-2.amazonaws.com/kcc_pms/1/spri123123123123ngboot.png', 'png', '24.7KB', 1, '홍길동', sysdate);
 
-INSERT INTO Output (opt_no, opt_ttl, depth, prj_no, high_folder_no, fld_yn, use_yn, fl_ms_no)
-VALUES (seq_output.nextval, 'A 업무 요구사항 정의서', 2, 1, 1, 'N', 'Y', 1);
+INSERT INTO Output (opt_no, opt_ttl, prj_no, high_folder_no, fld_yn, use_yn, fl_ms_no)
+VALUES (seq_output.nextval, 'A 업무 요구사항 정의서', 1, 1, 'N', 'Y', 1);
 
 -----------------------------------------------------------------------------------------------------------------
 COMMIT;

@@ -19,8 +19,9 @@ public class AwsS3Utils {
         ObjectMetadata metadata = new ObjectMetadata();
         metadata.setContentLength(multipartFile.getSize());
         metadata.setContentType(multipartFile.getContentType());
+        String ext = multipartFile.getOriginalFilename().substring(multipartFile.getOriginalFilename().lastIndexOf(".") + 1);
 
-        amazonS3.putObject(properties.getS3().getBucket() + "/kcc_pms", fileName, multipartFile.getInputStream(), metadata);
-        return amazonS3.getUrl(properties.getS3().getBucket() + "/kcc_pms", fileName).toString();
+        amazonS3.putObject(properties.getS3().getBucket() + "/kcc_pms", fileName + "." + ext, multipartFile.getInputStream(), metadata);
+        return amazonS3.getUrl(properties.getS3().getBucket() + "/kcc_pms", fileName + "." + ext).toString();
     }
 }
