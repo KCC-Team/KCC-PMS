@@ -32,6 +32,11 @@ public class MemberController {
         return "member/memberRegister";
     }
 
+    @GetMapping("/addTeamMember")
+    public String addTeamMember(){
+        return "member/teamMemberRegister";
+    }
+
     @GetMapping("/getGroupList")
     @ResponseBody
     public List<GroupResponseDto> groupList() {
@@ -47,7 +52,7 @@ public class MemberController {
     @GetMapping("/{projectNo}/members/team/{teamNo}")
     @ResponseBody
     public List<MemberResponseDto> teamMembers(@PathVariable("projectNo") Long projectNo, @PathVariable("teamNo") Long teamNo) {
-        return memberService.getTeamMember(projectNo, teamNo);
+        return memberService.getTeamMember(teamNo);
     }
 
     @GetMapping("/projectmembers")

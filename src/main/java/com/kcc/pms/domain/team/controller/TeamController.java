@@ -1,5 +1,6 @@
 package com.kcc.pms.domain.team.controller;
 
+import com.amazonaws.Response;
 import com.kcc.pms.domain.team.model.dto.*;
 import com.kcc.pms.domain.team.model.vo.Team;
 import com.kcc.pms.domain.team.service.TeamService;
@@ -71,10 +72,16 @@ public class TeamController {
         }
     }
 
+    @GetMapping("/team/{teamNo}/members")
+    @ResponseBody
+    public ResponseEntity<List<TeamMemberResponseDto>> getTeamMembers(@PathVariable("teamNo") Long teamNo){
+        return ResponseEntity.ok().body(teamService.getTeamMembers(teamNo));
+    }
+
     @GetMapping("/teams/tree")
     @ResponseBody
     public ResponseEntity<List<TeamTreeResponseDto>> getTeamTree(HttpSession session){
-        Long prjNo = (Long) session.getAttribute("prjNo");
+        //Long prjNo = (Long) session.getAttribute("prjNo");
         return ResponseEntity.ok(teamService.getTeamTree(1L));
     }
 

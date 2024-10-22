@@ -1,5 +1,7 @@
 package com.kcc.pms.domain.team.service;
 
+import com.kcc.pms.domain.member.mapper.MemberMapper;
+import com.kcc.pms.domain.member.model.dto.MemberResponseDto;
 import com.kcc.pms.domain.team.mapper.TeamMapper;
 import com.kcc.pms.domain.team.model.dto.*;
 import com.kcc.pms.domain.team.model.vo.Team;
@@ -13,6 +15,7 @@ import java.util.*;
 @RequiredArgsConstructor
 public class TeamServiceImpl implements TeamService{
     private final TeamMapper mapper;
+    private final MemberMapper memberMapper;
 
     @Override
     public List<TeamResponseDto> getTeamList(Long projectNo) {
@@ -110,6 +113,25 @@ public class TeamServiceImpl implements TeamService{
     public List<TeamTreeResponseDto> getTeamTree(Long prjNo) {
         List<TeamTreeResponseDto> teamBeforeTree = mapper.getTeamTree(prjNo);
         return buildTree(teamBeforeTree);
+    }
+
+    @Override
+    public List<TeamMemberResponseDto> getTeamMembers(Long teamNo) {
+        List<MemberResponseDto> teamMember = memberMapper.getTeamMember(teamNo);
+        List<TeamMemberResponseDto> responseTeamMember = new ArrayList<>();
+        for (MemberResponseDto m : teamMember) {
+            TeamMemberResponseDto rm = new TeamMemberResponseDto();
+            rm.setId(m.getId());
+            rm.setMemberName(m.getMemberName());
+            rm.setGroupName(m.getGroupName());
+            rm.setAuth(m.getAuth());
+            rm.setTech(m.getTech());
+            rm.setEmail(m.getEmail());
+            rm.setPosition(m.getPosition());
+            rm.setTeamNo(teamNo);
+            responseTeamMember.add(rm);
+        }
+        return responseTeamMember;
     }
 
 

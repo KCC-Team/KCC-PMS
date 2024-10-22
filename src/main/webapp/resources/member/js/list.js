@@ -211,6 +211,14 @@ function openPopup(teamNo){
     );
 }
 
+function openTeamPopUp(prjNo){
+    window.open(
+        "/projects/addTeamMember?prjNo=" + prjNo,
+        "그룹등록",
+        "width=1000, height=800, resizable=yes"
+    )
+}
+
 // 최상위 팀의 팀번호
 function fetchTeamNoByPrjNo(prjNo) {
     return new Promise(function (resolve, reject) {
