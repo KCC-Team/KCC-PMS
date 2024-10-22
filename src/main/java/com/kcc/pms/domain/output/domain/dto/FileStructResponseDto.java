@@ -10,8 +10,9 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class FileStructResponseDto {
-    private String id;
+    private Long id;
     private String text;
     private String type;
+    private Long parentId;
     private List<FileStructResponseDto> children;
 }

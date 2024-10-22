@@ -53,7 +53,7 @@ public class CommonServiceImpl implements CommonService {
         }
     }
 
-    private void generateFileMapList(Long prjNo, MultipartFile file, Integer fl_ms_no, List<Map<String, Object>> fileList) throws IOException {
+    private void generateFileMapList(Long prjNo, MultipartFile file, Long fl_ms_no, List<Map<String, Object>> fileList) throws IOException {
         Map<String, Object> map = new HashMap<>();
         map.put("original_ttl", file.getOriginalFilename());
         String fileName = UUID.randomUUID().toString();
