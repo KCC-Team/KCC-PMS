@@ -6,7 +6,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class FileMasterVO {
-    private Integer fl_ms_no;
+    private Long fl_ms_no;
     private String fl_cd;
     private String use_yn;
 

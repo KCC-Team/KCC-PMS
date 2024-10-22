@@ -5,7 +5,7 @@
 
 <mapper namespace="com.kcc.pms.domain.output.mapper.FileMapper">
     <insert id="saveFileMaster" parameterType="FileMasterVO">
-        <selectKey keyProperty="fl_ms_no" resultType="Integer" order="BEFORE">
+        <selectKey keyProperty="fl_ms_no" resultType="Long" order="BEFORE">
             SELECT seq_filemaster.NEXTVAL FROM dual
         </selectKey>
         INSERT INTO FileMaster (fl_ms_no, fl_cd, use_yn)
