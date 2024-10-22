@@ -3,7 +3,7 @@
 }
 
 .modal-content {
-    width: 950px !important;
+    width: 700px !important;
     margin-right: 100px !important;
 }
 
@@ -97,7 +97,7 @@
     margin-bottom: 15px;
     border-bottom: 1px solid black;
     padding-bottom: 5px;
-    width: 97%;
+    width: 94.5%;
 }
 
 .modal-body {

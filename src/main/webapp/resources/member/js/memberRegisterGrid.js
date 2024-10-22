@@ -132,10 +132,11 @@ $(document.body).ready(function () {
 function checkProject() {
     let urlParams = new URLSearchParams(window.location.search);
     let typeValue = urlParams.get('type');
-    if (typeValue === 'project') {
-        document.getElementById('project_member_total').hidden = true;
-    } else if (typeValue === 'wbs') {
-        document.getElementById('group_total').hidden = true;
+    // if (typeValue === 'project') {
+    //     document.getElementById('project_member_total').hidden = true;
+    // }
+    if (typeValue === 'wbs') {
+        //document.getElementById('group_total').hidden = true;
         $('#project_member_total').trigger('click');
     }
 }
@@ -519,4 +520,20 @@ function closePopupAndUpdateParent() {
     window.opener.postMessage({ type: 'updateTree', teamNo: teamNo }, '*');
     console.log("부모 페이지 업데이트 메시지 전송 완료. 팝업 닫기.");
     window.close();  // 팝업 닫기
+}
+
+
+function openTab(event, tabName) {
+    // 모든 탭 콘텐츠 숨기기
+    var tabContents = document.getElementsByClassName("tab-content");
+    for (var i = 0; i < tabContents.length; i++) {
+        tabContents[i].style.display = "none";
+        tabContents[i].classList.remove("active");
+    }
+
+    // 모든 탭 버튼의 active 클래스 제거
+    var tabBtns = document.getElementsByClassName("tab-btn");
+    for (var i = 0; i < tabBtns.length; i++) {
+        tabBtns[i].classList.remove("active");
+    }
 }
