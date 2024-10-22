@@ -20,7 +20,7 @@ document.addEventListener('DOMContentLoaded', function() {
             <div class="dz-error-message"><span data-dz-errormessage></span></div>
         </div>
     `;
-
+  
     const dropzone1 = initDropzone('#df-insert-file-dropzone_1', '.file-zone_1', previewTemplate, "/projects/defects/defect");
     // 업로드 성공 시 이미지 링크 설정
     dropzone1.on("success", function(file, response) {
