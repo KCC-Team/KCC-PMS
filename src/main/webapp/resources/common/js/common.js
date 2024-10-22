@@ -77,10 +77,20 @@ $(document).on('click', '.li-project', function() {
     });
 });
 
-function openTeamPopUp(){
+function openTeamPopUp(type){
+    let height;
+
+    if (type === 'feature') {
+        height = 550;
+    } else {
+        height = 700;
+    }
+
+    console.log(height);
+
     window.open(
-        "/projects/addTeamMember",
+        "/projects/addTeamMember?type=" + type,
         "그룹등록",
-        "width=1000, height=1200, resizable=yes"
-    )
+        "width=1000, height=" + height + ", resizable=yes"
+    );
 }

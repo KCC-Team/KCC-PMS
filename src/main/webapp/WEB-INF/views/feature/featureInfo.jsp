@@ -23,7 +23,9 @@
 
             <div class="modal-body">
 
-                <form id="wbs_form" action="#" method="post">
+                <form id="feat_form" action="#" method="post">
+                    <input type="hidden" id="mem_no" name="mem_no">
+                    <input type="hidden" id="tm_no" name="tm_no">
                     <table class="form-table">
                         <tr>
                             <th><label for="feat_title">기능명 <span class="required-icon">*</span></label></th>
@@ -103,7 +105,7 @@
                             <th>작업자</th>
                             <td colspan="3">
                                 <input type="text" id="mem_nm" name="mem_nm" value="" readonly>
-                                <button type="button" class="btn-select-user">사용자 선택</button>
+                                <button type="button" class="btn-select-user" onclick="openTeamPopUp('feature')">사용자 선택</button>
                             </td>
                         </tr>
                         <tr>
@@ -122,8 +124,8 @@
                     </table>
 
                     <div class="modal-footer">
-                        <button type="submit" class="btn-save-wbs">저장</button>
-                        <button onclick="window.close();" class="btn-close-wbs">닫기</button>
+                        <button type="submit" class="btn-save-feature">저장</button>
+                        <button onclick="window.close();" class="btn-close-feature">닫기</button>
                     </div>
                 </form>
 
@@ -132,7 +134,7 @@
     </div>
 </div>
 <!-- wbs Info Modal -->
-
+<script src="../../../resources/common/js/common.js"></script>
 <script src="../../../resources/feature/js/featureInfo.js"></script>
 </body>
 </html>

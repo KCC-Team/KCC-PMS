@@ -1,4 +1,11 @@
 $(document).ready(function() {
+    var urlParams = new URLSearchParams(window.location.search);
+    let typeValue = urlParams.get('type');
+    if(typeValue === 'feature'){
+        $('#jstree-container').css('height', '367px'); // jstree-container 높이 조절
+        $('#memberList').css('height', '367px'); // memberList 높이 조절
+    }
+
     $.jstree.defaults.core.themes.icons = false;
 
     function addIcons(node) {
@@ -32,6 +39,7 @@ $(document).ready(function() {
         const teamNo = data.node.id;
         console.log("teamNo = " + teamNo);
         const cleanText = $('<div>' + data.node.text + '</div>').text();
+
         $.ajax({
             url: "/team/" + teamNo + "/members",
             type: 'GET',
@@ -39,6 +47,7 @@ $(document).ready(function() {
                 console.log(members);
                 $('#selectedGroupName').text(cleanText);
                 team_reg_groupmemGrid.setData(members);
+
             },
             error: function(xhr, status, error) {
                 console.error('인원 목록을 가져오는 데 실패했습니다: ', error);
@@ -46,6 +55,9 @@ $(document).ready(function() {
         });
 
         $('#memberList').children().show();
+        if(typeValue === 'feature'){
+            $('#addedContainer').hide();
+        }
     });
 
     // 검색 기능
