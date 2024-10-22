@@ -133,10 +133,10 @@ function initGrid() {
         columns: [
             {key: "memberName", label: "성명", align: "center"},
             {key: "auth", label: "프로젝트권한", align: "center"},
-            {key: "groupName", width: 90, label: "소속", align: "center"},
+            {key: "groupName", width: 110, label: "소속", align: "center"},
             {key: "position", width: 80, label: "직위", align: "center"},
             {key: "tech", width: 80, label: "기술등급", align: "center"},
-            {key: "email", width: 110, label: "이메일", align: "center"}
+            {key: "email", width: 160, label: "이메일", align: "center"}
         ],
         page: {
             display: false
@@ -151,7 +151,7 @@ function initGrid() {
         columns: [
             {key: "memberName", label: "성명", align: "center"},
             {key: "auth", label: "프로젝트권한", align: "center"},
-            {key: "groupName", width: 90, label: "소속", align: "center"},
+            {key: "groupName", width: 110, label: "소속", align: "center"},
             {key: "position", width: 80, label: "직위", align: "center"},
             {key: "tech", width: 80, label: "기술등급", align: "center"},
             {key: "email", width: 160, label: "이메일", align: "center"},
