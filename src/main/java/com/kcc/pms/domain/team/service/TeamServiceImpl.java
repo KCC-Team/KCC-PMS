@@ -1,9 +1,7 @@
 package com.kcc.pms.domain.team.service;
 
 import com.kcc.pms.domain.team.mapper.TeamMapper;
-import com.kcc.pms.domain.team.model.dto.MemberAddRequestDto;
-import com.kcc.pms.domain.team.model.dto.TeamRequestDto;
-import com.kcc.pms.domain.team.model.dto.TeamResponseDto;
+import com.kcc.pms.domain.team.model.dto.*;
 import com.kcc.pms.domain.team.model.vo.Team;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -108,30 +106,36 @@ public class TeamServiceImpl implements TeamService{
         return mapper.addMembersTeam(teamNo, prjNo, addMembers);
     }
 
+    @Override
+    public List<TeamTreeResponseDto> getTeamTree(Long prjNo) {
+        List<TeamTreeResponseDto> teamBeforeTree = mapper.getTeamTree(prjNo);
+        return buildTree(teamBeforeTree);
+    }
 
-    private List<TeamResponseDto> buildTree(List<TeamResponseDto> nodeList) {
-        Map<Integer, TeamResponseDto> nodeMap = new HashMap<>();
 
-        for (TeamResponseDto node : nodeList) {
+    private <T extends TreeNode> List<T> buildTree(List<T> nodeList) {
+        Map<Integer, T> nodeMap = new HashMap<>();
+
+        for (T node : nodeList) {
             nodeMap.put(node.getKey(), node);
         }
 
         // 트리 구조로 변환
-        List<TeamResponseDto> rootNodes = new ArrayList<>();
-        for (TeamResponseDto node : nodeMap.values()) {
+        List<T> rootNodes = new ArrayList<>();
+        for (T node : nodeMap.values()) {
             if (node.getParentId() == null) {
                 rootNodes.add(node);
             } else {
-                TeamResponseDto parent = nodeMap.get(node.getParentId());
+                T parent = nodeMap.get(node.getParentId());
                 // 부모가 존재할 경우 자식으로 추가하고 정렬
                 if (parent != null) {
                     parent.getChildren().add(node);
-                    parent.getChildren().sort(Comparator.comparing(TeamResponseDto::getOrderNo));
+                    parent.getChildren().sort(Comparator.comparing(T::getOrderNo));
                 }
             }
         }
 
-        rootNodes.sort(Comparator.comparing(TeamResponseDto::getOrderNo));
+        rootNodes.sort(Comparator.comparing(T::getOrderNo));
         return rootNodes;
     }
 }

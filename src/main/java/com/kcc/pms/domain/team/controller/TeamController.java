@@ -1,11 +1,9 @@
 package com.kcc.pms.domain.team.controller;
 
-import com.kcc.pms.domain.team.model.dto.MemberAddRequestDto;
-import com.kcc.pms.domain.team.model.dto.TeamOrderUpdateRequestDto;
-import com.kcc.pms.domain.team.model.dto.TeamRequestDto;
-import com.kcc.pms.domain.team.model.dto.TeamResponseDto;
+import com.kcc.pms.domain.team.model.dto.*;
 import com.kcc.pms.domain.team.model.vo.Team;
 import com.kcc.pms.domain.team.service.TeamService;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -71,6 +69,13 @@ public class TeamController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body("팀원 등록 중 오류가 발생했습니다: " + e.getMessage());
         }
+    }
+
+    @GetMapping("/teams/tree")
+    @ResponseBody
+    public ResponseEntity<List<TeamTreeResponseDto>> getTeamTree(HttpSession session){
+        Long prjNo = (Long) session.getAttribute("prjNo");
+        return ResponseEntity.ok(teamService.getTeamTree(1L));
     }
 
 }
