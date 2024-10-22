@@ -3,7 +3,7 @@
 }
 
 .modal-content {
-    width: 950px !important;
+    width: 700px !important;
     margin-right: 100px !important;
 }
 
@@ -22,7 +22,7 @@
 .form-table th {
     background-color: #EDF0F5;
     text-align: left;
-    width: 140px;
+    width: 130px;
     font-size: 12px;
     font-weight: bold;
 }
@@ -97,7 +97,7 @@
     margin-left: 20px;
     border-bottom: 1px solid black;
     padding-bottom: 5px;
-    width: 97%;
+    width: 94.5%;
 }
 
 .modal-body {
@@ -114,7 +114,7 @@
 }
 
 #mem_nm, #sys_no {
-    width: 39%;
+    width: 35%;
 }
 
 input[type="date"] {

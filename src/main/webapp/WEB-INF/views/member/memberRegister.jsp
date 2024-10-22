@@ -29,9 +29,14 @@
 <div id="member-apply-title-container">
     <span class="mem-apply-title">인력등록</span>
 </div>
-<div class="option-btn-container">
-    <button id="group_total">조직도에서찾기</button>
-    <button id="project_member_total">목록으로 찾기</button>
+<%--<div class="option-btn-container">--%>
+<%--    <button id="group_total">조직도에서찾기</button>--%>
+<%--    <button id="project_member_total">목록으로 찾기</button>--%>
+<%--</div>--%>
+
+<div class="tab-container">
+    <button class="tab-btn active" id="group_total" onclick="openTab(event)">조직도에서 찾기</button>
+    <button class="tab-btn" id="project_member_total" onclick="openTab(event)">목록으로 찾기</button>
 </div>
 
 <div id="add-member-by-group">
@@ -68,14 +73,12 @@
             <div class="button-container">
                 <button class="reg-member-edit-button">편집</button>
                 <button class="member-remove-button">제거하기</button>
+                <button class="apply">적용하기</button>
             </div>
         </div>
 
         <div style="position: relative;height:270px;" id="grid-parent3">
             <div id="y-added-grid" data-ax5grid="added-grid" data-ax5grid-config="{}" style="height: 100%;"></div>
-        </div>
-        <div class="button-container">
-            <button class="apply">적용하기</button>
         </div>
     </div>
 </div>
@@ -105,14 +108,12 @@
             <div class="button-container">
                 <button class="reg-member-edit-button">편집</button>
                 <button class="member-remove-button">제거하기</button>
+                <button class="apply">적용하기</button>
             </div>
         </div>
 
         <div style="position: relative;height:270px;" id="grid-parent2">
             <!--<div class="y-added-grid"  data-ax5grid="added-grid" data-ax5grid-config="{}" style="height: 100%;"></div>-->
-        </div>
-        <div class="button-container">
-            <button class="apply">적용하기</button>
         </div>
     </div>
 </div>

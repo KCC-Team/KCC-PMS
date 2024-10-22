@@ -341,7 +341,7 @@ function wbsInfoPopup(type, id, parentId, max_order_id) {
     window.open(
         url,
         "프로젝트WBS",
-        "width=960, height=480, resizable=yes"
+        "width=720, height=490, resizable=yes"
     );
 }
 
