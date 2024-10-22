@@ -35,15 +35,16 @@ public class CommonServiceImpl implements CommonService {
 
     @Transactional
     @Override
-    public void fileUpload(List<MultipartFile> files, Long prjNo, String fl_cd) {
+    public Long fileUpload(List<MultipartFile> files, Long prjNo, String fl_cd) {
+        List<Map<String, Object>> fileList = new ArrayList<>();
+        FileMasterVO fileMasterVO = new FileMasterVO(fl_cd, "Y");
+        Integer isSaved = fileMapper.saveFileMaster(fileMasterVO);
+        if (isSaved != 1) {
+            throw new RuntimeException("파일 업로드 중 오류가 발생했습니다.");
+        }
+
         try {
-            List<Map<String, Object>> fileList = new ArrayList<>();
             for (MultipartFile file : files) {
-                FileMasterVO fileMasterVO = new FileMasterVO(fl_cd, "Y");
-                Integer isSaved = fileMapper.saveFileMaster(fileMasterVO);
-                if (isSaved != 1) {
-                    throw new RuntimeException("파일 업로드 중 오류가 발생했습니다.");
-                }
                 generateFileMapList(prjNo, file, fileMasterVO.getFl_ms_no(), fileList);
             }
             bulkSaveFiles(fileList);
@@ -51,6 +52,8 @@ public class CommonServiceImpl implements CommonService {
             log.error("파일 업로드 중 오류가 발생했습니다.", e);
             throw new RuntimeException("파일 업로드 중 오류가 발생했습니다.");
         }
+
+        return fileMasterVO.getFl_ms_no();
     }
 
     private void generateFileMapList(Long prjNo, MultipartFile file, Long fl_ms_no, List<Map<String, Object>> fileList) throws IOException {
