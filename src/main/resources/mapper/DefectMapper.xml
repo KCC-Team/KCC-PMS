@@ -4,6 +4,16 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.kcc.pms.domain.task.defect.mapper.DefectMapper">
-
+    <insert id="insertDefect" parameterType="map">
+        INSERT INTO DEFECT
+        (DF_NO, DF_ID, DF_TTL, STAT_CD, PRI_CD, DF_CONT, DF_FD_DT, DUE_DT, COMPL_DT,
+         DF_COMPL_CONT, PRJ_NO, WORK_NO, TEST_DTL_NO, MEM_FD_NO, MEM_ACT_NO, FL_MS_ACT_NO, FL_MS_FD_NO)
+        VALUES
+        (
+         seq_defect.nextval, #{req.defect_id, jdbcType=VARCHAR}, #{req.defect_ttl, jdbcType=VARCHAR},
+         #{status, jdbcType=VARCHAR}, #{order, jdbcType=VARCHAR}, #{req.defect_cont, jdbcType=VARCHAR},
+         #{req.discover}
+        )
+    </insert>
 
 </mapper>

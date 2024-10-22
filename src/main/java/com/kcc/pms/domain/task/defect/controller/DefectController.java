@@ -1,8 +1,10 @@
 package com.kcc.pms.domain.task.defect.controller;
 
 import com.kcc.pms.domain.common.service.CommonService;
+import com.kcc.pms.domain.task.defect.domain.dto.DefectFileRequestDto;
 import com.kcc.pms.domain.task.defect.domain.dto.DefectRequestDto;
 import com.kcc.pms.domain.task.defect.service.DefectService;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -28,7 +30,7 @@ public class DefectController {
     }
 
     @GetMapping("/defect")
-    public String showInsertForm(Model model) {
+    public String showInsertForm(Model model, @RequestParam(value = "id", required = false) Long id) {
         model.addAttribute("type", "register");
         model.addAttribute("req", new DefectRequestDto());
         model.addAttribute("order", commonService.getCommonCodeSelectList(ORDER));
@@ -37,33 +39,13 @@ public class DefectController {
     }
 
     @PostMapping("/defect")
-    public String insert(DefectRequestDto req,
+    public String insert(HttpSession session,
+                       DefectRequestDto req, DefectFileRequestDto files,
                          @ModelAttribute("order") String order,
                          @ModelAttribute("status") String status) {
-        System.out.println("order = " + order);
-        System.out.println("status = " + status);
-        System.out.println("req = " + req);
+//        Long prgNo = (Long) session.getAttribute("prgNo");
+        Long prgNo = 1L;
+        defectService.saveDefect(prgNo, req, files, order, status);
         return "redirect:/projects/defects/defect";
-    }
-
-    @PostMapping("/files-dis")
-    @ResponseBody
-    public ResponseEntity<Void> saveDefectFilesDiscover(List<MultipartFile> files) {
-        System.out.println("discover files = " + files);
-        return ResponseEntity.ok().build();
-    }
-
-    @PostMapping("/files-work")
-    @ResponseBody
-    public ResponseEntity<Void> saveDefectFilesWork(List<MultipartFile> files) {
-        System.out.println("work files = " + files);
-        commonService.fileUpload(files, 1L, null);
-
-        return ResponseEntity.ok().build();
-    }
-
-    @GetMapping("/{id}")
-    public String findById(Model model, @PathVariable Long id) {
-        return "defect/defect";
     }
 }

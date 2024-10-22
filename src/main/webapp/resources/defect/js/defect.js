@@ -6,7 +6,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // 첫 번째 Dropzone
-    const previewTemplate1 = `
+    const previewTemplate = `
         <div class="dz-preview dz-file-preview">
             <a href="" target="_blank" class="dz-image-link">
                 <img data-dz-thumbnail style="width: 85px;"/>
@@ -21,7 +21,7 @@ document.addEventListener('DOMContentLoaded', function() {
         </div>
     `;
 
-    const dropzone1 = initDropzone('#df-insert-file-dropzone_1', '.file-zone_1', previewTemplate1, "/projects/defects/files");
+    const dropzone1 = initDropzone('#df-insert-file-dropzone_1', '.file-zone_1', previewTemplate, "/projects/defects/defect");
     // 업로드 성공 시 이미지 링크 설정
     dropzone1.on("success", function(file, response) {
         // 서버에서 이미지 URL을 반환한다고 가정
@@ -31,22 +31,7 @@ document.addEventListener('DOMContentLoaded', function() {
         imageLink.href = imageUrl;
     });
 
-    // 미리보기 템플릿 정의
-    const previewTemplate2 = `
-        <div class="dz-preview dz-file-preview">
-            <a href="" target="_blank" class="dz-image-link">
-                <img data-dz-thumbnail />
-            </a>
-            <div class="dz-details">
-                <div class="dz-filename"><span data-dz-name></span></div>
-                <div class="dz-size" data-dz-size></div>
-            </div>
-            <div class="dz-progress"><span class="dz-upload" data-dz-uploadprogress></span></div>
-            <div class="dz-error-message"><span data-dz-errormessage></span></div>
-        </div>
-    `;
-
-    const dropzone2 = initDropzone('#df-insert-file-dropzone_2', '.file-zone_2', previewTemplate2, "/projects/defects/files");
+    const dropzone2 = initDropzone('#df-insert-file-dropzone_2', '.file-zone_2', previewTemplate);
     // 업로드 성공 시 이미지 링크 설정
     dropzone2.on("success", function(file, response) {
         // 서버에서 이미지 URL을 반환한다고 가정
@@ -57,46 +42,58 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     $('#save-df').on('click', function(e) {
-        uploadFiles(dropzone1); // Process upload for Dropzone 1
-        uploadFiles(dropzone2);
+        e.preventDefault();
+        let $form = $('#defectForm')[0];
+
+        uploadFiles(dropzone1, dropzone2, $form);
     });
 });
 
-function uploadFiles(dropzone) {
-    let files = dropzone.files;
-    let formData = new FormData();
+function uploadFiles(dropzone_dis, dropzone_work, $form) {
+    let dis_files = dropzone_dis.files;
+    let work_files = dropzone_work.files;
 
-    files.forEach(file => {
-        formData.append('files', file); // 'files'는 서버측에서 List<MultipartFile>로 받기 위한 필드 이름입니다.
-    });
-    console.log(dropzone.files);
-    console.log(dropzone.getFilesWithStatus(Dropzone.ADDED));
+    let formData = new FormData($form);
+    if (dis_files.length > 0) {
+        dis_files.forEach(file => {
+            formData.append('dis_files', file);
+        });
+    }
+    if (work_files.length > 0) {
+        work_files.forEach(file => {
+            formData.append('work_files', file);
+        });
+    }
 
     $.ajax({
-        url: dropzone.options.url,
+        url: dropzone_dis.options.url,
         type: 'post',
         data: formData,
         contentType: false,
         processData: false,
         success: function(response) {
-            console.log('Files uploaded successfully');
-            files.forEach(file => {
-                file.status = Dropzone.SUCCESS;
-                dropzone.emit("complete", file);
-            });
+            if (dis_files.length > 0) {
+                dis_files.forEach(file => {
+                    file.status = Dropzone.SUCCESS;
+                    dropzone_dis.emit("complete", file);
+                });
+            }
+
+            if (work_files.length > 0) {
+                work_files.forEach(file => {
+                    file.status = Dropzone.SUCCESS;
+                    dropzone_work.emit("complete", file);
+                });
+            }
         },
         error: function(response) {
-            console.error('Failed to upload files');
-            files.forEach(file => {
-                file.status = Dropzone.ERROR;
-                dropzone.emit("error", file);
-            });
+            console.error(response);
         }
     });
 }
 
 $(function () {
     $(".defect-date").datepicker({
-        dateFormat: "yyyy-mm-dd"
+        dateFormat: "yy-mm-dd"
     });
 });
