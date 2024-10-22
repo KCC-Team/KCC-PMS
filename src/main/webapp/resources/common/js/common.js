@@ -76,3 +76,11 @@ $(document).on('click', '.li-project', function() {
         }
     });
 });
+
+function openTeamPopUp(){
+    window.open(
+        "/projects/addTeamMember",
+        "그룹등록",
+        "width=1000, height=1200, resizable=yes"
+    )
+}

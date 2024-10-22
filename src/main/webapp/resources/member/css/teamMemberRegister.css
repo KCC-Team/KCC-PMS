@@ -1,0 +1,56 @@
+.addedMembersList {
+    margin-left:250px;
+    width: 660px !important;
+    height: 400px;
+}
+
+#memberList {
+    height: 530px;
+    width: 800px !important;
+    border-right: 1px solid black;
+    border-top: 1px solid black;
+    border-bottom: 1px solid black;
+}
+
+.added-title {
+    margin-top: 50px;
+}
+
+#add-member-by-group {
+    height: 580px;
+}
+
+#jstree-container {
+    position: relative;
+    height: 530px !important;
+    width: 300px;
+    border: 1px solid black;
+    display: flex;
+    flex-direction: column;
+}
+
+.button-container {
+    display: flex;
+    justify-content: flex-end;
+    gap: 3px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    margin-right: 10px !important;
+}
+
+.button-container-solo{
+    margin-right: 5px;
+}
+
+
+.mem-apply-title {
+    font-weight: bold;
+    font-size: 20px !important;
+}
+
+#member-apply-title-container {
+    border-bottom: 1px solid #989898;
+    margin-bottom: 10px;
+    width: 930px !important;
+    padding-bottom: 10px;
+}

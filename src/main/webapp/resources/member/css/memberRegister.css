@@ -94,8 +94,8 @@ body {
 }
 
 .member-grid {
-    margin-left: 5px;
-    margin-right: 5px;
+    margin-left: 8px;
+    margin-right: 8px;
 }
 
 .addedMembersList {
@@ -176,6 +176,8 @@ body {
 .tab-container {
     display: flex;
     border-bottom: 1px solid #ccc;
+    margin-bottom: 10px;
+    width: 23%;
 }
 
 .tab-btn {

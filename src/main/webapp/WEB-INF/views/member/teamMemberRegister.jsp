@@ -23,6 +23,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.3.12/jstree.search.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.3.12/jstree.dnd.min.js"></script>
     <link rel="stylesheet" href="../../../resources/member/css/memberRegister.css">
+    <link rel="stylesheet" href="../../../resources/member/css/teamMemberRegister.css">
     <link rel="stylesheet" href="../../../resources/common/css/ax5gridMin.css">
 </head>
 <body>
@@ -45,35 +46,52 @@
                 <div>
                     <h3 id="selectedGroupName" class="group-name"></h3>
                 </div>
-
-                <button class="member-add-button">추가하기</button>
+                <div class="button-container-solo">
+                    <button class="member-add-button">추가하기</button>
+                </div>
             </div>
 
             <div class="member-grid">
-                <div style="position: relative;height:270px;" id="grid-parent">
+                <div style="position: relative;height:160px;" id="grid-parent">
                     <div data-ax5grid="team-groupmemGrid" data-ax5grid-config="{}" style="height: 100%;"></div>
+                </div>
+            </div>
+
+
+            <div class="memberList-title-area added-title">
+                <div>
+                    <h3 class="group-name">추가 인원</h3>
+                </div>
+                <div class="button-container">
+                    <button class="member-remove-button">제거하기</button>
+                    <button class="apply">적용하기</button>
+                </div>
+            </div>
+            <div class="member-grid">
+                <div style="position: relative;height:160px;" id="grid-parent3">
+                    <div id="y-added-grid" data-ax5grid="team-added-grid" data-ax5grid-config="{}" style="height: 100%;"></div>
                 </div>
             </div>
         </div>
     </div>
 
-    <div class="addedMembersList">
-        <div class="memberList-title-area">
-            <div>
-                <h3 class="group-name">추가 인원</h3>
-            </div>
-            <div class="button-container">
-                <button class="member-remove-button">제거하기</button>
-            </div>
-        </div>
+<%--    <div class="addedMembersList">--%>
+<%--        <div class="memberList-title-area">--%>
+<%--            <div>--%>
+<%--                <h3 class="group-name">추가 인원</h3>--%>
+<%--            </div>--%>
+<%--            <div class="button-container">--%>
+<%--                <button class="member-remove-button">제거하기</button>--%>
+<%--            </div>--%>
+<%--        </div>--%>
 
-        <div style="position: relative;height:270px;" id="grid-parent3">
-            <div id="y-added-grid" data-ax5grid="team-added-grid" data-ax5grid-config="{}" style="height: 100%;"></div>
-        </div>
-        <div class="button-container">
-            <button class="apply">적용하기</button>
-        </div>
-    </div>
+<%--        <div style="position: relative;height:150px;" id="grid-parent3">--%>
+<%--            <div id="y-added-grid" data-ax5grid="team-added-grid" data-ax5grid-config="{}" style="height: 100%;"></div>--%>
+<%--        </div>--%>
+<%--        <div class="button-container">--%>
+<%--            <button class="apply">적용하기</button>--%>
+<%--        </div>--%>
+<%--    </div>--%>
 </div>
 
 <%--<script src="../../../resources/member/js/list.js"></script>--%>
