@@ -2,7 +2,7 @@ function openFeaturePopup(){
     window.open(
         "/projects/features/register",
         "기능등록",
-        "width=720, height=590, resizable=yes"
+        "width=810, height=620, resizable=yes"
     );
 }
 

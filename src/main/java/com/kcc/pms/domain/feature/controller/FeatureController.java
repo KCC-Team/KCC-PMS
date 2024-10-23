@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -25,9 +26,9 @@ public class FeatureController {
     }
 
     @GetMapping("/register")
-    public String featureInfo(HttpSession session){
+    public String featureInfo(HttpSession session, Model model){
         Long prjNo = (Long) session.getAttribute("prjNo");
-        System.out.println("prjNo = " + prjNo);
+        model.addAttribute("prjNo", prjNo);
         return "feature/featureInfo";
     }
 

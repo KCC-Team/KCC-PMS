@@ -1,5 +1,4 @@
 $(document).ready(function (){
-
     window.addEventListener("message", function(event) {
         if (event.data.type === 'featureMember') {
             let receivedMember = event.data.member;
@@ -11,7 +10,10 @@ $(document).ready(function (){
         }
     }, false);
 
+    console.log("prjNo = " + prjNo)
+
     fetchOptions();
+
 
     $("#pre_st_dt, #pre_end_dt, #st_dt, #end_dt").datepicker({
         dateFormat: "yy-mm-dd"  // 원하는 형식으로 날짜 표시
@@ -43,6 +45,16 @@ $(document).ready(function (){
             }
         });
     });
+
+    fetchMenuData().then(function(menuData) {
+        createMenu(menuData);
+    });
+
+    $('#system-select').click(function() {
+        $('#system-menu').slideToggle();  // 메뉴를 보여주거나 숨기기
+    });
+
+    $("#system-select span:first").text("시스템 선택");
 
 })
 
@@ -79,5 +91,49 @@ function setOptions($selectElement, options) {
         });
 
         $selectElement.append($option);
+    });
+}
+
+function fetchMenuData() {
+    return $.ajax({
+        url: '/systems?prjNo=' + prjNo,
+        method: 'GET',
+        dataType: 'json',
+        success: function(response) {
+            console.log("systems: " + response);
+            return response;
+        },
+        error: function(error) {
+            console.error("Error fetching data:", error);
+        }
+    });
+}
+
+
+function createMenu(menuData) {
+    createMenuHTML(menuData, $('#system-menu'), "");
+}
+
+function createMenuHTML(menuData, parentElement, path) {
+    menuData.forEach(function(menuItem) {
+        const listItem = $('<li class="menu-item"></li>').text(menuItem.systemTitle);
+        const subMenu = $('<ul class="system-submenu"></ul>');
+
+        const currentPath = path ? path + " > " + menuItem.systemTitle : menuItem.systemTitle;
+
+        // 하위 메뉴가 있는 경우
+        if (menuItem.subSystems && menuItem.subSystems.length > 0) {
+            createMenuHTML(menuItem.subSystems, subMenu, currentPath);
+            listItem.append(subMenu);
+        }
+
+        listItem.click(function(event) {
+            event.stopPropagation();
+            $('#system-select span:first-child').text(currentPath);  // 사용자가 선택한 경로 표시
+            $('#systemNo').val(menuItem.systemNo);  // systemNo를 숨겨진 필드에 저장
+            $('.mymenu').slideUp();  // 메뉴 숨기기
+        });
+
+        parentElement.append(listItem);
     });
 }
