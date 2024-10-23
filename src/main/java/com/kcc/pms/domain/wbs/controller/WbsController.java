@@ -35,11 +35,30 @@ public class WbsController {
 
     @GetMapping("/api/wbs")
     @ResponseBody
-    public ResponseEntity<List<WbsResponseDto>> info(HttpSession session) {
-        int prjNo = (int)session.getAttribute("prjNo");
-        Long prjNoLong = Long.valueOf(prjNo);
+    public ResponseEntity<List<WbsResponseDto>> list(HttpSession session) {
+        Long prjNo = (Long)session.getAttribute("prjNo");
 
-        List<WbsResponseDto> wbsList = wbsService.getWbsList(prjNoLong);
+        List<WbsResponseDto> wbsList = wbsService.getWbsList(prjNo, null);
+
+        return ResponseEntity.ok(wbsList);
+    }
+
+    @GetMapping("/api/wbs/info")
+    @ResponseBody
+    public ResponseEntity<List<WbsResponseDto>> info(Long tsk_no, HttpSession session) {
+        Long prjNo = (Long)session.getAttribute("prjNo");
+
+        List<WbsResponseDto> wbsList = wbsService.getWbsList(prjNo, tsk_no);
+
+        return ResponseEntity.ok(wbsList);
+    }
+
+    @GetMapping("/api/wbs/topTask")
+    @ResponseBody
+    public ResponseEntity<List<WbsResponseDto>> topTask(Long tsk_no, HttpSession session) {
+        Long prjNo = (Long)session.getAttribute("prjNo");
+
+        List<WbsResponseDto> wbsList = wbsService.getTopTaskList(prjNo, tsk_no);
 
         return ResponseEntity.ok(wbsList);
     }
@@ -48,11 +67,9 @@ public class WbsController {
     @ResponseBody
     public ResponseEntity<String> saveWbs(WbsRequestDto wbs, HttpSession session) {
         String login_id = "user1"; // 회원아이디(세션정보)
-        int prjNo = (int) session.getAttribute("prjNo"); // 프로젝트번호(세션정보)
-        Long prjNoLong = Long.valueOf(prjNo);
+        Long prjNo = (Long) session.getAttribute("prjNo"); // 프로젝트번호(세션정보)
         wbs.setReg_id(login_id);
-        wbs.setPrj_no(prjNoLong);
-
+        wbs.setPrj_no(prjNo);
 
         try {
             int result = wbsService.saveWbs(wbs);
@@ -62,15 +79,49 @@ public class WbsController {
                 return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("fail save wbs");
             }
         } catch (Exception e) {
-            System.out.println("e.getMessage() = " + e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("error: " + e.getMessage());
         }
     }
 
     @PostMapping("/wbs/updateOrder")
     @ResponseBody
-    public void updateOrder(@RequestBody WbsOrderUpdateRequestDto request){
+    public void updateOrder(@RequestBody WbsOrderUpdateRequestDto request) {
         wbsService.updateOrder(request.getWbsNo(), request.getNewParentNo(), request.getNewPosition() + 1);
+    }
+
+    @PutMapping("/api/wbs")
+    @ResponseBody
+    public ResponseEntity<String> updateWbs(WbsRequestDto request, HttpSession session) {
+        Long prjNo = (Long)session.getAttribute("prjNo");
+        request.setPrj_no(prjNo);
+
+        try {
+            int result = wbsService.updateWbs(request);
+            if (result > 0) {
+                return ResponseEntity.ok("success update wbs");
+            } else {
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("fail update wbs");
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("error: " + e.getMessage());
+        }
+    }
+
+    @DeleteMapping("/api/wbs")
+    @ResponseBody
+    public ResponseEntity<String> deleteWbs(WbsRequestDto request, HttpSession session) {
+        Long prjNo = (Long)session.getAttribute("prjNo");
+
+        try {
+            int result = wbsService.deleteWbs(prjNo, request.getTsk_no());
+            if (result > 0) {
+                return ResponseEntity.ok("success delete wbs");
+            } else {
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("fail delete wbs");
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("error: " + e.getMessage());
+        }
     }
 
 }

@@ -113,8 +113,20 @@
     gap: 11px;
 }
 
-#mem_nm, #sys_no {
-    width: 35%;
+#mem_nm {
+    width: 81%;
+}
+
+#sys_no {
+    width: 100%;
+}
+
+#output_nm {
+    width: 81%;
+}
+
+#rel_out_nm {
+    width: 100%;
 }
 
 input[type="date"] {
@@ -126,3 +138,6 @@ input[type="date"] {
     font-weight: bold;
 }
 
+#par_task_nm_row {
+    display: none;
+}

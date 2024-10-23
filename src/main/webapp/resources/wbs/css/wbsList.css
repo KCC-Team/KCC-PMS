@@ -52,7 +52,7 @@
 }
 
 .action-buttons button {
-    padding: 5px 9px 5px 9px;
+    padding: 5px 5px 5px 5px;
     border: 1px solid #ccc;
     border-radius: 5px;
     color: white;
@@ -116,9 +116,20 @@
 }
 
 .btn-task {
-    margin-bottom: 5px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    color: white;
+    cursor: pointer;
+    background-color: #8B8B8B;
+    padding: 5px;
+    margin-bottom: 3px;
 }
 
 #gantt_here, .btn-modify-wbs, #toggle-grid {
     display: none;
+}
+
+.gantt_task_line {
+    background-color: #5A9BD5 !important;
+    border-color: #2F5597 !important;
 }
