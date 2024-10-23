@@ -3,7 +3,7 @@
 }
 
 .modal-content {
-    width: 805px !important;
+    width: 756px !important;
     margin-right: 100px !important;
 }
 
@@ -207,15 +207,18 @@ input[type="date"] {
     cursor: pointer;
     border: 1px solid #ccc;
     background-color: #fff;
-    width: 220px;
+    width: 185px;
     height: 11px;
     border-radius: 4px;
     text-align: left;
-    display: flex;
+    display: block;
     justify-content: space-between;
     align-items: center;
     font-size: 14px;
     position: relative;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 .system-select-button:after {
