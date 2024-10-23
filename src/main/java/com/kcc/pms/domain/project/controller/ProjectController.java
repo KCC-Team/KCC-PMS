@@ -44,7 +44,7 @@ public class ProjectController {
     }
 
     @GetMapping("/dashboardInfo")
-    public String dashboard(@RequestParam Integer prjNo, @RequestParam String prjTitle, HttpSession session) {
+    public String dashboard(@RequestParam Long prjNo, @RequestParam String prjTitle, HttpSession session) {
         if (prjNo > 0 && prjTitle != null) {
             session.setAttribute("prjNo", prjNo);
             session.setAttribute("prjTitle", prjTitle);
@@ -56,19 +56,20 @@ public class ProjectController {
     @GetMapping("/api/project")
     @ResponseBody
     public ResponseEntity<CombinedProjectResponseDto> info(HttpSession session) {
-        Integer prjNo = (Integer)session.getAttribute("prjNo");
-        Long prjNogValue = prjNo.longValue();
-
-        CombinedProjectResponseDto projectInfo = projectService.findByProject(prjNogValue);
+        Long prjNo = (Long)session.getAttribute("prjNo");
+        CombinedProjectResponseDto projectInfo = projectService.findByProject(prjNo);
         
         return ResponseEntity.ok(projectInfo);
     }
 
     @PostMapping("/api/project")
     @ResponseBody
-    public ResponseEntity<String> saveProject(ProjectRequestDto project) {
+    public ResponseEntity<String> saveProject(ProjectRequestDto project, HttpSession session) {
         String login_id = "user1"; // 회원아이디(세션정보)
         project.setReg_id(login_id);
+
+        Long prjNo = (Long)session.getAttribute("prjNo");
+        project.setPrj_no(prjNo);
 
         try {
             int result = projectService.saveProject(project);
@@ -85,16 +86,14 @@ public class ProjectController {
     @PutMapping("/api/project")
     @ResponseBody
     public ResponseEntity<String> updateProject(ProjectRequestDto project, HttpSession session) {
-        Integer prjNo = (Integer)session.getAttribute("prjNo");
-        Long prjNogValue = prjNo.longValue();
-
+        Long prjNo = (Long)session.getAttribute("prjNo");
         String login_id = "user1"; // 회원아이디(세션정보)
         project.setMod_id(login_id);
 
         try {
             int result = projectService.updateProject(project);
             if (result > 0) {
-                CombinedProjectResponseDto projectInfo = projectService.findByProject(prjNogValue);
+                CombinedProjectResponseDto projectInfo = projectService.findByProject(prjNo);
                 String prjTitle = projectInfo.getProject().getPrj_title();
                 session.setAttribute("prjTitle", prjTitle);
 

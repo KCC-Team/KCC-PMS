@@ -62,5 +62,11 @@ public class WbsResponseDto {
 
     private String members;
 
+    private String mem_nms;
+
+    private String tm_numbers;
+
+    private String mem_numbers;
+
     private String wbs_status;
 }

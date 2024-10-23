@@ -37,26 +37,55 @@
     </insert>
 
     <select id="getWbsList" resultType="com.kcc.pms.domain.wbs.model.dto.WbsResponseDto">
+
         SELECT
             t.*,
             CASE
-            WHEN t.tsk_stat_cd = 'PMS00101' THEN '대기'
-            WHEN t.tsk_stat_cd = 'PMS00102' THEN '진행중'
-            ELSE '완료'
+                WHEN t.tsk_stat_cd = 'PMS00101' THEN '대기'
+                WHEN t.tsk_stat_cd = 'PMS00102' THEN '진행중'
+                ELSE '완료'
             END AS wbs_status,
-            (
-            SELECT LISTAGG(m.mem_nm, ', ') WITHIN GROUP (ORDER BY m.mem_no)
-            FROM
-                taskmember tm
-            JOIN member m
-                on tm.mem_no = m.mem_no
+        (
+            SELECT
+            LISTAGG(m.mem_nm, ',') WITHIN GROUP (ORDER BY m.mem_no)
+            FROM taskmember tm
+            JOIN member m ON tm.mem_no = m.mem_no
             WHERE tm.prj_no = t.prj_no
             AND tm.tsk_no = t.tsk_no
-            ) AS members
+        ) AS mem_nms,
+        (
+            SELECT
+            LISTAGG(tm.tm_no, ',') WITHIN GROUP (ORDER BY tm.tm_no)
+            FROM taskmember tm
+            WHERE tm.prj_no = t.prj_no
+            AND tm.tsk_no = t.tsk_no
+        ) AS tm_numbers,
+        (
+            SELECT LISTAGG(tm.mem_no, ',') WITHIN GROUP (ORDER BY tm.mem_no)
+            FROM taskmember tm
+            WHERE tm.prj_no = t.prj_no
+            AND tm.tsk_no = t.tsk_no
+        ) AS mem_numbers
         FROM task t
         WHERE t.prj_no = #{prj_no}
-        order by t.order_no
+        <if test="tsk_no != null and tsk_no != ''">
+            AND t.tsk_no = #{tsk_no}
+        </if>
+        order by t.tsk_no
     </select>
+
+
+    <select id="getTopTaskList" resultType="com.kcc.pms.domain.wbs.model.dto.WbsResponseDto">
+        SELECT
+            tsk_no, par_task_no, tsk_ttl
+        FROM task
+        WHERE
+            prj_no = #{prj_no}
+        START WITH tsk_no = #{tsk_no}
+        CONNECT BY PRIOR par_task_no = tsk_no
+        ORDER BY SYS_CONNECT_BY_PATH(par_task_no, '/') DESC
+    </select>
+
 
     <select id="getMaxOrderNo" resultType="Integer">
         SELECT MAX(order_no) FROM task WHERE par_task_no = #{parentNo}
@@ -92,4 +121,58 @@
         </if>
         WHERE tsk_no = #{wbsNo}
     </update>
+
+
+    <update id="updateWbs">
+        UPDATE task
+        SET tsk_ttl = #{tsk_ttl}
+        <if test="tsk_stat_cd != null">
+            , tsk_stat_cd = #{tsk_stat_cd}
+        </if>
+        <if test="pre_st_dt != null">
+            , pre_st_dt = #{pre_st_dt}
+        </if>
+        <if test="pre_end_dt != null">
+            , pre_end_dt = #{pre_end_dt}
+        </if>
+        <if test="st_dt != null">
+            , st_dt = #{st_dt}
+        </if>
+        <if test="end_dt != null">
+            , end_dt = #{end_dt}
+        </if>
+        <if test="weight_val != null">
+           , weight_val = #{weight_val}
+        </if>
+        <if test="prg != null">
+           , prg = #{prg}
+        </if>
+        <if test="rel_out_nm != null">
+            , rel_out_nm = #{rel_out_nm}
+        </if>
+        <if test="sys_no != null">
+            , sys_no = #{sys_no}
+        </if>
+        WHERE prj_no = #{prj_no}
+        AND tsk_no = #{tsk_no}
+    </update>
+
+    <delete id="deleteWbsMember">
+        delete from taskmember
+        where prj_no = #{prj_no}
+        and tsk_no = #{tsk_no}
+    </delete>
+
+    <delete id="deleteWbs">
+        DELETE FROM task
+        WHERE tsk_no IN
+        (
+            SELECT tsk_no
+            FROM task
+            WHERE prj_no = #{prj_no}
+            START WITH tsk_no = #{tsk_no}
+            CONNECT BY PRIOR tsk_no = par_task_no
+        )
+    </delete>
+
 </mapper>
