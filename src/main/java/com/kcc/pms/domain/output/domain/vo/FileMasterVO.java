@@ -1,17 +1,19 @@
 package com.kcc.pms.domain.output.domain.vo;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import static lombok.AccessLevel.*;
+
 @Getter
+@NoArgsConstructor(access = PROTECTED)
 @Setter
 public class FileMasterVO {
-    private Long fl_ms_no;
-    private String fl_cd;
-    private String use_yn;
+    private Long fileMasterNumber;
+    private String fileCode;
 
-    public FileMasterVO(String fl_cd, String use_yn) {
-        this.fl_cd = fl_cd;
-        this.use_yn = use_yn;
+    public FileMasterVO(String fileCode) {
+        this.fileCode = fileCode;
     }
 }

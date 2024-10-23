@@ -5,17 +5,17 @@
 
 <mapper namespace="com.kcc.pms.domain.output.mapper.FileMapper">
     <insert id="saveFileMaster" parameterType="FileMasterVO">
-        <selectKey keyProperty="fl_ms_no" resultType="Long" order="BEFORE">
+        <selectKey keyProperty="fileMasterNumber" resultType="Long" order="BEFORE">
             SELECT seq_filemaster.NEXTVAL FROM dual
         </selectKey>
         INSERT INTO FileMaster (fl_ms_no, fl_cd, use_yn)
-        VALUES (#{fl_ms_no}, #{fl_cd, jdbcType=VARCHAR}, #{use_yn})
+        VALUES (#{fileMasterNumber}, #{fileCode, jdbcType=VARCHAR}, 'Y')
     </insert>
 
     <insert id="saveFileDetails" parameterType="map">
         INSERT INTO FileDetail (fl_no, original_ttl, file_path, fl_type, fl_size, fl_ms_no, reg_id, reg_dt)
-        VALUES (seq_filedetail.nextval, #{original_ttl, jdbcType=VARCHAR}, #{file_path, jdbcType=VARCHAR}, #{file_type, jdbcType=VARCHAR},
-                #{file_size, jdbcType=VARCHAR}, #{fl_ms_no, jdbcType=INTEGER}, #{reg_id, jdbcType=VARCHAR}, sysdate)
+        VALUES (seq_filedetail.nextval, #{originalTitle, jdbcType=VARCHAR}, #{filePath, jdbcType=VARCHAR}, #{fileType, jdbcType=VARCHAR},
+                #{fileSize, jdbcType=VARCHAR}, #{fileMasterNumber, jdbcType=NUMERIC}, #{registerId, jdbcType=VARCHAR}, sysdate)
     </insert>
 
 </mapper>
