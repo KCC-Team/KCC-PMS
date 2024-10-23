@@ -393,7 +393,7 @@ ALTER TABLE Task ADD CONSTRAINT fk_tsk_prj_no_003 FOREIGN KEY (prj_no) REFERENCE
 
 ALTER TABLE TaskMember ADD CONSTRAINT pk_tsk_mem_no_001 PRIMARY KEY (mem_no, tm_no, tsk_no, prj_no);
 ALTER TABLE TaskMember ADD CONSTRAINT fk_tsk_mem_no_002 FOREIGN KEY (mem_no, tm_no, prj_no) REFERENCES ProjectMember (mem_no, tm_no, prj_no);
-ALTER TABLE TaskMember ADD CONSTRAINT fk_tsk_tsk_no_003 FOREIGN KEY (tsk_no) REFERENCES Task (tsk_no);
+ALTER TABLE TaskMember ADD CONSTRAINT fk_tsk_tsk_no_003 FOREIGN KEY (tsk_no) REFERENCES Task (tsk_no) ON DELETE CASCADE;
 
 ALTER TABLE Feature ADD CONSTRAINT pk_feat_no_001 PRIMARY KEY (feat_no);
 ALTER TABLE Feature ADD CONSTRAINT fk_feat_sys_no_002 FOREIGN KEY (sys_no) REFERENCES System (sys_no);

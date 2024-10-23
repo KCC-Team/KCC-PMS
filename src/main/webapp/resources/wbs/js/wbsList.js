@@ -18,28 +18,23 @@ gantt.config.subscales = [{unit: "month", step: 1, date: "%Y-%m"}];  // 월 단�
 
 // Gantt 그리드 설정
 gantt.config.columns = [
-    {name: "id", label: "순번", align: "left", width: 40, resize: true, template: function (task) {
-        if (String(task.id).includes("0")) {
-            let taskId = String(task.id).replace(/0/g, "."); // 모든 "0"을 "."으로 변경
-            return taskId;
-        }
-        return task.id;
-    }},
-    {name: "text", label: "작업명", align: "left", width: 180, tree: true, resize: true},
-    {name: "tsk_stat_cd", label: "상태", width: 45, align: "center", resize: true},
-    {name: "start_date", label: "예정 시작일", align: "center", width: 80, resize: true},
-    {name: "end_date", label: "예정 종료일", align: "center", width: 80, resize: true},
-    {name: "real_st_dt", label: "시작일", align: "center", width: 80, resize: true},
-    {name: "real_end_dt", label: "종료일", align: "center", width: 80, resize: true},
+    // {name: "id", label: "순번", align: "left", width: 40, resize: true, template: function (task) {
+    //     if (String(task.id).includes("0")) {
+    //         let taskId = String(task.id).replace(/0/g, "."); // 모든 "0"을 "."으로 변경
+    //         return taskId;
+    //     }
+    //     return task.id;
+    // }},
+    {name: "text", label: "작업명", align: "left", width: 160, tree: true, resize: true},
+    {name: "tsk_stat_cd", label: "상태", width: 52, align: "center", resize: true},
+    {name: "start_date", label: "예정 시작일", align: "center", width: 90, resize: true},
+    {name: "end_date", label: "예정 종료일", align: "center", width: 90, resize: true},
+    {name: "real_st_dt", label: "시작일", align: "center", width: 90, resize: true},
+    {name: "real_end_dt", label: "종료일", align: "center", width: 90, resize: true},
     {name: "progress", label: "진척도", align: "center", width: 60, template: function(task) { return task.progress * 100 + "%"; }, resize: true},
     // {name: "weight_val", label: "가중치", align: "center", width: 70, template: function(task) { return task.weight_val || ""; }, resize: true},
     // {name: "ante_task_no", label: "선행작업", align: "center", width: 47, template: function(task) { return task.ante_task_no || ""; }, resize: true},
     {name: "manager", label: "담당자", align: "center", width: 90, template: function(task) { return task.manager || ""; }, resize: true},
-    // {name: "addbtn", label: "", width: 30, align: "center", template:
-    //         function(task) {
-    //             return "<button class='add-wbs'><i class=\"fa-regular fa-square-plus\"></i></button>";
-    //         }
-    // }
 ];
 
 
@@ -75,7 +70,7 @@ function getProjectResult() {
                     ante_task_no: item.ante_task_no,
                     tsk_stat_cd: item.wbs_status,
                     weight_val: item.weight_val,
-                    manager: item.members,
+                    manager: item.mem_nms,
                     rel_out_nm: item.rel_out_nm,
                     par_task_no: item.par_task_no
                 });
@@ -124,7 +119,6 @@ function getProjectResult() {
 }
 
 
-
 // 작업이 추가될 때 중복 호출 방지
 let isTaskAdding = false;
 
@@ -137,51 +131,6 @@ gantt.showLightbox = function(id) {
 gantt.attachEvent("onBeforeTaskDrag", function(id, mode, e) {
     return false; // 드래그를 방지
 });
-
-// // 작업 저장 시 호출되는 이벤트 (Lightbox에서 저장될 때)
-// gantt.attachEvent("onLightboxSave", function(id, task, is_new) {
-//
-//     // console.log(task);
-//     // let taskId = gantt.addTask({
-//     //     id: 3,
-//     //     parent: 2,
-//     //     text: "Task #3",
-//     //     start_date: "2024-02-28",
-//     //     end_date: "2024-03-02",
-//     //     progress : 0.1
-//     // });
-//     // gantt.updateTask(taskId); // 작업 업데이트
-//     // logCurrentTasks();
-//
-//
-//     if (!isTaskAdding) {
-//         isTaskAdding = true;
-//         gantt.updateTask(id);  // 작업 업데이트
-//         logCurrentTasks();
-//         isTaskAdding = false;
-//     }
-//     return true;
-// });
-//
-// // 작업이 추가된 후 실행되는 이벤트
-// gantt.attachEvent("onAfterTaskAdd", function(id, item) {
-//     if (!isTaskAdding) {
-//         isTaskAdding = true;
-//         logCurrentTasks();  // 작업 상태를 로그로 기록
-//         isTaskAdding = false;
-//     }
-// });
-//
-// // 작업이 업데이트된 후 실행되는 이벤트
-// gantt.attachEvent("onAfterTaskUpdate", function(id, item) {
-//     logCurrentTasks();  // 작업 상태를 로그로 기록
-// });
-//
-// // 작업이 삭제된 후 실행되는 이벤트
-// gantt.attachEvent("onAfterTaskDelete", function(id) {
-//     logCurrentTasks();  // 작업 삭제 후 로그 기록
-// });
-
 
 // 로그 기능 (변경 사항 추적)
 gantt.attachEvent("onAfterTaskMove", function(id, parent, tindex){
@@ -223,8 +172,6 @@ gantt.attachEvent("onContextMenu", function (id, linkId, e) {
     // 우클릭한 작업의 정보 가져오기
     let task = gantt.getTask(id);
 
-    console.log(task.id);
-
     // 부모 작업 ID 가져오기 (최상위 작업일 경우 부모가 없을 수 있음)
     let parentTaskId = task.parent ? task.parent : "null";  // 부모가 없는 경우 '없음' 표시
 
@@ -250,10 +197,6 @@ gantt.attachEvent("onContextMenu", function (id, linkId, e) {
         lastSiblingId = lastSiblingTask.id;
     }
 
-    //아래에추가 => 클릭한친구의 부모아이디
-    //하위에추가 => 클릭한친구의 아이디
-
-
     // 자식 작업들 가져오기
     let children = gantt.getChildren(id);
 
@@ -275,7 +218,9 @@ gantt.attachEvent("onContextMenu", function (id, linkId, e) {
       <input type=button value="아래에 추가" class="btn-task" onclick="wbsInfoPopup('new', ${lastSiblingId}, ${parentTaskId}, ${task.par_task_no})">
       <br/>
       ${additionalButton}
-      <input type=button value="상세 정보" class="btn-task" onclick="wbsInfoPopup('view', ${id}, ${id})">
+      <input type=button value="상세 정보" class="btn-task" onclick="wbsInfoPopup('view', ${id})">
+      <br/>
+      <input type=button value="삭제" class="btn-task" onclick="deleteWbs('delete', ${id})">
     </div>
     `;
 
@@ -343,6 +288,28 @@ function wbsInfoPopup(type, id, parentId, max_order_id) {
         "프로젝트WBS",
         "width=720, height=490, resizable=yes"
     );
+}
+
+// wbs 삭제
+function deleteWbs(type, id) {
+    if (confirm("정말로 삭제 하시겠습니까?")) {
+        $.ajax({
+            url: '/projects/api/wbs',
+            type: 'DELETE',
+            data: {
+                tsk_no: id
+            },
+            success: function(response) {
+                alert('작업이 삭제되었습니다.');
+                window.location.reload();
+            },
+            error: function(xhr, status, error) {
+                console.error('에러:', xhr.responseText);
+                alert('삭제 중 에러가 발생했습니다. 다시 시도해 주세요.');
+                return false;
+            }
+        });
+    }
 }
 
 

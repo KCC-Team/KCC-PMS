@@ -1,3 +1,7 @@
+/*.main_content {*/
+/*    height: 90% !important;*/
+/*}*/
+
 .project-content {
     display: flex;
     padding-top: 15px;
@@ -22,9 +26,8 @@
 }
 
 .project-form {
-    width: 95%;
+    width: 97%;
     margin: 0 auto;
-    border-top: 1px solid #ccc;
 }
 
 .form-group {
@@ -44,7 +47,7 @@ label {
 
 input[type="date"],
 select {
-    width: 150px;
+    width: 200px;
     padding: 8px;
     margin-top: 5px;
     border: 1px solid #ccc;
@@ -85,7 +88,7 @@ input[type="text"] {
 }
 
 input[type="date"] {
-    width: 150px;
+    width: 200px;
     padding: 8px;
     margin-top: 5px;
     border: 1px solid #ccc;
@@ -164,9 +167,9 @@ button {
 }
 
 button.save-btn {
-    background-color: gray;
+    background-color: #1F80DA;
     color: white;
-    margin-right: 10px;
+    margin-right: 5px;
 }
 
 button.modify-btn {
@@ -353,7 +356,7 @@ input:disabled, select:disabled, textarea:disabled {
 
 
 .overview-table, .members-table, .detail-table {
-    width: 100%;
+    width: 50%;
 }
 
 .overview-table td {
@@ -479,7 +482,7 @@ input:disabled, select:disabled, textarea:disabled {
 }
 
 .file-zone_1 .file-section, .file-zone_2 .file-section {
-    height: 150px;
+    height: 210px;
     border: 1px solid #C5C5C5;
     padding: 10px;
     overflow-y: auto;
@@ -581,4 +584,24 @@ input:disabled, select:disabled, textarea:disabled {
 
 .system-select-button:focus {
     outline: none;
+}
+
+
+.all-section {
+    display: flex;
+}
+
+.overview-table {
+    flex: 0.91;
+    overflow-x: auto;
+    border-top: 1px solid #ccc;
+    margin-right: 10px;
+}
+
+.right-section {
+    flex: 0.7;
+}
+
+.mt-3 {
+    margin-top: 0px !important;
 }

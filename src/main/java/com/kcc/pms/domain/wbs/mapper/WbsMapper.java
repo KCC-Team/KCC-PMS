@@ -16,10 +16,13 @@ import java.util.List;
 public interface WbsMapper {
     int saveWbs(WbsRequestDto wbs);
     int saveWbsMember(WbsRequestDto wbs);
-    List<WbsResponseDto> getWbsList(Long prj_no);
+    List<WbsResponseDto> getWbsList(@Param("prj_no") Long prj_no, @Param("tsk_no") Long tsk_no);
+    List<WbsResponseDto> getTopTaskList(@Param("prj_no") Long prj_no, @Param("tsk_no") Long tsk_no);
     Integer getMaxOrderNo(Long parentNo);
-
     List<Wbs> getSiblings(Integer parentNo);
     Wbs getWbsByNo(Integer wbsNo);
     void updateWbsOrder(@Param("wbsNo") Integer wbsNo, @Param("parentNo") Integer parentNo, @Param("orderNo") Integer orderNo);
+    int updateWbs(WbsRequestDto wbs);
+    int deleteWbsMember(@Param("prj_no") Long prj_no, @Param("tsk_no") Long tsk_no);
+    int deleteWbs(@Param("prj_no") Long prj_no, @Param("tsk_no") Long tsk_no);
 }

@@ -2,9 +2,9 @@
 
 <%
     Object prjNo = session.getAttribute("prjNo");
-    Integer prjNoInt = null;
-    if (prjNo instanceof Integer) {
-        prjNoInt = (Integer) prjNo;
+    Long prjNoInt = null;
+    if (prjNo instanceof Long) {
+        prjNoInt = (Long) prjNo;
     }
 %>
 
@@ -36,10 +36,9 @@
                 <div class="modal-body">
 
                     <form id="wbs_form" action="#" method="post">
-                        <input type="hidden" id="order_no" name="order_no" value="">
+                        <input type="hidden" id="tsk_no" name="tsk_no" value="">
                         <input type="hidden" id="mem_no" name="mem_no" value="">
                         <input type="hidden" id="tm_no" name="tm_no" value="">
-                        <input type="hidden" id="par_task_no" name="par_task_no" value="">
                         <input type="hidden" id="max_order_id" name="max_order_id" value="">
 
                         <table class="form-table">
@@ -102,11 +101,9 @@
                                     </select>
                                 </td>
                             </tr>
-                            <tr>
+                            <tr id="par_task_nm_row">
                                 <th>상위작업</th>
-                                <td><input type="text" id="par_task_nm" name="par_task_nm" value="" readonly></td>
-                                <th>선행작업</th>
-                                <td><input type="text" id="ante_task_no" name="ante_task_no" value=""></td>
+                                <td colspan="3"><input type="text" id="par_task_nm" name="par_task_nm" value="" readonly></td>
                             </tr>
                             <tr>
                                 <th>담당자</th>
@@ -116,21 +113,22 @@
                                 </td>
                             </tr>
                             <tr>
-                                <th>시스템/업무</th>
+                                <th>산출물</th>
                                 <td colspan="3">
-                                    <select id="sys_no" name="sys_no">
-                                        <option value="">선택하세요.</option>
-                                    </select>
+                                    <input type="text" id="output_nm" name="output_nm" value="" readonly>
+                                    <button type="button" class="btn-select-output">산출물 연결</button>
                                 </td>
                             </tr>
                             <tr>
-                                <th>산출물</th>
-                                <td>
-                                    <button type="button" class="btn-select-output">산출물 연결</button>
-                                </td>
                                 <th>관련 산출물명</th>
                                 <td>
                                     <input type="text" id="rel_out_nm" name="rel_out_nm" value="">
+                                </td>
+                                <th>시스템/업무</th>
+                                <td>
+                                    <select id="sys_no" name="sys_no">
+                                        <option value="">선택하세요.</option>
+                                    </select>
                                 </td>
                             </tr>
 

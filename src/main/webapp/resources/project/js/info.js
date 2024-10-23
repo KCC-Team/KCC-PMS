@@ -129,7 +129,8 @@ function getProjectResult() {
                 $("#st_dt").attr("readonly", true).val('').css("background-color", "#e9ecef");
                 $("#end_dt").attr("readonly", true).val('').css("background-color", "#e9ecef");
             }
-            $(".char-count").text($("#prj_cont").val().length);
+            const byteLength = getByteLength($("#prj_cont").val());
+            $(".char-count").text(byteLength);
         },
         error: function(xhr, status, error) {
             console.error('에러:', xhr.responseText);
@@ -295,6 +296,22 @@ function validateDate(startDateElem, endDateElem) {
         alert("종료일은 시작일보다 이전일 수 없습니다.");
         endDateElem.value = ""; // 종료일을 비움
     }
+}
+
+// 바이트 길이를 계산하는 함수
+function getByteLength(str) {
+    let byteLength = 0;
+    for (let i = 0; i < str.length; i++) {
+        const charCode = str.charCodeAt(i);
+        if (charCode <= 0x007F) {
+            byteLength += 1; // 영문, 숫자 등 1바이트
+        } else if (charCode <= 0x07FF) {
+            byteLength += 2; // 2바이트 문자 (라틴계)
+        } else {
+            byteLength += 3; // 한글 및 기타 3바이트 문자 (UTF-8)
+        }
+    }
+    return byteLength;
 }
 
 // 프로젝트 예정기간 (pre_st_dt, pre_end_dt)

@@ -33,7 +33,6 @@ public class WbsServiceImpl implements WbsService {
             maxOrderNo = maxOrderNo + 1;
         }
         wbs.setOrder_no(maxOrderNo);
-        System.out.println(wbs);
 
         int result = wbsMapper.saveWbs(wbs);
 
@@ -47,8 +46,8 @@ public class WbsServiceImpl implements WbsService {
     }
 
     @Override
-    public List<WbsResponseDto> getWbsList(Long prj_no) {
-        List<WbsResponseDto> wbsList = wbsMapper.getWbsList(prj_no);
+    public List<WbsResponseDto> getWbsList(Long prj_no, Long tsk_no) {
+        List<WbsResponseDto> wbsList = wbsMapper.getWbsList(prj_no, tsk_no);
 
         for (WbsResponseDto wbs : wbsList) {
             String preStartDate = wbs.getPre_st_dt();
@@ -70,6 +69,11 @@ public class WbsServiceImpl implements WbsService {
         }
 
         return wbsList;
+    }
+
+    @Override
+    public List<WbsResponseDto> getTopTaskList(Long prjNo, Long tsk_no) {
+        return wbsMapper.getTopTaskList(prjNo, tsk_no);
     }
 
     public int addMember(WbsRequestDto wbs) {
@@ -156,6 +160,24 @@ public class WbsServiceImpl implements WbsService {
         movedWbs.setOrderNo(newPosition);
 
         wbsMapper.updateWbsOrder(movedWbs.getWbsNo(), newParentNo, newPosition);
+    }
+
+    @Override
+    public int updateWbs(WbsRequestDto wbs) {
+        int result = wbsMapper.updateWbs(wbs);
+        if (result > 0
+                && wbs.getMem_no() != null && !wbs.getMem_no().isEmpty()
+                && wbs.getTm_no() != null && !wbs.getTm_no().isEmpty()) {
+            wbsMapper.deleteWbsMember(wbs.getPrj_no(), wbs.getTsk_no());
+            return addMember(wbs);
+        }
+        return result;
+    }
+
+    @Override
+    public int deleteWbs(Long prj_no, Long tsk_no) {
+        //wbsMapper.deleteWbsMember(prj_no, tsk_no);
+        return wbsMapper.deleteWbs(prj_no, tsk_no);
     }
 
 }
