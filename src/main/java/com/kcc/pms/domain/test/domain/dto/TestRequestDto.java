@@ -13,7 +13,7 @@ import java.util.Map;
 @NoArgsConstructor
 @AllArgsConstructor
 public class TestRequestDto implements Serializable {
-    private Long testNo;
+    private Long testNumber;
     private String testTitle;
     private String testId;
     private LocalDate testStartDate;
@@ -21,15 +21,15 @@ public class TestRequestDto implements Serializable {
     private String testType;
     private String testStatus;
     private String workType;
-    private String testCont;        // 테스트 내용 memberName;
+    private String testContent;        // 테스트 내용 memberName;
     private List<TestDetailRequestDto> testCaseList;
 
     public Map<String, Object> toMapWithoutTestCase() {
         Map<String, Object> map = new HashMap<>();
-        map.put("testNo", testNo);
+        map.put("testNumber", testNumber);
         map.put("testId", testId);
         map.put("testTitle", testTitle);
-        map.put("testCont", testCont);
+        map.put("testContent", testContent);
         map.put("testStatus", testStatus);
         map.put("testType", testType);
         map.put("testStartDate", testStartDate);

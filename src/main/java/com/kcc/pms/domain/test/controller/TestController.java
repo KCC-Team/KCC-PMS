@@ -1,7 +1,7 @@
 package com.kcc.pms.domain.test.controller;
 
 import com.kcc.pms.domain.test.domain.dto.TestRequestDto;
-import com.kcc.pms.domain.test.domain.vo.TestVO;
+import com.kcc.pms.domain.test.domain.dto.TestDto;
 import com.kcc.pms.domain.test.service.TestService;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
@@ -26,7 +26,7 @@ public class TestController {
 
     @GetMapping("/api/list")
     @ResponseBody
-    public ResponseEntity<List<TestVO>> findAll(
+    public ResponseEntity<List<TestDto>> findAll(
             HttpSession session,
             @RequestParam(value = "work", defaultValue = "0") Long work_no,
             @RequestParam(value = "test", defaultValue = "all") String test_type,
@@ -35,7 +35,7 @@ public class TestController {
 //        Integer prj_no = (int) session.getAttribute("prjNo");
         Long prj_no = 1L;
         System.out.print(page);
-        List<TestVO> testList = testService.getTestList(prj_no, work_no, test_type, status, page);
+        List<TestDto> testList = testService.getTestList(prj_no, work_no, test_type, status, page);
         return ResponseEntity.ok().body(testList);
     }
 

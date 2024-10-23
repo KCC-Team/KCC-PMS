@@ -2,7 +2,7 @@ package com.kcc.pms.domain.test.service;
 
 import com.kcc.pms.domain.test.domain.dto.TestDetailRequestDto;
 import com.kcc.pms.domain.test.domain.dto.TestRequestDto;
-import com.kcc.pms.domain.test.domain.vo.TestVO;
+import com.kcc.pms.domain.test.domain.dto.TestDto;
 import com.kcc.pms.domain.test.mapper.TestMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -27,11 +27,11 @@ public class TestServiceImpl implements TestService {
     private final static int LIMIT = 10;
 
     @Override
-    public List<TestVO> getTestList(Long prj_no, Long work_no, String test_type, String status, int page) {
+    public List<TestDto> getTestList(Long projectNumber, Long workNumber, String testType, String status, int page) {
         Map<String, Object> parameters = new HashMap<>();
-        parameters.put("prj_no", prj_no);
-        parameters.put("work_no", work_no);
-        parameters.put("test_type", test_type);
+        parameters.put("projectNumber", projectNumber);
+        parameters.put("workNumber", workNumber);
+        parameters.put("testType", testType);
         parameters.put("status", status);
         parameters.put("page", page);
         parameters.put("limit", LIMIT);
@@ -47,7 +47,7 @@ public class TestServiceImpl implements TestService {
 
             // 테스트 정보 저장 (테스트 헤더 정보)
             Map<String, Object> testReqMapWithoutTestCase = testReq.toMapWithoutTestCase();
-            testReqMapWithoutTestCase.put("prj_no", 1);
+            testReqMapWithoutTestCase.put("projectNumber", 1);
 
             int isPass = mapper.saveTest(testReqMapWithoutTestCase);
             if (isPass == 0) {
@@ -57,7 +57,7 @@ public class TestServiceImpl implements TestService {
             // 테스트 케이스 리스트를 반복하면서 배치 처리
             for (TestDetailRequestDto detail : testReq.getTestCaseList()) {
                 Map<String, Object> map = detail.toUnitMap();
-                map.put("testNo", testReqMapWithoutTestCase.get("testNo"));
+                map.put("testNumber", testReqMapWithoutTestCase.get("testNumber"));
 
                 // 개별 테스트 케이스 삽입
                 mapper.saveUnitTestDetails(map);

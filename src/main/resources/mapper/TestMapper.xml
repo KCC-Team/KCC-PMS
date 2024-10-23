@@ -4,32 +4,32 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.kcc.pms.domain.test.mapper.TestMapper">
-    <resultMap id="testVO" type="TestVO">
-        <result property="testType" column="test_type" />
-        <result property="testTitle" column="test_title" />
-        <result property="workTitle" column="work_title" />
-        <result property="testPeriod" column="test_period" />
-        <result property="testCaseCount" column="detail_count" />
-        <result property="defectCount" column="defect_count" />
-        <result property="testStatus" column="test_status" />
-        <association property="testItem" column="test_item">
-            <id property="test_no" column="test_no" />
-            <result property="test_id" column="test_id" />
+    <resultMap id="testDto" type="testDto">
+        <result property="testType" column="testType" />
+        <result property="testTitle" column="testTitle" />
+        <result property="workTitle" column="workTitle" />
+        <result property="testPeriod" column="testPeriod" />
+        <result property="detailCount" column="detailCount" />
+        <result property="defectCount" column="defectCount" />
+        <result property="testStatus" column="testStatus" />
+        <association property="testItem" column="testItem">
+            <id property="testNumber" column="testNumber" />
+            <result property="testId" column="testId" />
         </association>
     </resultMap>
 
     <resultMap id="TestDetailResultMap" type="TestDetailRequestDto">
-        <id property="testDtlId" column="testDtlId"/>
-        <result property="preCondition" column="preCondition"/>
-        <result property="testCaseCont" column="testCaseCont"/>
-        <result property="preoceedCont" column="preoceedCont"/>
+        <id property="testDetailId" column="testDtlId"/>
         <result property="testData" column="testData"/>
         <result property="estimatedResult" column="estimatedRlt"/>
+        <result property="testDetailContent" column="testDetailContent"/>
+        <result property="progressContent" column="progressContent"/>
+        <result property="preCondition" column="preCondition"/>
         <result property="note" column="note"/>
     </resultMap>
 
     <resultMap id="TestRequestResultMap" type="TestRequestDto">
-        <id property="testNo" column="testNo"/>
+        <id property="testNumber" column="testNumber"/>
         <result property="testTitle" column="testTitle"/>
         <result property="testId" column="testId"/>
         <result property="testStartDate" column="testStartDate"/>
@@ -37,26 +37,26 @@
         <result property="testType" column="testType"/>
         <result property="testStatus" column="testStatus"/>
         <result property="workType" column="workType"/>
-        <result property="testCont" column="testCont"/>
+        <result property="testContent" column="testCont"/>
         <result property="memberName" column="memberName"/>
         <collection property="testCaseList" resultMap="TestDetailResultMap"/>
     </resultMap>
 
-    <select id="findAllByOptions" parameterType="map" resultMap="testVO">
+    <select id="findAllByOptions" parameterType="map" resultMap="testDto">
         SELECT *
         FROM (
         SELECT sub.*, ROWNUM rn
         FROM (
         SELECT
-        t.test_no AS test_no,
-        t.test_id AS test_id,
-        TRIM(cd_type.cd_dtl_nm) AS test_type,
-        t.test_title,
-        sys_work.sys_ttl AS work_title,
-        TO_CHAR(t.test_st_dt, 'YYYY-MM-DD') || ' ~ ' || TO_CHAR(t.test_end_dt, 'YYYY-MM-DD') AS test_period,
-        COUNT(DISTINCT td.test_dtl_no) AS detail_count,
-        COUNT(d.df_no) AS defect_count,
-        TRIM(cd_stat.cd_dtl_nm) AS test_status
+        t.test_no AS testNumber,
+        t.test_id AS testId,
+        TRIM(cd_type.cd_dtl_nm) AS testType,
+        t.test_title AS testTitle,
+        sys_work.sys_ttl AS workTitle,
+        TO_CHAR(t.test_st_dt, 'YYYY-MM-DD') || ' ~ ' || TO_CHAR(t.test_end_dt, 'YYYY-MM-DD') AS testPeriod,
+        COUNT(DISTINCT td.test_dtl_no) AS detailCount,
+        COUNT(d.df_no) AS defectCount,
+        TRIM(cd_stat.cd_dtl_nm) AS testStatus
         FROM testmaster t
         LEFT JOIN testdetail td ON t.test_no = td.test_no
         LEFT JOIN codedetail cd_type ON t.type_cd = cd_type.cd_dtl_no
@@ -65,11 +65,11 @@
         LEFT JOIN system sys_work ON sys_work.sys_no = t.sys_work_no
         WHERE t.prj_no = 1
         AND t.use_yn = 'Y'
-        <if test="work_no != 0">
-            AND t.sys_work_no = #{work_no, jdbcType=INTEGER}
+        <if test="workNumber != 0">
+            AND t.sys_work_no = #{workNumber, jdbcType=INTEGER}
         </if>
-        <if test="test_type != 'all'">
-            AND t.type_cd = #{test_type, jdbcType=CHAR}
+        <if test="testType != 'all'">
+            AND t.type_cd = #{testType, jdbcType=CHAR}
         </if>
         <if test="status != 'all'">
             AND t.stat_cd = #{status, jdbcType=CHAR}
@@ -83,7 +83,7 @@
         ]]>
         )
         WHERE rn > (#{page} - 1) * #{limit}
-        ORDER BY test_no
+        ORDER BY testNumber
     </select>
 
     <insert id="saveTest" parameterType="map">
@@ -95,10 +95,10 @@
         (test_no, test_id, test_title, test_cont, stat_cd, type_cd,
         test_st_dt, test_end_dt, prj_no, sys_work_no, reg_id, reg_dt, use_yn)
         VALUES
-        (#{testNo, jdbcType=INTEGER}, #{testId, jdbcType=VARCHAR}, #{testTitle, jdbcType=VARCHAR},
-        #{testCont, jdbcType=VARCHAR}, #{testStatus, jdbcType=CHAR},
+        (#{testNumber, jdbcType=INTEGER}, #{testId, jdbcType=VARCHAR}, #{testTitle, jdbcType=VARCHAR},
+        #{testContent, jdbcType=VARCHAR}, #{testStatus, jdbcType=CHAR},
         #{testType, jdbcType=CHAR}, #{testStartDate, jdbcType=DATE}, #{testEndDate, jdbcType=DATE},
-        #{prj_no, jdbcType=INTEGER}, #{workType, jdbcType=INTEGER},
+        #{projectNumber, jdbcType=INTEGER}, #{workType, jdbcType=INTEGER},
         'admin',
         sysdate, 'Y')
     </insert>
@@ -112,7 +112,7 @@
             test_data,
             estimated_rlt,
             test_detail_cont,
-            proceed_cont,
+            progress_cont,
             pre_cond,
             note,
             test_no
@@ -120,21 +120,21 @@
         VALUES
             (
                 SEQ_TESTDETAIL.nextval,
-                #{testDtlId, jdbcType=VARCHAR},
-                #{wrkProcCont, jdbcType=VARCHAR},
+                #{testDetailId, jdbcType=VARCHAR},
+                #{workProcessContent, jdbcType=VARCHAR},
                 #{testData, jdbcType=VARCHAR},
                 #{estimatedResult, jdbcType=VARCHAR},
-                #{testCaseCont, jdbcType=VARCHAR},
-                #{preoceedCont, jdbcType=VARCHAR},
+                #{testDetailContent, jdbcType=VARCHAR},
+                #{progressContent, jdbcType=VARCHAR},
                 #{preCondition, jdbcType=VARCHAR},
                 #{note, jdbcType=VARCHAR},
-                #{testNo, jdbcType=INTEGER}
+                #{testNumber, jdbcType=INTEGER}
             )
     </insert>
 
     <select id="getUnitTest" parameterType="long" resultMap="TestRequestResultMap">
         select
-            t.test_no as testNo,
+            t.test_no as testNumber,
             t.test_title AS testTitle,
             t.test_id AS testId,
             t.test_st_dt AS testStartDate,
@@ -145,10 +145,10 @@
             t.test_cont AS testCont,
 --             m.mem_nm AS memberName,
             f.feat_title AS featureName,
-            td.test_dtl_no AS testDtlId,
+            td.test_dtl_id AS testDtlId,
             td.pre_cond AS preCondition,
-            td.test_detail_cont AS testCaseCont,
-            td.proceed_cont AS preoceedCont,
+            td.test_detail_cont AS testDetailContent,
+            td.progress_cont AS progressContent,
             td.test_data AS testData,
             td.estimated_rlt AS estimatedResult,
             td.note AS note
@@ -161,11 +161,11 @@
                  left join member m ON m.mem_no = td.mem_no
                  left join featureTest ft ON ft.test_dtl_no = td.test_dtl_no
                  left join feature f ON f.feat_no = ft.feat_no
-        where t.test_no = #{testNo, jdbcType=INTEGER}
+        where t.test_no = #{testNumber, jdbcType=INTEGER}
         order by td.test_dtl_no
     </select>
 
     <update id="deleteTest" parameterType="long">
-        update testmaster t set t.use_yn = 'N' where test_no = #{testNo, jdbcType=INTEGER}
+        update testmaster t set t.use_yn = 'N' where test_no = #{testNumber, jdbcType=INTEGER}
     </update>
 </mapper>
