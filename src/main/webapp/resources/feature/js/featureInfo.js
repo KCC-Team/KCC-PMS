@@ -19,32 +19,29 @@ $(document).ready(function (){
 
 
     $(".btn-save-feature").on("click", function (e) {
-        e.preventDefault(); 
-        const formDataArray = $("#feat_form").serializeArray();
+        e.preventDefault();
+        const formData = $("#feat_form").serializeArray();
         const formDataObject = {};
 
-        formDataArray.forEach(function(item) {
+        formData.forEach(function(item) {
             formDataObject[item.name] = item.value;
         });
 
         console.log("Form Data:", formDataObject);
 
 
-        // $.ajax({
-        //     type: "POST",
-        //     url: "/your-server-endpoint", // 서버의 실제 엔드포인트로 변경
-        //     data: formData,
-        //     success: function (response) {
-        //         // 서버 응답이 성공적일 때 수행할 작업
-        //         alert("저장이 완료되었습니다.");
-        //         // 추가적으로 모달 닫기 또는 화면 새로고침 등 필요시 작성
-        //     },
-        //     error: function (xhr, status, error) {
-        //         // 에러가 발생할 때 수행할 작업
-        //         alert("저장 중 문제가 발생했습니다. 다시 시도해주세요.");
-        //         console.log(xhr, status, error);
-        //     }
-        // });
+        $.ajax({
+            type: "POST",
+            url: "/projects/features",
+            data: formData,
+            success: function (response) {
+                alert("저장이 완료되었습니다.");
+            },
+            error: function (xhr, status, error) {
+                alert("저장 중 문제가 발생했습니다. 다시 시도해주세요.");
+                console.log(xhr, status, error);
+            }
+        });
     });
 
 })

@@ -162,18 +162,19 @@ CREATE TABLE Feature (
     feat_id	VARCHAR2(20) NOT NULL,
     feat_title VARCHAR2(100) NOT NULL,
     feat_cont VARCHAR2(500) NOT NULL,
-    pre_st_dt DATE NOT NULL,
-    pre_end_dt DATE NOT NULL,
+    pre_st_dt DATE NULL,
+    pre_end_dt DATE NULL,
     st_dt DATE NULL,
     end_dt DATE NULL,
     stat_cd CHAR(8) NOT NULL,
     pri_cd CHAR(8) NOT NULL,
     prg	NUMBER NOT NULL,
     diff_cd CHAR(8) NOT NULL,
+    class_cd CHAR(8) NULL,
     use_yn VARCHAR2(1) NOT NULL,
     sys_no NUMBER NULL,
-    mem_no NUMBER NOT NULL,
-    tm_no NUMBER NOT NULL,
+    mem_no NUMBER  NULL,
+    tm_no NUMBER  NULL,
     prj_no NUMBER NOT NULL
 );
 
@@ -490,6 +491,8 @@ ALTER TABLE Feature ADD CONSTRAINT FK_Code_To_Feature_2 FOREIGN KEY(
                                                                     pri_cd) REFERENCES CodeDetail (cd_dtl_no);
 ALTER TABLE Feature ADD CONSTRAINT FK_Code_To_Feature_3 FOREIGN KEY(
                                                                     diff_cd) REFERENCES CodeDetail (cd_dtl_no);
+ALTER TABLE Feature ADD CONSTRAINT FK_Code_To_Feature_4 FOREIGN KEY(
+                                                                    class_cd) REFERENCES CodeDetail (cd_dtl_no);
 ALTER TABLE Request ADD CONSTRAINT FK_Code_To_Request_1 FOREIGN KEY(
                                                                     stat_cd) REFERENCES CodeDetail (cd_dtl_no);
 ALTER TABLE Request ADD CONSTRAINT FK_Code_To_Request_2 FOREIGN KEY(
