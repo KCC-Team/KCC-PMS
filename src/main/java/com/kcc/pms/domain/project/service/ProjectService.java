@@ -1,9 +1,7 @@
 package com.kcc.pms.domain.project.service;
 
-import com.kcc.pms.domain.project.model.dto.CombinedProjectResponseDto;
-import com.kcc.pms.domain.project.model.dto.Criteria;
-import com.kcc.pms.domain.project.model.dto.ProjectRequestDto;
-import com.kcc.pms.domain.project.model.dto.ProjectResponseDto;
+import com.kcc.pms.domain.project.model.dto.*;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -14,4 +12,5 @@ public interface ProjectService {
     int getProjectCount(ProjectRequestDto prjReqDto);
     CombinedProjectResponseDto findByProject(Long prj_no);
     List<ProjectResponseDto> getCommonProjectList(String login_id);
+    ProjectManagerResponseDto getAuthCode(Long prjNo, Long memNo);
 }

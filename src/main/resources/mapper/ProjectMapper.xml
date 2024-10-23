@@ -201,4 +201,12 @@
         order by P.prj_no desc
     </select>
 
+    <select id="getAuthCode" resultType="com.kcc.pms.domain.project.model.dto.ProjectManagerResponseDto">
+        select
+            prj_auth_cd as projectAuthCode
+        from projectmember
+        where prj_no = #{prjNo}
+        and mem_no = #{memNo}
+    </select>
+
 </mapper>

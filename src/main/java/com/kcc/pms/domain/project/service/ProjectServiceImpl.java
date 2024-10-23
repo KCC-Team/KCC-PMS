@@ -80,4 +80,9 @@ public class ProjectServiceImpl implements ProjectService {
     public List<ProjectResponseDto> getCommonProjectList(String login_id) {
         return projectMapper.getCommonProjectList(login_id);
     }
+
+    @Override
+    public ProjectManagerResponseDto getAuthCode(Long prjNo, Long memNo) {
+        return projectMapper.getAuthCode(prjNo, memNo);
+    }
 }

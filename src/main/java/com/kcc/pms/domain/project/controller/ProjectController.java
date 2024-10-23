@@ -1,14 +1,17 @@
 package com.kcc.pms.domain.project.controller;
 
+import com.kcc.pms.auth.PrincipalDetail;
 import com.kcc.pms.domain.project.model.dto.*;
 import com.kcc.pms.domain.project.service.ProjectService;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+
 
 @Controller
 @RequiredArgsConstructor
@@ -18,8 +21,8 @@ public class ProjectController {
     private final ProjectService projectService;
 
     @GetMapping("/list")
-    public String list(ProjectRequestDto prjReqDto, Criteria cri, Model model) {
-        String login_id = "user1"; // 회원아이디(세션정보)
+    public String list(ProjectRequestDto prjReqDto, Criteria cri, Model model, @AuthenticationPrincipal PrincipalDetail principalDetail) {
+        String login_id = principalDetail.getMember().getId(); // 회원아이디(세션정보)
         prjReqDto.setLogin_id(login_id);
 
         int total = projectService.getProjectCount(prjReqDto);
@@ -44,10 +47,15 @@ public class ProjectController {
     }
 
     @GetMapping("/dashboardInfo")
-    public String dashboard(@RequestParam Long prjNo, @RequestParam String prjTitle, HttpSession session) {
+    public String dashboard(@RequestParam Long prjNo, @RequestParam String prjTitle, HttpSession session, @AuthenticationPrincipal PrincipalDetail principalDetail) {
         if (prjNo > 0 && prjTitle != null) {
+            Long memNo = principalDetail.getMember().getMemNo();
+            ProjectManagerResponseDto pmDto = projectService.getAuthCode(prjNo, memNo);
+            String authCode = pmDto.getProjectAuthCode();
+
             session.setAttribute("prjNo", prjNo);
             session.setAttribute("prjTitle", prjTitle);
+            session.setAttribute("authCode", authCode);
         }
 
         return "/project/dashboard";
@@ -56,7 +64,7 @@ public class ProjectController {
     @GetMapping("/api/project")
     @ResponseBody
     public ResponseEntity<CombinedProjectResponseDto> info(HttpSession session) {
-        Long prjNo = (Long)session.getAttribute("prjNo");
+        Long prjNo = (Long)session.getAttribute("prjNo"); // 프로젝트번호(세션정보)
         CombinedProjectResponseDto projectInfo = projectService.findByProject(prjNo);
         
         return ResponseEntity.ok(projectInfo);
@@ -64,11 +72,10 @@ public class ProjectController {
 
     @PostMapping("/api/project")
     @ResponseBody
-    public ResponseEntity<String> saveProject(ProjectRequestDto project, HttpSession session) {
-        String login_id = "user1"; // 회원아이디(세션정보)
+    public ResponseEntity<String> saveProject(ProjectRequestDto project, HttpSession session, @AuthenticationPrincipal PrincipalDetail principalDetail) {
+        String login_id = principalDetail.getMember().getId(); // 회원아이디(세션정보)
+        Long prjNo = (Long)session.getAttribute("prjNo"); // 프로젝트번호(세션정보)
         project.setReg_id(login_id);
-
-        Long prjNo = (Long)session.getAttribute("prjNo");
         project.setPrj_no(prjNo);
 
         try {
@@ -85,9 +92,9 @@ public class ProjectController {
 
     @PutMapping("/api/project")
     @ResponseBody
-    public ResponseEntity<String> updateProject(ProjectRequestDto project, HttpSession session) {
-        Long prjNo = (Long)session.getAttribute("prjNo");
-        String login_id = "user1"; // 회원아이디(세션정보)
+    public ResponseEntity<String> updateProject(ProjectRequestDto project, HttpSession session, @AuthenticationPrincipal PrincipalDetail principalDetail) {
+        Long prjNo = (Long)session.getAttribute("prjNo"); // 프로젝트번호(세션정보)
+        String login_id = principalDetail.getMember().getId(); // 회원아이디(세션정보)
         project.setMod_id(login_id);
 
         try {

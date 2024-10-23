@@ -1,5 +1,6 @@
 package com.kcc.pms.domain.wbs.controller;
 
+import com.kcc.pms.auth.PrincipalDetail;
 import com.kcc.pms.domain.project.model.dto.CombinedProjectResponseDto;
 import com.kcc.pms.domain.project.model.dto.ProjectRequestDto;
 import com.kcc.pms.domain.team.model.dto.TeamOrderUpdateRequestDto;
@@ -11,9 +12,11 @@ import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
 import java.util.List;
 
 @Controller
@@ -65,8 +68,8 @@ public class WbsController {
 
     @PostMapping("/api/wbs")
     @ResponseBody
-    public ResponseEntity<String> saveWbs(WbsRequestDto wbs, HttpSession session) {
-        String login_id = "user1"; // 회원아이디(세션정보)
+    public ResponseEntity<String> saveWbs(WbsRequestDto wbs, HttpSession session, @AuthenticationPrincipal PrincipalDetail principalDetail) {
+        String login_id = principalDetail.getMember().getId(); // 회원아이디(세션정보)
         Long prjNo = (Long) session.getAttribute("prjNo"); // 프로젝트번호(세션정보)
         wbs.setReg_id(login_id);
         wbs.setPrj_no(prjNo);
