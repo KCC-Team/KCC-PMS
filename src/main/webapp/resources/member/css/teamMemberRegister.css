@@ -22,7 +22,7 @@
 
 #jstree-container {
     position: relative;
-    height: 530px !important;
+    height: 530px;
     width: 300px;
     border: 1px solid black;
     display: flex;
