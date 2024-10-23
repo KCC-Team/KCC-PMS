@@ -58,7 +58,8 @@
             </div>
 
 
-            <div class="memberList-title-area added-title">
+
+            <div class="memberList-title-area added-title" id="addedContainer">
                 <div>
                     <h3 class="group-name">추가 인원</h3>
                 </div>

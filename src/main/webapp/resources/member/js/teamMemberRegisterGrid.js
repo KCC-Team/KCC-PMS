@@ -10,25 +10,62 @@ $(document.body).ready(function () {
 
     console.log(prjNo);
 
-    $('#project_member_total').on('click', function() {
-        $('#add-member-by-prjmem').show();
-        $('#add-member-by-group').hide();
+    let typeValue = urlParams.get('type');
+    console.log("typeValue = " + typeValue);
 
-        let $table =  $('#add-member-by-group').find('#y-added-grid');
-        $('#grid-parent2').append($table);
-    });
+    if(typeValue === 'feature'){
+        $('#grid-parent3').hide();
+        $('#grid-parent').css('height', '250px');
+        $('.member-add-button').on('click', function() {
+            console.log("feature에서 불러운 경우 추가버튼 클릭");
+            let selectedMember;
+            selectedMember = team_reg_groupmemGrid.getList("selected");
+            console.log("selectedMember = " + selectedMember);
 
-    $('#group_total').on('click', function() {
-        $('#add-member-by-group').show();
-        $('#add-member-by-prjmem').hide();
+            if (selectedMember.length > 1) {
+                alert("1명만 선택 가능합니다.");
+                return;
+            }
 
-        let $table =  $('#grid-parent2').find('#y-added-grid');
-        $('#grid-parent3').append($table);
-    });
+            if (window.opener) {
+                window.opener.postMessage({ type: 'featureMember', member: selectedMember }, "*");
+                window.close();
+            } else {
+                console.log("부모 페이지가 없습니다.");
+            }
+        });
+    } else {
+        // 멤버 추가 버튼
+        $('.member-add-button').on('click', function() {
+            let selectedMembers;
 
 
+            selectedMembers = team_reg_groupmemGrid.getList("selected");
+            team_reg_groupmemGrid.clearSelect();
 
 
+            selectedMembers.forEach(member => {
+                console.log("추가된 멤버 : " + JSON.stringify(member, null, 2));
+
+                let exists = addedMembers.some(m => m.id === member.id);
+                if (!exists) {
+                    addedMembers.push({
+                        id: member.id,
+                        memberName: member.memberName,
+                        auth: member.auth ? member.auth : "",
+                        groupName: member.groupName,
+                        position: member.position,
+                        tech: member.tech,
+                        email: member.email,
+                        teamNo: member.teamNo
+                    });
+                    console.log("addedMembers = " + addedMembers);
+                }
+            });
+
+            updateAddedGrid(); // 추가된 멤버들을 그리드에 반영
+        });
+    }
 
     //멤버 제거 버튼
     $('.member-remove-button').on('click', function() {
@@ -40,53 +77,21 @@ $(document.body).ready(function () {
         // reg_addedGrid.clearSelector();
     });
 
-    // 멤버 추가 버튼
-    $('.member-add-button').on('click', function() {
-        let selectedMembers;
 
-
-        selectedMembers = team_reg_groupmemGrid.getList("selected");
-        team_reg_groupmemGrid.clearSelect();
-
-
-        selectedMembers.forEach(member => {
-            console.log("추가된 멤버 : " + JSON.stringify(member, null, 2));
-
-            let exists = addedMembers.some(m => m.id === member.id);
-            if (!exists) {
-                addedMembers.push({
-                    id: member.id,
-                    memberName: member.memberName,
-                    auth: member.auth ? member.auth : "",
-                    groupName: member.groupName,
-                    position: member.position,
-                    tech: member.tech,
-                    email: member.email,
-                    teamNo: member.teamNo
-                });
-                console.log("addedMembers = " + addedMembers);
-            }
-        });
-
-        updateAddedGrid(); // 추가된 멤버들을 그리드에 반영
-    });
 
 
     // 적용 버튼 클릭
     $(document).on('click', '.apply', function() {
         insertProject();
 
-        let typeValue = urlParams.get('type');
-        let pageValue = urlParams.get('page');
-        if (typeValue != 'project' && pageValue != 'wbs') {
-            //registerMember();
-        }
+        // let typeValue = urlParams.get('type');
+        // let pageValue = urlParams.get('page');
+        // if (typeValue != 'project' && pageValue != 'wbs') {
+        //     //registerMember();
+        // }
     });
 
     initGrid();
-
-    $('#add-member-by-prjmem').hide();
-
     checkProject();
 });
 

@@ -1,13 +1,14 @@
 package com.kcc.pms.domain.feature.controller;
 
 import com.kcc.pms.domain.common.model.dto.CommonCodeOptions;
+import com.kcc.pms.domain.feature.model.dto.FeatureCreateRequestDto;
 import com.kcc.pms.domain.feature.service.FeatureService;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -25,7 +26,7 @@ public class FeatureController {
 
     @GetMapping("/register")
     public String featureInfo(HttpSession session){
-        Integer prjNo = (Integer) session.getAttribute("prjNo");
+        Long prjNo = (Long) session.getAttribute("prjNo");
         System.out.println("prjNo = " + prjNo);
         return "feature/featureInfo";
     }
@@ -34,5 +35,24 @@ public class FeatureController {
     @ResponseBody
     public List<CommonCodeOptions> getOptions(){
         return service.getFeatureCommonCode();
+    }
+
+    @PostMapping()
+    @ResponseBody
+    public ResponseEntity<?> createFeature(FeatureCreateRequestDto requestDto, HttpSession session){
+        System.out.println("requestDto = " + requestDto);
+        //Object prjNo = session.getAttribute("prjNo");
+        //System.out.println("prjNo = " + prjNo);
+        Long prjNo = 1L;
+        requestDto.setPrjNo(prjNo);
+
+        Integer result = service.createFeature(requestDto);
+
+        if (result == null || result == 0) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("생성에 실패하였습니다.");
+        }
+
+        return ResponseEntity.status(HttpStatus.CREATED).body("성공적으로 생성되었습니다.");
+
     }
 }
