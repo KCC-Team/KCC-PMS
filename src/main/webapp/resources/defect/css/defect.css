@@ -78,7 +78,6 @@ td textarea {
     width: 250px;
     height: 150px;
     padding: 10px;
-    overflow-y: auto;
 }
 
 .file-zone_1 .dropzone, .file-zone_2 .dropzone {

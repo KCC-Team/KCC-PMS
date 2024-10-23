@@ -44,11 +44,10 @@
 <%@ page import="java.util.Map" %>
 
 <%
-    Map<Integer, String> tasks = new HashMap<>();
-    tasks.put(0, "선택");
-    tasks.put(1, "단위 테스트");
-    tasks.put(2, "통합 테스트");
-    request.setAttribute("tasks", tasks);
+    Map<String, String> typeCode = new HashMap<>();
+    typeCode.put("1", "단위 테스트");
+    typeCode.put("2", "통합 테스트");
+    request.setAttribute("typeCode", typeCode);
 %>
 
 <c:set var="type" value="${type}" />
@@ -64,7 +63,7 @@
         <span class="popup-title">결함 정보</span>
     </div>
     <section style="height: 600px">
-        <form id="defectForm" method="post" action="/projects/defects/defect">
+        <form id="defectForm">
             <div class="d-flex justify-content-left">
                 <div class="me-4" style="width: 550px !important;">
                     <table class="defect-table w-100">
@@ -76,8 +75,9 @@
                             <td class="td-title">업무 분류</td>
                             <td>
                                 <select name="work_type" class="type" required >
-                                    <c:forEach var="sys" items="${tasks}">
-                                        <option value="${sys.key}" ${sys.key == 0 ? 'selected' : ''}>${sys.value}</option>
+                                    <option value="" selected disabled>업무 분류 선택</option>
+                                    <c:forEach var="type" items="${typeCode}">
+                                        <option value="${type.key}">${type.value}</option>
                                     </c:forEach>
                                 </select>
                             </td>
@@ -168,7 +168,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="file-zone_2 mt-3">
+                    <div class="file-zone_2 mt-3" style="width: 500px">
                         <div class="file-section mt-3">
                             <div class="info-item d-flex flex-column align-items-start">
                                 <div class="mb-2"><label>결함 조치 첨부파일</label></div>

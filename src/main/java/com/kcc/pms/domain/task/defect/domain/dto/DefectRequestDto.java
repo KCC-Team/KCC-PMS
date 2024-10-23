@@ -11,6 +11,7 @@ public class DefectRequestDto {
     private String defect_ttl;
     private String defect_id;
     private String test_id;
+    private String work_type;
     private String defect_cont;
     private String discover_nm;
     private String discover_dt;
