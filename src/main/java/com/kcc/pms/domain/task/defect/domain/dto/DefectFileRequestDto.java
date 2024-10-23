@@ -5,12 +5,13 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
+import static lombok.AccessLevel.*;
+
 @Getter
 @Setter
-@NoArgsConstructor
+@NoArgsConstructor(access = PROTECTED)
 @AllArgsConstructor
-@ToString
 public class DefectFileRequestDto {
-    List<MultipartFile> dis_files;
-    List<MultipartFile> work_files;
+    List<MultipartFile> disFiles;
+    List<MultipartFile> workFiles;
 }

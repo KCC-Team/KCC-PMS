@@ -56,12 +56,12 @@ function uploadFiles(dropzone_dis, dropzone_work, $form) {
     let formData = new FormData($form);
     if (dis_files.length > 0) {
         dis_files.forEach(file => {
-            formData.append('dis_files', file);
+            formData.append('disFiles', file);
         });
     }
     if (work_files.length > 0) {
         work_files.forEach(file => {
-            formData.append('work_files', file);
+            formData.append('workFiles', file);
         });
     }
 
@@ -78,13 +78,14 @@ function uploadFiles(dropzone_dis, dropzone_work, $form) {
                     dropzone_dis.emit("complete", file);
                 });
             }
-
             if (work_files.length > 0) {
+
                 work_files.forEach(file => {
                     file.status = Dropzone.SUCCESS;
                     dropzone_work.emit("complete", file);
                 });
             }
+            window.location.href = response;
         },
         error: function(response) {
             console.error(response);

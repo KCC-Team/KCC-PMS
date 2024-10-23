@@ -1,4 +1,4 @@
-package com.kcc.pms.domain.test.domain.vo;
+package com.kcc.pms.domain.test.domain.dto;
 
 import lombok.*;
 
@@ -9,13 +9,13 @@ import static lombok.AccessLevel.*;
 @Getter
 @NoArgsConstructor(access = PROTECTED)
 @AllArgsConstructor
-public class TestVO implements Serializable {
+public class TestDto implements Serializable {
     private TestItem testItem;
     private String testType;
     private String testTitle;
     private String workTitle;
     private String testPeriod;
-    private Integer testCaseCount;
+    private Integer detailCount;
     private Integer defectCount;
     private String testStatus;
 
@@ -23,7 +23,7 @@ public class TestVO implements Serializable {
     @NoArgsConstructor(access = PROTECTED)
     @AllArgsConstructor
     private static class TestItem implements Serializable {
-        private Integer test_no;
-        private String test_id;
+        private Integer testNumber;
+        private String testId;
     }
 }

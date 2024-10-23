@@ -35,9 +35,10 @@ public class CommonServiceImpl implements CommonService {
 
     @Transactional
     @Override
-    public Long fileUpload(List<MultipartFile> files, Long prjNo, String fl_cd) {
+    public Long fileUpload(List<MultipartFile> files,
+                           Long projectNumber, String fileCode) {
         List<Map<String, Object>> fileList = new ArrayList<>();
-        FileMasterVO fileMasterVO = new FileMasterVO(fl_cd, "Y");
+        FileMasterVO fileMasterVO = new FileMasterVO(fileCode);
         Integer isSaved = fileMapper.saveFileMaster(fileMasterVO);
         if (isSaved != 1) {
             throw new RuntimeException("파일 업로드 중 오류가 발생했습니다.");
@@ -45,7 +46,7 @@ public class CommonServiceImpl implements CommonService {
 
         try {
             for (MultipartFile file : files) {
-                generateFileMapList(prjNo, file, fileMasterVO.getFl_ms_no(), fileList);
+                generateFileMapList(projectNumber, file, fileMasterVO.getFileMasterNumber(), fileList);
             }
             bulkSaveFiles(fileList);
         } catch (Exception e) {
@@ -53,26 +54,26 @@ public class CommonServiceImpl implements CommonService {
             throw new RuntimeException("파일 업로드 중 오류가 발생했습니다.");
         }
 
-        return fileMasterVO.getFl_ms_no();
+        return fileMasterVO.getFileMasterNumber();
     }
 
-    private void generateFileMapList(Long prjNo, MultipartFile file, Long fl_ms_no, List<Map<String, Object>> fileList) throws IOException {
+    private void generateFileMapList(Long projectNumber, MultipartFile file, Long fileMasterNumber, List<Map<String, Object>> files) throws IOException {
         Map<String, Object> map = new HashMap<>();
-        map.put("original_ttl", file.getOriginalFilename());
+        map.put("originalTitle", file.getOriginalFilename());
         String fileName = UUID.randomUUID().toString();
-        map.put("file_type", file.getContentType());
-        map.put("file_size", file.getSize());
-        map.put("fl_ms_no", fl_ms_no);
-        map.put("reg_id", "홍길동");
-        map.put("file_path", awsS3Utils.saveFile(file, prjNo + "/" + fileName));
-        fileList.add(map);
+        map.put("fileType", file.getContentType());
+        map.put("fileSize", file.getSize());
+        map.put("fileMasterNumber", fileMasterNumber);
+        map.put("registerId", "홍길동");
+        map.put("filePath", awsS3Utils.saveFile(file, projectNumber + "/" + fileName));
+        files.add(map);
     }
 
-    private void bulkSaveFiles(List<Map<String, Object>> fileList) {
+    private void bulkSaveFiles(List<Map<String, Object>> files) {
         SqlSession sqlSession = sqlSessionFactory.openSession(ExecutorType.BATCH);
         try {
             FileMapper fileMapper = sqlSession.getMapper(FileMapper.class);
-            for (Map<String, Object> fileDetail : fileList) {
+            for (Map<String, Object> fileDetail : files) {
                 fileMapper.saveFileDetails(fileDetail);
             }
             sqlSession.flushStatements();

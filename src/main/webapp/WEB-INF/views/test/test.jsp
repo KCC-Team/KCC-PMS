@@ -5,29 +5,6 @@
 <link rel="stylesheet" type="text/css" href="../../../resources/common/css/ax5grid.css">
 <link rel="stylesheet" type="text/css" href="../../../resources/test/css/test.css">
 
-<!-- 샘플 데이터 -->
-<%@ page import="java.util.List" %>
-<%@ page import="java.util.ArrayList" %>
-<%@ page import="java.util.HashMap" %>
-<%@ page import="java.util.Map" %>
-
-<%--<%--%>
-<%--    // 데이터 목록 준비--%>
-<%--    List<String> tasks = new ArrayList<>();--%>
-<%--    tasks.add("");--%>
-<%--    tasks.add("연결 작업 1");--%>
-<%--    tasks.add("연결 작업 2");--%>
-<%--    tasks.add("연결 작업 3");--%>
-<%--    // JSP 페이지의 Attribute로 데이터 목록을 설정--%>
-<%--    request.setAttribute("tasks", tasks);--%>
-
-<%--    Map<Integer, String> testType = new HashMap<>();--%>
-<%--    testType.put(0, "");--%>
-<%--    testType.put(1, "단위 테스트");--%>
-<%--    testType.put(2, "통합 테스트");--%>
-<%--    request.setAttribute("testType", testType);--%>
-<%--%>--%>
-
 <c:set var="type" value="${type}" />
 <c:choose>
     <c:when test="${type eq 'register'}">
@@ -65,7 +42,7 @@
                     <div class="info-item ms-5">
                         <div class="d-flex justify-content-start">
                             <div class="me-4">
-                                <input type="hidden" name="testNo" id="testNo" value="${testReq.testNo}" >
+                                <input type="hidden" name="testNo" id="testNo" value="${testReq.testNumber}" >
                                 <div class="d-flex justify-content-start"><label>테스트 명&nbsp;&nbsp;&nbsp;<span class="es-star">*</span></label></div>
                                 <input type="text" name="testTitle" value="${testReq.testTitle}" required ${disabled} >
                             </div>&nbsp;&nbsp;&nbsp;
@@ -133,24 +110,6 @@
                         </div>
                         <br>
                         <div class="d-flex justify-content-start">
-                            <div class="me-4">
-                                <div class="d-flex justify-content-start"><label>시스템 분류</label></div>
-                                <select name="systemType" id="systemType" required ${disabled}>
-                                    <c:forEach var="type" items="${systemType}">
-                                        <c:choose>
-                                            <c:when test="${type.value == testReq.systemType}">
-                                                <option value="${type.key}" selected>${type.value}</option>
-                                            </c:when>
-                                            <c:when test="${type.key == 0}">
-                                                <option value="${type.key}" selected disabled>${type.value}</option>
-                                            </c:when>
-                                            <c:otherwise>
-                                                <option value="${type.key}">${type.value}</option>
-                                            </c:otherwise>
-                                        </c:choose>
-                                    </c:forEach>
-                                </select>
-                            </div>
                             <div class="ms-4 me-4">
                                 <div class="d-flex justify-content-start"><label>업무 구분</label></div>
                                 <select name="workType" id="workType" required ${disabled}>
@@ -174,7 +133,7 @@
                         <div class="d-flex justify-content-start">
                             <div class="me-4">
                                 <div class="d-flex justify-content-start"><label>테스트 설명&nbsp;&nbsp;&nbsp;<span class="es-star">*</span></label></div>
-                                <textarea id="test-txt" name="testCont" required ${disabled} >${testReq.testCont}</textarea>
+                                <textarea id="test-txt" name="testCont" required ${disabled} >${testReq.testContent}</textarea>
                                 <div class="word-count">0 / 500</div>
                             </div>
                         </div>
