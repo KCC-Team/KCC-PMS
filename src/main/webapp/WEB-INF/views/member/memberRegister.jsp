@@ -35,8 +35,8 @@
 <%--</div>--%>
 
 <div class="tab-container">
-    <button class="tab-btn active" id="group_total" onclick="openTab(event)">조직도에서 찾기</button>
-    <button class="tab-btn" id="project_member_total" onclick="openTab(event)">목록으로 찾기</button>
+    <button class="tab-btn active" id="group_total" onclick="openTab(this)">조직도에서 찾기</button>
+    <button class="tab-btn" id="project_member_total" onclick="openTab(this)">목록으로 찾기</button>
 </div>
 
 <div id="add-member-by-group">

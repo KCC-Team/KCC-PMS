@@ -523,17 +523,10 @@ function closePopupAndUpdateParent() {
 }
 
 
-function openTab(event, tabName) {
-    // 모든 탭 콘텐츠 숨기기
-    var tabContents = document.getElementsByClassName("tab-content");
-    for (var i = 0; i < tabContents.length; i++) {
-        tabContents[i].style.display = "none";
-        tabContents[i].classList.remove("active");
-    }
-
-    // 모든 탭 버튼의 active 클래스 제거
-    var tabBtns = document.getElementsByClassName("tab-btn");
-    for (var i = 0; i < tabBtns.length; i++) {
-        tabBtns[i].classList.remove("active");
-    }
+function openTab(selectedTab) {
+    var tabs = document.querySelectorAll('.tab-btn');
+    tabs.forEach(function(tab) {
+        tab.classList.remove('active');
+    });
+    selectedTab.classList.add('active');
 }

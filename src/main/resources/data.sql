@@ -271,20 +271,20 @@ CREATE TABLE Defect (
     df_id VARCHAR(20) NOT NULL,
     df_ttl VARCHAR2(100) NOT NULL,
     type_cd CHAR(3) NOT NULL,
-    stat_cd CHAR(3) NOT NULL,
-    pri_cd CHAR(3) NOT NULL,
-    df_cont VARCHAR2(500) NOT NULL,
-    df_fd_dt DATE NOT NULL,
-    due_dt DATE NULL,
-    compl_dt DATE NULL,
-    df_compl_cont VARCHAR2(500) NULL,
-    prj_no NUMBER NOT NULL,
-    sys_no NUMBER NULL,
-    test_dtl_no NUMBER NULL,
-    mem_fd_no NUMBER NOT NULL,
-    mem_act_no NUMBER NULL,
-    fl_ms_act_no NUMBER NULL,
-    fl_ms_fd_no NUMBER NULL
+    stat_cd CHAR(3) NOT NULL,               -- 결함상태
+    pri_cd CHAR(3) NOT NULL,                -- 우선순위
+    df_cont VARCHAR2(500) NOT NULL,         -- 결함내용
+    df_fd_dt DATE NOT NULL,                 -- 결함발견일
+    due_dt DATE NULL,                       -- 결함 조치 희망일
+    fl_ms_fd_no NUMBER NULL,                -- 결함첨부파일
+    work_dt DATE NULL,                      -- 결함조치일자
+    df_work_cont VARCHAR2(500) NULL,        -- 결함조치내용
+    fl_ms_work_no NUMBER NULL,              -- 결함조치첨부파일
+    test_dtl_no NUMBER NULL,                -- 테스트상세번호
+    mem_fd_no NUMBER NOT NULL,              -- 결함발견자
+    mem_work_no NUMBER NULL,                -- 결함조치자
+    work_no NUMBER NULL,                    -- 업무 번호
+    prj_no NUMBER NOT NULL
 );
 
 CREATE TABLE FeatureTest (
@@ -394,7 +394,7 @@ ALTER TABLE Task ADD CONSTRAINT fk_tsk_prj_no_003 FOREIGN KEY (prj_no) REFERENCE
 
 ALTER TABLE TaskMember ADD CONSTRAINT pk_tsk_mem_no_001 PRIMARY KEY (mem_no, tm_no, tsk_no, prj_no);
 ALTER TABLE TaskMember ADD CONSTRAINT fk_tsk_mem_no_002 FOREIGN KEY (mem_no, tm_no, prj_no) REFERENCES ProjectMember (mem_no, tm_no, prj_no);
-ALTER TABLE TaskMember ADD CONSTRAINT fk_tsk_tsk_no_003 FOREIGN KEY (tsk_no) REFERENCES Task (tsk_no);
+ALTER TABLE TaskMember ADD CONSTRAINT fk_tsk_tsk_no_003 FOREIGN KEY (tsk_no) REFERENCES Task (tsk_no) ON DELETE CASCADE;
 
 ALTER TABLE Feature ADD CONSTRAINT pk_feat_no_001 PRIMARY KEY (feat_no);
 ALTER TABLE Feature ADD CONSTRAINT fk_feat_sys_no_002 FOREIGN KEY (sys_no) REFERENCES System (sys_no);
@@ -411,12 +411,10 @@ ALTER TABLE TestDetail ADD CONSTRAINT fk_td_test_par_test_dtl_no_004 FOREIGN KEY
 
 ALTER TABLE Defect ADD CONSTRAINT pk_df_no_001 PRIMARY KEY (df_no);
 ALTER TABLE Defect ADD CONSTRAINT fk_df_prj_no_002 FOREIGN KEY (prj_no) REFERENCES Project (prj_no);
-ALTER TABLE Defect ADD CONSTRAINT fk_df_sys_no_003 FOREIGN KEY (sys_no) REFERENCES System (sys_no);
+ALTER TABLE Defect ADD CONSTRAINT fk_df_work_no_003 FOREIGN KEY (work_no) REFERENCES System (sys_no);
 ALTER TABLE Defect ADD CONSTRAINT fk_df_test_dtl_no_004 FOREIGN KEY (test_dtl_no) REFERENCES TestDetail (test_dtl_no);
-ALTER TABLE Defect ADD CONSTRAINT fk_df_mem_fd_no_005 FOREIGN KEY (mem_fd_no) REFERENCES Member (mem_no);
-ALTER TABLE Defect ADD CONSTRAINT fk_df_mem_act_no_006 FOREIGN KEY (mem_act_no) REFERENCES Member (mem_no);
-ALTER TABLE Defect ADD CONSTRAINT fk_df_fl_ms_act_no_007 FOREIGN KEY (fl_ms_act_no) REFERENCES Member (mem_no);
-ALTER TABLE Defect ADD CONSTRAINT fk_df_fl_ms_fd_no_008 FOREIGN KEY (fl_ms_fd_no) REFERENCES Member (mem_no);
+ALTER TABLE Defect ADD CONSTRAINT fk_df_fl_ms_fd_no_005 FOREIGN KEY (fl_ms_fd_no) REFERENCES Member (mem_no);
+ALTER TABLE Defect ADD CONSTRAINT fk_df_fl_ms_work_no_006 FOREIGN KEY (fl_ms_work_no) REFERENCES Member (mem_no);
 
 ALTER TABLE FeatureTest ADD CONSTRAINT pk_ft_feat_test_no_001 PRIMARY KEY (feat_no, test_dtl_no);
 ALTER TABLE FeatureTest ADD CONSTRAINT fk_ft_feat_no_002 FOREIGN KEY (feat_no) REFERENCES Feature (feat_no);
@@ -981,11 +979,6 @@ INSERT INTO TestDetail (test_dtl_no, test_dtl_id, wrk_proc_cont, test_data, esti
 VALUES (seq_testdetail.nextval, 'TD002', '테스트상세2', '테스트상세2 내용', '테스트상세2 예상결과', '테스트상세2 내용', '2021-01-01', 'PMS01401', '테스트상세2 진행내용', '테스트상세2 사전조건', '테스트상세2 비고', 1, NULL, 1);
 INSERT INTO TestDetail (test_dtl_no, test_dtl_id, wrk_proc_cont, test_data, estimated_rlt, test_detail_cont, test_st_dt, test_result_cd, proceed_cont, pre_cond, note, mem_no, par_test_dtl_no, test_no)
 VALUES (seq_testdetail.nextval, 'TD003', '테스트상세3', '테스트상세3 내용', '테스트상세3 예상결과', '테스트상세3 내용', '2021-01-01', 'PMS01401', '테스트상세3 진행내용', '테스트상세3 사전조건', '테스트상세3 비고', 1, NULL, 3);
-
--- INSERT INTO Defect (df_no, df_id, df_ttl, type_cd, stat_cd, pri_cd, df_cont, df_fd_dt, due_dt, compl_dt, df_compl_cont, prj_no, sys_no, test_dtl_no, mem_fd_no, mem_act_no)
--- VALUES (seq_defect.nextval, 'D001', '결함1', '001', '001', '001', '결함1 내용', '2021-01-01', '2021-01-01', '2021-01-01', '결함1 해결내용', 'PMS00801', 1, 1, 1, 1);
--- INSERT INTO Defect (df_no, df_id, df_ttl, type_cd, stat_cd, pri_cd, df_cont, df_fd_dt, due_dt, compl_dt, df_compl_cont, prj_no, sys_no, test_dtl_no, mem_fd_no, mem_act_no)
--- VALUES (seq_defect.nextval, 'D002', '결함2', '001', '001', '001', '결함2 내용', '2021-01-01', '2021-01-01', '2021-01-01', '결함2 해결내용', 'PMS00801', 1, 1, 1, 1);
 
 INSERT INTO FeatureTest (feat_no, test_dtl_no) VALUES (1, 1);
 INSERT INTO FeatureTest (feat_no, test_dtl_no) VALUES (2, 1);

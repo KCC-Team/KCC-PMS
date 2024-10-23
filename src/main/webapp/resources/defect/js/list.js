@@ -79,6 +79,11 @@ $(function () {
 
     $(document).on('click', '.defect-id', function(e) {
         e.preventDefault();
-       let popup = window.open($(this).attr('href'), 'popup', 'width=1100, height=677');
+       let popup = window.open($(this).attr('href'), 'popup', 'width=1100, height=730');
+    });
+
+    $(document).on('click', '.add-defect', function(e) {
+        e.preventDefault();
+        let popup = window.open('/projects/defects/defect', 'popup', 'width=1100, height=730');
     });
 });

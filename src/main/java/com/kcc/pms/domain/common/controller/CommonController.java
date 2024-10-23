@@ -31,7 +31,7 @@ public class CommonController {
 
 
     @GetMapping("/commonProjectInfo")
-    public String getCommonProject(@RequestParam Integer prjNo, @RequestParam String prjTitle,
+    public String getCommonProject(@RequestParam Long prjNo, @RequestParam String prjTitle,
                                    HttpSession session, HttpServletRequest request) {
         session.setAttribute("prjNo", prjNo);
         session.setAttribute("prjTitle", prjTitle);
@@ -41,8 +41,6 @@ public class CommonController {
         if (referer == null || referer.isEmpty()) {
             referer = "/projects/dashboard"; // 기본 경로 설정
         }
-
-        System.out.println("referer = " + referer);
 
         return "redirect:" + referer;
     }
@@ -57,7 +55,6 @@ public class CommonController {
     @GetMapping("/getCommonCodeList")
     @ResponseBody
     public List<CommonCodeSelectListResponseDto> getCommonCodeList(@RequestParam("commonCodeNo") String commonCodeNo) {
-        System.out.println(commonCodeNo);
         return commonService.getCommonCodeSelectList(commonCodeNo);
     }
 

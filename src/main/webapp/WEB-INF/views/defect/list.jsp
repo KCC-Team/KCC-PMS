@@ -3,7 +3,7 @@
 <%@ include file="../common.jsp" %>
 <%--<link rel="stylesheet" type="text/css" href="https://cdn.rawgit.com/ax5ui/ax5ui-grid/master/dist/ax5grid.css">--%>
 <link rel="stylesheet" type="text/css" href="../../../resources/common/css/ax5grid.css">
-<link rel="stylesheet" type="text/css" href="../../../resources/test/css/list.css">
+<link rel="stylesheet" type="text/css" href="../../../resources/defect/css/list.css">
 
 <!-- 샘플 데이터 -->
 <%@ page import="java.util.List" %>
@@ -29,38 +29,36 @@
             <section>
                 <div>
                     <div class="filter-section">
-                        <div class="d-flex align-items-center" style="width: 100%">
-                            <div class="me-4 d-flex justify-content-left align-items-center">
-                                시스템 분류&nbsp;&nbsp;&nbsp;
-                                <label>
-                                    <select name="taskSelect" class="form-select">
-                                        <c:forEach var="task" items="${tasks}">
-                                            <option value="${task}">${task}</option>
-                                        </c:forEach>
-                                    </select>
-                                </label>
-                            </div>
-                            <div class="me-4 d-flex justify-content-left align-items-center">
-                                결함 분류&nbsp;&nbsp;&nbsp;
-                                <label>
-                                    <select name="taskSelect" class="form-select">
-                                        <c:forEach var="task" items="${tasks}">
-                                            <option value="${task}">${task}</option>
-                                        </c:forEach>
-                                    </select>
-                                </label>
-                            </div>
-                            <input type="text" class="form-control" id="searchTest" placeholder="결함 검색하세요." style="height: 40px; width: 215px;">&nbsp;&nbsp;
-                            <button id="test-search-btn" class="custom-button d-flex align-items-center me-3 text-nowrap">&nbsp;&nbsp;&nbsp;&nbsp;검색&nbsp;&nbsp;&nbsp;&nbsp;</button>
-                            <div class="action-buttons d-flex justify-content-end">
-                                <a class="d-flex align-items-center text-nowrap">
-                                    <button class="add-item">
-                                        <i class="fas fa-plus"></i>&nbsp;&nbsp;결함 등록</button>
-                                </a>
-                                <a href="#">
-                                    <button class="danger-export-excel"><i class="fa-solid fa-download"></i> 액셀받기</button>
-                                </a>
-                            </div>
+                        <div class="me-4 d-flex justify-content-left align-items-center">
+                            시스템 분류&nbsp;&nbsp;&nbsp;
+                            <label>
+                                <select name="taskSelect">
+                                    <c:forEach var="task" items="${tasks}">
+                                        <option value="${task}">${task}</option>
+                                    </c:forEach>
+                                </select>
+                            </label>
+                        </div>
+                        <div class="me-4 d-flex justify-content-left align-items-center">
+                            결함 분류&nbsp;&nbsp;&nbsp;
+                            <label>
+                                <select name="taskSelect">
+                                    <c:forEach var="task" items="${tasks}">
+                                        <option value="${task}">${task}</option>
+                                    </c:forEach>
+                                </select>
+                            </label>
+                        </div>
+                        <input type="text" class="form-control" id="searchTest" placeholder="결함 검색하세요." style="height: 40px; width: 215px;">&nbsp;&nbsp;
+                        <button id="test-search-btn" class="save-btn-df d-flex align-items-center me-3 text-nowrap">&nbsp;&nbsp;&nbsp;&nbsp;검색&nbsp;&nbsp;&nbsp;&nbsp;</button>
+                        <div class="action-buttons d-flex justify-content-end">
+                            <a class="d-flex align-items-center text-nowrap">
+                                <button class="add-item add-defect">
+                                    <i class="fas fa-plus"></i>&nbsp;&nbsp;결함 등록</button>
+                            </a>
+                            <a href="#">
+                                <button class="danger-export-excel"><i class="fa-solid fa-download"></i> 액셀받기</button>
+                            </a>
                         </div>
                     </div>
                 </div>

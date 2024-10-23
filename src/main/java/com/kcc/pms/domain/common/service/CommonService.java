@@ -7,5 +7,5 @@ import java.util.List;
 
 public interface CommonService {
     List<CommonCodeSelectListResponseDto> getCommonCodeSelectList(String commonCodeNo);
-    void fileUpload(List<MultipartFile> files, Long prjNo, String fl_cd);
+    Long fileUpload(List<MultipartFile> files, Long prjNo, String fl_cd);
 }
