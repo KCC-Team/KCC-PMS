@@ -270,8 +270,8 @@ CREATE TABLE Defect (
     df_no number NOT NULL,
     df_id VARCHAR(20) NOT NULL,
     df_ttl VARCHAR2(100) NOT NULL,
-    stat_cd CHAR(3) NOT NULL,               -- 결함상태
-    pri_cd CHAR(3) NOT NULL,                -- 우선순위
+    stat_cd CHAR(8) NOT NULL,               -- 결함상태
+    pri_cd CHAR(8) NOT NULL,                -- 우선순위
     df_cont VARCHAR2(500) NOT NULL,         -- 결함내용
     df_fd_dt DATE NOT NULL,                 -- 결함발견일
     due_dt DATE NULL,                       -- 결함 조치 희망일

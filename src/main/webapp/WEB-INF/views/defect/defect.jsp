@@ -70,11 +70,11 @@
                         <tr>
                             <td class="td-title">결함 명&nbsp;&nbsp;&nbsp;<span class="es-star">*</span></td>
                             <td class="font-nowrap">
-                                <input type="text" name="defect_ttl" value="${req.defect_ttl}" required >
+                                <input type="text" name="defectTitle" value="${req.defectTitle}" required >
                             </td>
                             <td class="td-title">업무 분류</td>
                             <td>
-                                <select name="work_type" class="type" required >
+                                <select name="workType" class="type" required >
                                     <option value="" selected disabled>업무 분류 선택</option>
                                     <c:forEach var="type" items="${typeCode}">
                                         <option value="${type.key}">${type.value}</option>
@@ -85,11 +85,12 @@
                         <tr>
                             <td class="td-title">결함 ID&nbsp;&nbsp;&nbsp;<span class="es-star">*</span></td>
                             <td>
-                                <input type="text" name="defect_id" value="${req.defect_id}" required >
+                                <input type="text" name="defectId" value="${req.defectId}" required >
                             </td>
                             <td class="td-title">테스트 ID</td>
                             <td>
-                                <input type="text" name="test_id" value="${req.test_id}" >
+                                <a href="#">${req.testId}</a>
+                                <input type="hidden" name="testNumber" value="${req.testNumber}" >
                             </td>
                         </tr>
                         <tr>
@@ -97,16 +98,16 @@
                         </tr>
                         <tr>
                             <td colspan="4">
-                                <textarea name="defect_cont" required >${req.defect_cont}</textarea>
+                                <textarea name="defectContent" required >${req.defectContent}</textarea>
                             </td>
                         </tr>
                         <tr>
                             <td class="td-title">우선순위&nbsp;&nbsp;&nbsp;<span class="es-star">*</span></td>
                             <td>
-                                <select name="order" class="type" required >
+                                <select name="priority" class="type" required >
                                     <option value="" selected disabled>우선순위 선택</option>
-                                    <c:forEach var="item" items="${order}">
-                                        <option value="${item.codeDetailNo}" ${item.codeDetailNo} == ${req.order_select} ? 'selected' : ''>${item.codeDetailName}</option>
+                                    <c:forEach var="item" items="${priority}">
+                                        <option value="${item.codeDetailNo}" ${item.codeDetailNo} == ${req.orderSelect} ? 'selected' : ''>${item.codeDetailName}</option>
                                     </c:forEach>
                                 </select>
                             </td>
@@ -115,7 +116,7 @@
                                 <select name="status" class="type" required >
                                     <option value="" selected disabled>상태 선택</option>
                                     <c:forEach var="st" items="${status}">
-                                        <option value="${st.codeDetailNo}" ${st.codeDetailNo} == ${req.status_select} ? 'selected' : ''>${st.codeDetailName}</option>
+                                        <option value="${st.codeDetailNo}" ${st.codeDetailNo} == ${req.statusSelect} ? 'selected' : ''>${st.codeDetailName}</option>
                                     </c:forEach>
                                 </select>
                             </td>
@@ -123,29 +124,29 @@
                         <tr>
                             <td class="td-title">발견자&nbsp;&nbsp;&nbsp;<span class="es-star">*</span></td>
                             <td>
-                                <input type="text" name="discover_nm" value="${req.discover_nm}" required readonly >
+                                <input type="text" name="discoverName" value="${req.discoverName}" required readonly >
                             </td>
                             <td class="td-title">발견일자&nbsp;&nbsp;&nbsp;<span class="es-star">*</span></td>
                             <td>
-                                <input type="text" name="discover_dt" value="${req.discover_dt}" class="defect-date" placeholder="yyyy-mm-dd" required >
+                                <input type="text" name="discoverDate" value="${req.discoverDate}" class="defect-date" placeholder="yyyy-mm-dd" required >
                             </td>
                         </tr>
                         <tr>
                             <td class="td-title">조치희망일</td>
                             <td colspan="3">
                                 <div class="d-flex justify-content-left" style="width: 136px">
-                                    <input type="text" name="sche_work_dt" value="${req.sche_work_dt}" class="defect-date" placeholder="yyyy-mm-dd" >
+                                    <input type="text" name="scheduleWorkDate" value="${req.scheduleWorkDate}" class="defect-date" placeholder="yyyy-mm-dd" >
                                 </div>
                             </td>
                         </tr>
                         <tr>
                             <td class="td-title">조치자</td>
                             <td>
-                                <input type="text" name="member_nm" value="${req.member_nm}" readonly >
+                                <input type="text" name="workerName" value="${req.workerName}" readonly >
                             </td>
                             <td class="td-title">조치일자</td>
                             <td>
-                                <input type="text" name="work_dt" value="${req.work_dt}" class="defect-date" placeholder="yyyy-mm-dd" >
+                                <input type="text" name="workDate" value="${req.workDate}" class="defect-date" placeholder="yyyy-mm-dd" >
                             </td>
                         </tr>
                         <tr>
@@ -153,7 +154,7 @@
                         </tr>
                         <tr>
                             <td colspan="4">
-                                <textarea name="work_cont" >${req.work_cont}</textarea>
+                                <textarea name="workContent" >${req.workContent}</textarea>
                             </td>
                         </tr>
                     </table>
