@@ -26,7 +26,7 @@ public class FeatureController {
 
     @GetMapping("/register")
     public String featureInfo(HttpSession session){
-        Integer prjNo = (Integer) session.getAttribute("prjNo");
+        Long prjNo = (Long) session.getAttribute("prjNo");
         System.out.println("prjNo = " + prjNo);
         return "feature/featureInfo";
     }
