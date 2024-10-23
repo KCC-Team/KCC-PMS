@@ -10,6 +10,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>기능 정보</title>
+    <script type="text/javascript">
+        var prjNo = "${prjNo}";
+    </script>
 </head>
 <body>
 
@@ -26,6 +29,7 @@
                 <form id="feat_form" action="#" method="post">
                     <input type="hidden" id="mem_no" name="memberNo">
                     <input type="hidden" id="tm_no" name="teamNo">
+                    <input type="hidden" id="systemNo" name="systemNo">
                     <table class="form-table">
                         <tr>
                             <th><label for="feat_title">기능명 <span class="required-icon">*</span></label></th>
@@ -40,14 +44,6 @@
                                     <option value="" selected>선택</option>
                                 </select>
                             </td>
-                            <th><label for="system">시스템/업무분류</label></th>
-                            <td>
-                                <select id="system" name="systemNo">
-                                    <option value="" selected>선택</option>
-                                </select>
-                            </td>
-                        </tr>
-                        <tr>
                             <th><label>우선순위 <span class="required-icon">*</span></label></th>
                             <td>
                                 <select id="PMS006" name="priorCode">
@@ -55,6 +51,19 @@
 
                                 </select>
                             </td>
+                        </tr>
+                        <tr>
+                            <th><label>시스템/업무분류</label></th>
+                            <td>
+                                <div class="system-select-wrapper">
+                                    <span class="system-select-button" id="system-select">
+                                        <span>시스템/업무 선택</span>
+                                    </span>
+                                    <!-- 메뉴 리스트 -->
+                                    <ul class="mymenu" id="system-menu"></ul>
+                                </div>
+                            </td>
+
                             <th><label>난이도</label></th>
                             <td>
                                 <select id="PMS011" name="diffCode">
