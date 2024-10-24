@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!-- mapper DTD 선언 -->
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.kcc.pms.domain.member.mapper.MemberMapper">
+
+    <select id="getGroupList" resultType="com.kcc.pms.domain.member.model.dto.GroupResponseDto">
+        SELECT GRP_NO as id, GRP_NM as text, PAR_GRP_NO as parentId
+        FROM usergroup
+    </select>
+
+    <select id="getGroupMemberList" resultType="com.kcc.pms.domain.member.model.dto.GroupMembersResponseDto">
+        select m.grp_no, m.mem_no as id, m.mem_nm as memberName, m.phone_no as phoneNo , m.email, tech_cd.cd_dtl_nm as tech,
+               pos_cd.cd_dtl_nm as position, g.grp_nm as groupName
+        from member m, codedetail tech_cd, codedetail pos_cd, usergroup g
+        where m.tech_grd_cd = tech_cd.cd_dtl_no
+          and m.pos_nm = pos_cd.cd_dtl_no
+          and m.grp_no = g.grp_no
+          and m.grp_no = #{groupNo}
+        order by pos_cd.order_no, tech_cd.order_no
+    </select>
+
+
+
+    <resultMap id="memberDetail" type="com.kcc.pms.domain.member.model.dto.MemberResponseDto">
+        <id column="MEM_NO" property="id" />
+        <result column="MEM_NM" property="memberName" />
+        <result column="AUTH" property="auth" />
+        <result column="GRP_NM" property="groupName" />
+        <result column="POSITION" property="position" />
+        <result column="PRE_START_DT" property="preStartDate" />
+        <result column="PRE_END_DT" property="preEndDate" />
+        <result column="START_DT" property="startDate" />
+        <result column="END_DT" property="endDate" />
+        <result column="TECH" property="tech" />
+        <result column="EMAIL" property="email" />
+        <result column="PHONE_NO" property="phoneNo" />
+
+        <collection property="connectTeams" resultMap="connectTeams"/>
+    </resultMap>
+
+    <resultMap id="connectTeams" type="com.kcc.pms.domain.team.model.vo.Team">
+        <result column="TM_NO" property="teamNo" />
+        <result column="TM_NM" property="teamName" />
+        <result column="ORDER_NO" property="orderNo"/>
+        <result column="PAR_TM_NO" property="parentNo"/>
+    </resultMap>
+
+    <select id="getProjectMemberList" resultMap="memberDetail">
+        SELECT m.mem_no,
+               m.mem_nm,
+               auth.cd_dtl_nm AS AUTH,
+               g.grp_nm,
+               pos.cd_dtl_nm AS POSITION,
+               pm.pre_start_dt,
+               pm.pre_end_dt,
+               pm.start_dt,
+               pm.end_dt,
+               m.email,
+               m.phone_no,
+               tech.cd_dtl_nm AS TECH,
+               t.tm_nm,
+               t.tm_no,
+               t.order_no,
+               t.par_tm_no
+        FROM projectmember pm,
+             member m,
+             usergroup g,
+             codedetail tech,
+             codedetail pos,
+             codedetail auth,
+             team t
+        WHERE pm.mem_no = m.mem_no
+          AND m.grp_no = g.grp_no
+          AND m.tech_grd_cd = tech.cd_dtl_no
+          AND m.pos_nm = pos.cd_dtl_no
+          AND pm.prj_auth_cd = auth.cd_dtl_no
+          AND pm.tm_no = t.tm_no
+          AND pm.tm_no IN (
+            SELECT t2.tm_no
+            FROM team t2
+            WHERE t2.prj_no = #{projectNo}
+        ) ORDER BY t.tm_no
+    </select>
+
+
+    <select id="getMemberDetail" resultMap="memberDetail">
+        SELECT m.mem_no,
+               m.mem_nm,
+               auth.cd_dtl_nm AS AUTH,
+               g.grp_nm,
+               pos.cd_dtl_nm AS POSITION,
+               pm.pre_start_dt,
+               pm.pre_end_dt,
+               pm.start_dt,
+               pm.end_dt,
+               m.email,
+               m.phone_no,
+               tech.cd_dtl_nm AS TECH,
+               t.tm_no,
+               t.tm_nm,
+               t.order_no
+        FROM projectmember pm,
+             member m,
+             usergroup g,
+             codedetail tech,
+             codedetail pos,
+             codedetail auth,
+             team t
+        WHERE pm.mem_no = m.mem_no
+          AND m.grp_no = g.grp_no
+          AND m.tech_grd_cd = tech.cd_dtl_no
+          AND m.pos_nm = pos.cd_dtl_no
+          AND pm.prj_auth_cd = auth.cd_dtl_no
+          AND pm.tm_no = t.tm_no
+          AND m.mem_no = #{memberNo} AND t.prj_no = #{projectNo}
+    </select>
+
+
+
+    <select id="getTeamMember" resultMap="memberDetail">
+        SELECT m.mem_no,
+               m.mem_nm,
+               auth.cd_dtl_nm as AUTH,
+               gr.grp_nm,
+               pos.cd_dtl_nm as POSITION,
+               pm.pre_start_dt,
+               pm.pre_end_dt,
+               pm.start_dt,
+               pm.end_dt,
+               tech.cd_dtl_nm as TECH,
+               m.email,
+               m.phone_no,
+               t.tm_no,
+               t.tm_nm,
+               t.order_no
+        FROM projectmember pm,
+             member m,
+             usergroup gr,
+             codedetail auth,
+             codedetail pos,
+             codedetail tech,
+             team t
+        WHERE pm.prj_auth_cd = auth.cd_dtl_no AND
+            m.tech_grd_cd = tech.cd_dtl_no AND
+            m.pos_nm = pos.cd_dtl_no AND
+            pm.mem_no = m.mem_no AND
+            m.grp_no = gr.grp_no AND
+            pm.tm_no = t.tm_no AND
+            t.tm_no = #{teamNo}
+    </select>
+
+    <update id="memberAssignTeam">
+        UPDATE projectmember SET tm_no = #{teamNo} WHERE mem_no = #{memberNo} and tm_no = #{beforeTeamNo}
+    </update>
+
+    <insert id="saveMember">
+        insert into member
+        (mem_no, grp_no, login_id, pw, mem_nm, phone_no, email, auth_cd, pos_nm, birth_dt, tech_grd_cd, org, use_yn)
+        values (seq_member.nextval, #{groupNumber}, #{id}, #{pw}, #{memberName}, #{phoneNumber},
+        #{email}, #{authCode}, #{positionCode}, #{birthDate}, #{techGradeCode}, #{organization}, 'Y')
+    </insert>
+
+
+    <select id="findById" resultType="com.kcc.pms.domain.member.model.vo.MemberVO">
+        select
+            mem_no as memNo,
+            grp_no as groupNumber,
+            login_id as id,
+            pw as pw,
+            mem_nm as memberName,
+            phone_no as phoneNumber,
+            email as email,
+            auth_cd as authCode,
+            pos_nm as positionCode,
+            birth_dt as birthDate,
+            tech_grd_cd as techGradeCode,
+            org as organization,
+            use_yn as use,
+            rec_prj as recent_project_number
+        from member
+        where login_id = #{username}
+    </select>
+
+</mapper>
+

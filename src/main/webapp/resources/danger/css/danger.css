@@ -1,0 +1,96 @@
+.list_table{
+    margin-left: 40px;
+    margin-right: 10px;
+}
+
+[data-ax5grid] [data-ax5grid-container="root"] [data-ax5grid-container="body"] [data-ax5grid-panel] table tr {
+    background: white !important;
+}
+
+.danger-content, .issue-content {
+    display: flex;
+    padding-top: 15px;
+    align-items: center;
+    overflow: hidden;
+}
+
+.danger-info, .issue-info {
+    width: 94%;
+    margin: 4px 0px 20px 40px;
+    font-size: 20px;
+    font-weight: bold;
+    color: black;
+    border-bottom: 1px solid #989898;
+    padding-bottom: 5px;
+    float: left;
+}
+
+h5 {
+    font-family: NanumGothic,NanumBarunGothic,"Apple SD Gothic Neo","Malgun Gothic",Dotum,sans-serif !important;
+    padding: 20px 20px 20px 60px;
+    color: black;
+    border-bottom: 1px solid;
+}
+
+.danger-title:hover {
+    text-decoration: underline !important;
+}
+
+.filter-section {
+    background-color: white;
+    padding: 14px;
+    border-radius: 10px;
+    border: 1px #ddd solid;
+    display: flex;
+    align-items: center;
+    margin: 2px 45px 30px 37px;
+}
+
+.filter-section > form select,
+.filter-section > form input,
+.filter-section > form button {
+    padding: 9px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    margin-left: 7px;
+    margin-right: 7px;
+}
+
+.search-text {
+    width: 215px;
+}
+
+.search {
+    background-color: #5c5c5c;
+    color: white;
+    width: 70px;
+}
+
+
+.filter-section > form select {
+    width: 120px;
+}
+
+.status-label {
+    display: inline-block;
+    padding: 5px 10px;
+    border-radius: 10px;
+    font-size: 12px;
+    color: white;
+}
+
+.status-in-progress {
+    background-color: #4caf50;
+}
+
+.status-completed {
+    background-color: #0044cc;
+}
+
+.status-before {
+    background-color: #888;
+}
+
+.add-project {
+    background-color: #5c5c5c;
+}

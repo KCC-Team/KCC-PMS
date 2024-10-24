@@ -1,0 +1,32 @@
+.logout_form {
+    margin: 0;
+    padding: 0;
+}
+
+.logout-menu {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    flex-direction: column;
+}
+
+.logout-menu li {
+    margin: 0;
+    padding: 0;
+}
+
+.logout_btn {
+    border: none;
+    padding: 10px 15px;
+    text-align: left;
+    font-size: 16px;
+    cursor: pointer;
+    display: block;
+    width: 100%;
+    border: none;
+    background-color: white;
+}
+
+.logout_btn:hover {
+    background-color: #f8f8f8;
+}

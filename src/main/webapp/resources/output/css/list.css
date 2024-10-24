@@ -1,0 +1,96 @@
+
+.table-header {
+    background-color: #EDF0F5;
+    height: 50px;
+    border-bottom: 1px solid #ccc;
+    box-shadow: 0 5px 5px -5px #aaa;
+}
+
+.table-body {
+    font-size: 15px;
+    width: 45%;
+}
+
+.btn-link {
+    color: #575454;
+    text-decoration: none;
+    background-color: transparent;
+    border: none;
+    padding: 0;
+}
+.btn-link:hover, .btn-link:focus {
+    color: #000;
+    font-weight: bold;
+}
+
+.modify-icon {
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    background-image: url('../images/edit.png');
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+.first-component {
+    width: 40%;
+    margin-right: 12px;
+    background-color: #fff;
+    border: 1px solid #C5C5C5;
+}
+
+.fir-com-header {
+    background-color: #EDF0F5;
+    height: 35px;
+    border-bottom: 1px solid #ccc;
+    font-size: 15px;
+}
+
+.second-component {
+    width: 60%;
+    margin-right: 12px;
+    background-color: #fff;
+    border: 1px solid #C5C5C5;
+}
+
+.input-area {
+    width: 200px;
+    height: 32px;
+    padding: 10px;
+}
+
+input.input-area:disabled {
+    background-color: #F3F6F9;
+    border: 1px solid #C5C5C5;
+    border-radius: 5px;
+}
+
+.task {
+    text-decoration: none;
+    margin-left: 20px;
+    font-size: 15px;
+}
+
+.task:hover {
+    text-decoration: underline;
+}
+
+.ax5-ui {
+    border: 1px solid #C5C5C5;
+}
+
+.file-btn {
+    text-align: center;
+    height: 18px;
+    background-color: #646464;
+    border-radius: 2px;
+    color: white;
+    border: none;
+    font-size: 11px;
+    cursor: pointer;
+}
+
+.file-btn:hover {
+    background-color: #AFABAB;
+}

@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!-- mapper DTD 선언 -->
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.kcc.pms.domain.task.defect.mapper.DefectMapper">
+    <resultMap id="DefectListDto" type="DefectResponseDto">
+        <result property="defectTitle" column="defectTitle" />
+        <result property="priority" column="priority" />
+        <result property="status" column="status" />
+        <result property="discoverName" column="discoverName" />
+        <result property="workName" column="workName" />
+        <result property="discoverDate" column="discoverDate" />
+        <result property="scheduleWorkDate" column="scheduleWorkDate" />
+        <result property="workDate" column="workDate" />
+        <association property="defectItem" column="defectItem">
+            <id property="defectNumber" column="defectNumber" />
+            <result property="defectId" column="defectId" />
+        </association>
+    </resultMap>
+    
+    <insert id="saveDefect" parameterType="map">
+        <selectKey keyProperty="defect.defectNumber" resultType="long" order="BEFORE">
+            SELECT seq_defect.nextval FROM dual
+        </selectKey>
+
+        INSERT INTO DEFECT
+        (df_no, df_id, df_ttl, stat_cd, pri_cd, df_cont, df_fd_dt, due_dt, work_dt,
+         df_work_cont, fl_ms_fd_no, fl_ms_work_no, test_dtl_no, mem_fd_no, mem_work_no, work_no, prj_no)
+        VALUES
+        (
+         #{defect.defectNumber}, #{defect.defectId, jdbcType=VARCHAR}, #{defect.defectTitle, jdbcType=VARCHAR},
+         #{status, jdbcType=VARCHAR}, #{priority, jdbcType=VARCHAR}, #{defect.defectContent, jdbcType=VARCHAR},
+         #{defect.discoverDate, jdbcType=DATE}, #{defect.scheduleWorkDate, jdbcType=DATE}, #{defect.workDate, jdbcType=DATE},
+         #{defect.workContent, jdbcType=VARCHAR}, #{fileMasterFoundNumber, jdbcType=NUMERIC}, #{fileMasterWorkNumber, jdbcType=NUMERIC},
+         #{defect.testNumber, jdbcType=NUMERIC}, 1, 1, #{defect.systemNumber, jdbcType=NUMERIC}, #{projectNumber, jdbcType=NUMERIC}
+         )
+    </insert>
+
+    <update id="updateDefect" parameterType="map">
+        UPDATE defect
+        SET
+            df_id = #{defect.defectId, jdbcType=VARCHAR},
+            df_ttl = #{defect.defectTitle, jdbcType=VARCHAR},
+            stat_cd = #{status, jdbcType=VARCHAR},
+            pri_cd = #{priority, jdbcType=VARCHAR},
+            df_cont = #{defect.defectContent, jdbcType=VARCHAR},
+            df_fd_dt = #{defect.discoverDate, jdbcType=DATE},
+            due_dt = #{defect.scheduleWorkDate, jdbcType=DATE},
+            work_dt = #{defect.workDate, jdbcType=DATE},
+            df_work_cont = #{defect.workContent, jdbcType=VARCHAR},
+            test_dtl_no = #{defect.testNumber, jdbcType=NUMERIC},
+            work_no = #{defect.systemNumber, jdbcType=NUMERIC}
+        WHERE df_no = #{defect.defectNumber}
+    </update>
+
+    <select id="getDefect" parameterType="long" resultType="DefectDto">
+        SELECT
+            df_no AS defectNumber,
+            df_ttl AS defectTitle,
+            df_id AS defectId,
+            td.test_dtl_no AS testNumber,
+            td.test_dtl_id AS testId,
+            df_cont AS defectContent,
+            df_fd_dt AS discoverDate,
+            due_dt AS scheduleWorkDate,
+            work_dt AS workDate,
+            df_work_cont AS workContent,
+            stat_cd AS statusSelect,
+            work_no AS systemNumber,
+            pri_cd AS prioritySelect
+        FROM defect
+        left join testdetail td on defect.test_dtl_no = td.test_dtl_no
+        WHERE df_no = #{defectNumber}
+    </select>
+
+    <select id="getDefectList" resultMap="DefectListDto">
+        SELECT *
+        FROM (
+        SELECT sub.*, ROWNUM rn
+        FROM (
+        SELECT
+        df_no AS defectNumber,
+        df_id AS defectId,
+        df_ttl AS defectTitle,
+        pri.cd_dtl_nm AS priority,
+        st.cd_dtl_nm AS status,
+        -- mem_fd_name,
+        -- mem_work_name,
+        df_fd_dt AS discoverDate
+        -- due_dt AS scheduleWorkDate,
+        -- work_dt AS workDate
+        FROM defect
+        LEFT JOIN member mem_fd ON defect.mem_fd_no = mem_fd.mem_no
+        LEFT JOIN member mem_work ON defect.mem_work_no = mem_work.mem_no
+        LEFT JOIN codedetail pri ON defect.pri_cd = pri.cd_dtl_no
+        LEFT JOIN codedetail st ON defect.stat_cd = st.cd_dtl_no
+        WHERE prj_no = #{projectNumber}
+        <if test="workNo != 0">AND work_no = #{workNo}
+            </if><if test="
+        status != 'all'">AND stat_cd = #{status}
+            </if>
+            <if test="search != ''">
+                AND (df_id LIKE '%' || #{search} || '%' OR df_ttl LIKE '%' || #{search} || '%' OR df_cont LIKE '%' || #{search} || '%')
+            </if>
+        ORDER BY defectNumber
+        ) sub
+        <![CDATA[
+        WHERE ROWNUM <= #{page} * #{limit}
+        ]]>
+        )
+        WHERE rn > (#{page} - 1) * #{limit}
+        ORDER BY defectNumber
+    </select>
+
+    <select id="getFileMasterNumbers" resultType="FileMasterNumbers">
+        SELECT
+            fl_ms_fd_no AS fileMasterFoundNumber,
+            fl_ms_work_no AS fileMasterWorkNumber
+        FROM defect
+        WHERE df_no = #{defectNumber}
+    </select>
+
+    <delete id="deleteDefect" parameterType="long">
+        DELETE FROM defect
+        WHERE df_no = #{defectNumber}
+    </delete>
+</mapper>

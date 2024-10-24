@@ -1,0 +1,245 @@
+body {
+    background-color: #fff;
+}
+
+.project-form {
+    width: 72%;
+    margin: 30px auto;
+    padding: 30px 50px 70px 50px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: 500;
+    font-size: 14px;
+    color: black;
+}
+
+input[type="date"]
+textarea,
+select {
+    width: calc(100% - 10px);
+    padding: 8px;
+    margin-top: 5px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+#pre_st_dt, #pre_end_dt, #st_dt, #end_dt {
+    width: 22%;
+    padding: 8px;
+    margin-top: 5px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+#prj_title, #prj_cont {
+    width: 100%;
+    padding: 8px;
+    margin-top: 5px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+ #stat_cd, #prg {
+    width: 100%;
+    padding: 8px;
+    margin-top: 5px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+#mem_num {
+    width: 161px;
+    padding: 8px;
+    margin-top: 5px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+#org {
+    width: 49%;
+    padding: 8px;
+    margin-top: 5px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+textarea {
+    height: 100px;
+}
+
+.full-width {
+    width: 100%;
+}
+
+.form-row {
+    display: flex;
+    gap: 20px;
+}
+
+.form-row .form-group {
+    flex: 1;
+}
+
+.period-inputs {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    width: 100%;
+}
+
+.days {
+    color: #666;
+}
+
+.pm-input {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+button.pm-search {
+    padding: 6px 12px;
+    border: 2px solid #ccc;
+    background-color: #f1f1f1;
+    cursor: pointer;
+    border-radius: 4px;
+}
+
+button.pm-search:hover {
+    background-color: #ddd;
+}
+
+.char-count {
+    font-size: 15px;
+    text-align: right;
+}
+
+.desc-count {
+    float: right;
+    margin-right: 10px;
+}
+
+.form-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    float: right;
+    margin-top: 10px;
+}
+
+button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+button.save-btn {
+    background-color: #1F80DA;
+    color: white;
+}
+
+button.cancel-btn {
+    background-color: #8B8B8B;
+    color: white;
+}
+
+.no-period {
+    width: 26%;
+}
+
+#no_days_period, #no_predays_period {
+    margin-left: 7px;
+}
+
+.required-icon {
+    color: red;
+}
+
+.desc-count {
+    float: left;
+}
+
+.no-period {
+    font-weight: normal !important;
+}
+
+.search-member-btn {
+    padding: 10px 20px;
+    border-radius: 4px;
+    cursor: pointer;
+    border: 1px solid #ddd;
+    background-color: #8B8B8B;
+    color: white;
+}
+
+.del-btn {
+    padding: 10px 20px;
+    border-radius: 4px;
+    cursor: pointer;
+    border: 1px solid #ddd;
+    background-color: gray;
+    color: white;
+    width: 78px;
+}
+
+
+.overview-table, .members-table, .detail-table {
+    margin-top: 10px;
+    width: 100%;
+    border-top: 2px solid #ddd;
+}
+
+.overview-table td {
+    height: 50px;
+    font-size: 15px;
+}
+
+.overview-table td, .members-table th, .members-table td, .detail-table td, .team-table td {
+    border-bottom: 1px solid #ccc;
+    border-left: 1px solid #ccc;
+    border-right: 1px solid #ccc;
+    padding: 9px;
+}
+
+.text-align-right {
+    text-align: right;
+    background-color: #EDF0F5;
+    font-weight: bold;
+}
+
+.text-align-center {
+    text-align: left;
+    background-color: #EDF0F5;
+    font-weight: bold;
+    width: 200px;
+}
+
+.members-table a {
+    text-decoration: none;
+}
+
+.text-align-left {
+    text-align: left;
+    background-color: #EDF0F5;
+}
+
+.fa-folder-open {
+    display: none;
+}

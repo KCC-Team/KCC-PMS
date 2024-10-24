@@ -1,0 +1,274 @@
+.project-content {
+    display: flex;
+    justify-content: space-between;
+    padding-top: 15px;
+    align-items: center;
+    width: 97%;
+    margin-left: 26px;
+    margin-bottom: 16px;
+    border-bottom: 1px solid #989898;
+}
+
+.project-info {
+    font-size: 20px;
+    font-weight: bold;
+    color: black;
+    padding-bottom: 5px;
+    width: 91.6%;
+}
+
+.feat_content {
+
+}
+
+.first{
+    margin-bottom: 17px;
+}
+
+.feat-all-chart {
+    /*border: 1px solid #ccc;*/
+    text-align: center;
+    margin-bottom: 10px;
+    width: 75%;  /* 차트의 너비 조정 */
+    height: 300px; /* 차트의 높이 조정 */
+    margin: auto; /* 중앙 정렬 */
+}
+
+.project-title {
+    text-align: center;
+    font-size: 17px;
+    font-weight: bold;
+    color: black;
+    padding-bottom: 5px;
+    margin-bottom: 20px;
+}
+
+.feat-info, .feat-info-title {
+    font-size: 17px;
+    font-weight: bold;
+    color: black;
+    padding-bottom: 5px;
+    margin-left: 10px;
+    text-align: left;
+}
+
+.btn-add-feat {
+    margin-left: auto;
+    padding-bottom: 5px;
+}
+
+
+.btn-add-feat button {
+    padding: 8px 16px;
+    border: none;
+    border-radius: 5px;
+    color: white;
+    background-color: #5c5c5c;
+    cursor: pointer;
+}
+
+.add-feat {
+    background-color: #5c5c5c;
+    color: white;
+}
+
+.all-container {
+    display: flex;
+    gap: 5px;
+}
+
+.left-section {
+    flex: 0.9;
+    margin: 13px 5px 10px 25px;
+    padding-right: 16px;
+    border-right: 1px solid #ccc;
+}
+
+.middle-section {
+    flex: 1.2;
+    margin: 13px 1px 10px 1px;
+    padding-right: 10px;
+    border-right: 1px solid #ccc;
+}
+
+.right-section {
+    flex: 1.2;
+    margin: 13px 19px 10px 1px;
+}
+
+.feat-info-row {
+    border: 1px solid black;
+    padding: 10px;
+    margin-bottom: 13px;
+}
+
+.feat-info-row.on {
+    border: 2px solid black;
+}
+
+.feat-title {
+    flex-grow: 1;
+    font-size: 17px;
+    font-weight: bold;
+    color: black;
+    padding-bottom: 5px;
+}
+
+progress {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 90%;
+    height: 20px;
+}
+
+progress::-webkit-progress-bar {
+    background-color: #eee;
+    border-radius: 0;
+}
+
+progress::-webkit-progress-value {
+    background-color: #1F80DA;
+    border-radius: 0;
+}
+
+.prg-val {
+    margin-left: 3px;
+    margin-bottom: 10px;
+}
+
+.feat-search-section {
+    padding: 10px;
+    margin-bottom: 10px;
+}
+
+.feat-select-option, .feat-select-option {
+    height: 30px;
+    margin-right: 7px;
+    border-radius: 5px;
+    width: 31%;
+}
+
+.feat-search-form {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    margin-right: 9px;
+}
+
+.feat-submit-btn {
+    padding: 5px 10px;
+    border: none;
+    border-radius: 5px;
+    color: white;
+    background-color: #5c5c5c;
+    cursor: pointer;
+}
+
+.search-text {
+    width: 150px;
+    margin-right: 7px;
+}
+
+.row-info {
+    padding: 10px;
+    margin-bottom: 13px;
+    width: 100%;
+}
+
+.feat-total-cnt, .feat-complete-cnt, .feat-continue-cnt {
+    color: black;
+}
+
+.feat-info-table {
+    width: 97%;
+    border-collapse: collapse;
+    border: 1px solid black;
+    margin: 8px;
+}
+
+.feat-info-table td {
+    border-collapse: collapse;
+    border: 1px solid black;
+    text-align: center;
+    height: 24px;
+}
+
+.tr-row {
+    height: 30px;
+    text-align: center;
+    background-color: #EDF0F5;
+    color: black;
+}
+
+.feat-total-cnt, .feat-complete-cnt, .feat-continue-cnt, .feat-delay-cnt {
+    font-weight: bold;
+}
+
+.toggle-btn {
+    transition: left 0.01s ease !important;
+}
+
+.status-label {
+    display: inline-block;
+    padding: 5px 10px;
+    border-radius: 10px;
+    font-size: 12px;
+    color: white;
+}
+
+.status-in-progress {
+    background-color: #4caf50;
+}
+
+.status-completed {
+    background-color: #0044cc;
+}
+
+.status-before {
+    background-color: #888;
+}
+
+[data-ax5grid] [data-ax5grid-container="root"] [data-ax5grid-container="body"] [data-ax5grid-panel] table tr {
+    background: white !important;
+}
+
+#grid-parent {
+    margin-left: 10px;
+    margin-right: 15px;
+}
+
+.feat_content.delay {
+    margin-top: 39px;
+}
+
+.feat-bar {
+    width: 88%;
+    height: 20px;
+    -webkit-appearance: none;
+    appearance: none;
+}
+
+.feat-bar::-webkit-progress-bar {
+    background-color: #eee;
+}
+
+.feat-bar::-webkit-progress-value {
+    background-color: #1F80DA;
+}
+
+.prg-val {
+    margin-left: 10px;
+    font-size: 16px;
+    color: #000;
+}
+
+
+.circle_strong {
+    position: absolute;
+    top: 312px;
+    left: 294px;
+    text-align: center;
+    line-height: 40px;
+    font-size: 42px;
+}

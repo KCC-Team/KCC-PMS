@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!-- mapper DTD 선언 -->
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.kcc.pms.domain.team.mapper.TeamMapper">
+
+    <select id="getTeamList" resultType="com.kcc.pms.domain.team.model.dto.TeamResponseDto">
+        SELECT t.tm_no as key,
+               t.tm_nm as title,
+               t.tm_cont as teamDescription,
+               pt.tm_nm as parentTeamName,
+               NVL(
+                       CASE
+                           WHEN t.par_tm_no IS NULL THEN
+                               (SELECT COUNT(DISTINCT pm.mem_no)
+                                FROM projectmember pm
+                                WHERE pm.tm_no IN (
+                                    SELECT t2.tm_no
+                                    FROM team t2
+                                    WHERE t2.prj_no = t.prj_no
+                                    START WITH t2.tm_no = t.tm_no
+                                    CONNECT BY PRIOR t2.tm_no = t2.par_tm_no
+                                )
+                               )
+                           ELSE
+                               (SELECT COUNT(*)
+                                FROM projectmember pm2
+                                WHERE pm2.tm_no = t.tm_no
+                               )
+                           END, 0) as totalCount,
+               s.sys_ttl as systemName,
+               t.par_tm_no as parentId,
+               t.order_no as orderNo
+        FROM team t,
+             system s,
+             team pt
+        WHERE t.sys_no = s.sys_no(+)
+          AND t.par_tm_no = pt.tm_no(+)
+          AND t.prj_no = #{projectNo}
+        ORDER BY NVL(t.par_tm_no, t.tm_no), t.order_no
+    </select>
+
+    <select id="getTeamByNo" resultType="com.kcc.pms.domain.team.model.vo.Team">
+        SELECT tm_no AS teamNo,
+               tm_nm AS teamName,
+               par_tm_no AS parentNo,
+               order_no AS orderNo
+        FROM team
+        WHERE tm_no = #{teamNo}
+    </select>
+
+    
+    <select id="getSiblings" resultType="com.kcc.pms.domain.team.model.vo.Team">
+        SELECT tm_no AS teamNo,
+               tm_nm AS teamName,
+               par_tm_no AS parentNo,
+               order_no AS orderNo
+        FROM team
+        WHERE par_tm_no = #{parentNo}
+        ORDER BY order_no ASC
+    </select>
+
+    <update id="updateTeamOrder">
+        UPDATE team
+        SET order_no = #{orderNo}
+        <if test="parentNo != null">
+            , par_tm_no = #{parentNo}
+        </if>
+        WHERE tm_no = #{teamNo}
+    </update>
+
+    <select id="getTeamByProject" resultType="com.kcc.pms.domain.team.model.vo.Team">
+        SELECT tm_no AS teamNo,
+               tm_nm AS teamName,
+               par_tm_no AS parentNo,
+               order_no AS orderNo
+        FROM team
+        WHERE prj_no = #{projectNo}
+    </select>
+
+    <select id="getMaxOrderNo" resultType="Integer">
+        SELECT MAX(order_no) FROM team WHERE par_tm_no = #{parentNo}
+    </select>
+
+    <insert id="createTeam" parameterType="com.kcc.pms.domain.team.model.vo.Team">
+        INSERT INTO team (
+            tm_no,
+            tm_nm,
+            tm_cont,
+            use_yn,
+            par_tm_no,
+            prj_no,
+            sys_no,
+            order_no
+        ) VALUES (SEQ_TEAM.NEXTVAL, #{teamName}, #{teamContent},'Y', #{parentNo}, #{projectNo},
+                    <if test="systemNo != null">
+                        #{systemNo}
+                    </if>
+                    <if test="systemNo == null">
+                        NULL
+                    </if>
+                     ,#{orderNo}
+                 )
+    </insert>
+
+    <insert id="addMembersTeam">
+        INSERT INTO projectmember (tm_no, prj_no, mem_no, prj_auth_cd, pre_start_dt, pre_end_dt, start_dt, end_dt, use_yn)
+        <foreach collection="addMembers" item="member" separator=" UNION ALL ">
+            SELECT
+            #{teamNo},
+            #{prjNo},
+            #{member.id},
+            #{member.auth, jdbcType=VARCHAR},
+            COALESCE(TO_DATE(#{member.pre_st_dt, jdbcType=DATE}, 'YYYY-MM-DD'), TO_DATE('2999-12-31', 'YYYY-MM-DD')),
+            COALESCE(TO_DATE(#{member.pre_end_dt, jdbcType=DATE}, 'YYYY-MM-DD'), TO_DATE('2999-12-31', 'YYYY-MM-DD')),
+            COALESCE(TO_DATE(#{member.st_dt, jdbcType=DATE}, 'YYYY-MM-DD'), TO_DATE('2999-12-31', 'YYYY-MM-DD')),
+            COALESCE(TO_DATE(#{member.end_dt, jdbcType=DATE}, 'YYYY-MM-DD'), TO_DATE('2999-12-31', 'YYYY-MM-DD')),
+            'Y'
+            FROM dual
+        </foreach>
+    </insert>
+
+    <select id="getTeamTree" resultType="com.kcc.pms.domain.team.model.dto.TeamTreeResponseDto">
+        SELECT tm_no as id, tm_nm as text, par_tm_no as parentId, order_no as orderNo
+        FROM team
+        WHERE prj_no = #{prjNo}
+        order by NVL(par_tm_no, tm_no), order_no
+    </select>
+</mapper>

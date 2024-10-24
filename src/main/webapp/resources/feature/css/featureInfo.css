@@ -1,0 +1,240 @@
+.modal-dialog {
+    margin-right: 650px !important;
+}
+
+.modal-content {
+    width: 756px !important;
+    margin-right: 100px !important;
+}
+
+.form-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.form-table td, .form-table th {
+    border: 1px solid #ddd;
+    border-radius: 5px !important;
+    padding: 8px;
+    vertical-align: middle;
+}
+
+.form-table th {
+    background-color: #EDF0F5;
+    text-align: left;
+    width: 140px;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.form-group {
+    margin-bottom: 10px;
+}
+
+.form-table input,
+.form-table select {
+    width: 100%;
+    padding: 5px;
+    box-sizing: border-box;
+    border-radius: 5px !important;
+    border: 2px solid #ddd;
+}
+
+.btn-select-user {
+    padding: 5px 9px 5px 9px;
+    border: none;
+    border-radius: 5px;
+    color: white;
+    cursor: pointer;
+    background-color: #8B8B8B;
+    margin-bottom: 5px;
+}
+
+.btn-select-output {
+    padding: 5px 9px 5px 9px;
+    border: none;
+    border-radius: 5px;
+    color: white;
+    cursor: pointer;
+    background-color: #8B8B8B;
+}
+
+.btn-save-feature {
+    padding: 5px 9px 5px 9px;
+    border: none;
+    border-radius: 5px;
+    color: white;
+    cursor: pointer;
+    background-color: #1F80DA;
+}
+
+.btn-close-feature {
+    padding: 5px 9px 5px 9px;
+    border: none;
+    border-radius: 5px;
+    color: white;
+    cursor: pointer;
+    background-color: gray;
+}
+
+#mem_no {
+    width: 35% !important;
+}
+
+.required-icon {
+    color: red;
+}
+
+.modal-title {
+    font-weight: bold;
+    font-size: 22px;
+    margin-bottom: 10px;
+}
+
+.modal-header {
+    margin-top:20px;
+    margin-left: 20px;
+    margin-bottom: 15px;
+    border-bottom: 1px solid black;
+    padding-bottom: 5px;
+    width: 94.5%;
+}
+
+.modal-body {
+    padding-left: 20px;
+    padding-right: 20px;
+}
+
+.modal-footer {
+    margin: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 12px;
+}
+
+#mem_nm, #sys_no {
+    width: 39%;
+}
+
+input[type="date"] {
+    position: relative;
+}
+
+input[type="date"] {
+    color: black;
+    font-weight: bold;
+}
+
+#feat_cont {
+    width: 100%;
+    height: 100px;
+    border: 1px solid #ccc;
+}
+
+.form-table > tbody > tr > td a {
+    text-decoration: none;
+}
+
+
+
+.mymenu {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+    display: none;
+    border: 1px solid #ccc;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    background-color: #fff;
+    z-index: 1000;
+}
+
+.menu-item {
+    padding: 10px;
+    cursor: pointer;
+    border-bottom: 1px solid #ddd;
+    background-color: #fff;
+    min-width: 150px;
+    position: relative;
+    z-index: 1000;
+}
+
+.menu-item:last-child {
+    border-bottom: none;
+}
+
+.menu-item:hover {
+    background-color: #f1f4f8;
+}
+
+
+.system-submenu {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+    display: none;
+    position: absolute;
+    left: 100%;
+    top: 0;
+    border: 1px solid #ddd;
+    background-color: #fff;
+    min-width: 200px;
+    z-index: 1000;
+}
+
+.menu-item:hover > .system-submenu,
+.system-submenu:hover {
+    display: block;
+}
+
+
+.system-select-wrapper {
+    display: inline-block;
+    position: relative;
+}
+
+.system-select-label {
+    padding: 10px;
+    background-color: #f1f4f8;
+    border-right: 1px solid #ddd;
+}
+
+.system-select-button {
+    padding: 8px 10px;
+    cursor: pointer;
+    border: 1px solid #ccc;
+    background-color: #fff;
+    width: 185px;
+    height: 11px;
+    border-radius: 4px;
+    text-align: left;
+    display: block;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 14px;
+    position: relative;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.system-select-button:after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    right: 10px;
+    width: 0;
+    height: 0;
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+    border-top: 5px solid #333;
+    transform: translateY(-50%);
+    pointer-events: none;
+}
+
+.system-select-button:focus {
+    outline: none;
+}

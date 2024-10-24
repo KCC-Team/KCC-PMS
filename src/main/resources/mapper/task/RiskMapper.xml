@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!-- mapper DTD 선언 -->
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.kcc.pms.domain.risk.mapper.RiskMapper">
+
+    <resultMap id="codeOptions" type="com.kcc.pms.domain.common.model.dto.CommonCodeOptions">
+        <id column="COMMON_CD_NO" property="common_cd_no"/>
+        <collection property="codes" resultMap="codeDetails"/>
+    </resultMap>
+
+    <resultMap id="codeDetails" type="com.kcc.pms.domain.common.model.vo.CommonCodeVO">
+        <result column="CD_DTL_NO" property="cd_dtl_no"/>
+        <result column="CD_DTL_NM" property="cd_dtl_nm"/>
+        <result column="ORDER_NO" property="order_no"/>
+    </resultMap>
+
+    <select id="getRiskCommonCode" resultMap="codeOptions">
+        SELECT common_cd_no, cd_dtl_no, cd_dtl_nm, order_no
+        FROM codedetail
+        WHERE (COMMON_CD_NO IN ('PMS005', 'PMS006'))
+           OR (COMMON_CD_NO = 'PMS004' AND FIELD_2 = 'Y') AND use_yn = 'Y'
+        ORDER BY COMMON_CD_NO, ORDER_NO
+    </select>
+
+</mapper>

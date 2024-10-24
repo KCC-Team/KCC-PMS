@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!-- mapper DTD 선언 -->
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.kcc.pms.domain.feature.mapper.FeatureMapper">
+
+    <resultMap id="codeOptions" type="com.kcc.pms.domain.common.model.dto.CommonCodeOptions">
+        <id column="COMMON_CD_NO" property="common_cd_no"/>
+        <collection property="codes" resultMap="codeDetails"/>
+    </resultMap>
+
+    <resultMap id="codeDetails" type="com.kcc.pms.domain.common.model.vo.CommonCodeVO">
+        <result column="CD_DTL_NO" property="cd_dtl_no"/>
+        <result column="CD_DTL_NM" property="cd_dtl_nm"/>
+        <result column="ORDER_NO" property="order_no"/>
+    </resultMap>
+
+    <select id="getFeatureCommonCode" resultMap="codeOptions">
+        SELECT common_cd_no, cd_dtl_no, cd_dtl_nm, order_no
+        FROM codedetail
+        WHERE common_cd_no IN( 'PMS006','PMS009','PMS010','PMS011')
+        ORDER BY common_cd_no, order_no
+    </select>
+
+
+    <insert id="createFeature" parameterType="FeatureCreateRequestDto">
+        <selectKey keyProperty="featNo" resultType="long" order="BEFORE">
+            SELECT seq_feature.NEXTVAL FROM dual
+        </selectKey>
+
+        INSERT INTO Feature (
+        feat_no, feat_id, feat_title, feat_cont, pre_st_dt, pre_end_dt, st_dt, end_dt,
+        stat_cd, pri_cd, prg, diff_cd, class_cd, use_yn, sys_no, mem_no, tm_no, prj_no
+        ) VALUES (
+        #{featNo}, #{featId}, #{featTitle}, #{featDescription},
+        <if test="preStartDate != null and preStartDate != ''">#{preStartDate},</if>
+        <if test="preStartDate == null or preStartDate == ''">NULL,</if>
+        <if test="preEndDate != null and preEndDate != ''">#{preEndDate},</if>
+        <if test="preEndDate == null or preEndDate == ''">NULL,</if>
+        <if test="startDate != null and startDate != ''">#{startDate},</if>
+        <if test="startDate == null or startDate == ''">NULL,</if>
+        <if test="endDate != null and endDate != ''">#{endDate},</if>
+        <if test="endDate == null or endDate == ''">NULL,</if>
+        #{statusCode}, #{priorCode}, #{progress},
+        <if test="diffCode != null and diffCode != ''">#{diffCode},</if>
+        <if test="diffCode == null or diffCode == ''">NULL,</if>
+        <if test="featClassCode != null and featClassCode != ''">#{featClassCode},</if>
+        <if test="featClassCode == null or featClassCode == ''">NULL,</if>
+        'Y',
+        <if test="systemNo != null">#{systemNo},</if>
+        <if test="systemNo == null">NULL,</if>
+        <if test="memberNo != null">#{memberNo},</if>
+        <if test="memberNo == null">NULL,</if>
+        <if test="teamNo != null">#{teamNo},</if>
+        <if test="teamNo == null">NULL,</if>
+        #{prjNo}
+        )
+    </insert>
+</mapper>

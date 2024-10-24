@@ -1,0 +1,276 @@
+body {
+    font-family: 'Arial', sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f5f5f5;
+}
+
+.container {
+    width: 90%;
+    margin: 20px auto;
+}
+
+.stats-section {
+    display: flex;
+    justify-content: space-between;
+    padding-top: 25px;
+    margin-bottom: 20px;
+}
+
+.stat-box {
+    background-color: #fff;
+    padding-top: 15px;
+    border-radius: 5px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    width: 15%;
+}
+
+.stat-box h3 {
+    margin: 0;
+    font-size: 24px;
+    color: #333;
+}
+
+.stat-box p {
+    margin: 5px 0 0;
+    font-size: 14px;
+    color: #666;
+}
+
+.project-info {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+}
+
+.project-details, .project-participation {
+    background-color: #fff;
+    padding: 20px;
+    width: 49%;
+    border-radius: 5px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+}
+
+.project-details h2, .project-participation h2 {
+    margin: 0 0 10px 0;
+    font-size: 18px;
+    color: #333;
+}
+
+.project-details p, .project-participation p {
+    margin: 5px 0;
+    color: #666;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+}
+
+table th, table td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+    height: 49px;
+}
+
+table th {
+    background-color: #f2f2f2;
+    color: #5578eb;
+}
+
+
+.charts-section {
+    display: flex;
+    flex-wrap: wrap; /* 아이템이 한 줄에 다 들어가지 않으면 다음 줄로 넘어가도록 설정 */
+    justify-content: space-between;
+}
+
+.chart {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 49%;
+    height: 300px;
+    background-color: #fff;
+    padding: 45px;
+    border-radius: 8px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+canvas {
+    width: 300px;
+    height: 300px;
+}
+
+.chart h3 {
+    margin-bottom: 15px;
+    font-size: 18px;
+    color: #333;
+    text-align: center;
+}
+
+.legend {
+    display: flex;
+    justify-content: center;
+    margin-top: 10px;
+}
+
+.legend-item {
+    margin-right: 15px;
+    font-size: 14px;
+    color: #666;
+}
+
+
+.info-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    column-gap: 10px;
+    row-gap: 15px;
+}
+
+.info {
+    display: flex;
+    flex-direction: column;
+}
+
+.label, .value {
+    font-size: 14px;
+    color: #666;
+}
+
+.label {
+    margin-bottom: 5px;
+}
+
+.progress-bar-complete {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.progress-bar {
+    width: 80%;
+    background-color: #e0e0e0;
+    height: 10px;
+    border-radius: 5px;
+    overflow: hidden;
+    margin-right: 10px;
+}
+
+.progress {
+    height: 100%;
+    background-color: #4caf50;
+}
+
+.progress-bar-value {
+    display: flex;
+    justify-content: space-between; /* 좌측과 우측에 배치 */
+    align-items: center; /* 세로 정렬을 중앙에 맞춤 */
+    margin-left: 10px;
+    white-space: nowrap;
+}
+
+
+.project-info-title {
+    display: flex;
+    justify-content: space-between; /* 좌측과 우측에 배치 */
+    border-bottom: 1px #CCCCCC solid;
+    margin-bottom: 22px;
+}
+
+.action-buttons {
+    display: flex; /* 수정/삭제를 수평으로 나란히 배치 */
+    gap: 10px; /* 수정과 삭제 사이의 간격 */
+}
+
+.action-buttons span {
+    cursor: pointer;
+}
+
+.action-buttons a {
+    color: black;
+    text-decoration: none;
+}
+
+.content.expanded > .main_content > .container{
+    width: 100%;
+}
+
+.pj-date {
+    background-color: #D9E5FF;
+    width: 70%;
+    text-align: center;
+    font-size: 13px;
+}
+
+.stat-box {
+    width: 15%;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 2px;
+    display: flex;
+    flex-direction: column; /* 수직 레이아웃 */
+    justify-content: space-between;
+    margin-bottom: 10px;
+    position: relative;
+}
+
+.stat-box-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between; /* 아이콘과 텍스트를 양쪽으로 배치 */
+}
+
+.stat-box i {
+    font-size: 25px;
+    color: #ccc;
+    margin-right: 15px;
+    margin-top: 43px;
+}
+
+.stat-box-content {
+    display: flex;
+    flex-direction: column;
+    padding-right: 10px;
+}
+
+.stat-box h3 {
+    font-size: 28px;
+    color: #5578eb;
+    margin: 0;
+}
+
+.stat-box p {
+    font-size: 14px;
+    color: #888;
+    margin-top: 5px;
+    margin-bottom: 10px;
+}
+
+.card-footer {
+    border-top: 1px solid #f0f0f0;
+    text-align: center;
+}
+
+.card-footer a {
+    text-decoration: none;
+    color: #888;
+    font-size: 11px;
+}
+
+.arrow {
+    font-size: 18px;
+    color: #888;
+}
+
+
+
+

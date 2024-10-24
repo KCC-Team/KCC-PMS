@@ -1,0 +1,207 @@
+@font-face {
+    font-family: 'Pretendard-Regular';
+    src: url('https://fastly.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff') format('woff');
+    font-weight: 300;
+    font-style: normal;
+}
+
+* {
+    font-family: 'Pretendard-Regular';
+    box-sizing: border-box;
+
+}
+
+body {
+    padding: 30px;
+}
+
+#jstree-container {
+    position: relative;
+    height: 400px;
+    width: 300px;
+    border: 1px solid black;
+    display: flex;
+    flex-direction: column;
+}
+
+#jstree-content {
+    flex-grow: 1;
+    overflow-y: auto;
+}
+
+#memberList {
+
+    height: 400px;
+    width: 600px;
+    border-right: 1px solid black;
+    border-top: 1px solid black;
+    border-bottom: 1px solid black;
+}
+
+#usergroup-memberList-content {
+    display: flex;
+    flex-direction: row;
+}
+
+
+#search {
+    width: calc(100% - 20px);
+    margin: 10px;
+    box-sizing: border-box;
+    height: 20px;
+    padding: 10px;
+    font-size: 16px;
+    background-color: white;
+}
+
+.group-name {
+    margin-left: 20px;
+}
+
+.memberList-title-area{
+    display: flex;
+
+    justify-content: space-between;
+    align-items: center;
+}
+
+.member-add-button {
+    background-color: #4a4a4a;
+    color: white;
+    border: none;
+    padding: 6px 10px;
+    font-size: 11px;
+    border-radius: 5px;
+    cursor: pointer;
+    outline: none;
+    margin: 5px 3px 5px 5px;
+}
+
+.member-remove-button, .reg-member-edit-button  {
+    background-color: #4a4a4a;
+    color: white;
+    border: none;
+    padding: 6px 10px;
+    font-size: 11px;
+    border-radius: 5px;
+    cursor: pointer;
+    outline: none;
+    margin-right: 10px;
+}
+
+.member-add-button:hover {
+    background-color: #3a3a3a;
+}
+
+.member-grid {
+    margin-left: 8px;
+    margin-right: 8px;
+}
+
+.addedMembersList {
+    width: 900px;
+    height: 400px;
+
+}
+
+
+.button-container {
+    display: flex;
+    justify-content: flex-end;
+    gap: 3px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+.apply {
+    background-color: #4a4a4a;
+    color: white;
+    border: none;
+    padding: 6px 10px;
+    font-size: 11px;
+    border-radius: 5px;
+    cursor: pointer;
+    outline: none;
+}
+
+.apply:hover {
+    background-color: #3a3a3a;
+}
+
+
+/*#group_total, #project_member_total {*/
+/*    background-color: #4a4a4a;*/
+/*    color: white;*/
+/*    border: none;*/
+/*    padding: 5px 10px;*/
+/*    font-size: 12px;*/
+/*    border-radius: 5px;*/
+/*    cursor: pointer;*/
+/*    outline: none;*/
+/*}*/
+
+/*#group_total:hover, #project_member_total:hover {*/
+/*    background-color: #3a3a3a;*/
+/*}*/
+
+#member-apply-title-container {
+    border-bottom: 1px solid #989898;
+    margin-bottom: 10px;
+    width: 900px;
+    padding-bottom: 10px;
+}
+.mem-apply-title {
+    font-weight: bold;
+    font-size: large;
+}
+.option-btn-container {
+    display: flex;
+    justify-content: flex-start;
+    gap: 10px;
+    width: 900px;
+    margin-bottom: 15px;
+}
+#add-member-by-group {
+
+}
+
+#add-member-by-prjmem {
+
+}
+
+#prjmem_list {
+    width: 900px;
+    height: 335px;
+}
+
+.tab-container {
+    display: flex;
+    border-bottom: 1px solid #ccc;
+    margin-bottom: 10px;
+    width: 23%;
+}
+
+.tab-btn {
+    padding: 10px 20px;
+    cursor: pointer;
+    background-color: #f1f1f1;
+    border: none;
+    outline: none;
+    transition: background-color 0.3s ease;
+}
+
+.tab-btn.active {
+    background-color: #ffffff;
+    border-bottom: 1px solid black;
+    font-weight: bold;
+}
+
+.tab-content {
+    display: none;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-top: none;
+}
+
+.tab-content.active {
+    display: block;
+}

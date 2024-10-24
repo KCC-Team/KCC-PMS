@@ -1,0 +1,232 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.kcc.pms.domain.project.mapper.ProjectMapper">
+
+    <insert id="saveProject" parameterType="com.kcc.pms.domain.project.model.dto.ProjectRequestDto">
+        <selectKey keyProperty="prj_no" resultType="long" order="BEFORE">
+            SELECT seq_project.nextval FROM dual
+        </selectKey>
+        insert into project
+        (prj_no, prj_title, prj_cont, stat_cd, prg, org, pre_st_dt, pre_end_dt, use_yn,
+        <if test="st_dt != null">st_dt,</if>
+        <if test="end_dt != null">end_dt,</if>
+        reg_id, reg_dt)
+        values (#{prj_no}, #{prj_title}, #{prj_cont}, #{stat_cd}, #{prg}, #{org}, #{pre_st_dt}, #{pre_end_dt}, 'Y',
+        <if test="st_dt != null">#{st_dt},</if>
+        <if test="end_dt != null">#{end_dt},</if>
+        #{reg_id}, SYSDATE)
+    </insert>
+
+    <insert id="saveTeam" parameterType="com.kcc.pms.domain.project.model.dto.ProjectRequestDto">
+        <selectKey keyProperty="tm_no" resultType="long" order="BEFORE">
+            SELECT seq_team.nextval FROM dual
+        </selectKey>
+        insert into team
+        (tm_no, tm_nm, prj_no, use_yn,
+        <if test="tm_cont != null">tm_cont,</if>
+        <if test="par_tm_no != null">par_tm_no,</if>
+        <if test="sys_no != null">sys_no,</if>
+        order_no, reg_id, reg_dt)
+        values (#{tm_no}, #{prj_title}, #{prj_no}, 'Y',
+        <if test="tm_cont != null">#{tm_cont},</if>
+        <if test="par_tm_no != null">#{par_tm_no},</if>
+        <if test="sys_no != null">#{sys_no},</if>
+        1, #{reg_id}, SYSDATE)
+    </insert>
+
+    <insert id="saveProjectMember" parameterType="com.kcc.pms.domain.project.model.dto.ProjectRequestDto">
+        insert into projectmember
+        (mem_no, tm_no, prj_no, prj_auth_cd, use_yn,
+        <if test="pm_pre_start_dt != null">pre_start_dt,</if>
+        <if test="pm_pre_end_dt != null">pre_end_dt,</if>
+        <if test="pm_start_dt != null">start_dt,</if>
+        <if test="pm_end_dt != null">end_dt,</if>
+        reg_id, reg_dt)
+        values (#{mem_no}, #{tm_no}, #{prj_no}, #{prj_auth_cd}, 'Y',
+        <if test="pm_pre_start_dt != null">#{pm_pre_start_dt},</if>
+        <if test="pm_pre_end_dt != null">#{pm_pre_end_dt},</if>
+        <if test="pm_start_dt != null">#{pm_start_dt},</if>
+        <if test="pm_end_dt != null">#{pm_end_dt},</if>
+        #{reg_id}, SYSDATE)
+    </insert>
+
+
+    <update id="updateProject">
+        update project set
+            prj_title = #{prj_title},
+            prj_cont = #{prj_cont},
+            stat_cd = #{stat_cd},
+            prg = #{prg},
+            org = #{org},
+            pre_st_dt = #{pre_st_dt},
+            pre_end_dt = #{pre_end_dt},
+            <if test="st_dt != null"> st_dt = #{st_dt}, </if>
+            <if test="end_dt != null"> end_dt = #{end_dt}, </if>
+            use_yn = #{use_yn},
+            mod_id = #{mod_id},
+            mod_dt = SYSDATE
+        where prj_no = #{prj_no}
+    </update>
+
+    <update id="updateTeam">
+        update team set
+        tm_nm = #{prj_title}
+        where prj_no = #{prj_no}
+        and par_tm_no IS NUll
+    </update>
+
+
+    <resultMap id="projectResultMap" type="com.kcc.pms.domain.project.model.dto.ProjectResponseDto">
+        <result property="prj_no" column="prj_no"/>
+        <result property="project_status" column="project_status"/>
+        <association property="projectManager"
+                    column="prj_no" javaType="list" select="getProjectManager">
+            <result property="memNo" column="mem_no"/>
+            <result property="memNm" column="mem_nm"/>
+        </association>
+    </resultMap>
+
+
+    <select id="getProjects" resultMap="projectResultMap">
+        SELECT
+            inline_query.*,
+            CASE
+                WHEN inline_query.stat_cd = 'PMS00101' THEN '대기'
+                WHEN inline_query.stat_cd = 'PMS00102' THEN '진행중'
+                ELSE '완료'
+            END AS project_status
+        FROM
+        (
+        SELECT
+            P.*,
+            ROW_NUMBER() OVER (ORDER BY
+            CASE
+                WHEN P.stat_cd = 'PMS00102' THEN 1
+                WHEN P.stat_cd = 'PMS00101' THEN 2
+                ELSE 3
+            END,
+            P.st_dt DESC NULLS LAST,
+            P.prj_no DESC
+        ) AS rn,
+        CASE
+            WHEN P.stat_cd = 'PMS00101' THEN '대기'
+            WHEN P.stat_cd = 'PMS00102' THEN '진행중'
+            ELSE '완료'
+        END AS project_status
+        FROM
+            project P
+        JOIN
+            projectmember PM ON P.prj_no = PM.prj_no
+        JOIN
+            member M ON PM.mem_no = M.mem_no
+        WHERE
+            M.login_id = #{prjReqDto.login_id}
+            AND P.use_yn = 'Y'
+            <if test="prjReqDto.prj_title != null and prjReqDto.prj_title != ''">
+                AND REPLACE(prj_title, ' ', '') like '%' || REPLACE(#{prjReqDto.prj_title}, ' ', '') || '%'
+            </if>
+            <if test="prjReqDto.stat_cd != null and prjReqDto.stat_cd != 'all'">
+                AND stat_cd = #{prjReqDto.stat_cd}
+            </if>
+        ) inline_query
+        WHERE
+            inline_query.rn BETWEEN ((#{cri.pageNum} - 1) * #{cri.amount} + 1) AND (#{cri.pageNum} * #{cri.amount})
+            ORDER BY
+            inline_query.rn
+    </select>
+
+
+    <select id="getProjectManager" resultType="com.kcc.pms.domain.project.model.dto.ProjectManagerResponseDto">
+        SELECT
+            M.mem_no as memNo , M.mem_nm as memNm
+        FROM
+            projectmember PM
+        JOIN
+            member M ON PM.mem_no = M.mem_no
+        WHERE
+            PM.prj_no = #{prj_no}
+        AND
+            PM.prj_auth_cd = 'PMS00201'
+    </select>
+
+
+    <select id="getProjectCount" resultType="int">
+        SELECT
+            COUNT(P.prj_no)
+        FROM
+            project P
+        JOIN
+            projectmember PM ON P.prj_no = PM.prj_no
+        JOIN
+            member M ON PM.mem_no = M.mem_no
+        WHERE
+            M.login_id = #{prjReqDto.login_id}
+            AND P.use_yn = 'Y'
+            <if test="prjReqDto.prj_title != null and prjReqDto.prj_title != ''">
+                AND REPLACE(prj_title, ' ', '') like '%' || REPLACE(#{prjReqDto.prj_title}, ' ', '') || '%'
+            </if>
+            <if test="prjReqDto.stat_cd != null and prjReqDto.stat_cd != 'all'">
+                AND stat_cd = #{prjReqDto.stat_cd}
+            </if>
+    </select>
+
+
+    <select id="findByProject" resultType="com.kcc.pms.domain.project.model.dto.ProjectResponseDto">
+        select *
+        from
+            project
+        where
+            prj_no = #{prj_no}
+        and use_yn = 'Y'
+    </select>
+
+
+    <select id="getCommonProjectList" resultType="com.kcc.pms.domain.project.model.dto.ProjectResponseDto">
+        select
+            p.prj_no,
+            p.prj_title
+        FROM
+            project P
+        JOIN
+            projectmember PM ON P.prj_no = PM.prj_no
+        JOIN
+            member M ON PM.mem_no = M.mem_no
+        WHERE
+            M.login_id = #{login_id}
+        AND p.stat_cd IN ('PMS00101', 'PMS00102')
+        AND P.use_yn = 'Y'
+        order by P.prj_no desc
+    </select>
+
+    <select id="getAuthCode" resultType="com.kcc.pms.domain.project.model.dto.ProjectManagerResponseDto">
+        select
+            prj_auth_cd as projectAuthCode
+        from projectmember
+        where prj_no = #{prjNo}
+        and mem_no = #{memNo}
+    </select>
+
+    <update id="updateRecentProject">
+        update member set
+        rec_prj = #{prjNo}
+        where mem_no = #{memNo}
+    </update>
+
+    <select id="getRecentProject" resultType="com.kcc.pms.domain.project.model.dto.RecentProjectDto">
+        select
+            rec_prj as recPrj,
+            (select prj_title from project where prj_no = rec_prj) as prjTitle
+        from member
+        where mem_no = #{memNo}
+    </select>
+
+    <update id="updateProjectProgress">
+        update project set
+        prg = #{progress}
+        where prj_no = #{prjNo}
+    </update>
+
+</mapper>

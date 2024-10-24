@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!-- mapper DTD 선언 -->
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.kcc.pms.domain.system.mapper.SystemMapper">
+    <cache />
+
+    <select id="getSystemsByProjectNo" resultType="com.kcc.pms.domain.system.model.dto.SystemResponseDTO">
+        SELECT sys_no AS systemNo,
+               sys_ttl AS systemTitle,
+               sys_cont AS systemContent,
+               prj_no AS projectNo,
+               par_sys_no AS parentSystemNo
+        FROM system
+        WHERE prj_no = #{projectNo}
+    </select>
+
+</mapper>

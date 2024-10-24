@@ -32,3 +32,8 @@ build/
 
 ### VS Code ###
 .vscode/
+
+### yml ###
+*-secret.yml
+
+.metadata
