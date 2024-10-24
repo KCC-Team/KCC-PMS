@@ -6,6 +6,7 @@ WORKDIR /app
 
 # Maven 빌드 시 생성된 JAR 파일을 Docker 이미지 내의 작업 디렉토리로 복사
 # 'your-application.jar'는 실제 Maven 빌드 후 생성된 JAR 파일명으로 대체해야 함
+ENV SPRING_PROFILES_ACTIVE=prod
 COPY target/pms-0.0.1-SNAPSHOT.jar /app/
 
 # 컨테이너가 시작될 때 실행될 명령어
