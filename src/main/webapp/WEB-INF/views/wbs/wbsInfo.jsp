@@ -40,6 +40,7 @@
                         <input type="hidden" id="mem_no" name="mem_no" value="">
                         <input type="hidden" id="tm_no" name="tm_no" value="">
                         <input type="hidden" id="max_order_id" name="max_order_id" value="">
+                        <input type="hidden" id="sys_no" name="sys_no" value="">
 
                         <table class="form-table">
                             <tr>
@@ -101,8 +102,19 @@
                                     </select>
                                 </td>
                             </tr>
+                            <tr>
+                                <th><label>시스템/업무분류</label></th>
+                                <td colspan="3">
+                                    <div class="system-select-wrapper">
+                                    <span class="system-select-button" id="system-select">
+                                        <span>시스템/업무 선택</span>
+                                    </span>
+                                        <ul class="mymenu" id="system-menu"></ul>
+                                    </div>
+                                </td>
+                            </tr>
                             <tr id="par_task_nm_row">
-                                <th>상위작업</th>
+                                <th>상위작업명</th>
                                 <td colspan="3"><input type="text" id="par_task_nm" name="par_task_nm" value="" readonly></td>
                             </tr>
                             <tr>
@@ -121,14 +133,8 @@
                             </tr>
                             <tr>
                                 <th>관련 산출물명</th>
-                                <td>
+                                <td colspan="3">
                                     <input type="text" id="rel_out_nm" name="rel_out_nm" value="">
-                                </td>
-                                <th>시스템/업무</th>
-                                <td>
-                                    <select id="sys_no" name="sys_no">
-                                        <option value="">선택하세요.</option>
-                                    </select>
                                 </td>
                             </tr>
 

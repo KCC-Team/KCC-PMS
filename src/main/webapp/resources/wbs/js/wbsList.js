@@ -48,7 +48,8 @@ function getProjectResult() {
         url: '/projects/api/wbs',
         type: 'GET',
         success: function(response) {
-
+            let totalPrg = 0;
+            let prgCount = 0;
             let tasks = {
                 data: [] // 빈 배열로 초기화
             };
@@ -74,7 +75,17 @@ function getProjectResult() {
                     rel_out_nm: item.rel_out_nm,
                     par_task_no: item.par_task_no
                 });
+
+                // 진척률 합산
+                totalPrg += parseInt(item.prg);
+                prgCount++;
             });
+
+            // 평균 진척률 구하기
+            let avgPrg = totalPrg / prgCount;
+            if (avgPrg > 0) {
+                updateProjectPrg(avgPrg);
+            }
 
             // 작업 간의 드래그 앤 드롭을 통해 순서 변경
             gantt.config.order_branch = false;  // 부모 작업 내에서 순서 변경(기본값:false)
@@ -272,7 +283,7 @@ function makeResizableColumns() {
     });
 }
 
-
+// wbs 등록 / 상세 팝업
 function wbsInfoPopup(type, id, parentId, max_order_id) {
     let url = "/projects/wbsInfo?page=wbs&type=" + type;
     if (id != undefined)  {
@@ -312,6 +323,23 @@ function deleteWbs(type, id) {
     }
 }
 
+// 프로젝트 진척률 update
+function updateProjectPrg(prg) {
+    $.ajax({
+        url: '/projects/api/prg',
+        type: 'PATCH',
+        data: {
+            progress: prg
+        },
+        success: function(response) {
+
+        },
+        error: function(xhr, status, error) {
+            console.log('에러:', xhr.responseText);
+        }
+    });
+}
+
 
 $(document).ready(function() {
     $('.btn-modify-wbs').click(function () {
@@ -349,5 +377,4 @@ $(document).ready(function() {
         }
         gridHidden = !gridHidden;
     });
-
 });

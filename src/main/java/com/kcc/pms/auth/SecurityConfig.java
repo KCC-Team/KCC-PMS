@@ -55,7 +55,7 @@ public class SecurityConfig {
                                 response.sendRedirect(prevPage);
                             } else {
                                 SavedRequestAwareAuthenticationSuccessHandler defaultHandler = new SavedRequestAwareAuthenticationSuccessHandler();
-                                defaultHandler.setDefaultTargetUrl("/projects/list"); // 기본 경로 설정
+                                defaultHandler.setDefaultTargetUrl("/projects/list?type=projectList"); // 기본 경로 설정
                                 defaultHandler.onAuthenticationSuccess(request, response, authentication);
                             }
                         })

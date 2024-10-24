@@ -1,9 +1,6 @@
 package com.kcc.pms.domain.project.mapper;
 
-import com.kcc.pms.domain.project.model.dto.Criteria;
-import com.kcc.pms.domain.project.model.dto.ProjectManagerResponseDto;
-import com.kcc.pms.domain.project.model.dto.ProjectRequestDto;
-import com.kcc.pms.domain.project.model.dto.ProjectResponseDto;
+import com.kcc.pms.domain.project.model.dto.*;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -23,5 +20,6 @@ public interface ProjectMapper {
     List<ProjectResponseDto> getCommonProjectList(@Param("login_id") String login_id);
     ProjectManagerResponseDto getAuthCode(@Param("prjNo") Long prjNo, @Param("memNo") Long memNo);
     int updateRecentProject(@Param("prjNo") Long prjNo, @Param("memNo") Long memNo);
-    int getRecentProject(Long memNo);
+    RecentProjectDto getRecentProject(Long memNo);
+    int updateProjectProgress(@Param("prjNo") Long prjNo, @Param("progress") Integer progress);
 }

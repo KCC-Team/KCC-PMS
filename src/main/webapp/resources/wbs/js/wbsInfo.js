@@ -15,6 +15,16 @@ $(document).ready(function() {
         dateFormat: "yy-mm-dd"
     });
 
+    fetchMenuData().then(function(menuData) {
+        createMenu(menuData);
+    });
+
+    $('#system-select').click(function() {
+        $('#system-menu').slideToggle();  // 메뉴를 보여주거나 숨기기
+    });
+
+    $("#system-select span:first").text("시스템 선택");
+
     // 인원 검색
     $('.btn-select-user').click(function () {
         window.open(
@@ -109,8 +119,7 @@ window.addEventListener('message', function (event) {
     $("#mem_nm").val(membersName);
 });
 
-
-// 상세정보
+// 상세정보 조회
 function getWbsInfo(id) {
     $.ajax({
         url: '/projects/api/wbs/info',
@@ -133,6 +142,7 @@ function getWbsInfo(id) {
             $("#prg").val(res[0].prg);
             $("#weight_val").val(res[0].weight_val);
             $("#rel_out_nm").val(res[0].rel_out_nm);
+            $("#sys_no").val(res[0].sys_no);
 
         },
         error: function (xhr, status, error) {
@@ -144,6 +154,7 @@ function getWbsInfo(id) {
     getTopTaskList(id);
 }
 
+// 상위 작업 조회 후 노출
 function getTopTaskList(id) {
     $.ajax({
         url: '/projects/api/wbs/topTask',
@@ -164,5 +175,50 @@ function getTopTaskList(id) {
             alert('조회 중 에러가 발생했습니다. 다시 시도해 주세요.');
             return false;
         }
+    });
+}
+
+function fetchMenuData() {
+    return $.ajax({
+        url: '/systems?prjNo=' + prjNo,
+        method: 'GET',
+        dataType: 'json',
+        success: function(response) {
+            return response;
+        },
+        error: function(error) {
+            console.error("Error fetching data:", error);
+        }
+    });
+}
+
+function createMenu(menuData) {
+    createMenuHTML(menuData, $('#system-menu'), "");
+}
+
+function createMenuHTML(menuData, parentElement, path) {
+    menuData.forEach(function(menuItem) {
+        const listItem = $('<li class="menu-item"></li>').text(menuItem.systemTitle);
+        const subMenu = $('<ul class="system-submenu"></ul>');
+        const currentPath = path ? path + " > " + menuItem.systemTitle : menuItem.systemTitle;
+
+        if ($('#sys_no').val() == menuItem.systemNo)  {
+            $('#system-select span:first-child').text(currentPath);
+        }
+
+        // 하위 메뉴가 있는 경우
+        if (menuItem.subSystems && menuItem.subSystems.length > 0) {
+            createMenuHTML(menuItem.subSystems, subMenu, currentPath);
+            listItem.append(subMenu);
+        }
+
+        listItem.click(function(event) {
+            event.stopPropagation();
+            $('#system-select span:first-child').text(currentPath);  // 사용자가 선택한 경로 표시
+            $('#sys_no').val(menuItem.systemNo);  // systemNo를 숨겨진 필드에 저장
+            $('.mymenu').slideUp();  // 메뉴 숨기기
+        });
+
+        parentElement.append(listItem);
     });
 }

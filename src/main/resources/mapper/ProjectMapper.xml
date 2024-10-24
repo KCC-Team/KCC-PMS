@@ -215,10 +215,18 @@
         where mem_no = #{memNo}
     </update>
 
-    <select id="getRecentProject" resultType="int">
-        select rec_prj
+    <select id="getRecentProject" resultType="com.kcc.pms.domain.project.model.dto.RecentProjectDto">
+        select
+            rec_prj as recPrj,
+            (select prj_title from project where prj_no = rec_prj) as prjTitle
         from member
         where mem_no = #{memNo}
     </select>
+
+    <update id="updateProjectProgress">
+        update project set
+        prg = #{progress}
+        where prj_no = #{prjNo}
+    </update>
 
 </mapper>
