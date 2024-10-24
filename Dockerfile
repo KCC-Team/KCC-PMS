@@ -13,4 +13,4 @@ COPY target/pms-0.0.1-SNAPSHOT.jar /app/
 CMD ["java", "-jar", "pms-0.0.1-SNAPSHOT.jar"]
 
 # 컨테이너 내부에서 제공될 포트 번호 지정 (애플리케이션이 사용하는 포트)
-EXPOSE 8085
+EXPOSE 8080
