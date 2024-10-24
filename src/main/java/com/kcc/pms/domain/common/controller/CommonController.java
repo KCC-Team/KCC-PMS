@@ -41,6 +41,8 @@ public class CommonController {
         ProjectManagerResponseDto pmDto = projectService.getAuthCode(prjNo, memNo);
         String authCode = pmDto.getProjectAuthCode();
 
+        projectService.updateRecentProject(prjNo, memNo);
+
         session.setAttribute("prjNo", prjNo);
         session.setAttribute("prjTitle", prjTitle);
         session.setAttribute("authCode", authCode);
