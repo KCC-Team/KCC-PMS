@@ -582,6 +582,7 @@ INSERT INTO CodeDetail (cd_dtl_no, common_cd_no, cd_dtl_nm, order_no, use_yn) VA
 INSERT INTO CodeDetail (cd_dtl_no, common_cd_no, cd_dtl_nm, order_no, use_yn) VALUES ('PMS01002', 'PMS010', '인터페이스', 2, 'Y');
 INSERT INTO CodeDetail (cd_dtl_no, common_cd_no, cd_dtl_nm, order_no, use_yn) VALUES ('PMS01003', 'PMS010', '프로그램', 3, 'Y');
 INSERT INTO CodeDetail (cd_dtl_no, common_cd_no, cd_dtl_nm, order_no, use_yn) VALUES ('PMS01004', 'PMS010', '보고서', 4, 'Y');
+INSERT INTO CodeDetail (cd_dtl_no, common_cd_no, cd_dtl_nm, order_no, use_yn) VALUES ('PMS01005', 'PMS010', '일반', 4, 'Y');
 
 INSERT INTO CodeDetail (cd_dtl_no, common_cd_no, cd_dtl_nm, order_no, use_yn) VALUES ('PMS01101', 'PMS011', '매우높음', 1, 'Y');
 INSERT INTO CodeDetail (cd_dtl_no, common_cd_no, cd_dtl_nm, order_no, use_yn) VALUES ('PMS01102', 'PMS011', '높음', 2, 'Y');
