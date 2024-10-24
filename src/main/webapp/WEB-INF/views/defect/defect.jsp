@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 
 <!DOCTYPE html>
 <html lang="ko">
@@ -39,31 +40,17 @@
     }
 </style>
 <body>
-<!-- 샘플 데이터 -->
-<%@ page import="java.util.HashMap" %>
-<%@ page import="java.util.Map" %>
 
-<%
-    Map<String, String> typeCode = new HashMap<>();
-    typeCode.put("1", "단위 테스트");
-    typeCode.put("2", "통합 테스트");
-    request.setAttribute("typeCode", typeCode);
-%>
+<c:set var="discoverDate" value="${req.discoverDate}" />
+<c:set var="scheduleDate" value="${req.scheduleWorkDate}" />
+<c:set var="workDate" value="${req.workDate}" />
 
-<c:set var="type" value="${type}" />
-<c:choose>
-    <c:when test="${type eq 'register'}">
-        <c:set var="titleName" value="결함 등록" />
-    </c:when>
-    <c:otherwise>
-        <c:set var="titleName" value="결함 상세" />
-    </c:otherwise>
-</c:choose>
     <div class="popup-header">
         <span class="popup-title">결함 정보</span>
     </div>
     <section style="height: 600px">
         <form id="defectForm">
+            <input type="hidden" name="defectNumber" value="${req.defectNumber}" >
             <div class="d-flex justify-content-left">
                 <div class="me-4" style="width: 550px !important;">
                     <table class="defect-table w-100">
@@ -72,14 +59,15 @@
                             <td class="font-nowrap">
                                 <input type="text" name="defectTitle" value="${req.defectTitle}" required >
                             </td>
-                            <td class="td-title">업무 분류</td>
+                            <td class="td-title">시스템-업무 분류</td>
                             <td>
-                                <select name="workType" class="type" required >
-                                    <option value="" selected disabled>업무 분류 선택</option>
-                                    <c:forEach var="type" items="${typeCode}">
-                                        <option value="${type.key}">${type.value}</option>
-                                    </c:forEach>
-                                </select>
+                                <input type="hidden" id="systemNo" name="systemNumber" value="${req.systemNumber}" >
+                                <div class="system-select-wrapper">
+                                    <span class="system-select-button" id="system-select">
+                                        <span>시스템/업무 선택</span>
+                                    </span>
+                                    <ul class="mymenu" id="system-menu"></ul>
+                                </div>
                             </td>
                         </tr>
                         <tr>
@@ -107,7 +95,11 @@
                                 <select name="priority" class="type" required >
                                     <option value="" selected disabled>우선순위 선택</option>
                                     <c:forEach var="item" items="${priority}">
-                                        <option value="${item.codeDetailNo}" ${item.codeDetailNo} == ${req.orderSelect} ? 'selected' : ''>${item.codeDetailName}</option>
+                                        <option value="${item.codeDetailNo}"
+                                                <c:if test="${item.codeDetailNo eq req.prioritySelect}">
+                                                    selected="selected"
+                                                </c:if>
+                                        >${item.codeDetailName}</option>
                                     </c:forEach>
                                 </select>
                             </td>
@@ -116,7 +108,11 @@
                                 <select name="status" class="type" required >
                                     <option value="" selected disabled>상태 선택</option>
                                     <c:forEach var="st" items="${status}">
-                                        <option value="${st.codeDetailNo}" ${st.codeDetailNo} == ${req.statusSelect} ? 'selected' : ''>${st.codeDetailName}</option>
+                                        <option value="${st.codeDetailNo}"
+                                                <c:if test="${st.codeDetailNo eq req.statusSelect}">
+                                                    selected="selected"
+                                                </c:if>
+                                        >${st.codeDetailName}</option>
                                     </c:forEach>
                                 </select>
                             </td>
@@ -128,14 +124,14 @@
                             </td>
                             <td class="td-title">발견일자&nbsp;&nbsp;&nbsp;<span class="es-star">*</span></td>
                             <td>
-                                <input type="text" name="discoverDate" value="${req.discoverDate}" class="defect-date" placeholder="yyyy-mm-dd" required >
+                                <input type="text" name="discoverDate" value="${fn:substring(discoverDate,0,10) }" class="defect-date" placeholder="yyyy-mm-dd" required >
                             </td>
                         </tr>
                         <tr>
                             <td class="td-title">조치희망일</td>
                             <td colspan="3">
                                 <div class="d-flex justify-content-left" style="width: 136px">
-                                    <input type="text" name="scheduleWorkDate" value="${req.scheduleWorkDate}" class="defect-date" placeholder="yyyy-mm-dd" >
+                                    <input type="text" name="scheduleWorkDate" value="${fn:substring(scheduleDate,0,10) }" class="defect-date" placeholder="yyyy-mm-dd" >
                                 </div>
                             </td>
                         </tr>
@@ -146,7 +142,7 @@
                             </td>
                             <td class="td-title">조치일자</td>
                             <td>
-                                <input type="text" name="workDate" value="${req.workDate}" class="defect-date" placeholder="yyyy-mm-dd" >
+                                <input type="text" name="workDate" value="${fn:substring(workDate,0,10) }" class="defect-date" placeholder="yyyy-mm-dd" >
                             </td>
                         </tr>
                         <tr>
@@ -183,10 +179,18 @@
             <br>
             <section class="btn-sec d-flex justify-content-center">
                 <button type="submit" class="save-btn me-3" id="save-df">&nbsp;<i class="fa-solid fa-check"></i>&nbsp;&nbsp;저장&nbsp;&nbsp;</button>
-                <button class="del-btn me-3">&nbsp;&nbsp;&nbsp;삭제&nbsp;&nbsp;&nbsp;</button>
+                <button class="del-btn me-3" style="display: none;">&nbsp;&nbsp;&nbsp;삭제&nbsp;&nbsp;&nbsp;</button>
                 <button class="btn btn-secondary" id="can-df">&nbsp;&nbsp;&nbsp;닫기&nbsp;&nbsp;&nbsp;</button>
             </section>
         </form>
     </section>
+
+<script type="text/javascript">
+    let discoverFilesJson = '<c:out value="${discoverFilesJson}" escapeXml="false" />';
+    let workFilesJson = '<c:out value="${workFilesJson}" escapeXml="false" />';
+    let discoverFiles = discoverFilesJson && discoverFilesJson.trim() !== '' ? JSON.parse(discoverFilesJson) : [];
+    let workFiles = workFilesJson && workFilesJson.trim() !== '' ? JSON.parse(workFilesJson) : [];
+</script>
+
 </body>
 </html>
