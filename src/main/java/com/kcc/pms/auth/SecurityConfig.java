@@ -39,7 +39,7 @@ public class SecurityConfig {
                 .ignoringRequestMatchers("/**") // 모든 경로에 대해 기본적으로 CSRF 비활성화
                 .requireCsrfProtectionMatcher(request -> {
                     String uri = request.getRequestURI();
-                    return uri.equals("/members/loginForm"); // 로그인 페이지에서만 CSRF 활성화
+                    return uri.equals("/loginForm"); // 로그인 페이지에서만 CSRF 활성화
                 })
         );
         http.authorizeHttpRequests(authorizeRequests ->

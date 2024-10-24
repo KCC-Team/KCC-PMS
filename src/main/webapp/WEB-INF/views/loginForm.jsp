@@ -1,4 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<%@ taglib uri="http://www.springframework.org/security/tags" prefix="sec" %>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -28,6 +29,13 @@
                 <div class="input-group">
                     <input type="password" name="password" placeholder="패스워드" required>
                 </div>
+
+                <% if (request.getParameter("error") != null) { %>
+                <div class="alert alert-danger">
+                    아이디와 비밀번호를 다시 확인해 주세요.
+                </div>
+                <% } %>
+
                 <button type="submit" class="login-btn">로그인</button>
                 <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}">
             </form>
