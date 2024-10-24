@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!-- mapper DTD 선언 -->
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.kcc.pms.domain.output.mapper.FileMapper">
+    <insert id="saveFileMaster" parameterType="FileMasterVO">
+        <selectKey keyProperty="fileMasterNumber" resultType="Long" order="BEFORE">
+            SELECT seq_filemaster.NEXTVAL FROM dual
+        </selectKey>
+        INSERT INTO FileMaster (fl_ms_no, fl_cd, use_yn)
+        VALUES (#{fileMasterNumber}, #{fileCode, jdbcType=VARCHAR}, 'Y')
+    </insert>
+
+    <insert id="saveFileDetails" parameterType="map">
+        INSERT INTO FileDetail (fl_no, original_ttl, file_path, fl_type, fl_size, fl_ms_no, reg_id, reg_dt)
+        VALUES (seq_filedetail.nextval, #{originalTitle, jdbcType=VARCHAR}, #{filePath, jdbcType=VARCHAR}, #{fileType, jdbcType=VARCHAR},
+                #{fileSize, jdbcType=VARCHAR}, #{fileMasterNumber, jdbcType=NUMERIC}, #{registerId, jdbcType=VARCHAR}, sysdate)
+    </insert>
+
+    <select id="findFilesDetails" parameterType="long" resultType="list">
+        SELECT file_path AS filePath
+        FROM filedetail
+        WHERE fl_ms_no = #{fileMasterNumber}
+    </select>
+
+    <delete id="deleteFileDetails" parameterType="long">
+        DELETE FROM filedetail
+        WHERE fl_no = #{fileNumber}
+    </delete>
+
+    <select id="getFileDetailsRes" parameterType="long" resultType="FileResponseDto">
+        SELECT
+            fl_no AS fileNumber,
+            file_path AS filePath,
+            original_ttl AS FileName,
+            fl_size AS fileSize
+        FROM filedetail
+        WHERE fl_ms_no = #{fileMasterNumber, jdbcType=NUMERIC}
+    </select>
+
+    <select id="deleteFileMaster" parameterType="long">
+        DELETE FROM filemaster
+        WHERE fl_ms_no = #{fileMasterNumber}
+    </select>
+</mapper>
