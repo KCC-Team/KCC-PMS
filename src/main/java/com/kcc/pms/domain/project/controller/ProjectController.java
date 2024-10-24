@@ -115,5 +115,29 @@ public class ProjectController {
         }
     }
 
+    @GetMapping("/api/project/recentProjectInfo")
+    @ResponseBody
+    public ResponseEntity<RecentProjectDto> recentProjectInfo(@AuthenticationPrincipal PrincipalDetail principalDetail) {
+        Long memNo = principalDetail.getMember().getMemNo();
+        RecentProjectDto projectInfo = projectService.getRecentProject(memNo);
+        return ResponseEntity.ok(projectInfo);
+    }
+
+    @PatchMapping("/api/prg")
+    @ResponseBody
+    public ResponseEntity<String> updateProgress(Integer progress, HttpSession session) {
+        Long prjNo = (Long)session.getAttribute("prjNo"); // 프로젝트번호(세션정보)
+
+        try {
+            int result = projectService.updateProjectProgress(prjNo, progress);
+            if (result > 0) {
+                return ResponseEntity.ok("success update progress");
+            } else {
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("fail update progress");
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("error: " + e.getMessage());
+        }
+    }
 
 }

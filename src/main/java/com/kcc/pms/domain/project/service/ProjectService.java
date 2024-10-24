@@ -14,5 +14,6 @@ public interface ProjectService {
     List<ProjectResponseDto> getCommonProjectList(String login_id);
     ProjectManagerResponseDto getAuthCode(Long prjNo, Long memNo);
     int updateRecentProject(Long prjNo, Long memNo);
-    int getRecentProject(Long memNo);
+    RecentProjectDto getRecentProject(Long memNo);
+    int updateProjectProgress(Long prjNo, Integer progress);
 }

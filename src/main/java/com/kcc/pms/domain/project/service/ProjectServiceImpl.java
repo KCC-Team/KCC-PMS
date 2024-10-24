@@ -92,7 +92,13 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    public int getRecentProject(Long memNo) {
+    public RecentProjectDto getRecentProject(Long memNo) {
         return projectMapper.getRecentProject(memNo);
     }
+
+    @Override
+    public int updateProjectProgress(Long prjNo, Integer progress) {
+        return projectMapper.updateProjectProgress(prjNo, progress);
+    }
+
 }

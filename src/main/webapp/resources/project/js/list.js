@@ -1,8 +1,12 @@
-var queryString = window.location.search;
-var queryParams = new URLSearchParams(queryString);
-var prj_title = queryParams.get('prj_title');
-var stat_cd = queryParams.get('stat_cd');
+let queryString = window.location.search;
+let queryParams = new URLSearchParams(queryString);
+let prj_title = queryParams.get('prj_title');
+let stat_cd = queryParams.get('stat_cd');
+let type = queryParams.get('type');
 
+if (type == 'projectList') {
+    getRecentProjectInfo();
+}
 getStatusCode();
 
 // 상태 코드 호출
@@ -25,6 +29,20 @@ function getStatusCode() {
             } else {
                 $("#stat_cd").val(stat_cd);
             }
+        },
+        error: function(error) {
+            console.error(error);
+        }
+    });
+}
+
+function getRecentProjectInfo() {
+    $.ajax({
+        url: '/projects/api/project/recentProjectInfo',
+        type: 'GET',
+        success: function(response) {
+            console.log(response);
+            connectDashboard(response.recPrj, response.prjTitle);
         },
         error: function(error) {
             console.error(error);
@@ -56,11 +74,7 @@ $(document).ready(function () {
     });
 });
 
-
-$(document).on('click', '.project-link', function() {
-    let prjNo = $(this).data('prj-no');
-    let prjTitle = $(this).text();
-
+function connectDashboard(prjNo, prjTitle) {
     $.ajax({
         url: '/projects/dashboardInfo',
         type: 'GET',
@@ -69,10 +83,17 @@ $(document).on('click', '.project-link', function() {
             prjTitle: prjTitle
         },
         success: function(response) {
-            window.location.href = '/projects/dashboard';
+            window.location.replace('/projects/dashboard');
         },
         error: function(xhr, status, error) {
             console.error('에러 발생:', xhr.responseText);
         }
     });
+}
+
+
+$(document).on('click', '.project-link', function() {
+    let prjNo = $(this).data('prj-no');
+    let prjTitle = $(this).text();
+    connectDashboard(prjNo, prjTitle);
 });
