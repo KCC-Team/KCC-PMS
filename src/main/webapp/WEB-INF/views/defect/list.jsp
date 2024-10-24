@@ -31,26 +31,26 @@
                     <div class="filter-section">
                         <div class="me-4 d-flex justify-content-left align-items-center">
                             시스템 분류&nbsp;&nbsp;&nbsp;
-                            <label>
-                                <select name="taskSelect">
-                                    <c:forEach var="task" items="${tasks}">
-                                        <option value="${task}">${task}</option>
-                                    </c:forEach>
-                                </select>
-                            </label>
+                            <div class="system-select-wrapper">
+                                <span class="system-select-button" id="system-select">
+                                    <span>시스템/업무 선택</span>
+                                </span>
+                                <ul class="mymenu" id="system-menu"></ul>
+                            </div>
                         </div>
                         <div class="me-4 d-flex justify-content-left align-items-center">
                             결함 분류&nbsp;&nbsp;&nbsp;
                             <label>
-                                <select name="taskSelect">
-                                    <c:forEach var="task" items="${tasks}">
-                                        <option value="${task}">${task}</option>
+                                <select class="defect-status" name="taskSelect">
+                                    <option value="all" selected>전체</option>
+                                    <c:forEach var="st" items="${status}">
+                                        <option value="${st.codeDetailNo}">${st.codeDetailName}</option>
                                     </c:forEach>
                                 </select>
                             </label>
                         </div>
-                        <input type="text" class="form-control" id="searchTest" placeholder="결함 검색하세요." style="height: 40px; width: 215px;">&nbsp;&nbsp;
-                        <button id="test-search-btn" class="save-btn-df d-flex align-items-center me-3 text-nowrap">&nbsp;&nbsp;&nbsp;&nbsp;검색&nbsp;&nbsp;&nbsp;&nbsp;</button>
+                        <input type="text" class="form-control" id="searchDefect" placeholder="결함 검색하세요." style="height: 40px; width: 215px;">&nbsp;&nbsp;
+                        <button id="defect-search-btn" class="save-btn-df d-flex align-items-center me-3 text-nowrap">&nbsp;&nbsp;&nbsp;&nbsp;검색&nbsp;&nbsp;&nbsp;&nbsp;</button>
                         <div class="action-buttons d-flex justify-content-end">
                             <a class="d-flex align-items-center text-nowrap">
                                 <button class="add-item add-defect">

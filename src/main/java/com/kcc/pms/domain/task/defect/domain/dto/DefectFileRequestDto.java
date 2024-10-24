@@ -14,4 +14,5 @@ import static lombok.AccessLevel.*;
 public class DefectFileRequestDto {
     List<MultipartFile> disFiles;
     List<MultipartFile> workFiles;
+    List<Long> deleteFiles;
 }

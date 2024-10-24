@@ -13,6 +13,8 @@ public class EnvVariableProperties {
     private String region;
     private S3 s3;
 
+    private final String KCC_BUCKET = "https://kcc-bucket.";
+
     @Setter @Getter
     public static class S3 {
         private String bucket;

@@ -12,7 +12,7 @@ public class DefectDto {
     private String defectId;
     private Long testNumber;
     private String testId;
-    private String workType;
+    private Long systemNumber;
     private String defectContent;
     private String discoverName;
     private String discoverDate;
@@ -20,6 +20,6 @@ public class DefectDto {
     private String workerName;
     private String workDate;
     private String workContent;
-    private String orderSelect;
+    private String prioritySelect;
     private String statusSelect;
 }

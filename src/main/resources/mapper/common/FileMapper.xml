@@ -18,4 +18,29 @@
                 #{fileSize, jdbcType=VARCHAR}, #{fileMasterNumber, jdbcType=NUMERIC}, #{registerId, jdbcType=VARCHAR}, sysdate)
     </insert>
 
+    <select id="findFilesDetails" parameterType="long" resultType="list">
+        SELECT file_path AS filePath
+        FROM filedetail
+        WHERE fl_ms_no = #{fileMasterNumber}
+    </select>
+
+    <delete id="deleteFileDetails" parameterType="long">
+        DELETE FROM filedetail
+        WHERE fl_no = #{fileNumber}
+    </delete>
+
+    <select id="getFileDetailsRes" parameterType="long" resultType="FileResponseDto">
+        SELECT
+            fl_no AS fileNumber,
+            file_path AS filePath,
+            original_ttl AS FileName,
+            fl_size AS fileSize
+        FROM filedetail
+        WHERE fl_ms_no = #{fileMasterNumber, jdbcType=NUMERIC}
+    </select>
+
+    <select id="deleteFileMaster" parameterType="long">
+        DELETE FROM filemaster
+        WHERE fl_ms_no = #{fileMasterNumber}
+    </select>
 </mapper>
