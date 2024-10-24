@@ -50,7 +50,7 @@ $(function () {
     });
 
     const urlParams = new URLSearchParams(window.location.search);
-        const page = urlParams.get('page') || '1';
+    const page = urlParams.get('page') || '1';
 
     $.ajax({
         method: "GET",
