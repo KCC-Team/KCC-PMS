@@ -21,10 +21,25 @@
 
 }
 
+.first{
+    margin-bottom: 17px;
+}
+
 .feat-all-chart {
-    border: 1px solid #ccc;
+    /*border: 1px solid #ccc;*/
     text-align: center;
     margin-bottom: 10px;
+    width: 75%;  /* 차트의 너비 조정 */
+    height: 300px; /* 차트의 높이 조정 */
+    margin: auto; /* 중앙 정렬 */
+}
+
+.project-title {
+    text-align: center;
+    font-size: 17px;
+    font-weight: bold;
+    color: black;
+    padding-bottom: 5px;
 }
 
 .feat-info, .feat-info-title {
@@ -223,11 +238,11 @@ progress::-webkit-progress-value {
 }
 
 .feat_content.delay {
-    margin-top: 23px;
+    margin-top: 39px;
 }
 
 .feat-bar {
-    width: 100%;
+    width: 88%;
     height: 20px;
     -webkit-appearance: none;
     appearance: none;

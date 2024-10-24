@@ -4,7 +4,7 @@
 
 <link rel="stylesheet" href="../../../resources/feature/css/featureList.css">
 <link rel="stylesheet" href="../../../resources/common/css/ax5grid.css">
-
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <!-- 콘텐츠 영역 -->
 <main class="content" id="content">
     <div class="main_content">
@@ -20,9 +20,11 @@
 
             <div class="left-section">
 
-                <div class="feat_content">
-                    <div class="feat-info">차세대 공공 프로젝트</div>
-                    <div class="feat-all-chart">도넛 차트 구현</div>
+                <div class="feat_content first">
+                    <div class="project-title">차세대 공공 프로젝트</div>
+                    <div class="feat-all-chart">
+                        <canvas id="systemProgressChart"></canvas>
+                    </div>
                 </div>
 
                 <div class="feat-info-row">
@@ -162,12 +164,35 @@
                 </form>
 
                 <!-- 작업자별 진척도 grid 구현-->
+                <div class="list_table" data-ax5grid="member-grid"  data-ax5grid-config="{
+                        sortable: true,
+                        header: {
+                            columnHeight: 40
+                        },
+                        body: {
+                            columnHeight: 40
+                        }
+                        }" style="height: 280px; width: 100%;">
+                </div>
 
                 <div class="feat_content delay">
                     <div class="feat-info-title">지연목록</div>
                 </div>
 
-                <!-- 지연목록 grid 구현-->
+                <div id="delay">
+                    <!-- 지연목록 grid 구현-->
+                    <div class="list_table" data-ax5grid="delay-grid"  data-ax5grid-config="{
+                        sortable: true,
+                        header: {
+                            columnHeight: 40
+                        },
+                        body: {
+                            columnHeight: 40
+                        }
+                        }" style="height: 280px; width: 100%;">
+                    </div>
+                </div>
+
 
             </div>
 
