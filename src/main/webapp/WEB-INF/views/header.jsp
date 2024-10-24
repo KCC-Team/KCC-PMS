@@ -1,4 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<%@ taglib uri="http://www.springframework.org/security/tags" prefix="sec" %>
 
 <%
     String uri = request.getRequestURI();
@@ -30,6 +31,7 @@
     let prjNo = '<%= prjNoInt != null ? prjNoInt.toString() : 1 %>';
 </script>
 
+<link rel="stylesheet" href="../../../resources/common/css/header.css">
 
 <header class="header">
     <div class="header-content">
@@ -51,12 +53,15 @@
         <i class="fa-regular fa-envelope"></i>
         <div class="dropdown header-user-name">
             <a class="btn dropdown-toggle project-user-name" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                홍길동 사원
+                <sec:authentication property="principal.member.memberName"/>
             </a>
-            <ul class="dropdown-menu">
-                <li><a class="dropdown-item" href="#">내 정보</a></li>
-                <li><a class="dropdown-item" href="#">로그아웃</a></li>
-            </ul>
+            <form method="POST" action="/logout" class="logout_form">
+                <ul class="dropdown-menu logout-menu">
+                    <li>
+                        <button type="submit" class="logout_btn">로그아웃</button>
+                    </li>
+                </ul>
+            </form>
         </div>
     </div>
 </header>

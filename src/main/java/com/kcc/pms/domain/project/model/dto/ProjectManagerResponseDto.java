@@ -12,4 +12,5 @@ import lombok.Setter;
 public class ProjectManagerResponseDto {
     private String memNo;
     private String memNm;
+    private String projectAuthCode;
 }

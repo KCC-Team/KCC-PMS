@@ -155,5 +155,33 @@
         UPDATE projectmember SET tm_no = #{teamNo} WHERE mem_no = #{memberNo} and tm_no = #{beforeTeamNo}
     </update>
 
+    <insert id="saveMember">
+        insert into member
+        (mem_no, grp_no, login_id, pw, mem_nm, phone_no, email, auth_cd, pos_nm, birth_dt, tech_grd_cd, org, use_yn)
+        values (seq_member.nextval, #{groupNumber}, #{id}, #{pw}, #{memberName}, #{phoneNumber},
+        #{email}, #{authCode}, #{positionCode}, #{birthDate}, #{techGradeCode}, #{organization}, 'Y')
+    </insert>
+
+
+    <select id="findById" resultType="com.kcc.pms.domain.member.model.vo.MemberVO">
+        select
+            mem_no as memNo,
+            grp_no as groupNumber,
+            login_id as id,
+            pw as pw,
+            mem_nm as memberName,
+            phone_no as phoneNumber,
+            email as email,
+            auth_cd as authCode,
+            pos_nm as positionCode,
+            birth_dt as birthDate,
+            tech_grd_cd as techGradeCode,
+            org as organization,
+            use_yn as use,
+            rec_prj as recent_project_number
+        from member
+        where login_id = #{username}
+    </select>
+
 </mapper>
 

@@ -4,6 +4,7 @@ import com.kcc.pms.domain.member.model.dto.GroupMembersResponseDto;
 import com.kcc.pms.domain.member.model.dto.GroupResponseDto;
 import com.kcc.pms.domain.member.model.dto.MemberResponseDto;
 import com.kcc.pms.domain.member.model.dto.ProjectMemberResponseDto;
+import com.kcc.pms.domain.member.model.vo.MemberVO;
 
 import java.util.List;
 
@@ -14,4 +15,5 @@ public interface MemberService {
     List<MemberResponseDto> getTeamMember(Long teamNo);
     MemberResponseDto getMemberDetail(Long projectNo, Long memberNo);
     Integer memberAssignTeam(Long memberNo, Long teamNo, Integer beforeTeamNo);
+    int saveMember(MemberVO member);
 }

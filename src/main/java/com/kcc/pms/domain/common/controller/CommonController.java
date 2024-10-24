@@ -1,13 +1,16 @@
 package com.kcc.pms.domain.common.controller;
 
+import com.kcc.pms.auth.PrincipalDetail;
 import com.kcc.pms.domain.common.model.dto.CommonCodeSelectListResponseDto;
 import com.kcc.pms.domain.common.service.CommonService;
+import com.kcc.pms.domain.project.model.dto.ProjectManagerResponseDto;
 import com.kcc.pms.domain.project.model.dto.ProjectResponseDto;
 import com.kcc.pms.domain.project.service.ProjectService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -23,8 +26,8 @@ public class CommonController {
 
     @GetMapping({"/projects", "/outputs"})
     @ResponseBody
-    public List<ProjectResponseDto> getCommonProjectList() {
-        String login_id = "user1"; // 회원아이디(세션정보)
+    public List<ProjectResponseDto> getCommonProjectList(@AuthenticationPrincipal PrincipalDetail principalDetail) {
+        String login_id = principalDetail.getMember().getId(); // 회원아이디(세션정보)
 
         return projectService.getCommonProjectList(login_id);
     }
@@ -32,9 +35,15 @@ public class CommonController {
 
     @GetMapping("/commonProjectInfo")
     public String getCommonProject(@RequestParam Long prjNo, @RequestParam String prjTitle,
-                                   HttpSession session, HttpServletRequest request) {
+                                   HttpSession session, HttpServletRequest request,
+                                   @AuthenticationPrincipal PrincipalDetail principalDetail) {
+        Long memNo = principalDetail.getMember().getMemNo();
+        ProjectManagerResponseDto pmDto = projectService.getAuthCode(prjNo, memNo);
+        String authCode = pmDto.getProjectAuthCode();
+
         session.setAttribute("prjNo", prjNo);
         session.setAttribute("prjTitle", prjTitle);
+        session.setAttribute("authCode", authCode);
 
         String referer = request.getHeader("Referer");
 
@@ -46,9 +55,9 @@ public class CommonController {
     }
 
 
-    @GetMapping("/login")
+    @GetMapping("/loginForm")
     public String login() {
-        return "login";
+        return "loginForm";
     }
 
 

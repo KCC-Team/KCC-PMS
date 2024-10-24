@@ -6,7 +6,9 @@ import com.kcc.pms.domain.member.model.dto.GroupResponseDto;
 import com.kcc.pms.domain.member.model.dto.MemberResponseDto;
 
 
+import com.kcc.pms.domain.member.model.vo.MemberVO;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 
@@ -20,6 +22,7 @@ import java.util.Map;
 public class MemberServiceImpl implements MemberService{
 
     private final MemberMapper mapper;
+    private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @Override
     public List<GroupResponseDto> getGroupList() {
@@ -51,6 +54,13 @@ public class MemberServiceImpl implements MemberService{
         return mapper.memberAssignTeam(memberNo, teamNo, beforeTeamNo);
     }
 
+    @Override
+    public int saveMember(MemberVO member) {
+        String rawPassword = member.getPw();
+        String encryptedPassword = bCryptPasswordEncoder.encode(rawPassword);
+        member.setPw(encryptedPassword);
+        return mapper.saveMember(member);
+    }
 
     public List<GroupResponseDto> buildTree(List<GroupResponseDto> nodeList) {
         Map<Integer, GroupResponseDto> nodeMap = new HashMap<>();
