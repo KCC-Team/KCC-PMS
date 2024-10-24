@@ -40,6 +40,7 @@
     font-weight: bold;
     color: black;
     padding-bottom: 5px;
+    margin-bottom: 20px;
 }
 
 .feat-info, .feat-info-title {
@@ -260,4 +261,14 @@ progress::-webkit-progress-value {
     margin-left: 10px;
     font-size: 16px;
     color: #000;
+}
+
+
+.circle_strong {
+    position: absolute;
+    top: 312px;
+    left: 294px;
+    text-align: center;
+    line-height: 40px;
+    font-size: 42px;
 }

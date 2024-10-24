@@ -5,6 +5,8 @@
 <link rel="stylesheet" href="../../../resources/feature/css/featureList.css">
 <link rel="stylesheet" href="../../../resources/common/css/ax5grid.css">
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="../../../resources/feature/js/circle-progress.min.js"></script>
+
 <!-- 콘텐츠 영역 -->
 <main class="content" id="content">
     <div class="main_content">
@@ -23,7 +25,10 @@
                 <div class="feat_content first">
                     <div class="project-title">차세대 공공 프로젝트</div>
                     <div class="feat-all-chart">
-                        <canvas id="systemProgressChart"></canvas>
+                        <div class="circle">
+                            <strong class="circle_strong">라벨</strong>
+                        </div>
+<%--                        <canvas id="systemProgressChart"></canvas>--%>
                     </div>
                 </div>
 

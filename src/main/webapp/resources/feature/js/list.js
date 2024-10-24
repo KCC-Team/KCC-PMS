@@ -7,46 +7,54 @@ function openFeaturePopup(){
 }
 
 $(document).ready(function (){
-
-
-    var ctx = document.getElementById('systemProgressChart').getContext('2d');
-    var myDoughnutChart = new Chart(ctx, {
-        type: 'doughnut',
-        data: {
-            labels: ['A 시스템', 'B 시스템', 'C 시스템'],
-            datasets: [{
-                label: '진척도',
-                data: [20, 70, 85], // 이 부분에 각 시스템의 진척도 데이터를 입력
-                backgroundColor: [
-                    'rgba(255, 99, 132, 0.5)',
-                    'rgba(54, 162, 235, 0.5)',
-                    'rgba(255, 206, 86, 0.5)'
-                ],
-                borderColor: [
-                    'rgba(255, 99, 132, 1)',
-                    'rgba(54, 162, 235, 1)',
-                    'rgba(255, 206, 86, 1)'
-                ],
-                borderWidth: 1
-            }]
-        },
-        options: {
-            responsive: true,
-            plugins: {
-                legend: {
-                    position: 'top',
-                },
-                tooltip: {
-                    enabled: true,
-                    callbacks: {
-                        label: function(tooltipItem) {
-                            return tooltipItem.label + ': ' + tooltipItem.raw + '%';
-                        }
-                    }
-                }
-            }
+    $(".circle").circleProgress({      //들어갈 div class명을 넣어주세요
+        value: 0.9,    //진행된 수를 넣어주세요. 1이 100기준입니다.
+        size: 260,       //도넛의 크기를 결정해줍니다.
+        fill: {
+            gradient: ["#3b82f6", "#f59e0b"]    //도넛의 색을 결정해줍니다.
         }
+    }).on('circle-animation-progress', function(event, progress) {    //라벨을 넣어줍니다.
+            $(this).find('strong').html(parseInt(100 * 0.9) + '<i>%</i>');
     });
+
+    // var ctx = document.getElementById('systemProgressChart').getContext('2d');
+    // var myDoughnutChart = new Chart(ctx, {
+    //     type: 'doughnut',
+    //     data: {
+    //         labels: ['A 시스템', 'B 시스템', 'C 시스템'],
+    //         datasets: [{
+    //             label: '진척도',
+    //             data: [20, 70, 85], // 이 부분에 각 시스템의 진척도 데이터를 입력
+    //             backgroundColor: [
+    //                 'rgba(255, 99, 132, 0.5)',
+    //                 'rgba(54, 162, 235, 0.5)',
+    //                 'rgba(255, 206, 86, 0.5)'
+    //             ],
+    //             borderColor: [
+    //                 'rgba(255, 99, 132, 1)',
+    //                 'rgba(54, 162, 235, 1)',
+    //                 'rgba(255, 206, 86, 1)'
+    //             ],
+    //             borderWidth: 1
+    //         }]
+    //     },
+    //     options: {
+    //         responsive: true,
+    //         plugins: {
+    //             legend: {
+    //                 position: 'top',
+    //             },
+    //             tooltip: {
+    //                 enabled: true,
+    //                 callbacks: {
+    //                     label: function(tooltipItem) {
+    //                         return tooltipItem.label + ': ' + tooltipItem.raw + '%';
+    //                     }
+    //                 }
+    //             }
+    //         }
+    //     }
+    // });
 
     document.getElementById('toggle-btn').click();
 
@@ -168,6 +176,11 @@ function initGrid(){
         {memberName: "이순신", total: 8, continue: 3, delay: 1, team: "팀2", progress: "37.5%"},
         {memberName: "장보고", total: 15, continue: 10, delay: 3, team: "팀1", progress: "66%"},
         {memberName: "유관순", total: 12, continue: 12, delay: 0, team: "팀3", progress: "100%"},
+        {memberName: "강감찬", total: 20, continue: 15, delay: 5, team: "팀2", progress: "75%"},
+        {memberName: "홍길동", total: 10, continue: 5, delay: 2, team: "팀1", progress: "50%"},
+        {memberName: "이순신", total: 8, continue: 3, delay: 1, team: "팀2", progress: "37.5%"},
+        {memberName: "장보고", total: 15, continue: 10, delay: 3, team: "팀1", progress: "66%"},
+        {memberName: "유관순", total: 12, continue: 12, delay: 0, team: "팀3", progress: "100%"},
         {memberName: "강감찬", total: 20, continue: 15, delay: 5, team: "팀2", progress: "75%"}
     ]
 
@@ -216,6 +229,10 @@ function initGrid(){
     });
 
     var delayData = [
+        {id: "1501", name: "인력관련", priority: "보통", status: "발생전", register: "A시스템", due_date: "70%", completion_date: "2024-06-12"},
+        {id: "1501", name: "인력관련", priority: "보통", status: "발생전", register: "이한희", due_date: "70%", completion_date: "2024-06-12"},
+        {id: "1501", name: "인력관련", priority: "긴급", status: "발생전", register: "김연호", due_date: "70%", completion_date: "2024-06-12"},
+        {id: "1501", name: "일정관련", priority: "즉시", status: "진행", register: "김연호", due_date: "70%", completion_date: "2024-06-12"},
         {id: "1501", name: "인력관련", priority: "보통", status: "발생전", register: "A시스템", due_date: "70%", completion_date: "2024-06-12"},
         {id: "1501", name: "인력관련", priority: "보통", status: "발생전", register: "이한희", due_date: "70%", completion_date: "2024-06-12"},
         {id: "1501", name: "인력관련", priority: "긴급", status: "발생전", register: "김연호", due_date: "70%", completion_date: "2024-06-12"},
