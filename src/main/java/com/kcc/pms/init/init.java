@@ -71,13 +71,13 @@ public class init implements ApplicationRunner {
             memberService.saveMember(member);
         }
 
-        SecurityContextHolder.getContext().setAuthentication(
-                new UsernamePasswordAuthenticationToken(
-                        principalDetailService.loadUserByUsername("pm1"),
-                        null,
-                        principalDetailService.loadUserByUsername("pm1").getAuthorities()
-                )
-        );
+//        SecurityContextHolder.getContext().setAuthentication(
+//                new UsernamePasswordAuthenticationToken(
+//                        principalDetailService.loadUserByUsername("pm1"),
+//                        null,
+//                        principalDetailService.loadUserByUsername("pm1").getAuthorities()
+//                )
+//        );
     }
 }
 
