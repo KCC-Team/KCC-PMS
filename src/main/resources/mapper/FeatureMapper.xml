@@ -57,4 +57,27 @@
         #{prjNo}
         )
     </insert>
+
+    <select id="getProgressSummary" parameterType="FeatureCreateRequestDto" resultType="com.kcc.pms.domain.feature.model.dto.FeatureProgressResponseDto">
+        <![CDATA[
+        SELECT
+        ROUND(SUM(f.prg) / COUNT(f.feat_no), 2) AS progress,
+        COUNT(f.feat_no) AS total,
+        COUNT(CASE WHEN f.prg < 100 AND SYSDATE < f.pre_end_dt THEN 1 END) AS present,
+        COUNT(CASE WHEN f.prg = 100 THEN 1 END) AS complete,
+        COUNT(CASE WHEN f.prg < 100 AND SYSDATE > f.pre_end_dt THEN 1 END) AS delay
+        FROM
+        System s
+        JOIN
+        Feature f ON f.sys_no = s.sys_no
+        WHERE
+        (s.sys_no = #{systemNo} OR s.sys_no IN (
+        SELECT sys_no FROM System
+        START WITH sys_no = :SelectedSysNo
+        CONNECT BY PRIOR sys_no = par_sys_no
+        ))
+        AND (#{featClassCd} IS NULL OR f.class_cd = #{featClassCd})
+        AND s.prj_no = #{prjNo}
+        ]]>
+    </select>
 </mapper>
