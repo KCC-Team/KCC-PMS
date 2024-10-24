@@ -162,15 +162,15 @@ CREATE TABLE Feature (
     feat_id	VARCHAR2(20) NOT NULL,
     feat_title VARCHAR2(100) NOT NULL,
     feat_cont VARCHAR2(500) NOT NULL,
-    pre_st_dt DATE NULL,
-    pre_end_dt DATE NULL,
+    pre_st_dt DATE NOT NULL,
+    pre_end_dt DATE NOT NULL,
     st_dt DATE NULL,
     end_dt DATE NULL,
     stat_cd CHAR(8) NOT NULL,
     pri_cd CHAR(8) NOT NULL,
     prg	NUMBER NOT NULL,
     diff_cd CHAR(8) NOT NULL,
-    class_cd CHAR(8) NULL,
+    class_cd CHAR(8) NOT NULL,
     use_yn VARCHAR2(1) NOT NULL,
     sys_no NUMBER NULL,
     mem_no NUMBER  NULL,
@@ -578,11 +578,12 @@ INSERT INTO CodeDetail (cd_dtl_no, common_cd_no, cd_dtl_nm, order_no, use_yn) VA
 INSERT INTO CodeDetail (cd_dtl_no, common_cd_no, cd_dtl_nm, order_no, use_yn) VALUES ('PMS00905', 'PMS009', 'PL확인', 5, 'Y');
 INSERT INTO CodeDetail (cd_dtl_no, common_cd_no, cd_dtl_nm, order_no, use_yn) VALUES ('PMS00906', 'PMS009', '고객확인', 6, 'Y');
 
-INSERT INTO CodeDetail (cd_dtl_no, common_cd_no, cd_dtl_nm, order_no, use_yn) VALUES ('PMS01001', 'PMS010', '화면', 1, 'Y');
-INSERT INTO CodeDetail (cd_dtl_no, common_cd_no, cd_dtl_nm, order_no, use_yn) VALUES ('PMS01002', 'PMS010', '인터페이스', 2, 'Y');
-INSERT INTO CodeDetail (cd_dtl_no, common_cd_no, cd_dtl_nm, order_no, use_yn) VALUES ('PMS01003', 'PMS010', '프로그램', 3, 'Y');
-INSERT INTO CodeDetail (cd_dtl_no, common_cd_no, cd_dtl_nm, order_no, use_yn) VALUES ('PMS01004', 'PMS010', '보고서', 4, 'Y');
-INSERT INTO CodeDetail (cd_dtl_no, common_cd_no, cd_dtl_nm, order_no, use_yn) VALUES ('PMS01005', 'PMS010', '일반', 4, 'Y');
+INSERT INTO CodeDetail (cd_dtl_no, common_cd_no, cd_dtl_nm, order_no, use_yn) VALUES ('PMS01005', 'PMS010', '일반', 1, 'Y');
+INSERT INTO CodeDetail (cd_dtl_no, common_cd_no, cd_dtl_nm, order_no, use_yn) VALUES ('PMS01001', 'PMS010', '화면', 2, 'Y');
+INSERT INTO CodeDetail (cd_dtl_no, common_cd_no, cd_dtl_nm, order_no, use_yn) VALUES ('PMS01002', 'PMS010', '인터페이스', 3, 'Y');
+INSERT INTO CodeDetail (cd_dtl_no, common_cd_no, cd_dtl_nm, order_no, use_yn) VALUES ('PMS01003', 'PMS010', '프로그램', 4, 'Y');
+INSERT INTO CodeDetail (cd_dtl_no, common_cd_no, cd_dtl_nm, order_no, use_yn) VALUES ('PMS01004', 'PMS010', '보고서', 5, 'Y');
+
 
 INSERT INTO CodeDetail (cd_dtl_no, common_cd_no, cd_dtl_nm, order_no, use_yn) VALUES ('PMS01101', 'PMS011', '매우높음', 1, 'Y');
 INSERT INTO CodeDetail (cd_dtl_no, common_cd_no, cd_dtl_nm, order_no, use_yn) VALUES ('PMS01102', 'PMS011', '높음', 2, 'Y');

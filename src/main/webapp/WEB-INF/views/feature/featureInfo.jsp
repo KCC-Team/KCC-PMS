@@ -64,7 +64,7 @@
                                 </div>
                             </td>
 
-                            <th><label>난이도</label></th>
+                            <th><label>난이도<span class="required-icon">*</span></label></th>
                             <td>
                                 <select id="PMS011" name="diffCode">
                                     <option value="" selected>선택</option>

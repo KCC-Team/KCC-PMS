@@ -90,7 +90,7 @@ function fetchOptions() {
 
 function setOptions($selectElement, options) {
     options.forEach(function(option) {
-        if (option.cd_dtl_no !== 'PMS01005') {
+
             // 각 option 태그 생성
             const $option = $('<option>', {
                 value: option.cd_dtl_no,
@@ -98,7 +98,7 @@ function setOptions($selectElement, options) {
             });
 
             $selectElement.append($option);
-        }
+
     });
 }
 
