@@ -3,7 +3,6 @@ package com.kcc.pms.domain.feature.service;
 import com.kcc.pms.domain.common.model.dto.CommonCodeOptions;
 import com.kcc.pms.domain.feature.mapper.FeatureMapper;
 import com.kcc.pms.domain.feature.model.dto.FeatureCreateRequestDto;
-import com.kcc.pms.domain.feature.model.dto.FeatureProgressRequestDto;
 import com.kcc.pms.domain.feature.model.dto.FeatureProgressResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -27,8 +26,8 @@ public class FeatureServiceImpl implements FeatureService{
     }
 
     @Override
-    public FeatureProgressResponseDto getProgressSummary(FeatureProgressRequestDto requestDto, Long prjNo) {
-        return mapper.getProgressSummary(requestDto, prjNo);
+    public FeatureProgressResponseDto getProgressSummary(Long systemNo, String featClassCd, Long prjNo) {
+        return mapper.getProgressSummary(systemNo, featClassCd, prjNo);
     }
 
 }

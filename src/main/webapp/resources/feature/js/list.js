@@ -65,6 +65,7 @@ $(document).ready(function (){
 
     initGrid();
 
+    getProgressSummary();
 });
 
 
@@ -89,6 +90,19 @@ document.addEventListener("DOMContentLoaded", function() {
         animateProgress();  // 각 progress 바에 대해 애니메이션 시작
     });
 });
+
+function getProgressSummary(){
+    $.ajax({
+        url: '/projects/features/progress?systemNo=1&featClassCd=PMS01001',
+        type: 'GET',
+        success: function (response) {
+          console.log(response);
+        },
+        error: function (xhr, status, error) {
+            console.error('Error:', error);
+        }
+    })
+}
 
 
 function initGrid(){

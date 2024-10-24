@@ -58,7 +58,7 @@
         )
     </insert>
 
-    <select id="getProgressSummary" parameterType="FeatureCreateRequestDto" resultType="com.kcc.pms.domain.feature.model.dto.FeatureProgressResponseDto">
+    <select id="getProgressSummary" resultType="com.kcc.pms.domain.feature.model.dto.FeatureProgressResponseDto">
         <![CDATA[
         SELECT
         ROUND(SUM(f.prg) / COUNT(f.feat_no), 2) AS progress,
@@ -73,7 +73,7 @@
         WHERE
         (s.sys_no = #{systemNo} OR s.sys_no IN (
         SELECT sys_no FROM System
-        START WITH sys_no = :SelectedSysNo
+        START WITH sys_no = #{systemNo}
         CONNECT BY PRIOR sys_no = par_sys_no
         ))
         AND (#{featClassCd} IS NULL OR f.class_cd = #{featClassCd})

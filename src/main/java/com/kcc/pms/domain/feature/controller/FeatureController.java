@@ -2,7 +2,6 @@ package com.kcc.pms.domain.feature.controller;
 
 import com.kcc.pms.domain.common.model.dto.CommonCodeOptions;
 import com.kcc.pms.domain.feature.model.dto.FeatureCreateRequestDto;
-import com.kcc.pms.domain.feature.model.dto.FeatureProgressRequestDto;
 import com.kcc.pms.domain.feature.model.dto.FeatureProgressResponseDto;
 import com.kcc.pms.domain.feature.service.FeatureService;
 import jakarta.servlet.http.HttpSession;
@@ -60,10 +59,14 @@ public class FeatureController {
 
     @GetMapping("/progress")
     @ResponseBody
-    public ResponseEntity<FeatureProgressResponseDto> getProgressSummary(FeatureProgressRequestDto requestDto, HttpSession session){
+    public ResponseEntity<FeatureProgressResponseDto> getProgressSummary(@RequestParam("systemNo") Long systemNo,
+                                                                         @RequestParam("featClassCd") String featClassCd,
+                                                                         HttpSession session){
         Long prjNo = (Long) session.getAttribute("prjNo");
-
-        FeatureProgressResponseDto progressSummary = service.getProgressSummary(requestDto, prjNo);
+        System.out.println("prjNo = " + prjNo);
+        System.out.println("systemNo = " + systemNo);
+        System.out.println("featClassCd = " + featClassCd);
+        FeatureProgressResponseDto progressSummary = service.getProgressSummary(systemNo, featClassCd, prjNo);
 
         if (progressSummary != null) {
             return ResponseEntity.ok(progressSummary);
