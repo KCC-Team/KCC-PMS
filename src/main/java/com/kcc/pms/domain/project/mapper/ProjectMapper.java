@@ -22,4 +22,6 @@ public interface ProjectMapper {
     ProjectResponseDto findByProject(@Param("prj_no") Long prj_no);
     List<ProjectResponseDto> getCommonProjectList(@Param("login_id") String login_id);
     ProjectManagerResponseDto getAuthCode(@Param("prjNo") Long prjNo, @Param("memNo") Long memNo);
+    int updateRecentProject(@Param("prjNo") Long prjNo, @Param("memNo") Long memNo);
+    int getRecentProject(Long memNo);
 }

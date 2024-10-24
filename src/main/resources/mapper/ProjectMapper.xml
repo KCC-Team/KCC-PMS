@@ -209,4 +209,16 @@
         and mem_no = #{memNo}
     </select>
 
+    <update id="updateRecentProject">
+        update member set
+        rec_prj = #{prjNo}
+        where mem_no = #{memNo}
+    </update>
+
+    <select id="getRecentProject" resultType="int">
+        select rec_prj
+        from member
+        where mem_no = #{memNo}
+    </select>
+
 </mapper>

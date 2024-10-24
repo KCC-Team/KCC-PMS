@@ -13,4 +13,6 @@ public interface ProjectService {
     CombinedProjectResponseDto findByProject(Long prj_no);
     List<ProjectResponseDto> getCommonProjectList(String login_id);
     ProjectManagerResponseDto getAuthCode(Long prjNo, Long memNo);
+    int updateRecentProject(Long prjNo, Long memNo);
+    int getRecentProject(Long memNo);
 }

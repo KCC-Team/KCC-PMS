@@ -85,4 +85,14 @@ public class ProjectServiceImpl implements ProjectService {
     public ProjectManagerResponseDto getAuthCode(Long prjNo, Long memNo) {
         return projectMapper.getAuthCode(prjNo, memNo);
     }
+
+    @Override
+    public int updateRecentProject(Long prjNo, Long memNo) {
+        return projectMapper.updateRecentProject(prjNo, memNo);
+    }
+
+    @Override
+    public int getRecentProject(Long memNo) {
+        return projectMapper.getRecentProject(memNo);
+    }
 }
