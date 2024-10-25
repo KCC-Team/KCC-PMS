@@ -3,6 +3,7 @@ package com.kcc.pms.domain.feature.mapper;
 import com.kcc.pms.domain.common.model.dto.CommonCodeOptions;
 import com.kcc.pms.domain.feature.model.dto.FeatureCreateRequestDto;
 import com.kcc.pms.domain.feature.model.dto.FeatureProgressResponseDto;
+import com.kcc.pms.domain.feature.model.dto.FeatureSummaryResponseDto;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -15,4 +16,7 @@ public interface FeatureMapper {
     FeatureProgressResponseDto getProgressSummary(@Param("systemNo") Long systemNo,
                                                   @Param("featClassCd") String featClassCd,
                                                   @Param("prjNo") Long prjNo);
+    List<FeatureSummaryResponseDto> getSystemFeatureList(@Param("systemNo") Long systemNo,
+                                                         @Param("featClassCd") String featClassCd,
+                                                         @Param("prjNo") Long prjNo);
 }

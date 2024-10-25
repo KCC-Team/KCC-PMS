@@ -114,14 +114,14 @@
                 </div>
 
                 <form class="feat-search-form" id="feat_team_form" action="#" method="post">
-                    <select class="feat-select-option" name="feat-option5">
-                        <option value="0">팀</option>
-                        <option value="1">팀1</option>
-                        <option value="2">팀2</option>
-                        <option value="3">팀3</option>
-                    </select>
+<%--                    <select class="feat-select-option" name="feat-option5">--%>
+<%--                        <option value="0">팀</option>--%>
+<%--                        <option value="1">팀1</option>--%>
+<%--                        <option value="2">팀2</option>--%>
+<%--                        <option value="3">팀3</option>--%>
+<%--                    </select>--%>
                     <input type="text" class="search-text" name="" value="">
-                    <input type="submit" class="feat-submit-btn" value="검색">
+                    <input id="featureSearch" type="submit" class="feat-submit-btn" value="검색">
                 </form>
 
                 <div style="position: relative;height:100%; width: 98%;" id="grid-parent">

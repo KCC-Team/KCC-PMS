@@ -79,7 +79,7 @@
 
 .left-section {
     flex: 0.9;
-    margin: 13px 5px 10px 25px;
+    margin: 13px 5px 10px 4px;
     padding-right: 16px;
     border-right: 1px solid #ccc;
 }
@@ -93,13 +93,14 @@
 
 .right-section {
     flex: 1.2;
-    margin: 13px 19px 10px 1px;
+    margin: 15px 7px 10px 1px;
 }
 
 .feat-info-row {
     border: 1px solid black;
     padding: 10px;
     margin-bottom: 13px;
+    margin-left: 21px;
 }
 
 .feat-info-row.on {
@@ -271,7 +272,7 @@ progress::-webkit-progress-value {
 .circle_strong {
     position: absolute;
     top: 312px;
-    left: 294px;
+    left: 277px;
     text-align: center;
     line-height: 40px;
     font-size: 42px;
