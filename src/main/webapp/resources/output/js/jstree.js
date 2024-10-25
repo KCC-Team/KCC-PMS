@@ -1,76 +1,161 @@
 $(function() {
-    let treeFolderData = [
-        {
-            id: "1",
-            text: "차세대 프로그램 구축",
-            type: "Y",
-            children: [
-                {
-                    id: "1.1",
-                    text: "요구사항 정의서",
-                    type: "Y",
+    $.ajax({
+        url: '/projects/outputs/api/list?option=y',
+        type: 'GET',
+        success: function(data) {
+            window.treeFolderData = data;
+            let jsTreeData = convertToJsTreeData(window.treeFolderData);
+            window.jsTreeInstance = $('.jstree-folder').jstree({
+                'core': {
+                    'data': jsTreeData,
+                    "themes" : { "stripes" : true },
+                    'check_callback': true
                 },
-                {
-                    id: "1.2",
-                    text: "요구사항추적표(설계)",
-                    type: "Y",
-                },
-            ],
-        },
-        {
-            id: "2",
-            text: "B 프로그램 구축",
-            type: "Y",
-            children: [
-                {
-                    id: "2.1",
-                    text: "개발환경 설치 작업계획서",
-                    type: "folder",
-                },
-            ],
-        },
-    ];
+                'plugins': ["types", "dnd", "wholerow", "search"],
+                'types': {
+                    "default": {
+                        "icon": "fa fa-folder text-warning"
+                    },
+                    "n": {
+                        "icon": "fa fa-file text-info"
+                    },
+                }
+            });
 
-    let treeData = [
-        {
-            id: "1",
-            text: "차세대 프로그램 구축",
-            type: "Y",
-            children: [
-                {
-                    id: "1.1",
-                    text: "요구사항 정의서",
-                    type: "Y",
-                    children: [
-                        { id: "1.1.1", text: "A 업무 시스템 요구사항 정의서", type: "N" },
-                        { id: "1.1.2", text: "B 업무 시스템 요구사항 정의서", type: "N" },
-                    ],
-                },
-                {
-                    id: "1.2",
-                    text: "요구사항추적표(설계)",
-                    type: "Y",
-                },
-            ],
+            $(function() {
+                // 초기 상태에서 드래그 앤 드롭 비활성화
+                $('.jstree-files').jstree(true).settings.dnd.is_draggable = function () {
+                    return false;
+                };
+                function initializeJsTree(data) {
+                    if ($('.jstree-folder-in').jstree(true)) {
+                        $('.jstree-folder-in').jstree('destroy');
+                    }
+                    $('.jstree-folder-in').jstree({
+                        'core': {
+                            'data': data,
+                            "themes" : { "stripes" : true },
+                            'check_callback': true
+                        },
+                        'plugins': ["types", "dnd", "wholerow", "search"],
+                        'types': {
+                            "default": {
+                                "icon": "fa fa-folder text-warning"
+                            },
+                        }
+                    });
+                    $('.jstree-folder-in').jstree('refresh');
+                }
+
+                // 초기화
+                initializeJsTree(window.treeData);
+                let selectedNode = null;
+
+                // 노드 선택 이벤트
+                $('.jstree-folder-in').on("select_node.jstree", function (e, data) {
+                    selectedNode = data.node;
+                });
+
+                // 노드 추가 버튼 클릭 이벤트
+                $('#add-folder-btn').on('click', function(e) {
+                    e.preventDefault();
+
+                    let folderName = $('#input-area-folder').val().trim();
+                    if (folderName === '') {
+                        console.log('폴더명을 입력해주세요.');
+                        alert('폴더명을 입력해주세요.');
+                        return;
+                    }
+
+                    if (!selectedNode) {
+                        console.log('노드를 선택해주세요.');
+                        alert('노드를 선택해주세요.');
+                        return;
+                    }
+
+                    // 선택된 노드를 부모로 설정
+                    let parentNodeId = selectedNode.id;
+
+                    // 새 노드 ID 생성 (고유 ID 생성 방식 필요)
+                    let newNodeId = parentNodeId + '.' + (selectedNode.children.length + 1);
+
+                    let newNode = {
+                        id: newNodeId,
+                        text: folderName,
+                        type: 'folder'
+                    };
+
+                    // jsTree에 새 노드 추가
+                    $('.jstree-folder-in').jstree('create_node', parentNodeId, newNode, "last", function(new_node) {
+                        $('.jstree-folder-in').jstree('deselect_all', true);
+                        $('.jstree-folder-in').jstree('select_node', new_node);
+                        $('.jstree-folder-in').jstree('open_node', parentNodeId);
+                    });
+
+                    // treeData 업데이트
+                    function addNodeToTreeData(data, parentId, newNode) {
+                        for (let node of data) {
+                            if (node.id === parentId) {
+                                if (!node.children) {
+                                    node.children = [];
+                                }
+                                node.children.push(newNode);
+                                return true;
+                            }
+                            if (node.children && node.children.length > 0) {
+                                if (addNodeToTreeData(node.children, parentId, newNode)) {
+                                    return true;
+                                }
+                            }
+                        }
+                        return false;
+                    }
+
+                    addNodeToTreeData(window.treeData, parentNodeId, newNode);
+                    $('#input-area-folder').val('');
+                });
+
+                $('#folderModal').on('hidden.bs.modal', function () {
+                    $('#input-area-folder').val('');
+                    $('#folder').prop('checked', true);
+                    selectedNode = null;
+                    window.treeData = JSON.parse(JSON.stringify(data));
+                    initializeJsTree(window.treeData);
+                });
+            });
         },
-        {
-            id: "2",
-            text: "B 프로그램 구축",
-            type: "Y",
-            children: [
-                {
-                    id: "2.1",
-                    text: "개발환경 설치 작업계획서",
-                    type: "Y",
+        error: function() {
+            alert('트리 데이터를 가져오는데 실패했습니다.');
+        }
+    });
+
+    $.ajax({
+        url: '/projects/outputs/api/list',
+        type: 'GET',
+        success: function(data) {
+            window.treeData = data;
+            let jsTreeFolderData = convertToJsTreeData(treeData);
+            window.jsTreeFolderInstance = $('.jstree-files').jstree({
+                'core': {
+                    'data': jsTreeFolderData,
+                    "themes" : { "stripes" : true },
+                    'check_callback': true
                 },
-            ],
+                'plugins': ["types", "dnd", "wholerow", "search"],
+                'types': {
+                    "default": {
+                        "icon": "fa fa-folder text-warning"
+                    },
+                    "n": {
+                        "icon": "fa fa-file text-info"
+                    },
+                }
+            });
         },
-        {
-            id: "3",
-            text: "ProjectExcelDown_초기 프로젝트 등록 테스트",
-            type: "N",
-        },
-    ];
+        error: function() {
+            alert('트리 데이터를 가져오는데 실패했습니다.');
+        }
+    });
 
     function convertToJsTreeData(nodes, parentId) {
         let jsTreeData = [];
@@ -91,40 +176,4 @@ $(function() {
         });
         return jsTreeData;
     }
-
-    let jsTreeData = convertToJsTreeData(treeData);
-    window.jsTreeInstance = $('.jstree-files').jstree({
-        'core': {
-            'data': jsTreeData,
-            "themes" : { "stripes" : true },
-            'check_callback': true
-        },
-        'plugins': ["types", "dnd", "wholerow", "search"],
-        'types': {
-            "default": {
-                "icon": "fa fa-folder text-warning"
-            },
-            "N": {
-                "icon": "fa fa-file text-info"
-            },
-        }
-    });
-
-    let jsTreeFolderData = convertToJsTreeData(treeFolderData);
-    window.jsTreeFolderInstance = $('.jstree-folder').jstree({
-        'core': {
-            'data': jsTreeFolderData,
-            "themes" : { "stripes" : true },
-            'check_callback': true
-        },
-        'plugins': ["types", "dnd", "wholerow", "search"],
-        'types': {
-            "default": {
-                "icon": "fa fa-folder text-warning"
-            },
-            "N": {
-                "icon": "fa fa-file text-info"
-            },
-        }
-    });
 });
