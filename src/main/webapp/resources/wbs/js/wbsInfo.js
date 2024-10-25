@@ -11,8 +11,48 @@ if (type == "view" && id != null) {
 
 $(document).ready(function() {
 
-    $("#pre_st_dt, #pre_end_dt, #st_dt, #end_dt").datepicker({
-        dateFormat: "yy-mm-dd"
+    // $("#pre_st_dt, #pre_end_dt, #st_dt, #end_dt").datepicker({
+    //     dateFormat: "yy-mm-dd"
+    // });
+
+    $("#pre_st_dt").datepicker({
+        dateFormat: "yy-mm-dd",
+        onSelect: function() {
+            validateDate($("#pre_st_dt"), $("#pre_end_dt"));
+        },
+        onClose: function() {
+            validateDate($("#pre_st_dt"), $("#pre_end_dt"));
+        }
+    });
+
+    $("#pre_end_dt").datepicker({
+        dateFormat: "yy-mm-dd",
+        onSelect: function() {
+            validateDate($("#pre_st_dt"), $("#pre_end_dt"));
+        },
+        onClose: function() {
+            validateDate($("#pre_st_dt"), $("#pre_end_dt"));
+        }
+    });
+
+    $("#st_dt").datepicker({
+        dateFormat: "yy-mm-dd",
+        onSelect: function() {
+            validateDate($("#pre_st_dt"), $("#pre_end_dt"));
+        },
+        onClose: function() {
+            validateDate($("#pre_st_dt"), $("#pre_end_dt"));
+        }
+    });
+
+    $("#end_dt").datepicker({
+        dateFormat: "yy-mm-dd",
+        onSelect: function() {
+            validateDate($("#pre_st_dt"), $("#pre_end_dt"));
+        },
+        onClose: function() {
+            validateDate($("#pre_st_dt"), $("#pre_end_dt"));
+        }
     });
 
     fetchMenuData().then(function(menuData) {
@@ -179,6 +219,18 @@ function getTopTaskList(id) {
     });
 }
 
+function handleStatusChange() {
+    const statCd = document.getElementById('tsk_stat_cd').value;
+    const prg = document.getElementById('prg');
+
+    if (statCd === 'PMS00101') {
+        prg.value = '0';
+    }
+    if (statCd === 'PMS00103') {
+        prg.value = '100';
+    }
+}
+
 // 시스템 메뉴 생성
 function fetchMenuData() {
     return $.ajax({
@@ -223,4 +275,14 @@ function createMenuHTML(menuData, parentElement, path) {
 
         parentElement.append(listItem);
     });
+}
+
+function validateDate(start, end) {
+    const startDate = new Date(start.val());
+    const endDate = new Date(end.val());
+
+    if (startDate > endDate) {
+        alert("종료일은 시작일보다 이전일 수 없습니다.");
+        end.val('');
+    }
 }

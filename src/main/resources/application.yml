@@ -39,6 +39,9 @@ cloud:
 ---
 server:
   port: 8085
+  servlet:
+    session:
+      timeout: 120m  # 120분으로 설정
 
 spring:
   config:

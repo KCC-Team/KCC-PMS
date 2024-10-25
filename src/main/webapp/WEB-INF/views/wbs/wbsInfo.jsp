@@ -48,7 +48,7 @@
                                 <td><input type="text" id="tsk_ttl" name="tsk_ttl" value="" required></td>
                                 <th><label for="tsk_stat_cd">상태 <span class="required-icon">*</span></label></th>
                                 <td>
-                                    <select id="tsk_stat_cd" name="tsk_stat_cd" required>
+                                    <select id="tsk_stat_cd" name="tsk_stat_cd" required onchange="handleStatusChange()">
                                         <option value="">선택하세요.</option>
                                         <option value="PMS00101">대기</option>
                                         <option value="PMS00102">진행중</option>

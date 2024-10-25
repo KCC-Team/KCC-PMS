@@ -229,4 +229,18 @@
         where prj_no = #{prjNo}
     </update>
 
+    <select id="getCountsByProject" resultType="map" parameterType="Long">
+        SELECT
+        (SELECT COUNT(tsk_no) FROM task where prj_no = #{prjNo}) AS task_count,
+        (SELECT COUNT(feat_no) FROM feature where prj_no = #{prjNo}) AS feat_count,
+        (SELECT COUNT(risk_no) FROM risk where prj_no = #{prjNo} and type_cd = 'PMS00301') AS issue_count,
+        (SELECT COUNT(risk_no) FROM risk where prj_no = #{prjNo} and type_cd = 'PMS00302') AS danger_count,
+        (SELECT COUNT(df_no) FROM defect where prj_no = #{prjNo}) AS defect_count,
+        (SELECT COUNT(mem_no) FROM projectmember where prj_no = #{prjNo}) AS projectmember_count,
+        (SELECT COUNT(mem_no) FROM projectmember where prj_no = #{prjNo} and prj_auth_cd = 'PMS00201') AS pm_count,
+        (SELECT COUNT(mem_no) FROM projectmember where prj_no = #{prjNo} and prj_auth_cd = 'PMS00202') AS pl_count,
+        (SELECT COUNT(mem_no) FROM projectmember where prj_no = #{prjNo} and prj_auth_cd = 'PMS00203') AS normal_count
+        FROM dual
+    </select>
+
 </mapper>
