@@ -63,7 +63,7 @@
         SELECT
         ROUND(SUM(f.prg) / COUNT(f.feat_no), 2) AS progress,
         COUNT(f.feat_no) AS total,
-        COUNT(CASE WHEN f.prg < 100 AND SYSDATE < f.pre_end_dt THEN 1 END) AS present,
+        COUNT(CASE WHEN f.prg < 100 AND SYSDATE < f.pre_end_dt THEN 1 END) AS presentCount,
         COUNT(CASE WHEN f.prg = 100 THEN 1 END) AS complete,
         COUNT(CASE WHEN f.prg < 100 AND SYSDATE > f.pre_end_dt THEN 1 END) AS delay
         FROM

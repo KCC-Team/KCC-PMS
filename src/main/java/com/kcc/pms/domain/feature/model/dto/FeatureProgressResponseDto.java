@@ -11,6 +11,6 @@ public class FeatureProgressResponseDto implements Serializable {
     private Double progress;
     private int total;
     private int complete;
-    private int present;
+    private int presentCount;
     private int delay;
 }

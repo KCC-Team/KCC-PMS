@@ -72,7 +72,7 @@
                         <span class="feat-complete-cnt">8</span>
                         <span class="total-name">건 완료, </span>
                         <span class="feat-continue-cnt">7</span><span class="total-name">건 진행중, </span>
-                        <span class="feat-continue-cnt">2</span><span class="total-name">건 지연)</span>
+                        <span class="feat-delay-cnt">2</span><span class="total-name">건 지연)</span>
                     </div>
                 </div>
             </div>
@@ -85,41 +85,31 @@
                 </div>
 
                 <div class="feat-search-section">
-                    <select class="feat-select-option" name="feat-option1">
-                        <option value="0">전체 시스템</option>
-                        <option value="1">A시스템</option>
-                        <option value="2">B시스템</option>
-                        <option value="3">C시스템</option>
-                    </select>
-                    <select class="feat-select-option" name="feat-option2">
-                        <option value="0">전체 업무</option>
-                        <option value="1">A업무</option>
-                        <option value="2">B업무</option>
-                        <option value="3">C업무</option>
-                    </select>
-                    <select class="feat-select-option" name="feat-option3">
-                        <option value="0">전체 분류</option>
-                        <option value="1">기능</option>
-                        <option value="2">화면</option>
-                        <option value="3">인터페이스</option>
-                        <option value="4">프로그램</option>
-                        <option value="5">보고서</option>
+                    <input type="hidden" id="systemNo" name="systemNo">
+                    <div class="system-select-wrapper">
+                        <span class="system-select-button" id="system-select">
+                            <span>시스템/업무 선택</span>
+                        </span>
+                        <!-- 메뉴 리스트 -->
+                        <ul class="mymenu" id="system-menu"></ul>
+                    </div>
+                    <select id="featClassOption" class="feat-select-option" name="feat-option3">
+                        <option value="">전체분류</option>
                     </select>
                 </div>
 
                 <div class="row-info">
-<%--                    <div class="feat-title">A업무시스템 - 화면 (홍길동)</div>--%>
-                     <div class="feat-title">차세대 공공 프로젝트 - (전체)</div>
+                     <div id="midSystemFeatureTitle"class="feat-title">차세대 공공 프로젝트 - (전체)</div>
                     <div class="prg-bar">
-                        <progress class="feat-bar" value="35" max="100"></progress><span class="prg-val">35%</span>
+                        <progress id="midFeatBar" class="feat-bar" value="35" max="100"></progress><span id="midFPrgVal" class="prg-val">35%</span>
                     </div>
                     <div class="feat-total">
-                        <span class="feat-total-cnt">15</span><span class="total-name">건 - </span>
+                        <span id="midTotalCnt" class="feat-total-cnt">15</span><span class="total-name">건 - </span>
                         <span class="total-name">(</span>
-                        <span class="feat-complete-cnt">8</span>
+                        <span id="midCompleteCnt" class="feat-complete-cnt">8</span>
                         <span class="total-name">건 완료, </span>
-                        <span class="feat-continue-cnt">7</span><span class="total-name">건 진행중, </span>
-                        <span class="feat-continue-cnt">2</span><span class="total-name">건 지연)</span>
+                        <span id="midContinueCnt" class="feat-continue-cnt">7</span><span class="total-name">건 진행중, </span>
+                        <span id="midDelayCnt" class="feat-continue-cnt">2</span><span class="total-name">건 지연)</span>
                     </div>
                 </div>
 

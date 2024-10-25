@@ -63,6 +63,20 @@ $(document).ready(function (){
         $(this).addClass("on");
     });
 
+
+
+    getFeatureClassCommonCode();
+
+    fetchMenuData().then(function(menuData) {
+        createMenu(menuData);
+    });
+
+    $('#system-select').click(function() {
+        $('#system-menu').slideToggle();  // 메뉴를 보여주거나 숨기기
+    });
+
+    $("#system-select span:first").text("시스템 선택");
+
     initGrid();
 
     getProgressSummary();
@@ -74,29 +88,43 @@ document.addEventListener("DOMContentLoaded", function() {
     var progressValues = document.querySelectorAll('.prg-val'); // 각 progress에 대한 텍스트 선택
 
     progressBars.forEach(function(progressBar, index) {
-        var value = 0;
-        var max = 100;
-        var targetValue = parseInt(progressValues[index].textContent); // 해당 progress의 목표 값 추출
-
-        function animateProgress() {
-            if (value < targetValue) {
-                value++;
-                progressBar.value = value;
-                progressValues[index].textContent = value + '%';
-                setTimeout(animateProgress, 20);
-            }
-        }
-
-        animateProgress();  // 각 progress 바에 대해 애니메이션 시작
+        var targetValue = parseInt(progressValues[index].textContent);
+        animateProgressBar(progressBar, targetValue);
     });
 });
 
-function getProgressSummary(){
+function getProgressSummary(systemNo, featClassCd){
+    featClassCd = $('#featClassOption').val();
+    console.log("ajax 요청할 systemNo = " + systemNo)
+    console.log("ajax 요청할 featClassCd = " + featClassCd)
+
     $.ajax({
-        url: '/projects/features/progress?systemNo=1&featClassCd=PMS01001',
+        url: '/projects/features/progress?systemNo=' + systemNo + '&featClassCd=' + featClassCd,
         type: 'GET',
         success: function (response) {
           console.log(response);
+
+            $("#midSystemFeatureTitle").text(
+                $('#system-select span:first-child').text() +
+                ($('#featClassOption').val() ? " > " + $('#featClassOption option:selected').text() : "")
+            );
+
+
+          $("#midFeatBar").attr("value", response.progress);
+          if (response.progress == null || isNaN(response.progress)) {
+              $("#midFPrgVal").text("0%");
+          } else {
+              $("#midFPrgVal").text(response.progress + "%");
+          }
+
+
+          var midbar = $("#midFeatBar")[0];
+          animateProgressBar(midbar, response.progress);
+
+          $("#midTotalCnt").text(response.total);
+          $("#midCompleteCnt").text(response.complete);
+          $("#midContinueCnt").text(response.presentCount);
+          $("#midDelayCnt").text(response.delay);
         },
         error: function (xhr, status, error) {
             console.error('Error:', error);
@@ -254,4 +282,107 @@ function initGrid(){
     ]
 
     delayGrid.setData(delayData);
+}
+
+
+function fetchMenuData() {
+    return $.ajax({
+        url: '/systems?prjNo=' + prjNo,
+        method: 'GET',
+        dataType: 'json',
+        success: function(response) {
+            console.log("systems: " + response);
+            return response;
+        },
+        error: function(error) {
+            console.error("Error fetching data:", error);
+        }
+    });
+}
+
+
+function createMenu(menuData) {
+    createMenuHTML(menuData, $('#system-menu'), "");
+}
+
+function createMenuHTML(menuData, parentElement, path) {
+    menuData.forEach(function(menuItem) {
+        const listItem = $('<li class="menu-item"></li>').text(menuItem.systemTitle);
+        const subMenu = $('<ul class="system-submenu"></ul>');
+
+        const currentPath = path ? path + " > " + menuItem.systemTitle : menuItem.systemTitle;
+
+        // 하위 메뉴가 있는 경우
+        if (menuItem.subSystems && menuItem.subSystems.length > 0) {
+            createMenuHTML(menuItem.subSystems, subMenu, currentPath);
+            listItem.append(subMenu);
+        }
+
+        // systemNo을 data attribute로 추가
+        listItem.data("systemNo", menuItem.systemNo);
+
+        listItem.click(function(event) {
+            event.stopPropagation();
+            $('#system-select span:first-child').text(currentPath);  // 사용자가 선택한 경로 표시
+            $('#systemNo').val(menuItem.systemNo);  // systemNo를 숨겨진 필드에 저장
+            $('.mymenu').slideUp();  // 메뉴 숨기기
+            getProgressSummary(menuItem.systemNo);
+        });
+
+        parentElement.append(listItem);
+    });
+}
+
+function getFeatureClassCommonCode(){
+    $.ajax({
+        url: '/getCommonCodeList?commonCodeNo=PMS010',
+        type: 'GET',
+        success: function (response){
+            console.log("기능 종류 공통 코드 = " + response);
+            response.forEach(function(option){
+                console.log("각 옵션 객체 = ", option)
+                const $option = $('<option>', {
+                    value: option.codeDetailNo,
+                    text: option.codeDetailName.trim()
+                });
+                $('#featClassOption').append($option);
+            })
+        }
+    })
+}
+
+
+$('#featClassOption').change(function() {
+    const selectedValue = $(this).val();
+    const selectedText = $(this).find("option:selected").text();
+    console.log("선택된 기능코드값:", selectedValue);
+    console.log("선택된 기능분류명:", selectedText);
+
+    const selectedSystemNo = $("#systemNo").val();
+    console.log("선택된 systemNo:", selectedSystemNo);
+
+    if (!selectedSystemNo) {
+        return;
+    }
+
+    getProgressSummary(selectedSystemNo, selectedValue);
+});
+
+
+
+
+function animateProgressBar(progressBar, targetValue) {
+    var value = 0;
+    var max = 100;
+
+    function animateProgress() {
+        if (value < targetValue) {
+            value++;
+            progressBar.value = value;
+            progressBar.nextElementSibling.textContent = value + '%';
+            setTimeout(animateProgress, 15);
+        }
+    }
+
+    animateProgress();
 }
