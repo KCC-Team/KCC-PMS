@@ -11,6 +11,7 @@
 	<groupId>com.kcc</groupId>
 	<artifactId>pms</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
+	<packaging>war</packaging>
 	<name>pms</name>
 	<description>Build KCC PMS</description>
 	<url/>
@@ -146,6 +147,12 @@
 			<version>2.3.1</version>
 		</dependency>
 
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-tomcat</artifactId>
+			<scope>provided</scope> <!-- 안되어 있는 경우 변경! -->
+		</dependency>
+
 	</dependencies>
 
 	<build>
@@ -160,6 +167,17 @@
 							<artifactId>lombok</artifactId>
 						</exclude>
 					</excludes>
+				</configuration>
+			</plugin>
+
+			<!-- war plugin -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-war-plugin</artifactId>
+				<version>3.2.1</version>
+				<configuration>
+					<warSourceDirectory>src/main/webapp</warSourceDirectory> <!-- war파일 디렉토리 -->
+					<failOnMissingWebXml>false</failOnMissingWebXml> <!-- web.xml이 없을 때 에러를 낼건지 안낼건지 -->
 				</configuration>
 			</plugin>
 
