@@ -1,3 +1,19 @@
+/* 확장/축소 버튼을 위한 기본 스타일 */
+.fancytree-expander {
+    font-family: "Font Awesome 6 Free";  /* FontAwesome 폰트 설정 */
+    font-weight: 900; /* Bold 스타일 적용 */
+}
+
+/* 트리가 확장된 상태일 때 '-' 아이콘 적용 */
+.fancytree-expanded > .fancytree-expander::before {
+    content: "\f068" !important;  /* '-' 아이콘 */
+}
+
+/* 트리가 축소된 상태일 때 '+' 아이콘 적용 */
+.fancytree-collapsed > .fancytree-expander::before {
+    content: "\f067" !important;  /* '+' 아이콘 */
+}
+
 #tree-table th, #tree-table td {
     text-align: center;
     vertical-align: middle;
