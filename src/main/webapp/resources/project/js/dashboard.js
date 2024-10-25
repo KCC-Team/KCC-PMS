@@ -1,3 +1,30 @@
+$(document).ready(function () {
+    $.ajax({
+        url: '/projects/api/dashboard',
+        type: 'GET',
+        success: function(response) {
+
+            console.log(response);
+
+            $("#myTaskCount").text(response.TASK_COUNT);
+            $("#myFeatCount").text(response.FEAT_COUNT);
+            $("#myIssueCount").text(response.ISSUE_COUNT);
+            $("#myDangerCount").text(response.DANGER_COUNT);
+            $("#myDefectCount").text(response.DEFECT_COUNT);
+            $("#task_count").text(response.TASK_COUNT);
+            $("#prm_count").text(response.PROJECTMEMBER_COUNT);
+            $("#pm_count").text(response.PM_COUNT);
+            $("#pl_count").text(response.PL_COUNT);
+            $("#normal_count").text(response.NORMAL_COUNT);
+
+        },
+        error: function(xhr, status, error) {
+            console.log("Error:", error);
+        }
+    });
+});
+
+
 // 작업 현황 차트
 const taskStatusChartCtx = document.getElementById('taskStatusChart').getContext('2d');
 const taskStatusChart = new Chart(taskStatusChartCtx, {

@@ -12,6 +12,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
+import java.util.Map;
+
 
 @Controller
 @RequiredArgsConstructor
@@ -138,6 +141,15 @@ public class ProjectController {
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("error: " + e.getMessage());
         }
+    }
+
+    @GetMapping("/api/dashboard")
+    @ResponseBody
+    public ResponseEntity<Map<String, BigDecimal>> dashboardCount(HttpSession session) {
+        Long prjNo = (Long)session.getAttribute("prjNo"); // 프로젝트번호(세션정보)
+        Map<String, BigDecimal> counts = projectService.getCountsByProject(prjNo);
+
+        return ResponseEntity.ok(counts);
     }
 
 }

@@ -3,7 +3,9 @@ package com.kcc.pms.domain.project.service;
 import com.kcc.pms.domain.project.model.dto.*;
 import org.apache.ibatis.annotations.Param;
 
+import java.math.BigDecimal;
 import java.util.List;
+import java.util.Map;
 
 public interface ProjectService {
     int saveProject(ProjectRequestDto project);
@@ -16,4 +18,5 @@ public interface ProjectService {
     int updateRecentProject(Long prjNo, Long memNo);
     RecentProjectDto getRecentProject(Long memNo);
     int updateProjectProgress(Long prjNo, Integer progress);
+    Map<String, BigDecimal> getCountsByProject(Long prjNo);
 }

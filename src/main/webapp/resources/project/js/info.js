@@ -4,8 +4,9 @@ var type = queryParams.get('type');
 
 getStatusCode();
 
-// pm만 수정 가능 / 이외네느 readonly
-if (authCode != undefined && authCode != null && authCode != 'PMS00201') {
+// pm만 수정 가능 / 이외 readonly
+if (authCode != undefined && authCode != null
+    && authCode != 'PMS00201' && type == 'view') {
     setAllReadonly();
 }
 
@@ -16,8 +17,44 @@ if (type === 'view') {
 
 $(document).ready(function () {
 
-    $("#pre_st_dt, #pre_end_dt, #st_dt, #end_dt").datepicker({
-        dateFormat: "yy-mm-dd"  // 원하는 형식으로 날짜 표시
+    $("#pre_st_dt").datepicker({
+        dateFormat: "yy-mm-dd",
+        onSelect: function() {
+            validateDate($("#pre_st_dt"), $("#pre_end_dt"));
+        },
+        onClose: function() {
+            validateDate($("#pre_st_dt"), $("#pre_end_dt"));
+        }
+    });
+
+    $("#pre_end_dt").datepicker({
+        dateFormat: "yy-mm-dd",
+        onSelect: function() {
+            validateDate($("#pre_st_dt"), $("#pre_end_dt"));
+        },
+        onClose: function() {
+            validateDate($("#pre_st_dt"), $("#pre_end_dt"));
+        }
+    });
+
+    $("#st_dt").datepicker({
+        dateFormat: "yy-mm-dd",
+        onSelect: function() {
+            validateDate($("#pre_st_dt"), $("#pre_end_dt"));
+        },
+        onClose: function() {
+            validateDate($("#pre_st_dt"), $("#pre_end_dt"));
+        }
+    });
+
+    $("#end_dt").datepicker({
+        dateFormat: "yy-mm-dd",
+        onSelect: function() {
+            validateDate($("#pre_st_dt"), $("#pre_end_dt"));
+        },
+        onClose: function() {
+            validateDate($("#pre_st_dt"), $("#pre_end_dt"));
+        }
     });
 
     // 프로젝트 기간
@@ -327,13 +364,13 @@ window.addEventListener('message', function (event) {
 });
 
 
-function validateDate(startDateElem, endDateElem) {
-    const startDate = new Date(startDateElem.value);
-    const endDate = new Date(endDateElem.value);
+function validateDate(start, end) {
+    const startDate = new Date(start.val());
+    const endDate = new Date(end.val());
 
-    if (endDateElem.value && endDate < startDate) {
+    if (startDate > endDate) {
         alert("종료일은 시작일보다 이전일 수 없습니다.");
-        endDateElem.value = ""; // 종료일을 비움
+        end.val('');
     }
 }
 
@@ -352,18 +389,3 @@ function getByteLength(str) {
     }
     return byteLength;
 }
-
-// 프로젝트 예정기간 (pre_st_dt, pre_end_dt)
-const preStartDate = document.getElementById("pre_st_dt");
-const preEndDate = document.getElementById("pre_end_dt");
-
-preStartDate.addEventListener("change", () => validateDate(preStartDate, preEndDate));
-preEndDate.addEventListener("change", () => validateDate(preStartDate, preEndDate));
-
-// 프로젝트 실제기간(st_dt, end_dt)
-const startDate = document.getElementById("st_dt");
-const endDate = document.getElementById("end_dt");
-const noDaysPeriodCheckbox = document.getElementById("no_days_period");
-
-startDate.addEventListener("change", () => validateDate(startDate, endDate));
-endDate.addEventListener("change", () => validateDate(startDate, endDate));

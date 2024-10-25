@@ -5,7 +5,9 @@ import com.kcc.pms.domain.project.model.dto.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.List;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -99,6 +101,11 @@ public class ProjectServiceImpl implements ProjectService {
     @Override
     public int updateProjectProgress(Long prjNo, Integer progress) {
         return projectMapper.updateProjectProgress(prjNo, progress);
+    }
+
+    @Override
+    public Map<String, BigDecimal> getCountsByProject(Long prjNo) {
+        return projectMapper.getCountsByProject(prjNo);
     }
 
 }
