@@ -4,7 +4,9 @@ import com.kcc.pms.domain.project.model.dto.*;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
+import java.math.BigDecimal;
 import java.util.List;
+import java.util.Map;
 
 @Mapper
 public interface ProjectMapper {
@@ -22,4 +24,5 @@ public interface ProjectMapper {
     int updateRecentProject(@Param("prjNo") Long prjNo, @Param("memNo") Long memNo);
     RecentProjectDto getRecentProject(Long memNo);
     int updateProjectProgress(@Param("prjNo") Long prjNo, @Param("progress") Integer progress);
+    Map<String, BigDecimal> getCountsByProject(@Param("prjNo") Long prjNo);
 }

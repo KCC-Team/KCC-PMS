@@ -124,7 +124,7 @@ $(document.body).ready(function () {
     initGrid();
     reg_loadProjectMember();
 
-    $('#add-member-by-prjmem').hide();
+    //$('#add-member-by-prjmem').hide();
 
     checkProject();
 });
