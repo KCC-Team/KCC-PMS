@@ -294,8 +294,19 @@ function setupSearch() {
     }).attr("disabled", true);
 }
 
+function setExpanded(treeData) {
+    treeData.forEach(function(node) {
+        node.expanded = true; // 모든 노드를 펼침 상태로 설정
+        if (node.children) {
+            setExpanded(node.children); // 재귀적으로 자식 노드도 펼침
+        }
+    });
+}
+
 function renderTeamTree(treeData) {
     console.log("트리 데이터: ", treeData);  // 트리 데이터 로그 출력
+
+    setExpanded(treeData);  // 모든 노드를 펼친 상태로 설정
 
     var tree = $.ui.fancytree.getTree("#tree-table");
     if(tree){
@@ -346,6 +357,7 @@ function renderTeamTree(treeData) {
                     if (data.hitMode === "before" || data.hitMode === "after" || data.hitMode === "over") {
                         data.otherNode.moveTo(node, data.hitMode);
                     }
+                    node.setExpanded();
                 }
             },
             activate: function(event, data) {
@@ -354,7 +366,6 @@ function renderTeamTree(treeData) {
                 var teamName = node.title;
 
                 document.getElementById('selectedTeamKey').value = teamKey;
-
 
                 if(node.data.parentId === null){
                     $(".team-overview, .team-members, .member-detail").hide();
