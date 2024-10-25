@@ -617,19 +617,19 @@ INSERT INTO CodeDetail (cd_dtl_no, common_cd_no, cd_dtl_nm, order_no, use_yn) VA
 INSERT INTO CodeDetail (cd_dtl_no, common_cd_no, cd_dtl_nm, order_no, use_yn) VALUES ('PMS01706', 'PMS017', '사원', 6, 'Y');
 
 INSERT INTO Member (mem_no, grp_no, login_id, pw, mem_nm, phone_no, email, auth_cd, pos_nm, birth_dt, tech_grd_cd, org, use_yn, rec_prj)
-VALUES (seq_member.nextval, 3, 'user1', '$2a$10$GBpeKte0vdpwmnB3brH3LeB4YwMZnbHQpyDkvTp9BWo0BS6fYXINe', '홍길동', '010-1234-5678', 'hong@example.com', 'PMS01501', 'PMS01706', '1990-01-01', 'PMS01503', '공공', 'Y', NULL);
+VALUES (seq_member.nextval, 3, 'user1', '$2a$10$GBpeKte0vdpwmnB3brH3LeB4YwMZnbHQpyDkvTp9BWo0BS6fYXINe', '이철수', '010-1234-5678', 'hong@example.com', 'PMS01501', 'PMS01706', '1990-01-01', 'PMS01503', '공공', 'Y', NULL);
 
 INSERT INTO Member (mem_no, grp_no, login_id, pw, mem_nm, phone_no, email, auth_cd, pos_nm, birth_dt, tech_grd_cd, org, use_yn, rec_prj)
 VALUES (seq_member.nextval, 3, 'user2', '$2a$10$GBpeKte0vdpwmnB3brH3LeB4YwMZnbHQpyDkvTp9BWo0BS6fYXINe', '김철수', '010-9876-5432', 'kim@example.com', 'PMS01501', 'PMS01703', '1992-05-21', 'PMS01502', 'SI', 'Y', NULL);
 
 INSERT INTO Member (mem_no, grp_no, login_id, pw, mem_nm, phone_no, email, auth_cd, pos_nm, birth_dt, tech_grd_cd, org, use_yn, rec_prj)
-VALUES (seq_member.nextval, 3, 'user3', '$2a$10$GBpeKte0vdpwmnB3brH3LeB4YwMZnbHQpyDkvTp9BWo0BS6fYXINe', '박길순', '010-9876-5432', 'kim@example.com', 'PMS01501', 'PMS01703', '1992-05-21', 'PMS01502', 'SI', 'Y', NULL);
+VALUES (seq_member.nextval, 3, 'user3', '$2a$10$GBpeKte0vdpwmnB3brH3LeB4YwMZnbHQpyDkvTp9BWo0BS6fYXINe', '박철수', '010-9876-5432', 'kim@example.com', 'PMS01501', 'PMS01703', '1992-05-21', 'PMS01502', 'SI', 'Y', NULL);
 
 INSERT INTO Member (mem_no, grp_no, login_id, pw, mem_nm, phone_no, email, auth_cd, pos_nm, birth_dt, tech_grd_cd, org, use_yn, rec_prj)
-VALUES (seq_member.nextval, 4, 'user4', '$2a$10$GBpeKte0vdpwmnB3brH3LeB4YwMZnbHQpyDkvTp9BWo0BS6fYXINe', '유재석', '010-9876-5432', 'kim@example.com', 'PMS01501', 'PMS01703', '1992-05-21', 'PMS01502', 'SI', 'Y', NULL);
+VALUES (seq_member.nextval, 4, 'user4', '$2a$10$GBpeKte0vdpwmnB3brH3LeB4YwMZnbHQpyDkvTp9BWo0BS6fYXINe', '강재석', '010-9876-5432', 'kim@example.com', 'PMS01501', 'PMS01703', '1992-05-21', 'PMS01502', 'SI', 'Y', NULL);
 
 INSERT INTO Member (mem_no, grp_no, login_id, pw, mem_nm, phone_no, email, auth_cd, pos_nm, birth_dt, tech_grd_cd, org, use_yn, rec_prj)
-VALUES (seq_member.nextval, 4, 'user5', '$2a$10$GBpeKte0vdpwmnB3brH3LeB4YwMZnbHQpyDkvTp9BWo0BS6fYXINe', '강호동', '010-9876-5432', 'kim@example.com', 'PMS01501', 'PMS01703', '1992-05-21', 'PMS01502', 'SI', 'Y', NULL);
+VALUES (seq_member.nextval, 4, 'user5', '$2a$10$GBpeKte0vdpwmnB3brH3LeB4YwMZnbHQpyDkvTp9BWo0BS6fYXINe', '김상중', '010-9876-5432', 'kim@example.com', 'PMS01501', 'PMS01703', '1992-05-21', 'PMS01502', 'SI', 'Y', NULL);
 
 INSERT INTO project (prj_no, prj_title, prj_cont, stat_cd, prg, org, pre_st_dt, pre_end_dt, st_dt, end_dt, use_yn, reg_id, reg_dt, mod_dt)
 VALUES (seq_project.nextval, '차세대 공공 프로젝트', '프로젝트 내용', 'PMS00102', 0, '공공', '2021-01-01', '2021-01-01', '2021-01-01', '2021-01-01', 'Y', 'user1', '2021-01-01', '2021-01-01');
@@ -647,26 +647,37 @@ INSERT INTO Member (mem_no, grp_no, login_id, pw, mem_nm, phone_no, email, auth_
 VALUES (seq_member.nextval, 4, 'user9', '$2a$10$GBpeKte0vdpwmnB3brH3LeB4YwMZnbHQpyDkvTp9BWo0BS6fYXINe', '황철순', '010-9876-5432', 'kim@example.com', 'PMS01501', 'PMS01703', '1992-05-21', 'PMS01502', 'SI', 'Y', NULL);
 
 INSERT INTO Member (mem_no, grp_no, login_id, pw, mem_nm, phone_no, email, auth_cd, pos_nm, birth_dt, tech_grd_cd, org, use_yn, rec_prj)
-VALUES (seq_member.nextval, 4, 'user10', '$2a$10$GBpeKte0vdpwmnB3brH3LeB4YwMZnbHQpyDkvTp9BWo0BS6fYXINe', '김박사', '010-9876-5432', 'kim@example.com', 'PMS01501', 'PMS01703', '1992-05-21', 'PMS01501', 'SI', 'Y', NULL);
+VALUES (seq_member.nextval, 4, 'user10', '$2a$10$GBpeKte0vdpwmnB3brH3LeB4YwMZnbHQpyDkvTp9BWo0BS6fYXINe', '유재석', '010-9876-5432', 'kim@example.com', 'PMS01501', 'PMS01703', '1992-05-21', 'PMS01501', 'SI', 'Y', NULL);
 
 INSERT INTO Member (mem_no, grp_no, login_id, pw, mem_nm, phone_no, email, auth_cd, pos_nm, birth_dt, tech_grd_cd, org, use_yn, rec_prj)
-VALUES (seq_member.nextval, 4, 'user11', '$2a$10$GBpeKte0vdpwmnB3brH3LeB4YwMZnbHQpyDkvTp9BWo0BS6fYXINe', '이박사', '010-9876-5432', 'kim@example.com', 'PMS01501', 'PMS01703', '1992-05-21', 'PMS01502', 'SI', 'Y', NULL);
+VALUES (seq_member.nextval, 4, 'user11', '$2a$10$GBpeKte0vdpwmnB3brH3LeB4YwMZnbHQpyDkvTp9BWo0BS6fYXINe', '강호동', '010-9876-5432', 'kim@example.com', 'PMS01501', 'PMS01703', '1992-05-21', 'PMS01502', 'SI', 'Y', NULL);
 
 INSERT INTO Member (mem_no, grp_no, login_id, pw, mem_nm, phone_no, email, auth_cd, pos_nm, birth_dt, tech_grd_cd, org, use_yn, rec_prj)
-VALUES (seq_member.nextval, 4, 'user12', '$2a$10$GBpeKte0vdpwmnB3brH3LeB4YwMZnbHQpyDkvTp9BWo0BS6fYXINe', '박카스', '010-9876-5432', 'kim@example.com', 'PMS01501', 'PMS01703', '1992-05-21', 'PMS01503', 'SI', 'Y', NULL);
+VALUES (seq_member.nextval, 4, 'user12', '$2a$10$GBpeKte0vdpwmnB3brH3LeB4YwMZnbHQpyDkvTp9BWo0BS6fYXINe', '이경규', '010-9876-5432', 'kim@example.com', 'PMS01501', 'PMS01703', '1992-05-21', 'PMS01503', 'SI', 'Y', NULL);
 
 INSERT INTO Member (mem_no, grp_no, login_id, pw, mem_nm, phone_no, email, auth_cd, pos_nm, birth_dt, tech_grd_cd, org, use_yn, rec_prj)
-VALUES (seq_member.nextval, 4, 'user13', '$2a$10$GBpeKte0vdpwmnB3brH3LeB4YwMZnbHQpyDkvTp9BWo0BS6fYXINe', '밀키스', '010-9876-5432', 'kim@example.com', 'PMS01501', 'PMS01703', '1992-05-21', 'PMS01501', 'SI', 'Y', NULL);
+VALUES (seq_member.nextval, 4, 'user13', '$2a$10$GBpeKte0vdpwmnB3brH3LeB4YwMZnbHQpyDkvTp9BWo0BS6fYXINe', '신동엽', '010-9876-5432', 'kim@example.com', 'PMS01501', 'PMS01703', '1992-05-21', 'PMS01501', 'SI', 'Y', NULL);
+
+INSERT INTO Member (mem_no, grp_no, login_id, pw, mem_nm, phone_no, email, auth_cd, pos_nm, birth_dt, tech_grd_cd, org, use_yn, rec_prj)
+VALUES (seq_member.nextval, 4, 'pm1', '$2a$10$GBpeKte0vdpwmnB3brH3LeB4YwMZnbHQpyDkvTp9BWo0BS6fYXINe', '홍길동', '010-9876-5432', 'kim@example.com', 'PMS01503', 'PMS01702', '1992-05-21', 'PMS01503', 'SI', 'Y', NULL);
+
+INSERT INTO Member (mem_no, grp_no, login_id, pw, mem_nm, phone_no, email, auth_cd, pos_nm, birth_dt, tech_grd_cd, org, use_yn, rec_prj)
+VALUES (seq_member.nextval, 4, 'pm2', '$2a$10$GBpeKte0vdpwmnB3brH3LeB4YwMZnbHQpyDkvTp9BWo0BS6fYXINe', '김길동', '010-9876-5432', 'kim@example.com', 'PMS01503', 'PMS01702', '1992-05-21', 'PMS01503', 'SI', 'Y', NULL);
+
+INSERT INTO Member (mem_no, grp_no, login_id, pw, mem_nm, phone_no, email, auth_cd, pos_nm, birth_dt, tech_grd_cd, org, use_yn, rec_prj)
+VALUES (seq_member.nextval, 3, 'pm3', '$2a$10$GBpeKte0vdpwmnB3brH3LeB4YwMZnbHQpyDkvTp9BWo0BS6fYXINe', '이길동', '010-9876-5432', 'kim@example.com', 'PMS01503', 'PMS01702', '1992-05-21', 'PMS01503', 'SI', 'Y', NULL);
 
 INSERT INTO team (tm_no, tm_nm, tm_cont, use_yn, order_no, par_tm_no, prj_no, sys_no, reg_id, reg_dt, mod_id, mod_dt)
 VALUES (seq_team.nextval, '차세대 공공 프로젝트', '테스트 내용', 'Y', 1, NULL, 1, NULL, 'user1', '2021-01-01', NULL, NULL);
 
 INSERT INTO projectMember (mem_no, tm_no, prj_no, prj_auth_cd, pre_start_dt, pre_end_dt, start_dt, end_dt, use_yn, reg_id, reg_dt, mod_id, mod_dt)
-VALUES (1, 1, 1, 'PMS00201', '2021-01-01', '2021-01-01', '2021-01-01', '2021-01-01', 'Y', 'user1', '2021-01-01', NULL, NULL);
+VALUES (1, 1, 1, 'PMS00203', '2021-01-01', '2021-01-01', '2021-01-01', '2021-01-01', 'Y', 'user1', '2021-01-01', NULL, NULL);
 INSERT INTO projectMember (mem_no, tm_no, prj_no, prj_auth_cd, pre_start_dt, pre_end_dt, start_dt, end_dt, use_yn, reg_id, reg_dt, mod_id, mod_dt)
-VALUES (2, 1, 1, 'PMS00202', '2021-01-01', '2021-01-01', '2021-01-01', '2021-01-01', 'Y', 'user1', '2021-01-01', NULL, NULL);
+VALUES (2, 1, 1, 'PMS00203', '2021-01-01', '2021-01-01', '2021-01-01', '2021-01-01', 'Y', 'user1', '2021-01-01', NULL, NULL);
 INSERT INTO projectMember (mem_no, tm_no, prj_no, prj_auth_cd, pre_start_dt, pre_end_dt, start_dt, end_dt, use_yn, reg_id, reg_dt, mod_id, mod_dt)
-VALUES (3, 1, 1, 'PMS00203', '2021-01-01', '2021-01-01', '2021-01-01', '2021-01-01', 'Y', 'user1', '2021-01-01', NULL, NULL);
+VALUES (3, 1, 1, 'PMS00202', '2021-01-01', '2021-01-01', '2021-01-01', '2021-01-01', 'Y', 'user1', '2021-01-01', NULL, NULL);
+INSERT INTO projectMember (mem_no, tm_no, prj_no, prj_auth_cd, pre_start_dt, pre_end_dt, start_dt, end_dt, use_yn, reg_id, reg_dt, mod_id, mod_dt)
+VALUES (14, 1, 1, 'PMS00201', '2021-01-01', '2021-01-01', '2021-01-01', '2021-01-01', 'Y', 'pm1', '2021-01-01', NULL, NULL);
 
 INSERT INTO System (sys_no, sys_ttl, sys_cont, use_yn, prj_no, par_sys_no, sys_yn)
 VALUES (seq_system.nextval, 'A 업무 시스템', '시스템1 내용', 'Y', 1, NULL, 'Y');

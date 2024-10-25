@@ -17,7 +17,6 @@
 
 <main class="content" id="content">
     <div class="main_content">
-        <button onclick="openTeamPopUp()">버튼클릭</button>
         <div class="div-section">
             <div class="div-info"> 투입인력 관리</div>
         </div>

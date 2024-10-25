@@ -25,10 +25,13 @@
     if (prjNo instanceof Long) {
         prjNoInt = (Long) prjNo;
     }
+
+    String authCode = (String)session.getAttribute("authCode");
 %>
 
 <script type="text/javascript">
     let prjNo = '<%= prjNoInt != null ? prjNoInt.toString() : 1 %>';
+    let authCode = '<%= authCode %>';
 </script>
 
 <link rel="stylesheet" href="../../../resources/common/css/header.css">
