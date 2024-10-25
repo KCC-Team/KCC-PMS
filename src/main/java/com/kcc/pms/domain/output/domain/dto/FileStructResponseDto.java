@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -14,5 +15,5 @@ public class FileStructResponseDto {
     private String text;
     private String type;
     private Long parentId;
-    private List<FileStructResponseDto> children;
+    private List<FileStructResponseDto> children = new ArrayList<>();
 }

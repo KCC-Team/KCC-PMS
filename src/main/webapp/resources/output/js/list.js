@@ -80,11 +80,6 @@ $(function () {
         }
     });
 
-    // 초기 상태에서 드래그 앤 드롭 비활성화
-    $('.jstree-files').jstree(true).settings.dnd.is_draggable = function () {
-        return false;
-    };
-
     $('#search').on('keypress', function (e) {
         if (e.which === 13) { // 엔터 키 코드
             let v = $(this).val();

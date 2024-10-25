@@ -1,11 +1,9 @@
-package com.kcc.pms.domain.output.mapper;
+package com.kcc.pms.domain.output.service;
 
 import com.kcc.pms.domain.output.domain.dto.FileStructResponseDto;
-import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
 
-@Mapper
-public interface OutputMapper {
+public interface OutputService {
     List<FileStructResponseDto> findList(Long prjNo, String option);
 }

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!-- mapper DTD 선언 -->
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.kcc.pms.domain.output.mapper.OutputMapper">
+    <select id="findList" parameterType="map" resultType="FileStructResponseDto">
+        SELECT
+        opt_no as id,
+        opt_ttl as text,
+        fld_yn as type,
+        high_folder_no as parentId
+        FROM Output
+        WHERE prj_no = #{prjNo}
+        <if test='option != null and option == "y"'>
+            and fld_yn = #{option}
+        </if>
+    </select>
+
+</mapper>
