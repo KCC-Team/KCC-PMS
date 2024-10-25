@@ -50,14 +50,13 @@ public class SecurityConfig {
                 ).formLogin(formLogin -> formLogin.loginPage("/loginForm") // 로그인 페이지 지정
                         .loginProcessingUrl("/login") // 컨트롤러 지정 없이 시큐리티에서 로그인 진행
                         .successHandler((request, response, authentication) -> {
-                            String prevPage = (String) request.getSession().getAttribute("prevPage");
-                            if (prevPage != null) {
-                                response.sendRedirect(prevPage);
-                            } else {
-                                SavedRequestAwareAuthenticationSuccessHandler defaultHandler = new SavedRequestAwareAuthenticationSuccessHandler();
-                                defaultHandler.setDefaultTargetUrl("/projects/list?type=projectList"); // 기본 경로 설정
-                                defaultHandler.onAuthenticationSuccess(request, response, authentication);
-                            }
+                            //String prevPage = (String) request.getSession().getAttribute("prevPage");
+                            //if (prevPage != null) {
+                                //response.sendRedirect(prevPage);
+                            //}
+                            SavedRequestAwareAuthenticationSuccessHandler defaultHandler = new SavedRequestAwareAuthenticationSuccessHandler();
+                            defaultHandler.setDefaultTargetUrl("/projects/list?type=projectList"); // 기본 경로 설정
+                            defaultHandler.onAuthenticationSuccess(request, response, authentication);
                         })
                         .failureHandler(authenticationFailureHandler())) // 로그인 실패 시 처리할 핸들러 설정
                 .logout(logout -> logout

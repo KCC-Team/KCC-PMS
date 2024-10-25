@@ -3,6 +3,12 @@ var queryParams = new URLSearchParams(queryString);
 var type = queryParams.get('type');
 
 getStatusCode();
+
+// pm만 수정 가능 / 이외네느 readonly
+if (authCode != undefined && authCode != null && authCode != 'PMS00201') {
+    setAllReadonly();
+}
+
 if (type === 'view') {
     getProjectResult();
     $('#type').val('view');
@@ -250,6 +256,39 @@ function limitByteLength(input, maxByteLength) {
     input.val(newText);
 
     return byteLength;
+}
+
+
+// 사원 접근 시 readonly
+function setAllReadonly() {
+    // 모든 input 요소에 readonly 속성 추가
+    document.querySelectorAll('input').forEach(function(input) {
+        input.readOnly = true;
+    });
+
+    // 모든 select 요소에 disabled 속성 추가
+    document.querySelectorAll('select').forEach(function(select) {
+        select.disabled = true;
+    });
+
+    // 모든 textarea 요소에 readonly 속성 추가
+    document.querySelectorAll('textarea').forEach(function(textarea) {
+        textarea.readOnly = true;
+    });
+
+    var elements = document.getElementsByClassName("modify-project");
+    // 모든 요소에 hidden 속성 추가
+    for (var i = 0; i < elements.length; i++) {
+        elements[i].hidden = true;
+    }
+
+    document.getElementById("pre_st_dt").disabled = true;
+    document.getElementById("pre_end_dt").disabled = true;
+    document.getElementById("st_dt").disabled = true;
+    document.getElementById("end_dt").disabled = true;
+    document.querySelectorAll('input[type="checkbox"]').forEach(function(checkbox) {
+        checkbox.disabled = true;
+    });
 }
 
 
