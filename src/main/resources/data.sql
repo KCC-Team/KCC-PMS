@@ -162,15 +162,15 @@ CREATE TABLE Feature (
     feat_id	VARCHAR2(20) NOT NULL,
     feat_title VARCHAR2(100) NOT NULL,
     feat_cont VARCHAR2(500) NOT NULL,
-    pre_st_dt DATE NULL,
-    pre_end_dt DATE NULL,
+    pre_st_dt DATE NOT NULL,
+    pre_end_dt DATE NOT NULL,
     st_dt DATE NULL,
     end_dt DATE NULL,
     stat_cd CHAR(8) NOT NULL,
     pri_cd CHAR(8) NOT NULL,
     prg	NUMBER NOT NULL,
     diff_cd CHAR(8) NOT NULL,
-    class_cd CHAR(8) NULL,
+    class_cd CHAR(8) NOT NULL,
     use_yn VARCHAR2(1) NOT NULL,
     sys_no NUMBER NULL,
     mem_no NUMBER  NULL,
@@ -218,7 +218,6 @@ CREATE TABLE FileDetail (
 CREATE TABLE Output (
     opt_no number NOT NULL,
     opt_ttl VARCHAR2(50) NOT NULL,
-    depth NUMBER NOT NULL,
     prj_no NUMBER NOT NULL,
     high_folder_no NUMBER NULL,
     fld_yn VARCHAR2(1) NOT NULL,
@@ -578,10 +577,12 @@ INSERT INTO CodeDetail (cd_dtl_no, common_cd_no, cd_dtl_nm, order_no, use_yn) VA
 INSERT INTO CodeDetail (cd_dtl_no, common_cd_no, cd_dtl_nm, order_no, use_yn) VALUES ('PMS00905', 'PMS009', 'PL확인', 5, 'Y');
 INSERT INTO CodeDetail (cd_dtl_no, common_cd_no, cd_dtl_nm, order_no, use_yn) VALUES ('PMS00906', 'PMS009', '고객확인', 6, 'Y');
 
-INSERT INTO CodeDetail (cd_dtl_no, common_cd_no, cd_dtl_nm, order_no, use_yn) VALUES ('PMS01001', 'PMS010', '화면', 1, 'Y');
-INSERT INTO CodeDetail (cd_dtl_no, common_cd_no, cd_dtl_nm, order_no, use_yn) VALUES ('PMS01002', 'PMS010', '인터페이스', 2, 'Y');
-INSERT INTO CodeDetail (cd_dtl_no, common_cd_no, cd_dtl_nm, order_no, use_yn) VALUES ('PMS01003', 'PMS010', '프로그램', 3, 'Y');
-INSERT INTO CodeDetail (cd_dtl_no, common_cd_no, cd_dtl_nm, order_no, use_yn) VALUES ('PMS01004', 'PMS010', '보고서', 4, 'Y');
+INSERT INTO CodeDetail (cd_dtl_no, common_cd_no, cd_dtl_nm, order_no, use_yn) VALUES ('PMS01005', 'PMS010', '일반', 1, 'Y');
+INSERT INTO CodeDetail (cd_dtl_no, common_cd_no, cd_dtl_nm, order_no, use_yn) VALUES ('PMS01001', 'PMS010', '화면', 2, 'Y');
+INSERT INTO CodeDetail (cd_dtl_no, common_cd_no, cd_dtl_nm, order_no, use_yn) VALUES ('PMS01002', 'PMS010', '인터페이스', 3, 'Y');
+INSERT INTO CodeDetail (cd_dtl_no, common_cd_no, cd_dtl_nm, order_no, use_yn) VALUES ('PMS01003', 'PMS010', '프로그램', 4, 'Y');
+INSERT INTO CodeDetail (cd_dtl_no, common_cd_no, cd_dtl_nm, order_no, use_yn) VALUES ('PMS01004', 'PMS010', '보고서', 5, 'Y');
+
 
 INSERT INTO CodeDetail (cd_dtl_no, common_cd_no, cd_dtl_nm, order_no, use_yn) VALUES ('PMS01101', 'PMS011', '매우높음', 1, 'Y');
 INSERT INTO CodeDetail (cd_dtl_no, common_cd_no, cd_dtl_nm, order_no, use_yn) VALUES ('PMS01102', 'PMS011', '높음', 2, 'Y');
@@ -707,12 +708,12 @@ VALUES (seq_system.nextval, '조달관리', '시스템8 내용', 'Y', 1, 4, 'Y')
 INSERT INTO System (sys_no, sys_ttl, sys_cont, use_yn, prj_no, par_sys_no, sys_yn)
 VALUES (seq_system.nextval, '통합관리', '시스템9 내용', 'Y', 1, 4, 'Y');
 
-INSERT INTO Feature (feat_no, feat_id, feat_title, feat_cont, pre_st_dt, pre_end_dt, st_dt, end_dt, stat_cd, pri_cd, prg, diff_cd, use_yn, sys_no, mem_no, tm_no, prj_no)
-VALUES (seq_feature.nextval, 'F001', 'RSTR110', '기능1 내용', '2021-01-01', '2021-01-01', '2021-01-01', '2021-01-01', 'PMS00901', 'PMS00603', 0, 'PMS01103', 'Y', 1, 1, 1, 1);
-INSERT INTO Feature (feat_no, feat_id, feat_title, feat_cont, pre_st_dt, pre_end_dt, st_dt, end_dt, stat_cd, pri_cd, prg, diff_cd, use_yn, sys_no, mem_no, tm_no, prj_no)
-VALUES (seq_feature.nextval, 'F002', 'RSTR111', '기능2 내용', '2021-01-01', '2021-01-01', '2021-01-01', '2021-01-01', 'PMS00901', 'PMS00603', 0, 'PMS01103', 'Y', 1, 1, 1, 1);
-INSERT INTO Feature (feat_no, feat_id, feat_title, feat_cont, pre_st_dt, pre_end_dt, st_dt, end_dt, stat_cd, pri_cd, prg, diff_cd, use_yn, sys_no, mem_no, tm_no, prj_no)
-VALUES (seq_feature.nextval, 'F003', 'RSTR123', '기능3 내용', '2021-01-01', '2021-01-01', '2021-01-01', '2021-01-01', 'PMS00901', 'PMS00603', 0, 'PMS01103', 'Y', 1, 1, 1, 1);
+INSERT INTO Feature (feat_no, feat_id, feat_title, feat_cont, pre_st_dt, pre_end_dt, st_dt, end_dt, stat_cd, pri_cd, prg, diff_cd, use_yn, sys_no, mem_no, tm_no, prj_no, class_cd)
+VALUES (seq_feature.nextval, 'F001', 'RSTR110', '기능1 내용', '2021-01-01', '2021-01-01', '2021-01-01', '2021-01-01', 'PMS00901', 'PMS00603', 0, 'PMS01103', 'Y', 1, 1, 1, 1, 'PMS01005');
+INSERT INTO Feature (feat_no, feat_id, feat_title, feat_cont, pre_st_dt, pre_end_dt, st_dt, end_dt, stat_cd, pri_cd, prg, diff_cd, use_yn, sys_no, mem_no, tm_no, prj_no, class_cd)
+VALUES (seq_feature.nextval, 'F002', 'RSTR111', '기능2 내용', '2021-01-01', '2021-01-01', '2021-01-01', '2021-01-01', 'PMS00901', 'PMS00603', 0, 'PMS01103', 'Y', 1, 1, 1, 1, 'PMS01005');
+INSERT INTO Feature (feat_no, feat_id, feat_title, feat_cont, pre_st_dt, pre_end_dt, st_dt, end_dt, stat_cd, pri_cd, prg, diff_cd, use_yn, sys_no, mem_no, tm_no, prj_no, class_cd)
+VALUES (seq_feature.nextval, 'F003', 'RSTR123', '기능3 내용', '2021-01-01', '2021-01-01', '2021-01-01', '2021-01-01', 'PMS00901', 'PMS00603', 0, 'PMS01103', 'Y', 1, 1, 1, 1, 'PMS01005');
 
 INSERT INTO TestMaster (
     test_no, test_id, test_title, test_cont, stat_cd, type_cd, prj_no,

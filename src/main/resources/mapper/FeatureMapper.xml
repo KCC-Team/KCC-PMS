@@ -57,4 +57,70 @@
         #{prjNo}
         )
     </insert>
+
+    <select id="getProgressSummary" resultType="com.kcc.pms.domain.feature.model.dto.FeatureProgressResponseDto">
+        <![CDATA[
+        SELECT
+        ROUND(SUM(f.prg) / COUNT(f.feat_no), 2) AS progress,
+        COUNT(f.feat_no) AS total,
+        COUNT(CASE WHEN f.prg < 100 AND SYSDATE < f.pre_end_dt THEN 1 END) AS presentCount,
+        COUNT(CASE WHEN f.prg = 100 THEN 1 END) AS complete,
+        COUNT(CASE WHEN f.prg < 100 AND SYSDATE > f.pre_end_dt THEN 1 END) AS delay
+        FROM
+        System s
+        JOIN
+        Feature f ON f.sys_no = s.sys_no
+        WHERE
+        (s.sys_no = #{systemNo} OR s.sys_no IN (
+        SELECT sys_no FROM System
+        START WITH sys_no = #{systemNo}
+        CONNECT BY PRIOR sys_no = par_sys_no
+        ))
+        AND (#{featClassCd} IS NULL OR f.class_cd = #{featClassCd})
+        AND s.prj_no = #{prjNo}
+        ]]>
+    </select>
+
+
+    <select id="getSystemFeatureList" resultType="com.kcc.pms.domain.feature.model.dto.FeatureSummaryResponseDto">
+        SELECT
+            f.feat_no as featureNo,
+            f.feat_id as featureId,
+            f.feat_title as featureTitle,
+            m.mem_nm as memberName,
+            f.prg as progress,
+            s.sys_ttl as system,
+            st.cd_dtl_nm as status,
+            CASE
+                WHEN f.pre_end_dt >= SYSDATE THEN 'D-' || TRUNC(f.pre_end_dt - SYSDATE)
+                ELSE 'D+' || ABS(TRUNC(SYSDATE - f.pre_end_dt))
+                END AS remainingDays
+        FROM
+            feature f,
+            system s,
+            member m,
+            codedetail st
+        WHERE
+            f.sys_no = s.sys_no
+          AND f.mem_no = m.mem_no
+          AND f.stat_cd = st.cd_dtl_no
+          AND (
+            s.sys_no = #{systemNo}
+                OR s.sys_no IN (
+                SELECT
+                    sys_no
+                FROM
+                    System
+                START WITH
+                    sys_no = #{systemNo}
+                CONNECT BY
+                    PRIOR sys_no = par_sys_no
+            )
+            )
+          AND (
+            #{featClassCd} IS NULL
+                OR f.class_cd = #{featClassCd}
+            )
+          AND s.prj_no = #{prjNo}
+    </select>
 </mapper>

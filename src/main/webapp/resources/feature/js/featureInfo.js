@@ -29,13 +29,18 @@ $(document).ready(function (){
             formDataObject[item.name] = item.value;
         });
 
+        // 'featClassCode'가 선택되지 않았다면 기본값 'PMS01005'를 설정
+        if (!formDataObject.featClassCode || formDataObject.featClassCode === "") {
+            formDataObject.featClassCode = "PMS01005";
+        }
+
         console.log("Form Data:", formDataObject);
 
 
         $.ajax({
             type: "POST",
             url: "/projects/features",
-            data: formData,
+            data: formDataObject,
             success: function (response) {
                 alert("저장이 완료되었습니다.");
             },
@@ -73,6 +78,7 @@ function fetchOptions() {
 
                 if ($selectElement.length) {
                     setOptions($selectElement, item.codes);
+
                 }
             });
         },
@@ -84,13 +90,15 @@ function fetchOptions() {
 
 function setOptions($selectElement, options) {
     options.forEach(function(option) {
-        // 각 option 태그 생성
-        const $option = $('<option>', {
-            value: option.cd_dtl_no,
-            text: option.cd_dtl_nm
-        });
 
-        $selectElement.append($option);
+            // 각 option 태그 생성
+            const $option = $('<option>', {
+                value: option.cd_dtl_no,
+                text: option.cd_dtl_nm
+            });
+
+            $selectElement.append($option);
+
     });
 }
 
