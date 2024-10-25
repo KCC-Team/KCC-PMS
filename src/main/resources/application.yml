@@ -37,6 +37,9 @@ cloud:
       auto: false
 
 ---
+server:
+  port: 8085
+
 spring:
   config:
     activate:

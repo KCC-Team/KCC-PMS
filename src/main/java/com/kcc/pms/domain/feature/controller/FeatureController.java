@@ -2,6 +2,8 @@ package com.kcc.pms.domain.feature.controller;
 
 import com.kcc.pms.domain.common.model.dto.CommonCodeOptions;
 import com.kcc.pms.domain.feature.model.dto.FeatureCreateRequestDto;
+import com.kcc.pms.domain.feature.model.dto.FeatureProgressResponseDto;
+import com.kcc.pms.domain.feature.model.dto.FeatureSummaryResponseDto;
 import com.kcc.pms.domain.feature.service.FeatureService;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
@@ -42,9 +44,9 @@ public class FeatureController {
     @ResponseBody
     public ResponseEntity<?> createFeature(FeatureCreateRequestDto requestDto, HttpSession session){
         System.out.println("requestDto = " + requestDto);
-        //Object prjNo = session.getAttribute("prjNo");
-        //System.out.println("prjNo = " + prjNo);
-        Long prjNo = 1L;
+        Long prjNo = (Long) session.getAttribute("prjNo");
+        System.out.println("prjNo = " + prjNo);
+
         requestDto.setPrjNo(prjNo);
 
         Integer result = service.createFeature(requestDto);
@@ -54,6 +56,39 @@ public class FeatureController {
         }
 
         return ResponseEntity.status(HttpStatus.CREATED).body("성공적으로 생성되었습니다.");
-
     }
+
+    @GetMapping("/progress")
+    @ResponseBody
+    public ResponseEntity<FeatureProgressResponseDto> getProgressSummary(@RequestParam("systemNo") Long systemNo,
+                                                                         @RequestParam("featClassCd") String featClassCd,
+                                                                         HttpSession session){
+        Long prjNo = (Long) session.getAttribute("prjNo");
+        System.out.println("prjNo = " + prjNo);
+        System.out.println("systemNo = " + systemNo);
+        System.out.println("featClassCd = " + featClassCd);
+        FeatureProgressResponseDto progressSummary = service.getProgressSummary(systemNo, featClassCd, prjNo);
+
+        if (progressSummary != null) {
+            return ResponseEntity.ok(progressSummary);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @GetMapping("/list")
+    @ResponseBody
+    public ResponseEntity<List<FeatureSummaryResponseDto>> getFeatureSummary(@RequestParam("systemNo") Long systemNo,
+                                                                             @RequestParam("featClassCd") String featClassCd,
+                                                                             HttpSession session){
+        Long prjNo = (Long) session.getAttribute("prjNo");
+        List<FeatureSummaryResponseDto> systemFeatureList = service.getSystemFeatureList(systemNo, featClassCd, prjNo);
+
+        if (systemFeatureList != null && !systemFeatureList.isEmpty()) {
+            return ResponseEntity.ok(systemFeatureList);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
 }

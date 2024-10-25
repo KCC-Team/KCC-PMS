@@ -81,8 +81,8 @@ public class TeamController {
     @GetMapping("/teams/tree")
     @ResponseBody
     public ResponseEntity<List<TeamTreeResponseDto>> getTeamTree(HttpSession session){
-        //Long prjNo = (Long) session.getAttribute("prjNo");
-        return ResponseEntity.ok(teamService.getTeamTree(1L));
+        Long prjNo = (Long) session.getAttribute("prjNo");
+        return ResponseEntity.ok(teamService.getTeamTree(prjNo));
     }
 
 }

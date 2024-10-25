@@ -25,14 +25,6 @@ $(document).ready(function() {
 
     $("#system-select span:first").text("시스템 선택");
 
-    // 인원 검색
-    $('.btn-select-user').click(function () {
-        window.open(
-            "/projects/addMember?prjNo=" + prjNo +"&type=wbs",
-            "project",
-            "width=1000, height=750, resizable=yes"
-        );
-    });
 
     // form 전송
     $('#wbs_form').on('submit', function (event) {
@@ -82,6 +74,15 @@ $(document).ready(function() {
         }
     });
 
+    // 인원 검색
+    $('.btn-select-user').click(function () {
+        window.open(
+            "/projects/addTeamMember?type=wbs",
+            "인원등록",
+            "width=1000, height=570, resizable=yes"
+        );
+    });
+
 });
 
 
@@ -100,8 +101,8 @@ window.addEventListener('message', function (event) {
 
     addedMembers.forEach(function(member) {
         membersId += member.id + ", ";
-        teamNo += member.connectTeams[0].teamNo + ", ";
-        membersName += member.name + ", ";
+        teamNo += member.teamNo + ", ";
+        membersName += member.memberName + ", ";
     });
 
     if (membersId.includes(',')) {
@@ -178,6 +179,7 @@ function getTopTaskList(id) {
     });
 }
 
+// 시스템 메뉴 생성
 function fetchMenuData() {
     return $.ajax({
         url: '/systems?prjNo=' + prjNo,
