@@ -16,4 +16,20 @@
         WHERE prj_no = #{projectNo}
     </select>
 
+    <select id="getParentSystems" resultType="com.kcc.pms.domain.system.model.dto.SystemPageDto">
+        <![CDATA[
+        SELECT sys_no as systemNo, sys_ttl as systemTitle FROM (
+        SELECT a.*, ROWNUM rnum
+        FROM (
+        SELECT sys_no, sys_ttl
+        FROM System
+        WHERE par_sys_no IS NULL and prj_no = #{prjNo}
+        ORDER BY sys_no
+        ) a
+        WHERE ROWNUM <= #{endRow}
+        )
+        WHERE rnum > #{startRow}
+        ]]>
+    </select>
+
 </mapper>

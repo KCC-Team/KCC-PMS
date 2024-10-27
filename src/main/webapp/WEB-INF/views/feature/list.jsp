@@ -32,49 +32,16 @@
                     </div>
                 </div>
 
-                <div class="feat-info-row">
-                    <div class="feat-title">A업무시스템</div>
-                    <div class="prg-bar">
-                        <progress class="feat-bar" value="35" max="100"></progress><span class="prg-val">35%</span>
-                    </div>
-                    <div class="feat-total">
-                        <span class="feat-total-cnt">15</span><span class="total-name">건 - </span>
-                        <span class="total-name">(</span>
-                        <span class="feat-complete-cnt">8</span>
-                        <span class="total-name">건 완료, </span>
-                        <span class="feat-continue-cnt">7</span><span class="total-name">건 진행중, </span>
-                        <span class="feat-continue-cnt">2</span><span class="total-name">건 지연)</span>
-                    </div>
+
+                <div id="system-container">
+
                 </div>
 
-                <div class="feat-info-row">
-                    <div class="feat-title">B업무시스템</div>
-                    <div class="prg-bar">
-                        <progress class="feat-bar" value="50" max="100"></progress><span class="prg-val">50%</span>
-                    </div>
-                    <div class="feat-total">
-                        <span class="feat-total-cnt">15</span><span class="total-name">건 - </span>
-                        <span class="total-name">(</span>
-                        <span class="feat-complete-cnt">8</span>
-                        <span class="total-name">건 완료, </span>
-                        <span class="feat-continue-cnt">7</span><span class="total-name">건 진행중, </span>
-                        <span class="feat-continue-cnt">2</span><span class="total-name">건 지연)</span>
-                    </div>
+                <div id="pagination" class="pagination">
+                    <span id="page-numbers"></span> <!-- 여기에 동적으로 페이지 번호와 내비게이션 버튼을 삽입 -->
                 </div>
 
-                <div class="feat-info-row">
-                    <div class="feat-title">C업무시스템</div>
-                    <div class="prg-bar">
-                        <progress class="feat-bar" value="20" max="100"></progress><span class="prg-val">20%</span>                    </div>
-                    <div class="feat-total">
-                        <span class="feat-total-cnt">15</span><span class="total-name">건 - </span>
-                        <span class="total-name">(</span>
-                        <span class="feat-complete-cnt">8</span>
-                        <span class="total-name">건 완료, </span>
-                        <span class="feat-continue-cnt">7</span><span class="total-name">건 진행중, </span>
-                        <span class="feat-delay-cnt">2</span><span class="total-name">건 지연)</span>
-                    </div>
-                </div>
+
             </div>
 
 

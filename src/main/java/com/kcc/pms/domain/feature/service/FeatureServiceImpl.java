@@ -36,4 +36,14 @@ public class FeatureServiceImpl implements FeatureService{
         return mapper.getSystemFeatureList(systemNo, featClassCd, prjNo);
     }
 
+    @Override
+    public FeatureProgressResponseDto getProjectProgressSummary(Long prjNo) {
+        return mapper.getProjectProgressSummary(prjNo);
+    }
+
+    @Override
+    public List<FeatureSummaryResponseDto> getProjectFeatureList(Long prjNo) {
+        return mapper.getProjectFeatureList(prjNo);
+    }
+
 }

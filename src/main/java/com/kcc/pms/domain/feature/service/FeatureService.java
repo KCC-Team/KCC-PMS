@@ -12,4 +12,6 @@ public interface FeatureService {
     Integer createFeature(FeatureCreateRequestDto requestDto);
     FeatureProgressResponseDto getProgressSummary(Long systemNo, String featClassCd, Long prjNo);
     List<FeatureSummaryResponseDto> getSystemFeatureList(Long systemNo, String featClassCd, Long prjNo);
+    FeatureProgressResponseDto getProjectProgressSummary(Long prjNo);
+    List<FeatureSummaryResponseDto> getProjectFeatureList(Long prjNo);
 }
