@@ -19,4 +19,6 @@ public interface FeatureMapper {
     List<FeatureSummaryResponseDto> getSystemFeatureList(@Param("systemNo") Long systemNo,
                                                          @Param("featClassCd") String featClassCd,
                                                          @Param("prjNo") Long prjNo);
+    FeatureProgressResponseDto getProjectProgressSummary(@Param("prjNo") Long prjNo);
+    List<FeatureSummaryResponseDto> getProjectFeatureList(@Param("prjNo") Long prjNo);
 }

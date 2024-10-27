@@ -1,6 +1,7 @@
 package com.kcc.pms.domain.system.service;
 
 import com.kcc.pms.domain.system.mapper.SystemMapper;
+import com.kcc.pms.domain.system.model.dto.SystemPageDto;
 import com.kcc.pms.domain.system.model.dto.SystemResponseDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -21,7 +22,15 @@ public class SystemServiceImpl implements SystemService{
         return buildTree(mapper.getSystemsByProjectNo(projectNo));
     }
 
-    public List<SystemResponseDTO> buildTree(List<SystemResponseDTO> systems){
+    @Override
+    public List<SystemPageDto> getParentSystems(int page, int size, Long prjNo) {
+        int startRow = (page - 1) * size;
+        int endRow = page * size;
+        return mapper.getParentSystems(startRow, endRow, prjNo);
+    }
+
+
+    private List<SystemResponseDTO> buildTree(List<SystemResponseDTO> systems){
         Map<Integer, SystemResponseDTO> systemMap = new HashMap<>();
         List<SystemResponseDTO> rootSystems = new ArrayList<>();
 

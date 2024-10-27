@@ -59,38 +59,101 @@
     </insert>
 
     <select id="getProgressSummary" resultType="com.kcc.pms.domain.feature.model.dto.FeatureProgressResponseDto">
-        <![CDATA[
         SELECT
         ROUND(SUM(f.prg) / COUNT(f.feat_no), 2) AS progress,
         COUNT(f.feat_no) AS total,
-        COUNT(CASE WHEN f.prg < 100 AND SYSDATE < f.pre_end_dt THEN 1 END) AS presentCount,
+        COUNT(CASE WHEN f.prg &lt; 100 AND SYSDATE &lt; f.pre_end_dt THEN 1 END) AS presentCount,
         COUNT(CASE WHEN f.prg = 100 THEN 1 END) AS complete,
-        COUNT(CASE WHEN f.prg < 100 AND SYSDATE > f.pre_end_dt THEN 1 END) AS delay
+        COUNT(CASE WHEN f.prg &lt; 100 AND SYSDATE &gt; f.pre_end_dt THEN 1 END) AS delay
         FROM
         System s
-        JOIN
-        Feature f ON f.sys_no = s.sys_no
+        JOIN Feature f ON f.sys_no = s.sys_no
         WHERE
-        (s.sys_no = #{systemNo} OR s.sys_no IN (
-        SELECT sys_no FROM System
-        START WITH sys_no = #{systemNo}
-        CONNECT BY PRIOR sys_no = par_sys_no
-        ))
-        AND (#{featClassCd} IS NULL OR f.class_cd = #{featClassCd})
-        AND s.prj_no = #{prjNo}
-        ]]>
+        s.prj_no = #{prjNo}
+
+        <if test="systemNo != null">
+            AND (s.sys_no = #{systemNo} OR s.sys_no IN (
+            SELECT sys_no FROM System
+            START WITH sys_no = #{systemNo}
+            CONNECT BY PRIOR sys_no = par_sys_no
+            ))
+        </if>
+
+        <if test="featClassCd != null and featClassCd != ''">
+            AND f.class_cd = #{featClassCd}
+        </if>
     </select>
+
 
 
     <select id="getSystemFeatureList" resultType="com.kcc.pms.domain.feature.model.dto.FeatureSummaryResponseDto">
         SELECT
-            f.feat_no as featureNo,
-            f.feat_id as featureId,
-            f.feat_title as featureTitle,
-            m.mem_nm as memberName,
-            f.prg as progress,
-            s.sys_ttl as system,
-            st.cd_dtl_nm as status,
+        f.feat_no AS featureNo,
+        f.feat_id AS featureId,
+        f.feat_title AS featureTitle,
+        m.mem_nm AS memberName,
+        f.prg AS progress,
+        s.sys_ttl AS system,
+        st.cd_dtl_nm AS status,
+        CASE
+        WHEN f.pre_end_dt >= SYSDATE THEN 'D-' || TRUNC(f.pre_end_dt - SYSDATE)
+        ELSE 'D+' || ABS(TRUNC(SYSDATE - f.pre_end_dt))
+        END AS remainingDays
+        FROM
+        feature f
+        JOIN
+        system s ON f.sys_no = s.sys_no
+        JOIN
+        member m ON f.mem_no = m.mem_no
+        JOIN
+        codedetail st ON f.stat_cd = st.cd_dtl_no
+        WHERE
+        s.prj_no = #{prjNo}
+
+        <!-- systemNo가 없으면 전체 데이터를 가져옴 있으면 해당 시스템 및 하위 시스템으로 필터링 -->
+        <if test="systemNo != null">
+            AND (
+            s.sys_no = #{systemNo}
+            OR s.sys_no IN (
+            SELECT sys_no
+            FROM system
+            START WITH sys_no = #{systemNo}
+            CONNECT BY PRIOR sys_no = par_sys_no
+            )
+            )
+        </if>
+
+        <!-- featClassCd가 존재하는 경우 해당 기능 코드로 필터링 -->
+        <if test="featClassCd != null">
+            AND f.class_cd = #{featClassCd}
+        </if>
+        ORDER BY st.order_no
+    </select>
+
+    <select id="getProjectProgressSummary" resultType="com.kcc.pms.domain.feature.model.dto.FeatureProgressResponseDto">
+        <![CDATA[
+        SELECT
+        COUNT(feat_no) AS total,
+        COUNT(CASE WHEN prg = 100 THEN 1 END) AS complete,
+        COUNT(CASE WHEN prg < 100 AND SYSDATE < pre_end_dt THEN 1 END) AS presentCount,
+        COUNT(CASE WHEN prg < 100 AND SYSDATE > pre_end_dt THEN 1 END) AS delay,
+        ROUND(AVG(prg), 2) AS progress
+        FROM
+        FEATURE
+        WHERE
+        prj_no = #{prjNo}
+        ]]>
+    </select>
+
+    <select id="getProjectFeatureList" resultType="com.kcc.pms.domain.feature.model.dto.FeatureSummaryResponseDto">
+        SELECT
+            f.feat_no AS featureNo,
+            f.feat_id AS featureId,
+            f.feat_title AS featureTitle,
+            m.mem_nm AS memberName,
+            f.prg AS progress,
+            s.sys_ttl AS system,
+            st.cd_dtl_nm AS status,
             CASE
                 WHEN f.pre_end_dt >= SYSDATE THEN 'D-' || TRUNC(f.pre_end_dt - SYSDATE)
                 ELSE 'D+' || ABS(TRUNC(SYSDATE - f.pre_end_dt))
@@ -104,23 +167,7 @@
             f.sys_no = s.sys_no
           AND f.mem_no = m.mem_no
           AND f.stat_cd = st.cd_dtl_no
-          AND (
-            s.sys_no = #{systemNo}
-                OR s.sys_no IN (
-                SELECT
-                    sys_no
-                FROM
-                    System
-                START WITH
-                    sys_no = #{systemNo}
-                CONNECT BY
-                    PRIOR sys_no = par_sys_no
-            )
-            )
-          AND (
-            #{featClassCd} IS NULL
-                OR f.class_cd = #{featClassCd}
-            )
           AND s.prj_no = #{prjNo}
+        ORDER BY st.order_no
     </select>
 </mapper>

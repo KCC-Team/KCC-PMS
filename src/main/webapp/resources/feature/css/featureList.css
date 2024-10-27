@@ -222,13 +222,26 @@ progress::-webkit-progress-value {
     background-color: #4caf50;
 }
 
-.status-completed {
-    background-color: #0044cc;
+.status-client-check {
+    background-color: #007bff;
 }
 
-.status-before {
+.status-new {
     background-color: #888;
 }
+
+.status-unit-test-complete {
+    background-color: #ff9800;
+}
+
+.status-pl-check {
+    background-color: #9c27b0;
+}
+
+.status-complete {
+    background-color: #2e7d32;
+}
+
 
 [data-ax5grid] [data-ax5grid-container="root"] [data-ax5grid-container="body"] [data-ax5grid-panel] table tr {
     background: white !important;
@@ -244,7 +257,7 @@ progress::-webkit-progress-value {
 }
 
 .feat-bar {
-    width: 88%;
+    width: 85%;
     height: 20px;
     -webkit-appearance: none;
     appearance: none;
@@ -384,4 +397,20 @@ progress::-webkit-progress-value {
 
 .system-select-button:focus {
     outline: none;
+}
+
+.pagination {
+    display: flex;
+    justify-content: center;
+    margin-top: 10px;
+}
+
+.pagination button {
+    margin: 0 5px;
+    padding: 5px 10px;
+}
+
+.pagination .active {
+    font-weight: bold;
+    background-color: #f0f0f0;
 }

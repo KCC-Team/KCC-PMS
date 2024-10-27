@@ -13,7 +13,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 @Controller
 @RequiredArgsConstructor
@@ -43,9 +45,7 @@ public class FeatureController {
     @PostMapping()
     @ResponseBody
     public ResponseEntity<?> createFeature(FeatureCreateRequestDto requestDto, HttpSession session){
-        System.out.println("requestDto = " + requestDto);
         Long prjNo = (Long) session.getAttribute("prjNo");
-        System.out.println("prjNo = " + prjNo);
 
         requestDto.setPrjNo(prjNo);
 
@@ -60,14 +60,13 @@ public class FeatureController {
 
     @GetMapping("/progress")
     @ResponseBody
-    public ResponseEntity<FeatureProgressResponseDto> getProgressSummary(@RequestParam("systemNo") Long systemNo,
-                                                                         @RequestParam("featClassCd") String featClassCd,
+    public ResponseEntity<FeatureProgressResponseDto> getProgressSummary(@RequestParam(value = "systemNo", required = false) Optional<Long> systemNo,
+                                                                         @RequestParam(value = "featClassCd", required = false) String featClassCd,
                                                                          HttpSession session){
         Long prjNo = (Long) session.getAttribute("prjNo");
-        System.out.println("prjNo = " + prjNo);
-        System.out.println("systemNo = " + systemNo);
-        System.out.println("featClassCd = " + featClassCd);
-        FeatureProgressResponseDto progressSummary = service.getProgressSummary(systemNo, featClassCd, prjNo);
+        Long systemNoValue = systemNo.orElse(null);
+
+        FeatureProgressResponseDto progressSummary = service.getProgressSummary(systemNoValue, featClassCd, prjNo);
 
         if (progressSummary != null) {
             return ResponseEntity.ok(progressSummary);
@@ -78,17 +77,41 @@ public class FeatureController {
 
     @GetMapping("/list")
     @ResponseBody
-    public ResponseEntity<List<FeatureSummaryResponseDto>> getFeatureSummary(@RequestParam("systemNo") Long systemNo,
-                                                                             @RequestParam("featClassCd") String featClassCd,
-                                                                             HttpSession session){
+    public ResponseEntity<List<FeatureSummaryResponseDto>> getFeatureSummary(@RequestParam(value = "systemNo", required = false) Long systemNo,
+                                                                             @RequestParam(value = "featClassCd", required = false) String featClassCd,
+                                                                             HttpSession session) {
         Long prjNo = (Long) session.getAttribute("prjNo");
         List<FeatureSummaryResponseDto> systemFeatureList = service.getSystemFeatureList(systemNo, featClassCd, prjNo);
+        System.out.println("systemFeatureList = " + systemFeatureList);
+        return ResponseEntity.ok(systemFeatureList != null ? systemFeatureList : Collections.emptyList());
+    }
 
-        if (systemFeatureList != null && !systemFeatureList.isEmpty()) {
-            return ResponseEntity.ok(systemFeatureList);
+    @GetMapping("/totalProgress")
+    @ResponseBody
+    public ResponseEntity<FeatureProgressResponseDto> getProjectFeatureProgressSummary(HttpSession session) {
+        Long prjNo = (Long) session.getAttribute("prjNo");
+        FeatureProgressResponseDto progressSummary = service.getProjectProgressSummary(prjNo);
+
+        if (progressSummary != null) {
+            return ResponseEntity.ok(progressSummary);
         } else {
             return ResponseEntity.notFound().build();
         }
     }
+
+
+    @GetMapping("/totalList")
+    @ResponseBody
+    public ResponseEntity<List<FeatureSummaryResponseDto>> getProjectFeatureSummary(HttpSession session){
+        Long prjNo = (Long) session.getAttribute("prjNo");
+        List<FeatureSummaryResponseDto> projectFeatureList = service.getProjectFeatureList(prjNo);
+
+        if (projectFeatureList != null && !projectFeatureList.isEmpty()) {
+            return ResponseEntity.ok(projectFeatureList);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
 
 }
