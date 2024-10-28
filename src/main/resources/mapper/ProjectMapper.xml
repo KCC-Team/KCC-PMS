@@ -141,7 +141,7 @@
 
     <select id="getProjectManager" resultType="com.kcc.pms.domain.project.model.dto.ProjectManagerResponseDto">
         SELECT
-            M.mem_no as memNo , M.mem_nm as memNm
+            distinct M.mem_no as memNo , M.mem_nm as memNm
         FROM
             projectmember PM
         JOIN
