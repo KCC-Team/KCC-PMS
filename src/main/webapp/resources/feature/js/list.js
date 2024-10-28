@@ -1,10 +1,15 @@
 var firstGrid;
-function openFeaturePopup(){
-    window.open(
-        "/projects/features/register",
-        "기능등록",
-        "width=810, height=620, resizable=yes"
-    );
+
+function openFeaturePopup(featureNo) {
+    let url;
+    if(featureNo != null){
+        url = '/projects/features/register?featureNo=' + encodeURIComponent(featureNo);
+    } else {
+        url = '/projects/features/register'
+    }
+
+    let popupOptions = 'width=810,height=620,resizable=yes';
+    window.open(url, '기능등록', popupOptions);
 }
 
 document.addEventListener("DOMContentLoaded", function() {
@@ -12,18 +17,14 @@ document.addEventListener("DOMContentLoaded", function() {
 });
 
 
-$(document).ready(function (){
 
-    // // toggle-btn 클릭 후 실행되는 작업들
-    // $(".circle").circleProgress({ //들어갈 div class명을 넣어주세요
-    //     value: 0.9,    //진행된 수를 넣어주세요. 1이 100기준입니다.
-    //     size: 260,       //도넛의 크기를 결정해줍니다.
-    //     fill: {
-    //         gradient: ["#3b82f6", "#f59e0b"]    //도넛의 색을 결정해줍니다.
-    //     }
-    // }).on('circle-animation-progress', function(event, progress) {    //라벨을 넣어줍니다.
-    //     $(this).find('strong').html(parseInt(100 * 0.9) + '<i>%</i>');
-    // });
+$(document).ready(function (){
+    window.addEventListener('message', function(event) {
+        if (event.data.status === 'success') {
+            console.log('Received:', event.data.message);
+            window.location.reload();
+        }
+    }, false);
 
     $(document).on('click', '.feat-info-row', function() {
         $(this).siblings().removeClass("on");
@@ -44,7 +45,7 @@ $(document).ready(function (){
 
 
     initGrid().then(() => {
-        getProjectFeatureProgressSummary(); // 진척도 정보 요청
+        getProjectFeatureProgressSummary();
     });
 
     initMemberGrid();
@@ -163,7 +164,7 @@ function initGrid(){
                         return '<span class="' + statusClass + '" style="font-size: 13px;">' + status + '</span>';
                     }},
                 {key: "memberName", label: "작업자", width: 70, align: "center" , formatter: function (){
-                        return '<span style="font-size: 13px;">' + this.value + '</span>';
+                        return '<span style="font-size: 13px;">' + (this.value ? this.value : '-') + '</span>';
                     }},
                 {key: "system", label: "시스템/업무", width: 82, align: "center", formatter: function (){
                         return '<span style="font-size: 13px;">' + this.value + '</span>';
@@ -544,7 +545,7 @@ function getProjectFeatureProgressSummary(){
             });
             let projectTitle = document.querySelector('.common-project-title').textContent.trim();
             updateMidPanel(response, projectTitle);
-            getProjectFeatureList();
+            getProgressSummary();
         },
         error: function (xhr, status, error){
             console.error('Error:', error);

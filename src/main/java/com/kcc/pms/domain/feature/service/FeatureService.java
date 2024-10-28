@@ -2,8 +2,10 @@ package com.kcc.pms.domain.feature.service;
 
 import com.kcc.pms.domain.common.model.dto.CommonCodeOptions;
 import com.kcc.pms.domain.feature.model.dto.FeatureCreateRequestDto;
+import com.kcc.pms.domain.feature.model.dto.FeatureDetailResponseDto;
 import com.kcc.pms.domain.feature.model.dto.FeatureProgressResponseDto;
 import com.kcc.pms.domain.feature.model.dto.FeatureSummaryResponseDto;
+
 
 import java.util.List;
 
@@ -14,4 +16,6 @@ public interface FeatureService {
     List<FeatureSummaryResponseDto> getSystemFeatureList(Long systemNo, String featClassCd, Long prjNo);
     FeatureProgressResponseDto getProjectProgressSummary(Long prjNo);
     List<FeatureSummaryResponseDto> getProjectFeatureList(Long prjNo);
+    FeatureDetailResponseDto getFeatureDetail(Long featNo);
+    Integer updateFeature(FeatureDetailResponseDto requestDto);
 }
