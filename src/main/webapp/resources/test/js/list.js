@@ -8,7 +8,7 @@ $(function () {
         columns: [
             {key: "testItem", label: "테스트 ID", align: "center", width: 200, formatter: function() {
                     let item = this.value;
-                    return '<a href="/projects/tests/' + encodeURIComponent(item.test_no) + '" class="defect-title" style="color: #2383f8; font-size: 13px; font-weight: bold; text-decoration: none;">' + item.test_id + '</a>';
+                    return '<a href="/projects/tests/' + encodeURIComponent(item.testNo) + '" class="defect-title" style="color: #2383f8; font-size: 13px; font-weight: bold; text-decoration: none;">' + item.testId + '</a>';
                 }},
             {key: "testType", label: "구분", width: 100, align: "center", formatter: function (){
                     return '<span style="font-size: 13px;">' + this.value + '</span>';
@@ -40,10 +40,10 @@ $(function () {
             {key: "testPeriod", label: "테스트 기간", width: 180, align: "center", formatter: function (){
                     return '<span style="font-size: 13px;">' + this.value + '</span>';
                 }},
-            {key: "testCaseCount", label: "테스트 케이스", width: 100, align: "center", formatter: function (){
+            {key: "testCaseCount", label: "테스트 케이스", width: 100, align: "left", formatter: function (){
                     return '<span style="font-size: 13px;">' + this.value + '</span>';
                 }},
-            {key: "defectCount", label: "결함", width: 100, align: "center", formatter: function (){
+            {key: "defectCount", label: "결함", width: 100, align: "left", formatter: function (){
                     return '<span style="font-size: 13px;">' + this.value + '</span>';
                 }},
         ],

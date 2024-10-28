@@ -17,6 +17,7 @@
         <association property="fileItem">
             <result property="fileNo" column="fl_no"/>
             <result property="fileTitle" column="original_ttl"/>
+            <result property="filePath" column="file_path"/>
         </association>
     </resultMap>
 
@@ -43,7 +44,7 @@
         SELECT
             o.opt_ttl as title,
             tsk_no, tsk_ttl,
-            fl_no, original_ttl, fl_type, fl_size,
+            fl_no, original_ttl, file_path, fl_type, fl_size,
             td.reg_dt as registedDate,
             td.reg_id as registedBy
         FROM Output o
@@ -90,7 +91,8 @@
     <select id="findDeleteOutputs" resultType="DeleteOutputResponseDto">
         SELECT
             fl_no as fileDetailNo,
-            original_ttl as fileName,
+            original_ttl as fileTitle,
+            file_path as filePath,
             fl_size as fileSize,
             fl_type as fileType,
             del_id as deleteName,

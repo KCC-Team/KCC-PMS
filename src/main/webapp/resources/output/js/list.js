@@ -14,7 +14,6 @@ $(function () {
         }
     });
 
-
     // treeData 업데이트 함수
     function updateTreeData(movedNode, newParentId) {
         let node = removeNodeById(window.treeData, parseInt(movedNode.id));
@@ -125,6 +124,8 @@ $(function () {
                 formatter: function () {
                     return `
                             <input type="hidden" value="${this.item.fileItem.fileNo}">
+                            <input type="hidden" name="filePath" value="${this.item.fileItem.filePath}">
+                            <input type="hidden" name="fileTitle" value="${this.item.fileItem.fileTitle}">
                             <span>${this.item.fileItem.fileTitle}</span>
                     `;
                 }
@@ -157,7 +158,7 @@ $(function () {
                 formatter: function () {
                     return `
                         <div class="d-flex justify-content-center">
-                            <button class="ms-1 file-btn" data-file="${this.item.fileName}">&nbsp;다운로드&nbsp;</button>
+                            <button class="ms-1 file-btn file-down-btn" data-file="${this.item.filePath}">&nbsp;다운로드&nbsp;</button>
                         </div>
                     `;
                 }
@@ -229,6 +230,41 @@ $(function () {
                 }
             });
         }
+    });
+
+    $(document).on('click', '.file-down-btn, .del-file-down-btn', function () {
+        let $row = $(this).closest('tr');
+
+        let filePath = $row.find('input[type="hidden"][name="filePath"]').val();
+        let fileTitle = $row.find('input[type="hidden"][name="fileTitle"]').val();
+
+        file = {
+            filePath: filePath,
+            fileTitle: fileTitle
+        }
+
+        fetch('/projects/outputs/api/download', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(file)
+        })
+            .then(response => {
+                const fileName = response.headers.get('Content-Disposition').match(/filename\*?="?(?:UTF-8''?)?([^";]+)"?;?/)[1];
+                return response.blob().then(blob => ({ blob, fileName }));
+            })
+            .then(({ blob, fileName }) => {
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = decodeURIComponent(fileName);
+                document.body.appendChild(a);
+                a.click();
+                a.remove();
+                window.URL.revokeObjectURL(url);
+            })
+            .catch(error => console.error('Error downloading files:', error));
     });
 
     $('#file-delete-btn').on('click', function (e) {
@@ -311,6 +347,35 @@ $(function () {
               }
        });
     });
+
+    $('.download-btn').on('click', function () {
+        let selected = grid.getList("selected");
+        let files = selected.map(file => ({
+            filePath: file.fileItem.filePath,
+            fileTitle: file.fileItem.fileTitle // 파일 타이틀을 추가
+        }));
+        console.log(files);
+
+        fetch('/projects/outputs/api/downloadmultiple', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(files) // 객체 배열을 JSON 형식으로 변환
+        })
+            .then(response => response.blob())
+            .then(blob => {
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = "files.zip"; // 다운로드 파일 이름
+                document.body.appendChild(a);
+                a.click();
+                a.remove();
+                window.URL.revokeObjectURL(url);
+            })
+            .catch(error => console.error('Error downloading files:', error));
+    });
 });
 
 // 산출물 파일 상세 모달
@@ -320,7 +385,6 @@ function loadVersionHistory(historyElement) {
         url: '/projects/outputs/api/delete?outputNo=' + selectedNodeId,
         method: 'GET',
         success: function(response) {
-            console.log(response);
             versionHistory = response;
             historyElement.empty();
 
@@ -349,13 +413,17 @@ function loadVersionHistory(historyElement) {
                 <td style="text-align: center;">
                     <img data-dz-thumbnail src='../../../../resources/output/images/file-icon.png' style="width: 30px;"/>
                 </td>
-                <td style="text-align: left;">${version.fileName}</td>
+                <td style="text-align: left;">
+                    <input type="hidden" value="${version.filePath}">
+                    <input type="hidden" value="${version.fileTitle}">
+                    ${version.fileTitle}
+                </td>
                 <td style="text-align: center;">${version.deleteName}</td>
                 <td style="text-align: center;">${formatDate(version.deletedDate)}</td>
                 <td style="text-align: center;">${formatBytes(version.fileSize)}</td>
                 <td class="ellipsis" style="text-align: center;">${version.fileType}</td>
                 <td style="text-align: center;">
-                    <button class="green-btn">&nbsp;&nbsp;다운로드&nbsp;&nbsp;</button>
+                    <button class="green-btn del-file-down-btn">&nbsp;&nbsp;다운로드&nbsp;&nbsp;</button>
                 </td>
             </tr>
         `);
