@@ -89,9 +89,9 @@
         st.cd_dtl_nm AS status,
         -- mem_fd_name,
         -- mem_work_name,
-        df_fd_dt AS discoverDate
-        -- due_dt AS scheduleWorkDate,
-        -- work_dt AS workDate
+        df_fd_dt AS discoverDate,
+        due_dt AS scheduleWorkDate,
+        work_dt AS workDate
         FROM defect
         LEFT JOIN member mem_fd ON defect.mem_fd_no = mem_fd.mem_no
         LEFT JOIN member mem_work ON defect.mem_work_no = mem_work.mem_no
@@ -99,12 +99,16 @@
         LEFT JOIN codedetail st ON defect.stat_cd = st.cd_dtl_no
         WHERE prj_no = #{projectNumber}
         <if test="workNo != 0">AND work_no = #{workNo}
-            </if><if test="
+        </if>
+        <if test="
+        type != 'all'">AND type_cd = #{type}
+        </if>
+        <if test="
         status != 'all'">AND stat_cd = #{status}
-            </if>
-            <if test="search != ''">
-                AND (df_id LIKE '%' || #{search} || '%' OR df_ttl LIKE '%' || #{search} || '%' OR df_cont LIKE '%' || #{search} || '%')
-            </if>
+        </if>
+        <if test="search != ''">
+            AND (df_id LIKE '%' || #{search} || '%' OR df_ttl LIKE '%' || #{search} || '%' OR df_cont LIKE '%' || #{search} || '%')
+        </if>
         ORDER BY defectNumber DESC
         ) sub
         <![CDATA[
@@ -112,6 +116,27 @@
         ]]>
         )
         WHERE rn > (#{page} - 1) * #{limit}
+    </select>
+
+    <select id="getDefectTotalCount" resultType="int">
+        SELECT COUNT(*)
+        FROM defect
+        LEFT JOIN member mem_fd ON defect.mem_fd_no = mem_fd.mem_no
+        LEFT JOIN member mem_work ON defect.mem_work_no = mem_work.mem_no
+        LEFT JOIN codedetail pri ON defect.pri_cd = pri.cd_dtl_no
+        LEFT JOIN codedetail st ON defect.stat_cd = st.cd_dtl_no
+        WHERE prj_no = #{projectNumber}
+        <if test="workNo != 0">
+            AND work_no = #{workNo}
+        </if>
+        <if test="status != 'all'">
+            AND stat_cd = #{status}
+        </if>
+        <if test="search != ''">
+            AND (df_id LIKE '%' || #{search} || '%'
+            OR df_ttl LIKE '%' || #{search} || '%'
+            OR df_cont LIKE '%' || #{search} || '%')
+        </if>
     </select>
 
     <select id="getFileMasterNumbers" resultType="FileMasterNumbers">

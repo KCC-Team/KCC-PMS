@@ -8,10 +8,13 @@ import com.kcc.pms.domain.common.model.vo.FileMasterNumbers;
 import com.kcc.pms.domain.common.service.CommonService;
 import com.kcc.pms.domain.task.defect.domain.dto.DefectFileRequestDto;
 import com.kcc.pms.domain.task.defect.domain.dto.DefectDto;
+import com.kcc.pms.domain.task.defect.domain.dto.DefectPageResponseDto;
 import com.kcc.pms.domain.task.defect.domain.dto.DefectResponseDto;
 import com.kcc.pms.domain.task.defect.service.DefectService;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
@@ -52,8 +55,7 @@ public class DefectController {
                                  @ModelAttribute("priority") String priority,
                                  @ModelAttribute("status") String status,
                                  @ModelAttribute("type") String type) {
-//        Long projectNo = (Long) session.getAttribute("prgNo");
-        Long projectNo = 1L;
+        Long projectNo = (Long) session.getAttribute("prgNo");
         Long defectNumber = defectService.saveDefect(projectNo, principalDetail.getMember().getMemberName(), req, files, priority, status,type);
         String redirectUrl = "/projects/defects/" + defectNumber;
         return ResponseEntity.ok().body(redirectUrl);
@@ -89,14 +91,13 @@ public class DefectController {
 
     @PutMapping("/{no}")
     @ResponseBody
-    public ResponseEntity<String> update(@PathVariable Long no, DefectDto req, DefectFileRequestDto files,
+    public ResponseEntity<String> update(HttpSession session, @PathVariable Long no, DefectDto req, DefectFileRequestDto files,
                                          @AuthenticationPrincipal PrincipalDetail principalDetail,
                                          @ModelAttribute("priority") String priority,
                                          @ModelAttribute("status") String status,
                                          @ModelAttribute("type") String type) {
-        //        Long prgNo = (Long) session.getAttribute("prgNo");
-        Long projectNumber = 1L;
-        defectService.updateDefect(projectNumber, principalDetail.getMember().getMemberName(), no, req, files, priority, status, type);
+        Long prgNo = (Long) session.getAttribute("prgNo");
+        defectService.updateDefect(prgNo, principalDetail.getMember().getMemberName(), no, req, files, priority, status, type);
         String redirectUrl = "/projects/defects/" + no;
         return ResponseEntity.ok().body(redirectUrl);
     }
@@ -111,20 +112,21 @@ public class DefectController {
     @GetMapping
     public String findAll(Model model) {
         model.addAttribute("status", commonService.getCommonCodeSelectList(STATUS));
+        model.addAttribute("type", commonService.getCommonCodeSelectList(TYPE));
         return "defect/list";
     }
 
     @GetMapping("/api/list")
     @ResponseBody
-    public ResponseEntity<List<DefectResponseDto>> findAll(
+    public ResponseEntity<DefectPageResponseDto> findAll(
             HttpSession session,
             @RequestParam(value = "workNo", defaultValue = "0") Long workNo,
+            @RequestParam(value = "type", defaultValue = "all") String type,
             @RequestParam(value = "status", defaultValue = "all") String status,
             @RequestParam(value = "search", defaultValue = "") String search,
             @RequestParam(value = "page", defaultValue = "1") int page) {
-//        Long projectNo = (Long) session.getAttribute("prjNo");
-        Long projectNo = 1L;
-        return ResponseEntity.ok().body(defectService.getDefectList(projectNo, workNo, status, search, page));
+        Long projectNo = (Long) session.getAttribute("prjNo");
+        return ResponseEntity.ok().body(defectService.getDefectList(projectNo, workNo, type, status, search, page));
     }
 
     private String generateFilesJson(List<FileResponseDto> files) {

@@ -19,5 +19,6 @@ public interface DefectMapper {
     int updateDefect(Long no, DefectDto defect, String priority, String status, String type);
     Optional<DefectDto> getDefect(Long no);
     Optional<FileMasterNumbers> getFileMasterNumbers(Long no);
-    List<DefectResponseDto> getDefectList(Long projectNumber, Long workNo, String status, String search, int page, int limit);
+    List<DefectResponseDto> getDefectList(Long projectNumber, Long workNo, String type, String status, String search, int page, int limit);
+    int getDefectTotalCount(Long projectNumber, Long workNo, String status, String search);
 }
