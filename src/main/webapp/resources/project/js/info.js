@@ -159,7 +159,6 @@ function getProjectResult() {
             $('#stat_cd').val(response.project.stat_cd);
             response.project.prg = Math.round(response.project.prg / 10) * 10;
             $('#prg').val(response.project.prg);
-            $('#prg').val(response.project.prg);
             $('#org').val(response.project.org);
             $('#pre_st_dt').val(response.project.pre_st_dt);
             $('#pre_end_dt').val(response.project.pre_end_dt);
