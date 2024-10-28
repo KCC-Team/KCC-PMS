@@ -72,10 +72,13 @@ public class CommonController {
     // 파일 업로드 테스트 API
     @PostMapping("/fileUpload")
     @ResponseBody
-    public ResponseEntity<Void> fileUpload(HttpSession session, @RequestPart("files") List<MultipartFile> files, @RequestParam(value = "flcd", required = false) String fl_cd) {
+    public ResponseEntity<Void> fileUpload(HttpSession session,
+                                           @AuthenticationPrincipal PrincipalDetail principalDetail,
+                                           @RequestPart("files") List<MultipartFile> files,
+                                           @RequestParam(value = "flcd", required = false) String fl_cd) {
 //        Long prjNo = (Long) session.getAttribute("prjNo");
         Long prjNo = 1L;
-        commonService.fileUpload(files, prjNo, fl_cd);
+        commonService.fileUpload(files, principalDetail.getMember().getMemberName(), prjNo, fl_cd);
         return ResponseEntity.ok().build();
     }
 }
