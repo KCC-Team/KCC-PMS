@@ -243,4 +243,25 @@
         FROM dual
     </select>
 
+
+    <select id="getCountsByDashboard" resultType="map" parameterType="Long">
+        SELECT
+        (SELECT COUNT(tsk_no) FROM task where prj_no = #{prjNo} and tsk_stat_cd = 'PMS00101') AS task_count_01,
+        (SELECT COUNT(tsk_no) FROM task where prj_no = #{prjNo} and tsk_stat_cd = 'PMS00102') AS task_count_02,
+        (SELECT COUNT(tsk_no) FROM task where prj_no = #{prjNo} and tsk_stat_cd = 'PMS00103') AS task_count_03,
+        (SELECT COUNT(risk_no) FROM risk where prj_no = #{prjNo} and type_cd = 'PMS00301' and stat_cd = 'PMS00401') AS issue_count_01,
+        (SELECT COUNT(risk_no) FROM risk where prj_no = #{prjNo} and type_cd = 'PMS00301' and stat_cd = 'PMS00402') AS issue_count_02,
+        (SELECT COUNT(risk_no) FROM risk where prj_no = #{prjNo} and type_cd = 'PMS00301' and stat_cd = 'PMS00403') AS issue_count_03,
+        (SELECT COUNT(risk_no) FROM risk where prj_no = #{prjNo} and type_cd = 'PMS00301' and stat_cd = 'PMS00404') AS issue_count_04,
+        (SELECT COUNT(risk_no) FROM risk where prj_no = #{prjNo} and type_cd = 'PMS00302' and stat_cd = 'PMS00401') AS danger_count_01,
+        (SELECT COUNT(risk_no) FROM risk where prj_no = #{prjNo} and type_cd = 'PMS00302' and stat_cd = 'PMS00402') AS danger_count_02,
+        (SELECT COUNT(risk_no) FROM risk where prj_no = #{prjNo} and type_cd = 'PMS00302' and stat_cd = 'PMS00403') AS danger_count_03,
+        (SELECT COUNT(risk_no) FROM risk where prj_no = #{prjNo} and type_cd = 'PMS00302' and stat_cd = 'PMS00404') AS danger_count_04,
+        (SELECT COUNT(df_no) FROM defect where prj_no = #{prjNo} and stat_cd = 'PMS00701') AS defect_count_01,
+        (SELECT COUNT(df_no) FROM defect where prj_no = #{prjNo} and stat_cd = 'PMS00702') AS defect_count_02,
+        (SELECT COUNT(df_no) FROM defect where prj_no = #{prjNo} and stat_cd = 'PMS00703') AS defect_count_03,
+        (SELECT COUNT(df_no) FROM defect where prj_no = #{prjNo} and stat_cd = 'PMS00704') AS defect_count_04
+        FROM dual
+    </select>
+
 </mapper>

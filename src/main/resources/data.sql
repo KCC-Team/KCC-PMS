@@ -863,16 +863,6 @@ values (seq_task.nextval, 1, '백엔드 개발', 'PMS00102', '24/10/05', '24/10/
         0, 'pm1', '24/10/05', 6);
 
 insert into task
-(tsk_no, order_no, tsk_ttl, tsk_stat_cd, pre_st_dt, pre_end_dt, prg, use_yn, prj_no, par_task_no, reg_id, reg_dt)
-values (seq_task.nextval, 1, '단위 테스트', 'PMS00101', '24/10/12', '24/10/14', 0, 'Y', 1,
-        0, 'pm1', '24/10/12');
-
-insert into task
-(tsk_no, order_no, tsk_ttl, tsk_stat_cd, pre_st_dt, pre_end_dt, prg, use_yn, prj_no, par_task_no, reg_id, reg_dt)
-values (seq_task.nextval, 1, '통합 테스트', 'PMS00101', '24/10/13', '24/10/15', 0, 'Y', 1,
-        0, 'pm1', '24/10/13');
-
-insert into task
 (tsk_no, order_no, tsk_ttl, tsk_stat_cd, pre_st_dt, pre_end_dt, prg, use_yn, prj_no, st_dt, par_task_no, reg_id, reg_dt)
 values (seq_task.nextval, 1, '화면 구성', 'PMS00102', '24/10/05', '24/10/10', 70, 'Y', 1,
         '24/10/05',
@@ -882,7 +872,7 @@ insert into task
 (tsk_no, order_no, tsk_ttl, tsk_stat_cd, pre_st_dt, pre_end_dt, prg, use_yn, prj_no, st_dt, par_task_no, reg_id, reg_dt)
 values (seq_task.nextval, 1, '메인 화면 구성', 'PMS00102', '24/10/05', '24/10/09', 70, 'Y', 1,
         '24/10/05',
-        10, 'pm1', '24/10/04');
+        8, 'pm1', '24/10/04');
 
 insert into task
 (tsk_no, order_no, tsk_ttl, tsk_stat_cd, pre_st_dt, pre_end_dt, prg, use_yn, prj_no, st_dt, par_task_no, reg_id, reg_dt)
@@ -894,7 +884,22 @@ insert into task
 (tsk_no, order_no, tsk_ttl, tsk_stat_cd, pre_st_dt, pre_end_dt, prg, use_yn, prj_no, st_dt, par_task_no, reg_id, reg_dt)
 values (seq_task.nextval, 1, '외부 시스템 연동', 'PMS00102', '24/10/05', '24/10/09', 60, 'Y', 1,
         '24/10/05',
-        12, 'pm1', '24/10/05');
+        10, 'pm1', '24/10/05');
+
+insert into task
+(tsk_no, order_no, tsk_ttl, tsk_stat_cd, pre_st_dt, pre_end_dt, prg, use_yn, prj_no, par_task_no, reg_id, reg_dt)
+values (seq_task.nextval, 1, '단위 테스트', 'PMS00101', '24/10/12', '24/10/14', 0, 'Y', 1,
+        0, 'pm1', '24/10/12');
+
+insert into task
+(tsk_no, order_no, tsk_ttl, tsk_stat_cd, pre_st_dt, pre_end_dt, prg, use_yn, prj_no, par_task_no, reg_id, reg_dt)
+values (seq_task.nextval, 1, '통합 테스트', 'PMS00101', '24/10/13', '24/10/15', 0, 'Y', 1,
+        0, 'pm1', '24/10/13');
+
+insert into task
+(tsk_no, order_no, tsk_ttl, tsk_stat_cd, pre_st_dt, pre_end_dt, prg, use_yn, prj_no, par_task_no, reg_id, reg_dt)
+values (seq_task.nextval, 1, '성능 테스트', 'PMS00101', '24/10/13', '24/10/15', 0, 'Y', 1,
+        0, 'pm1', '24/10/13');
 
 
 insert into taskmember
@@ -927,14 +932,6 @@ values (2, 1, 1, 6);
 
 insert into taskmember
 (mem_no, tm_no, prj_no, tsk_no)
-values (1, 1, 1, 10);
-
-insert into taskmember
-(mem_no, tm_no, prj_no, tsk_no)
-values (2, 1, 1, 11);
-
-insert into taskmember
-(mem_no, tm_no, prj_no, tsk_no)
 values (1, 1, 1, 7);
 
 insert into taskmember
@@ -943,11 +940,19 @@ values (2, 1, 1, 7);
 
 insert into taskmember
 (mem_no, tm_no, prj_no, tsk_no)
-values (1, 1, 1, 12);
+values (1, 1, 1, 8);
 
 insert into taskmember
 (mem_no, tm_no, prj_no, tsk_no)
-values (2, 1, 1, 13);
+values (2, 1, 1, 9);
+
+insert into taskmember
+(mem_no, tm_no, prj_no, tsk_no)
+values (1, 1, 1, 10);
+
+insert into taskmember
+(mem_no, tm_no, prj_no, tsk_no)
+values (2, 1, 1, 11);
 
 
 INSERT INTO Feature (feat_no, feat_id, feat_title, feat_cont, pre_st_dt, pre_end_dt, st_dt, end_dt, stat_cd, pri_cd, prg, diff_cd, use_yn, sys_no, mem_no, tm_no, prj_no, class_cd)

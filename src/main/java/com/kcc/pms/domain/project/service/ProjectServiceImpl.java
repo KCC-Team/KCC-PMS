@@ -108,4 +108,9 @@ public class ProjectServiceImpl implements ProjectService {
         return projectMapper.getCountsByProject(prjNo);
     }
 
+    @Override
+    public Map<String, BigDecimal> getCountsByDashboard(Long prjNo) {
+        return projectMapper.getCountsByDashboard(prjNo);
+    }
+
 }

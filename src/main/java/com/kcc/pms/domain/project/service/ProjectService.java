@@ -19,4 +19,5 @@ public interface ProjectService {
     RecentProjectDto getRecentProject(Long memNo);
     int updateProjectProgress(Long prjNo, Integer progress);
     Map<String, BigDecimal> getCountsByProject(Long prjNo);
+    Map<String, BigDecimal> getCountsByDashboard(Long prjNo);
 }

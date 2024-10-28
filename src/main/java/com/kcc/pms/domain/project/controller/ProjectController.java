@@ -152,4 +152,13 @@ public class ProjectController {
         return ResponseEntity.ok(counts);
     }
 
+    @GetMapping("/api/chart")
+    @ResponseBody
+    public ResponseEntity<Map<String, BigDecimal>> chartData(HttpSession session) {
+        Long prjNo = (Long)session.getAttribute("prjNo"); // 프로젝트번호(세션정보)
+        Map<String, BigDecimal> counts = projectService.getCountsByDashboard(prjNo);
+
+        return ResponseEntity.ok(counts);
+    }
+
 }

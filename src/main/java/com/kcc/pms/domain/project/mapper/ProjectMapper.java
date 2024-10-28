@@ -25,4 +25,5 @@ public interface ProjectMapper {
     RecentProjectDto getRecentProject(Long memNo);
     int updateProjectProgress(@Param("prjNo") Long prjNo, @Param("progress") Integer progress);
     Map<String, BigDecimal> getCountsByProject(@Param("prjNo") Long prjNo);
+    Map<String, BigDecimal> getCountsByDashboard(@Param("prjNo") Long prjNo);
 }
