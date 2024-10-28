@@ -24,9 +24,9 @@ public class DefectServiceImpl implements DefectService {
 
     @Transactional
     @Override
-    public Long saveDefect(Long projectNumber, String memberName, DefectDto defect, DefectFileRequestDto files, String priority, String status) {
+    public Long saveDefect(Long projectNumber, String memberName, DefectDto defect, DefectFileRequestDto files, String priority, String status, String type) {
         Long[] numbers = generateFiles(projectNumber, memberName, files);
-        int isPassed = defectMapper.saveDefect(projectNumber, defect, numbers[0], numbers[1], priority, status);
+        int isPassed = defectMapper.saveDefect(projectNumber, defect, numbers[0], numbers[1], priority, status, type);
         if (isPassed != 1) {
             throw new RuntimeException("Defect 저장 중 오류가 발생했습니다.");
         }
@@ -36,7 +36,7 @@ public class DefectServiceImpl implements DefectService {
 
     @Transactional
     @Override
-    public void updateDefect(Long prgNo, String MemberName, Long no, DefectDto defect, DefectFileRequestDto files, String priority, String status) {
+    public void updateDefect(Long prgNo, String MemberName, Long no, DefectDto defect, DefectFileRequestDto files, String priority, String status, String type) {
         Optional<FileMasterNumbers> numbers = defectMapper.getFileMasterNumbers(no);
         if (numbers.isPresent()) {
             if (numbers.get().getFileMasterFoundNumber() != null && files.getDisFiles() != null) {
@@ -51,7 +51,7 @@ public class DefectServiceImpl implements DefectService {
                 .ifPresent(deleteFiles -> deleteFiles.forEach(file -> {
                     commonService.deleteFileDetail(MemberName, file);
                 }));
-        int isPassed = defectMapper.updateDefect(no, defect, priority, status);
+        int isPassed = defectMapper.updateDefect(no, defect, priority, status, type);
         if (isPassed != 1) {
             throw new RuntimeException("Defect 수정 중 오류가 발생했습니다.");
         }

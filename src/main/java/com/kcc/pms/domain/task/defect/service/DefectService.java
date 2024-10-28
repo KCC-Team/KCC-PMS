@@ -10,10 +10,10 @@ import java.util.List;
 import java.util.Optional;
 
 public interface DefectService {
-    Long saveDefect(Long prgNo, String memberName, DefectDto req, DefectFileRequestDto files, String priority, String status);
+    Long saveDefect(Long prgNo, String memberName, DefectDto req, DefectFileRequestDto files, String priority, String status, String type);
     void deleteDefect(Long no);
     Optional<FileMasterNumbers> getFileMasterNumbers(Long no);
     DefectDto getDefect(Long no);
-    void updateDefect(Long prgNo, String memberName, Long no, DefectDto req, DefectFileRequestDto files, String priority, String status);
+    void updateDefect(Long prgNo, String memberName, Long no, DefectDto req, DefectFileRequestDto files, String priority, String status, String type);
     List<DefectResponseDto> getDefectList(Long prgNo, Long workNo, String status, String search, int page);
 }

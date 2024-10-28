@@ -22,4 +22,5 @@ public class DefectDto {
     private String workContent;
     private String prioritySelect;
     private String statusSelect;
+    private String typeSelect;
 }

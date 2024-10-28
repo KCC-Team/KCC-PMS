@@ -61,7 +61,6 @@
                                     <span class="system-select-button" id="system-select">
                                         <span>시스템/업무 선택</span>
                                     </span>
-                                    <!-- 메뉴 리스트 -->
                                     <ul class="mymenu" id="system-menu"></ul>
                                 </div>
                             </td>

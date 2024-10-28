@@ -25,12 +25,12 @@
         </selectKey>
 
         INSERT INTO DEFECT
-        (df_no, df_id, df_ttl, stat_cd, pri_cd, df_cont, df_fd_dt, due_dt, work_dt,
+        (df_no, df_id, df_ttl, stat_cd, pri_cd, type_cd, df_cont, df_fd_dt, due_dt, work_dt,
          df_work_cont, fl_ms_fd_no, fl_ms_work_no, test_dtl_no, mem_fd_no, mem_work_no, work_no, prj_no)
         VALUES
         (
          #{defect.defectNumber}, #{defect.defectId, jdbcType=VARCHAR}, #{defect.defectTitle, jdbcType=VARCHAR},
-         #{status, jdbcType=VARCHAR}, #{priority, jdbcType=VARCHAR}, #{defect.defectContent, jdbcType=VARCHAR},
+         #{status, jdbcType=VARCHAR}, #{priority, jdbcType=VARCHAR}, #{type, jdbcType=VARCHAR}, #{defect.defectContent, jdbcType=VARCHAR},
          #{defect.discoverDate, jdbcType=DATE}, #{defect.scheduleWorkDate, jdbcType=DATE}, #{defect.workDate, jdbcType=DATE},
          #{defect.workContent, jdbcType=VARCHAR}, #{fileMasterFoundNumber, jdbcType=NUMERIC}, #{fileMasterWorkNumber, jdbcType=NUMERIC},
          #{defect.testNumber, jdbcType=NUMERIC}, 1, 1, #{defect.systemNumber, jdbcType=NUMERIC}, #{projectNumber, jdbcType=NUMERIC}
@@ -44,6 +44,7 @@
             df_ttl = #{defect.defectTitle, jdbcType=VARCHAR},
             stat_cd = #{status, jdbcType=VARCHAR},
             pri_cd = #{priority, jdbcType=VARCHAR},
+            type_cd = #{type, jdbcType=VARCHAR},
             df_cont = #{defect.defectContent, jdbcType=VARCHAR},
             df_fd_dt = #{defect.discoverDate, jdbcType=DATE},
             due_dt = #{defect.scheduleWorkDate, jdbcType=DATE},
@@ -68,7 +69,8 @@
             df_work_cont AS workContent,
             stat_cd AS statusSelect,
             work_no AS systemNumber,
-            pri_cd AS prioritySelect
+            pri_cd AS prioritySelect,
+            type_cd AS typeSelect
         FROM defect
         left join testdetail td on defect.test_dtl_no = td.test_dtl_no
         WHERE df_no = #{defectNumber}
@@ -103,14 +105,13 @@
             <if test="search != ''">
                 AND (df_id LIKE '%' || #{search} || '%' OR df_ttl LIKE '%' || #{search} || '%' OR df_cont LIKE '%' || #{search} || '%')
             </if>
-        ORDER BY defectNumber
+        ORDER BY defectNumber DESC
         ) sub
         <![CDATA[
         WHERE ROWNUM <= #{page} * #{limit}
         ]]>
         )
         WHERE rn > (#{page} - 1) * #{limit}
-        ORDER BY defectNumber
     </select>
 
     <select id="getFileMasterNumbers" resultType="FileMasterNumbers">
