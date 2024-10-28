@@ -25,8 +25,8 @@ gantt.config.columns = [
     //     }
     //     return task.id;
     // }},
-    {name: "text", label: "작업명", align: "left", width: 160, tree: true, resize: true},
-    {name: "tsk_stat_cd", label: "상태", width: 52, align: "center", resize: true},
+    {name: "text", label: "작업명", align: "left", width: 130, tree: true, resize: true},
+    {name: "tsk_stat_cd", label: "상태", width: 50, align: "center", resize: true},
     {name: "start_date", label: "예정 시작일", align: "center", width: 90, resize: true},
     {name: "end_date", label: "예정 종료일", align: "center", width: 90, resize: true},
     {name: "real_st_dt", label: "시작일", align: "center", width: 90, resize: true},
@@ -55,6 +55,7 @@ function getProjectResult() {
             };
 
             response.forEach(function(item) {
+
                 let endDate = new Date(item.pre_end_dt);
                 endDate.setHours(23, 59, 59, 999);
                 let newEndDate = gantt.date.date_to_str("%Y-%m-%d %H:%i")(endDate);
@@ -82,7 +83,7 @@ function getProjectResult() {
             });
 
             // 평균 진척률 구하기
-            let avgPrg = totalPrg / prgCount;
+            let avgPrg = Math.floor(totalPrg / prgCount);
             if (avgPrg > 0) {
                 updateProjectPrg(avgPrg);
             }

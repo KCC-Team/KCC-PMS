@@ -171,15 +171,17 @@ progress {
     border: none;
     color: #333;
     font-size: 15px;
+    padding: 1px 5px 1px 5px;
     background-color: transparent;
 }
 
 .pagination .active a.page-link {
-    background-color: #f5f5f5;
+    background-color: white;
     color: black;
     font-weight: bold;
     border-radius: 3%;
-    padding: 5px;
+    padding: 1px 5px 1px 5px;
+    border: 1px solid black;
 }
 
 .pull-right {

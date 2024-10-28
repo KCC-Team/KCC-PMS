@@ -618,6 +618,50 @@ INSERT INTO CodeDetail (cd_dtl_no, common_cd_no, cd_dtl_nm, order_no, use_yn) VA
 INSERT INTO CodeDetail (cd_dtl_no, common_cd_no, cd_dtl_nm, order_no, use_yn) VALUES ('PMS01705', 'PMS017', '주임', 5, 'Y');
 INSERT INTO CodeDetail (cd_dtl_no, common_cd_no, cd_dtl_nm, order_no, use_yn) VALUES ('PMS01706', 'PMS017', '사원', 6, 'Y');
 
+
+INSERT INTO project (prj_no, prj_title, prj_cont, stat_cd, prg, org, pre_st_dt, pre_end_dt, st_dt, end_dt, use_yn, reg_id, reg_dt, mod_dt)
+VALUES (seq_project.nextval, '차세대 공공 프로젝트', '공공 프로젝트', 'PMS00102', 30, '경찰청', '2024-10-01', '2024-10-30', '2024-10-01', '2024-10-30', 'Y', 'user1', '2024-10-01', '2024-10-01');
+
+INSERT INTO project (prj_no, prj_title, prj_cont, stat_cd, prg, org, pre_st_dt, pre_end_dt, st_dt, end_dt, use_yn, reg_id, reg_dt, mod_dt)
+VALUES (seq_project.nextval, '차세대 금융 프로젝트', '금융 프로젝트', 'PMS00102', 10, '새마을금고중앙회', '2024-09-30', '2024-11-30', '2024-09-30', '2024-11-30', 'Y', 'user1', '2024-09-30', '2024-10-01');
+
+INSERT INTO project (prj_no, prj_title, prj_cont, stat_cd, prg, org, pre_st_dt, pre_end_dt, st_dt, end_dt, use_yn, reg_id, reg_dt, mod_dt)
+VALUES (seq_project.nextval, '철도 관리 시스템 유지보수', '철도관리 프로젝트', 'PMS00101', 0, '한국철도공사', '2024-10-01', '2024-10-01', '2024-10-01', '2024-10-05', 'Y', 'user1', '2024-10-01', '2024-10-01');
+
+INSERT INTO project (prj_no, prj_title, prj_cont, stat_cd, prg, org, pre_st_dt, pre_end_dt, st_dt, end_dt, use_yn, reg_id, reg_dt, mod_dt)
+VALUES (seq_project.nextval, '국방 프로젝트', '국방 프로젝트', 'PMS00101', 0, '공군 본부', '2024-10-01', '2024-10-01', '2024-10-01', '2024-10-05', 'Y', 'user1', '2024-10-01', '2024-10-01');
+
+INSERT INTO project (prj_no, prj_title, prj_cont, stat_cd, prg, org, pre_st_dt, pre_end_dt, st_dt, end_dt, use_yn, reg_id, reg_dt, mod_dt)
+VALUES (seq_project.nextval, '기상청 프로젝트', '기상청 프로젝트', 'PMS00103', 0, '기상청', '2024-10-01', '2024-10-01', '2024-10-01', '2024-10-05', 'Y', 'user1', '2024-10-01', '2024-10-01');
+
+INSERT INTO project (prj_no, prj_title, prj_cont, stat_cd, prg, org, pre_st_dt, pre_end_dt, st_dt, end_dt, use_yn, reg_id, reg_dt, mod_dt)
+VALUES (seq_project.nextval, 'ERP 시스템 프로젝트', 'ERP 프로젝트', 'PMS00103', 100, 'LH공사', '2024-10-01', '2024-10-01', '2024-10-01', '2024-10-01', 'Y', 'user1', '2024-10-01', '2024-10-01');
+
+INSERT INTO project (prj_no, prj_title, prj_cont, stat_cd, prg, org, pre_st_dt, pre_end_dt, st_dt, end_dt, use_yn, reg_id, reg_dt, mod_dt)
+VALUES (seq_project.nextval, 'CRM 시스템 프로젝트', 'CRM 프로젝트', 'PMS00103', 100, '서울교통공사', '2024-10-01', '2024-10-01', '2024-10-01', '2024-10-01', 'Y', 'user1', '2024-10-01', '2024-10-01');
+
+INSERT INTO project (prj_no, prj_title, prj_cont, stat_cd, prg, org, pre_st_dt, pre_end_dt, st_dt, end_dt, use_yn, reg_id, reg_dt, mod_dt)
+VALUES (seq_project.nextval, '전자결제 시스템', '전자결제 시스템', 'PMS00103', 100, '한국산업인력공단', '2024-10-01', '2024-10-01', '2024-10-01', '2024-10-01', 'Y', 'user1', '2024-10-01', '2024-10-01');
+
+INSERT INTO project (prj_no, prj_title, prj_cont, stat_cd, prg, org, pre_st_dt, pre_end_dt, st_dt, end_dt, use_yn, reg_id, reg_dt, mod_dt)
+VALUES (seq_project.nextval, '국방부 시스템 유지보수', '국방부 시스템 유지보수', 'PMS00103', 100, '국방부', '2024-10-01', '2024-10-01', '2024-10-01', '2024-10-01', 'Y', 'user1', '2024-10-01', '2024-10-01');
+
+INSERT INTO project (prj_no, prj_title, prj_cont, stat_cd, prg, org, pre_st_dt, pre_end_dt, st_dt, end_dt, use_yn, reg_id, reg_dt, mod_dt)
+VALUES (seq_project.nextval, '코레일 시스템', '코레일 시스템', 'PMS00103', 100, '코레일', '2024-10-01', '2024-10-01', '2024-10-01', '2024-10-01', 'Y', 'user1', '2024-10-01', '2024-10-01');
+
+INSERT INTO project (prj_no, prj_title, prj_cont, stat_cd, prg, org, pre_st_dt, pre_end_dt, st_dt, end_dt, use_yn, reg_id, reg_dt, mod_dt)
+VALUES (seq_project.nextval, '티머니 시스템', '티머니 시스템', 'PMS00103', 100, '티머니', '2024-10-01', '2024-10-01', '2024-10-01', '2024-10-01', 'Y', 'user1', '2024-10-01', '2024-10-01');
+
+INSERT INTO project (prj_no, prj_title, prj_cont, stat_cd, prg, org, pre_st_dt, pre_end_dt, st_dt, end_dt, use_yn, reg_id, reg_dt, mod_dt)
+VALUES (seq_project.nextval, '법무부 시스템', '법무부 시스템', 'PMS00103', 100, '대법원', '2024-10-01', '2024-10-01', '2024-10-01', '2024-10-01', 'Y', 'user1', '2024-10-01', '2024-10-01');
+
+INSERT INTO project (prj_no, prj_title, prj_cont, stat_cd, prg, org, pre_st_dt, pre_end_dt, st_dt, end_dt, use_yn, reg_id, reg_dt, mod_dt)
+VALUES (seq_project.nextval, '차량관리 시스템', '차량관리 시스템', 'PMS00103', 100, 'KCC오토', '2024-10-01', '2024-10-01', '2024-10-01', '2024-10-01', 'Y', 'user1', '2024-10-01', '2024-10-01');
+
+INSERT INTO project (prj_no, prj_title, prj_cont, stat_cd, prg, org, pre_st_dt, pre_end_dt, st_dt, end_dt, use_yn, reg_id, reg_dt, mod_dt)
+VALUES (seq_project.nextval, '인사관리 시스템', '인사관리 시스템', 'PMS00103', 100, '교직원공제회', '2024-10-01', '2024-10-01', '2024-10-01', '2024-10-01', 'Y', 'user1', '2024-10-01', '2024-10-01');
+
+
 INSERT INTO Member (mem_no, grp_no, login_id, pw, mem_nm, phone_no, email, auth_cd, pos_nm, birth_dt, tech_grd_cd, org, use_yn, rec_prj)
 VALUES (seq_member.nextval, 3, 'user1', '$2a$10$GBpeKte0vdpwmnB3brH3LeB4YwMZnbHQpyDkvTp9BWo0BS6fYXINe', '이철수', '010-1234-5678', 'hong@example.com', 'PMS01501', 'PMS01706', '1990-01-01', 'PMS01503', '공공', 'Y', NULL);
 
@@ -632,9 +676,6 @@ VALUES (seq_member.nextval, 4, 'user4', '$2a$10$GBpeKte0vdpwmnB3brH3LeB4YwMZnbHQ
 
 INSERT INTO Member (mem_no, grp_no, login_id, pw, mem_nm, phone_no, email, auth_cd, pos_nm, birth_dt, tech_grd_cd, org, use_yn, rec_prj)
 VALUES (seq_member.nextval, 4, 'user5', '$2a$10$GBpeKte0vdpwmnB3brH3LeB4YwMZnbHQpyDkvTp9BWo0BS6fYXINe', '김상중', '010-9876-5432', 'kim@example.com', 'PMS01501', 'PMS01703', '1992-05-21', 'PMS01502', 'SI', 'Y', NULL);
-
-INSERT INTO project (prj_no, prj_title, prj_cont, stat_cd, prg, org, pre_st_dt, pre_end_dt, st_dt, end_dt, use_yn, reg_id, reg_dt, mod_dt)
-VALUES (seq_project.nextval, '차세대 공공 프로젝트', '프로젝트 내용', 'PMS00102', 0, '공공', '2021-01-01', '2021-01-01', '2021-01-01', '2021-01-01', 'Y', 'user1', '2021-01-01', '2021-01-01');
 
 INSERT INTO Member (mem_no, grp_no, login_id, pw, mem_nm, phone_no, email, auth_cd, pos_nm, birth_dt, tech_grd_cd, org, use_yn, rec_prj)
 VALUES (seq_member.nextval, 3, 'user6', '$2a$10$GBpeKte0vdpwmnB3brH3LeB4YwMZnbHQpyDkvTp9BWo0BS6fYXINe', '김연호', '010-9876-5432', 'kim@example.com', 'PMS01501', 'PMS01703', '1992-05-21', 'PMS01502', 'SI', 'Y', NULL);
@@ -674,12 +715,82 @@ VALUES (seq_team.nextval, '차세대 공공 프로젝트', '테스트 내용', '
 
 INSERT INTO projectMember (mem_no, tm_no, prj_no, prj_auth_cd, pre_start_dt, pre_end_dt, start_dt, end_dt, use_yn, reg_id, reg_dt, mod_id, mod_dt)
 VALUES (1, 1, 1, 'PMS00203', '2021-01-01', '2021-01-01', '2021-01-01', '2021-01-01', 'Y', 'user1', '2021-01-01', NULL, NULL);
+
+INSERT INTO projectMember (mem_no, tm_no, prj_no, prj_auth_cd, pre_start_dt, pre_end_dt, start_dt, end_dt, use_yn, reg_id, reg_dt, mod_id, mod_dt)
+VALUES (1, 1, 2, 'PMS00203', '2021-01-01', '2021-01-01', '2021-01-01', '2021-01-01', 'Y', 'user1', '2021-01-01', NULL, NULL);
+
+INSERT INTO projectMember (mem_no, tm_no, prj_no, prj_auth_cd, pre_start_dt, pre_end_dt, start_dt, end_dt, use_yn, reg_id, reg_dt, mod_id, mod_dt)
+VALUES (1, 1, 3, 'PMS00203', '2021-01-01', '2021-01-01', '2021-01-01', '2021-01-01', 'Y', 'user1', '2021-01-01', NULL, NULL);
+
+INSERT INTO projectMember (mem_no, tm_no, prj_no, prj_auth_cd, pre_start_dt, pre_end_dt, start_dt, end_dt, use_yn, reg_id, reg_dt, mod_id, mod_dt)
+VALUES (1, 1, 4, 'PMS00203', '2021-01-01', '2021-01-01', '2021-01-01', '2021-01-01', 'Y', 'user1', '2021-01-01', NULL, NULL);
+
+INSERT INTO projectMember (mem_no, tm_no, prj_no, prj_auth_cd, pre_start_dt, pre_end_dt, start_dt, end_dt, use_yn, reg_id, reg_dt, mod_id, mod_dt)
+VALUES (1, 1, 5, 'PMS00203', '2021-01-01', '2021-01-01', '2021-01-01', '2021-01-01', 'Y', 'user1', '2021-01-01', NULL, NULL);
+
+INSERT INTO projectMember (mem_no, tm_no, prj_no, prj_auth_cd, pre_start_dt, pre_end_dt, start_dt, end_dt, use_yn, reg_id, reg_dt, mod_id, mod_dt)
+VALUES (1, 1, 6, 'PMS00203', '2021-01-01', '2021-01-01', '2021-01-01', '2021-01-01', 'Y', 'user1', '2021-01-01', NULL, NULL);
+
+INSERT INTO projectMember (mem_no, tm_no, prj_no, prj_auth_cd, pre_start_dt, pre_end_dt, start_dt, end_dt, use_yn, reg_id, reg_dt, mod_id, mod_dt)
+VALUES (1, 1, 7, 'PMS00203', '2021-01-01', '2021-01-01', '2021-01-01', '2021-01-01', 'Y', 'user1', '2021-01-01', NULL, NULL);
+
+INSERT INTO projectMember (mem_no, tm_no, prj_no, prj_auth_cd, pre_start_dt, pre_end_dt, start_dt, end_dt, use_yn, reg_id, reg_dt, mod_id, mod_dt)
+VALUES (1, 1, 8, 'PMS00203', '2021-01-01', '2021-01-01', '2021-01-01', '2021-01-01', 'Y', 'user1', '2021-01-01', NULL, NULL);
+
+INSERT INTO projectMember (mem_no, tm_no, prj_no, prj_auth_cd, pre_start_dt, pre_end_dt, start_dt, end_dt, use_yn, reg_id, reg_dt, mod_id, mod_dt)
+VALUES (1, 1, 9, 'PMS00203', '2021-01-01', '2021-01-01', '2021-01-01', '2021-01-01', 'Y', 'user1', '2021-01-01', NULL, NULL);
+
+INSERT INTO projectMember (mem_no, tm_no, prj_no, prj_auth_cd, pre_start_dt, pre_end_dt, start_dt, end_dt, use_yn, reg_id, reg_dt, mod_id, mod_dt)
+VALUES (1, 1, 10, 'PMS00203', '2021-01-01', '2021-01-01', '2021-01-01', '2021-01-01', 'Y', 'user1', '2021-01-01', NULL, NULL);
+
+INSERT INTO projectMember (mem_no, tm_no, prj_no, prj_auth_cd, pre_start_dt, pre_end_dt, start_dt, end_dt, use_yn, reg_id, reg_dt, mod_id, mod_dt)
+VALUES (1, 1, 11, 'PMS00203', '2021-01-01', '2021-01-01', '2021-01-01', '2021-01-01', 'Y', 'user1', '2021-01-01', NULL, NULL);
+
+INSERT INTO projectMember (mem_no, tm_no, prj_no, prj_auth_cd, pre_start_dt, pre_end_dt, start_dt, end_dt, use_yn, reg_id, reg_dt, mod_id, mod_dt)
+VALUES (1, 1, 12, 'PMS00203', '2021-01-01', '2021-01-01', '2021-01-01', '2021-01-01', 'Y', 'user1', '2021-01-01', NULL, NULL);
+
 INSERT INTO projectMember (mem_no, tm_no, prj_no, prj_auth_cd, pre_start_dt, pre_end_dt, start_dt, end_dt, use_yn, reg_id, reg_dt, mod_id, mod_dt)
 VALUES (2, 1, 1, 'PMS00203', '2021-01-01', '2021-01-01', '2021-01-01', '2021-01-01', 'Y', 'user1', '2021-01-01', NULL, NULL);
+
 INSERT INTO projectMember (mem_no, tm_no, prj_no, prj_auth_cd, pre_start_dt, pre_end_dt, start_dt, end_dt, use_yn, reg_id, reg_dt, mod_id, mod_dt)
 VALUES (3, 1, 1, 'PMS00202', '2021-01-01', '2021-01-01', '2021-01-01', '2021-01-01', 'Y', 'user1', '2021-01-01', NULL, NULL);
+
 INSERT INTO projectMember (mem_no, tm_no, prj_no, prj_auth_cd, pre_start_dt, pre_end_dt, start_dt, end_dt, use_yn, reg_id, reg_dt, mod_id, mod_dt)
 VALUES (14, 1, 1, 'PMS00201', '2021-01-01', '2021-01-01', '2021-01-01', '2021-01-01', 'Y', 'pm1', '2021-01-01', NULL, NULL);
+
+INSERT INTO projectMember (mem_no, tm_no, prj_no, prj_auth_cd, pre_start_dt, pre_end_dt, start_dt, end_dt, use_yn, reg_id, reg_dt, mod_id, mod_dt)
+VALUES (14, 1, 2, 'PMS00201', '2021-01-01', '2021-01-01', '2021-01-01', '2021-01-01', 'Y', 'pm1', '2021-01-01', NULL, NULL);
+
+INSERT INTO projectMember (mem_no, tm_no, prj_no, prj_auth_cd, pre_start_dt, pre_end_dt, start_dt, end_dt, use_yn, reg_id, reg_dt, mod_id, mod_dt)
+VALUES (14, 1, 3, 'PMS00201', '2021-01-01', '2021-01-01', '2021-01-01', '2021-01-01', 'Y', 'pm1', '2021-01-01', NULL, NULL);
+
+INSERT INTO projectMember (mem_no, tm_no, prj_no, prj_auth_cd, pre_start_dt, pre_end_dt, start_dt, end_dt, use_yn, reg_id, reg_dt, mod_id, mod_dt)
+VALUES (14, 1, 4, 'PMS00201', '2021-01-01', '2021-01-01', '2021-01-01', '2021-01-01', 'Y', 'pm1', '2021-01-01', NULL, NULL);
+
+INSERT INTO projectMember (mem_no, tm_no, prj_no, prj_auth_cd, pre_start_dt, pre_end_dt, start_dt, end_dt, use_yn, reg_id, reg_dt, mod_id, mod_dt)
+VALUES (14, 1, 5, 'PMS00201', '2021-01-01', '2021-01-01', '2021-01-01', '2021-01-01', 'Y', 'pm1', '2021-01-01', NULL, NULL);
+
+INSERT INTO projectMember (mem_no, tm_no, prj_no, prj_auth_cd, pre_start_dt, pre_end_dt, start_dt, end_dt, use_yn, reg_id, reg_dt, mod_id, mod_dt)
+VALUES (14, 1, 6, 'PMS00201', '2021-01-01', '2021-01-01', '2021-01-01', '2021-01-01', 'Y', 'pm1', '2021-01-01', NULL, NULL);
+
+INSERT INTO projectMember (mem_no, tm_no, prj_no, prj_auth_cd, pre_start_dt, pre_end_dt, start_dt, end_dt, use_yn, reg_id, reg_dt, mod_id, mod_dt)
+VALUES (14, 1, 7, 'PMS00201', '2021-01-01', '2021-01-01', '2021-01-01', '2021-01-01', 'Y', 'pm1', '2021-01-01', NULL, NULL);
+
+INSERT INTO projectMember (mem_no, tm_no, prj_no, prj_auth_cd, pre_start_dt, pre_end_dt, start_dt, end_dt, use_yn, reg_id, reg_dt, mod_id, mod_dt)
+VALUES (14, 1, 8, 'PMS00201', '2021-01-01', '2021-01-01', '2021-01-01', '2021-01-01', 'Y', 'pm1', '2021-01-01', NULL, NULL);
+
+INSERT INTO projectMember (mem_no, tm_no, prj_no, prj_auth_cd, pre_start_dt, pre_end_dt, start_dt, end_dt, use_yn, reg_id, reg_dt, mod_id, mod_dt)
+VALUES (14, 1, 9, 'PMS00201', '2021-01-01', '2021-01-01', '2021-01-01', '2021-01-01', 'Y', 'pm1', '2021-01-01', NULL, NULL);
+
+INSERT INTO projectMember (mem_no, tm_no, prj_no, prj_auth_cd, pre_start_dt, pre_end_dt, start_dt, end_dt, use_yn, reg_id, reg_dt, mod_id, mod_dt)
+VALUES (14, 1, 10, 'PMS00201', '2021-01-01', '2021-01-01', '2021-01-01', '2021-01-01', 'Y', 'pm1', '2021-01-01', NULL, NULL);
+
+INSERT INTO projectMember (mem_no, tm_no, prj_no, prj_auth_cd, pre_start_dt, pre_end_dt, start_dt, end_dt, use_yn, reg_id, reg_dt, mod_id, mod_dt)
+VALUES (14, 1, 11, 'PMS00201', '2021-01-01', '2021-01-01', '2021-01-01', '2021-01-01', 'Y', 'pm1', '2021-01-01', NULL, NULL);
+
+INSERT INTO projectMember (mem_no, tm_no, prj_no, prj_auth_cd, pre_start_dt, pre_end_dt, start_dt, end_dt, use_yn, reg_id, reg_dt, mod_id, mod_dt)
+VALUES (14, 1, 12, 'PMS00201', '2021-01-01', '2021-01-01', '2021-01-01', '2021-01-01', 'Y', 'pm1', '2021-01-01', NULL, NULL);
+
 
 INSERT INTO System (sys_no, sys_ttl, sys_cont, use_yn, prj_no, par_sys_no, sys_yn)
 VALUES (seq_system.nextval, 'A 업무 시스템', '시스템1 내용', 'Y', 1, NULL, 'Y');
@@ -708,6 +819,137 @@ INSERT INTO System (sys_no, sys_ttl, sys_cont, use_yn, prj_no, par_sys_no, sys_y
 VALUES (seq_system.nextval, '조달관리', '시스템8 내용', 'Y', 1, 4, 'Y');
 INSERT INTO System (sys_no, sys_ttl, sys_cont, use_yn, prj_no, par_sys_no, sys_yn)
 VALUES (seq_system.nextval, '통합관리', '시스템9 내용', 'Y', 1, 4, 'Y');
+
+
+insert into task
+(tsk_no, order_no, tsk_ttl, tsk_stat_cd, pre_st_dt, pre_end_dt, prg, use_yn, prj_no, st_dt,end_dt, par_task_no, reg_id, reg_dt, sys_no)
+values (seq_task.nextval, 1, '요구사항 수집 및 분석', 'PMS00103', '24/10/01', '24/10/02', 100, 'Y', 1,
+        '24/10/01', '24/10/02',
+        0, 'pm1', '24/10/01', 5);
+
+insert into task
+(tsk_no, order_no, tsk_ttl, tsk_stat_cd, pre_st_dt, pre_end_dt, prg, use_yn, prj_no,st_dt, end_dt, par_task_no, reg_id, reg_dt)
+values (seq_task.nextval, 1, '아키텍처 설계', 'PMS00103', '24/10/02', '24/10/03', 100, 'Y', 1,
+        '24/10/02', '24/10/03',
+        0, 'pm1', '24/10/02');
+
+insert into task
+(tsk_no, order_no, tsk_ttl, tsk_stat_cd, pre_st_dt, pre_end_dt, prg, use_yn, prj_no, st_dt,end_dt, par_task_no, reg_id, reg_dt)
+values (seq_task.nextval, 1, '데이터베이스 설계', 'PMS00103', '24/10/03', '24/10/04', 100, 'Y', 1,
+        '24/10/03', '24/10/04',
+        0, 'pm1', '24/10/03');
+
+insert into task
+(tsk_no, order_no, tsk_ttl, tsk_stat_cd, pre_st_dt, pre_end_dt, prg, use_yn, prj_no, st_dt,end_dt, par_task_no, reg_id, reg_dt)
+values (seq_task.nextval, 1, 'API 설계', 'PMS00103', '24/10/04', '24/10/05', 100, 'Y', 1,
+        '24/10/04', '24/10/05',
+        0, 'pm1', '24/10/06');
+
+insert into task
+(tsk_no, order_no, tsk_ttl, tsk_stat_cd, pre_st_dt, pre_end_dt, prg, use_yn, prj_no,st_dt, end_dt, par_task_no, reg_id, reg_dt)
+values (seq_task.nextval, 1, 'UI/UX 설계', 'PMS00103', '24/10/04', '24/10/05', 100, 'Y', 1,
+        '24/10/04', '24/10/05',
+        0, 'pm1', '24/10/09');
+
+insert into task
+(tsk_no, order_no, tsk_ttl, tsk_stat_cd, pre_st_dt, pre_end_dt, prg, use_yn, prj_no, st_dt, par_task_no, reg_id, reg_dt, sys_no)
+values (seq_task.nextval, 1, '프론트엔드 개발', 'PMS00102', '24/10/05', '24/10/12', 70, 'Y', 1,
+        '24/10/05',
+        0, 'pm1', '24/10/05', 6);
+
+insert into task
+(tsk_no, order_no, tsk_ttl, tsk_stat_cd, pre_st_dt, pre_end_dt, prg, use_yn, prj_no, st_dt, par_task_no, reg_id, reg_dt, sys_no)
+values (seq_task.nextval, 1, '백엔드 개발', 'PMS00102', '24/10/05', '24/10/12', 60, 'Y', 1,
+        '24/10/05',
+        0, 'pm1', '24/10/05', 6);
+
+insert into task
+(tsk_no, order_no, tsk_ttl, tsk_stat_cd, pre_st_dt, pre_end_dt, prg, use_yn, prj_no, par_task_no, reg_id, reg_dt)
+values (seq_task.nextval, 1, '단위 테스트', 'PMS00101', '24/10/12', '24/10/14', 0, 'Y', 1,
+        0, 'pm1', '24/10/12');
+
+insert into task
+(tsk_no, order_no, tsk_ttl, tsk_stat_cd, pre_st_dt, pre_end_dt, prg, use_yn, prj_no, par_task_no, reg_id, reg_dt)
+values (seq_task.nextval, 1, '통합 테스트', 'PMS00101', '24/10/13', '24/10/15', 0, 'Y', 1,
+        0, 'pm1', '24/10/13');
+
+insert into task
+(tsk_no, order_no, tsk_ttl, tsk_stat_cd, pre_st_dt, pre_end_dt, prg, use_yn, prj_no, st_dt, par_task_no, reg_id, reg_dt)
+values (seq_task.nextval, 1, '화면 구성', 'PMS00102', '24/10/05', '24/10/10', 70, 'Y', 1,
+        '24/10/05',
+        6, 'pm1', '24/10/15');
+
+insert into task
+(tsk_no, order_no, tsk_ttl, tsk_stat_cd, pre_st_dt, pre_end_dt, prg, use_yn, prj_no, st_dt, par_task_no, reg_id, reg_dt)
+values (seq_task.nextval, 1, '메인 화면 구성', 'PMS00102', '24/10/05', '24/10/09', 70, 'Y', 1,
+        '24/10/05',
+        10, 'pm1', '24/10/04');
+
+insert into task
+(tsk_no, order_no, tsk_ttl, tsk_stat_cd, pre_st_dt, pre_end_dt, prg, use_yn, prj_no, st_dt, par_task_no, reg_id, reg_dt)
+values (seq_task.nextval, 1, '시스템 연동', 'PMS00102', '24/10/05', '24/10/10', 60, 'Y', 1,
+        '24/10/05',
+        7, 'pm1', '24/10/05');
+
+insert into task
+(tsk_no, order_no, tsk_ttl, tsk_stat_cd, pre_st_dt, pre_end_dt, prg, use_yn, prj_no, st_dt, par_task_no, reg_id, reg_dt)
+values (seq_task.nextval, 1, '외부 시스템 연동', 'PMS00102', '24/10/05', '24/10/09', 60, 'Y', 1,
+        '24/10/05',
+        12, 'pm1', '24/10/05');
+
+
+insert into taskmember
+(mem_no, tm_no, prj_no, tsk_no)
+values (14, 1, 1, 1);
+
+insert into taskmember
+(mem_no, tm_no, prj_no, tsk_no)
+values (14, 1, 1, 2);
+
+insert into taskmember
+(mem_no, tm_no, prj_no, tsk_no)
+values (14, 1, 1, 3);
+
+insert into taskmember
+(mem_no, tm_no, prj_no, tsk_no)
+values (14, 1, 1, 4);
+
+insert into taskmember
+(mem_no, tm_no, prj_no, tsk_no)
+values (14, 1, 1, 5);
+
+insert into taskmember
+(mem_no, tm_no, prj_no, tsk_no)
+values (1, 1, 1, 6);
+
+insert into taskmember
+(mem_no, tm_no, prj_no, tsk_no)
+values (2, 1, 1, 6);
+
+insert into taskmember
+(mem_no, tm_no, prj_no, tsk_no)
+values (1, 1, 1, 10);
+
+insert into taskmember
+(mem_no, tm_no, prj_no, tsk_no)
+values (2, 1, 1, 11);
+
+insert into taskmember
+(mem_no, tm_no, prj_no, tsk_no)
+values (1, 1, 1, 7);
+
+insert into taskmember
+(mem_no, tm_no, prj_no, tsk_no)
+values (2, 1, 1, 7);
+
+insert into taskmember
+(mem_no, tm_no, prj_no, tsk_no)
+values (1, 1, 1, 12);
+
+insert into taskmember
+(mem_no, tm_no, prj_no, tsk_no)
+values (2, 1, 1, 13);
+
 
 INSERT INTO Feature (feat_no, feat_id, feat_title, feat_cont, pre_st_dt, pre_end_dt, st_dt, end_dt, stat_cd, pri_cd, prg, diff_cd, use_yn, sys_no, mem_no, tm_no, prj_no, class_cd)
 VALUES (seq_feature.nextval, 'F001', 'RSTR110', '기능1 내용', '2021-01-01', '2021-01-01', '2021-01-01', '2021-01-01', 'PMS00901', 'PMS00603', 0, 'PMS01103', 'Y', 1, 1, 1, 1, 'PMS01005');
