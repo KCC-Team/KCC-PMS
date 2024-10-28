@@ -15,6 +15,10 @@ $(document).ready(function() {
     //     dateFormat: "yy-mm-dd"
     // });
 
+    $('.btn-select-output').on('click', function() {
+       let popup = window.open('/projects/outputs/search', 'output', 'width=860, height=560, resizable=yes');
+    });
+
     $("#pre_st_dt").datepicker({
         dateFormat: "yy-mm-dd",
         onSelect: function() {
