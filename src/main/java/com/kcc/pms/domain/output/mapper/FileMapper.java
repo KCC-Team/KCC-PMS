@@ -12,6 +12,9 @@ public interface FileMapper {
     Integer saveFileMaster(FileMasterVO fileMasterVO);
     void saveFileDetails(String originalTitle, String fileType, Long fileSize, Long fileMasterNumber, String registerId, String filePath);
     List<String> findFilesDetails(Long fileMasterNumber);
-    int deleteFileDetails(Long fileMasterNumber);
+    int deleteFileDetails(String deleteName, Long fileMasterNumber);
     List<FileResponseDto> getFileDetailsRes(Long fileMasterNumber);
+    Long findFileMasterNumber(Long outputNumber);
+    String findFileDetailTitle(Long filesDetailNumber);
+    int deleteFileDetail(String deleteName, Long fileDetailNumber);
 }

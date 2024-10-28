@@ -4,6 +4,28 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.kcc.pms.domain.output.mapper.OutputMapper">
+    <resultMap id="TaskOutput" type="TaskOutput">
+        <result property="taskNo" column="tsk_no"/>
+        <result property="taskTitle" column="tsk_ttl"/>
+    </resultMap>
+
+    <resultMap id="OutputFile" type="OutputFile">
+        <result property="fileType" column="fl_type"/>
+        <result property="fileSize" column="fl_size"/>
+        <result property="registedDate" column="registedDate"/>
+        <result property="registedBy" column="registedBy"/>
+        <association property="fileItem">
+            <result property="fileNo" column="fl_no"/>
+            <result property="fileTitle" column="original_ttl"/>
+        </association>
+    </resultMap>
+
+    <resultMap id="outputRes" type="OutputResponseDto">
+        <result property="title" column="title"/>
+        <collection property="tasks" ofType="TaskOutput" resultMap="TaskOutput"/>
+        <collection property="files" ofType="OutputFile" resultMap="OutputFile"/>
+    </resultMap>
+
     <select id="findList" parameterType="map" resultType="FileStructResponseDto">
         SELECT
         opt_no as id,
@@ -11,10 +33,72 @@
         fld_yn as type,
         high_folder_no as parentId
         FROM Output
-        WHERE prj_no = #{prjNo}
+        WHERE prj_no = #{prjNo} and use_yn = 'y'
         <if test='option != null and option == "y"'>
             and fld_yn = #{option}
         </if>
     </select>
 
+    <select id="findOutput" parameterType="map" resultMap="outputRes">
+        SELECT
+            o.opt_ttl as title,
+            tsk_no, tsk_ttl,
+            fl_no, original_ttl, fl_type, fl_size,
+            td.reg_dt as registedDate,
+            td.reg_id as registedBy
+        FROM Output o
+        LEFT JOIN TaskOutput ON o.opt_no = TaskOutput.folder_no
+        LEFT JOIN Task ON Task.tsk_no = TaskOutput.task_no
+        LEFT JOIN FileMaster ON o.fl_ms_no = FileMaster.fl_ms_no
+        LEFT JOIN FileDetail td ON FileMaster.fl_ms_no = td.fl_ms_no and td.del_id is null
+        WHERE o.opt_no = #{outputNo} and o.use_yn = 'y'
+    </select>
+
+    <insert id="insertOutput" parameterType="map">
+        <selectKey keyProperty="output.id" resultType="long" order="BEFORE">
+            SELECT seq_output.nextval FROM dual
+        </selectKey>
+
+        INSERT INTO Output
+        (opt_no, opt_ttl, fld_yn, use_yn, high_folder_no, prj_no, fl_ms_no)
+        VALUES
+        (#{output.id}, #{output.text, jdbcType=VARCHAR},
+         <choose>
+            <when test='output.type == "y" or output.type == "default"'> 'y'</when>
+            <otherwise> 'n'</otherwise>
+         </choose>,
+         'y', #{output.parentId, jdbcType=NUMERIC}, #{output.projectNo, jdbcType=NUMERIC}, #{fileMasterNo, jdbcType=NUMERIC})
+    </insert>
+
+    <update id="updateOutput" parameterType="FileStructResponseDto">
+        UPDATE Output
+        SET opt_ttl = #{text},
+            high_folder_no = #{parentId}
+        WHERE opt_no = #{id}
+    </update>
+
+    <update id="updateOutputInfo">
+        UPDATE Output
+        SET opt_ttl = #{title}
+        WHERE opt_no = #{outputNo}
+    </update>
+
+    <delete id="deleteOutput" parameterType="long">
+        update Output set use_yn = 'n' where opt_no = #{no}
+    </delete>
+
+    <select id="findDeleteOutputs" resultType="DeleteOutputResponseDto">
+        SELECT
+            fl_no as fileDetailNo,
+            original_ttl as fileName,
+            fl_size as fileSize,
+            fl_type as fileType,
+            del_id as deleteName,
+            del_dt as deletedDate
+        FROM FileDetail
+        LEFT JOIN FileMaster ON FileDetail.fl_ms_no = FileMaster.fl_ms_no
+        LEFT JOIN Output ON FileMaster.fl_ms_no = Output.fl_ms_no
+        WHERE Output.opt_no = #{outputNo}
+        AND del_id IS NOT NULL
+    </select>
 </mapper>

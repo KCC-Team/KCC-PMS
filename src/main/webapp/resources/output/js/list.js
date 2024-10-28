@@ -1,23 +1,28 @@
 // jstree
+let selectedNodeId = null;
+
 $(function () {
     // 노드 이동 이벤트 핸들러
-    $('.jstree-files').on("move_node.jstree", function (e, data) {
-        let movedNode = data.node;
-        let newParentId = data.parent;
-        updateTreeData(movedNode, newParentId);
+    $('.jstree-files').on('move_node.jstree', function (e, data) {
+        let parentNode = data.instance.get_node(data.parent);
+
+        if (parentNode.type === 'n') {
+            alert('이 노드 아래로 이동할 수 없습니다.');
+            data.instance.refresh();
+        } else {
+            updateTreeData(data.node, data.parent);
+        }
     });
+
 
     // treeData 업데이트 함수
     function updateTreeData(movedNode, newParentId) {
-        // 이동된 노드를 treeData에서 제거
-        let node = removeNodeById(treeData, movedNode.id);
+        let node = removeNodeById(window.treeData, parseInt(movedNode.id));
 
-        // 새로운 부모 노드에 추가
         if (newParentId === '#') {
-            // 최상위 노드로 이동
-            treeData.push(node);
+            window.treeData.push(node);
         } else {
-            let parentNode = findNodeById(treeData, newParentId);
+            let parentNode = findNodeById(window.treeData, newParentId);
             if (parentNode) {
                 if (!parentNode.children) {
                     parentNode.children = [];
@@ -45,7 +50,7 @@ $(function () {
     // 노드를 ID로 찾는 함수
     function findNodeById(nodes, id) {
         for (let i = 0; i < nodes.length; i++) {
-            if (nodes[i].id === id) {
+            if (nodes[i].id === parseInt(id)) {
                 return nodes[i];
             } else if (nodes[i].children) {
                 let node = findNodeById(nodes[i].children, id);
@@ -77,6 +82,21 @@ $(function () {
             $('.jstree-files').jstree(true).settings.dnd.is_draggable = function () {
                 return false;
             };
+            let treeData = $('.jstree-files').jstree(true).get_json('#', { flat: false });
+            let updatedTreeData = transformTreeData(treeData);
+            $.ajax({
+                url: '/projects/outputs/api/update',
+                method: 'PUT',
+                contentType: 'application/json',
+                data: JSON.stringify(updatedTreeData),
+                success: function(response) {
+                    alert('순서가 성공적으로 저장되었습니다.');
+                    window.location.href = '/projects/outputs';
+                },
+                error: function(xhr, status, error) {
+                    alert('순서 저장 중 에러가 발생했습니다.');
+                }
+            });
         }
     });
 
@@ -93,37 +113,42 @@ $(function () {
     });
 });
 
-// file grid
-let gridData = [
-    {
-        fileName: "A 업무 시스템 요구사항 정의서_1",
-        fileType: "xls/xlsx",
-        size: "2.1MB",
-        version: "0.1",
-        date: "2024-02-17",
-        author: "이수호"
-    },
-    {
-        fileName: "A 업무 시스템 요구사항 정의서_2",
-        fileType: "xls/xlsx",
-        size: "1.77MB",
-        version: "0.1",
-        date: "2024-02-17",
-        author: "이수호"
-    }
-];
+let grid
 $(function () {
-    let grid = new ax5.ui.grid();
+    grid = new ax5.ui.grid();
     grid.setConfig({
         target: $('[data-ax5grid="my-grid"]'),
         showRowSelector: true,
         multipleSelect: true,
         columns: [
-            {key: "fileName", label: "파일명", width: 261.6, align: "center"},
+            {key: "fileItem", label: "파일명", width: 283.6, align: "left",
+                formatter: function () {
+                    return `
+                            <input type="hidden" value="${this.item.fileItem.fileNo}">
+                            <span>${this.item.fileItem.fileTitle}</span>
+                    `;
+                }
+            },
             {key: "fileType", label: "파일형식", width: 80, align: "center"},
-            {key: "size", label: "용량", width: 80, align: "center"},
-            {key: "date", label: "날짜", width: 100, align: "center"},
-            {key: "author", label: "작성자", width: 80, align: "center"},
+            {
+                key: "fileSize",
+                label: "용량",
+                width: 90,
+                align: "center",
+                formatter: function () {
+                    return formatBytes(this.value);
+                }
+            },
+            {
+                key: "registedDate",
+                label: "등록일자",
+                width: 100,
+                align: "center",
+                formatter: function () {
+                    return formatDate(this.value);
+                }
+            },
+            {key: "registedBy", label: "작성자", width: 80, align: "center"},
             {
                 key: null,
                 label: "작업",
@@ -140,8 +165,8 @@ $(function () {
         ]
     });
 
-    grid.setData(gridData);
-    $('#detail-cnt').text(gridData.length);
+    // grid.setData(gridData);
+    // $('#detail-cnt').text(gridData.length);
     $(document).on('click', '.btn-download', function () {
         let fileName = $(this).data('file');
         // 다운로드 로직 구현
@@ -175,28 +200,68 @@ $(function () {
         $selectElement.val('');
     });
 
-    function createLabel(value) {
-        const optionText = $selectElement.find('option[value="' + value + '"]').text();
-        const $label = $('<div>', {
-            class: 'label-item',
-            text: optionText
-        });
+    $('.jstree-files').on('select_node.jstree', function (e, data) {
+        selectedNodeId = data.node.id;
+        window.selectNode = data.node;
+        $('.second-component').addClass('fade-out');
+        if (data.node.type === 'n') {
+            $.ajax({
+                url: '/projects/outputs/' + data.node.id,
+                method: 'GET',
+                success: function (response) {
+                    setTimeout(() => {
+                        grid.setData(response.files);
+                        $('#detail-cnt').text(response.files.length);
+                        $('.input-area').val(response.title);
 
-        const $removeBtn = $('<button>', {
-            class: 'remove-btn',
-            html: '&times;'
-        });
+                        $('#outputTask').empty();
+                        response.tasks.forEach(function(task) {
+                            let $taskLink = $('<a>').attr('href', '#').addClass('task ms-4').text(task);
+                            $('#outputTask').append($taskLink, '<br>');
+                        });
 
-        $removeBtn.on('click', function () {
-            $label.remove();
-            selectedOptions = selectedOptions.filter(function (val) {
-                return val !== value;
+                        $('.second-component').removeClass('fade-out').addClass('fade-in');
+                        setTimeout(() => {
+                            $('.second-component').removeClass('fade-in');
+                        }, 250);
+
+                    }, 250);
+                }
             });
-        });
+        }
+    });
 
-        $label.append($removeBtn);
-        $selectBox.append($label);
-    }
+    $('#file-delete-btn').on('click', function (e) {
+        e.preventDefault();
+
+        let files = grid.getList("selected");
+
+        let fileIds = [];
+        if (files.length > 0) {
+            files.forEach(function (file) {
+                fileIds.push(file.fileItem.fileNo);
+            });
+        } else {
+            alert("선택된 파일이 없습니다.");
+            return;
+        }
+        console.log(fileIds);
+
+        $.ajax({
+            url: '/projects/outputs/api/deletefile',
+            method: 'post',
+            contentType: 'application/json',
+            data: JSON.stringify({ files: fileIds }),
+            success: function (response) {
+                alert('파일이 성공적으로 삭제되었습니다.');
+                window.location.href = '/projects/outputs';
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                console.error('삭제 요청 중 오류 발생:', textStatus, errorThrown);
+                alert('삭제 요청 중 오류가 발생했습니다.');
+            }
+        });
+    });
 });
 
 $(function () {
@@ -211,32 +276,64 @@ $(function () {
     $('#file-delete-his-btn').on('click', function () {
         openHistoryModal();
     });
+
+    $('#output-save-btn').on('click', function () {
+        $.ajax({
+            url: '/projects/outputs/api/update',
+            method: 'patch',
+            data: {
+                title: $('#outputTitle').val(),
+                outputNo: selectedNodeId
+            },
+            success: function (response) {
+                alert('산출물 정보가 저장 되었습니다.');
+                window.location.href = '/projects/outputs';
+            },
+            error: function (xhr, status, error) {
+                alert('산출물 등록 중 에러가 발생했습니다.');
+            }
+        })
+    });
+    
+    $('#output-delete-btn').on('click', function () {
+       $.ajax({
+              url: '/projects/outputs/api/delete',
+              method: 'delete',
+              data: {
+                outputNo: selectedNodeId
+              },
+              success: function (response) {
+                alert('산출물이 성공적으로 삭제 되었습니다.');
+                window.location.href = '/projects/outputs';
+              },
+              error: function (xhr, status, error) {
+                alert('산출물 삭제 중 에러가 발생했습니다.');
+              }
+       });
+    });
 });
 
 // 산출물 파일 상세 모달
 function loadVersionHistory(historyElement) {
-    const versionHistory = [
-        {fileName: "5차", fileSize: "2.01 MB", deleted_nm: "홍길동", deletedDate: "2024-02-14", fileType: "xls/xlsx"},
-        {fileName: "4차", fileSize: "1.92 MB", deleted_nm: "홍길동", deletedDate: "2024-02-07", fileType: "xls/xlsx"},
-        {fileName: "3차", fileSize: "1.77 MB", deleted_nm: "홍길동", deletedDate: "2024-01-29", fileType: "xls/xlsx"},
-        {fileName: "2차", fileSize: "1.58 MB", deleted_nm: "홍길동", deletedDate: "2024-01-11", fileType: "xls/xlsx"},
-        {fileName: "초안", fileSize: "1.26 MB", deleted_nm: "홍길동", deletedDate: "2024-01-03", fileType: "xls/xlsx"},
-        {fileName: "초안", fileSize: "1.26 MB", deleted_nm: "홍길동", deletedDate: "2024-01-03", fileType: "xls/xlsx"}
-    ];
+    let versionHistory;
+    $.ajax({
+        url: '/projects/outputs/api/delete?outputNo=' + selectedNodeId,
+        method: 'GET',
+        success: function(response) {
+            console.log(response);
+            versionHistory = response;
+            historyElement.empty();
 
-    historyElement.empty();
-
-    // 테이블 생성
-    const table = $(`
+            const table = $(`
         <table class="table table-striped version-history-table">
             <thead>
                 <tr>
                     <th style="text-align: center;">&nbsp;&nbsp;&nbsp;</th>
                     <th style="text-align: center;">파일명</th>
                     <th style="text-align: center;">삭제자</th>
-                    <th style="text-align: center;">삭제일</th>
-                    <th style="text-align: center;">크기</th>
-                    <th style="text-align: center;">형식</th>
+                    <th style="text-align: center;">삭제일자</th>
+                    <th style="text-align: center;">옹량</th>
+                    <th style="text-align: center;">파일형식</th>
                     <th style="text-align: center;">다운로드</th>
                 </tr>
             </thead>
@@ -244,28 +341,30 @@ function loadVersionHistory(historyElement) {
         </table>
     `);
 
-    const tbody = table.find('tbody');
+            const tbody = table.find('tbody');
 
-    versionHistory.forEach(version => {
-        const row = $(`
+            versionHistory.forEach(version => {
+                const row = $(`
             <tr>
                 <td style="text-align: center;">
                     <img data-dz-thumbnail src='../../../../resources/output/images/file-icon.png' style="width: 30px;"/>
                 </td>
                 <td style="text-align: left;">${version.fileName}</td>
-                <td style="text-align: center;">${version.deleted_nm}</td>
-                <td style="text-align: center;">${version.deletedDate}</td>
-                <td style="text-align: center;">${version.fileSize}</td>
-                <td style="text-align: center;">${version.fileType}</td>
+                <td style="text-align: center;">${version.deleteName}</td>
+                <td style="text-align: center;">${formatDate(version.deletedDate)}</td>
+                <td style="text-align: center;">${formatBytes(version.fileSize)}</td>
+                <td class="ellipsis" style="text-align: center;">${version.fileType}</td>
                 <td style="text-align: center;">
                     <button class="green-btn">&nbsp;&nbsp;다운로드&nbsp;&nbsp;</button>
                 </td>
             </tr>
         `);
-        tbody.append(row);
-    });
+                tbody.append(row);
+            });
 
-    historyElement.append(table);
+            historyElement.append(table);
+        },
+    });
 }
 
 function openHistoryModal() {
@@ -285,4 +384,44 @@ function initDropzone(selector, preDiv, previewTemplate) {
         previewTemplate: previewTemplate,
         previewsContainer: preDiv + ' .dropzone-preview',
     });
+}
+
+function createLabel(value) {
+    const optionText = $selectElement.find('option[value="' + value + '"]').text();
+    const $label = $('<div>', {
+        class: 'label-item',
+        text: optionText
+    });
+
+    const $removeBtn = $('<button>', {
+        class: 'remove-btn',
+        html: '&times;'
+    });
+
+    $removeBtn.on('click', function () {
+        $label.remove();
+        selectedOptions = selectedOptions.filter(function (val) {
+            return val !== value;
+        });
+    });
+
+    $label.append($removeBtn);
+    $selectBox.append($label);
+}
+
+function formatBytes(bytes, decimals = 2) {
+    if (bytes === 0) return '0 Bytes';
+
+    const k = 1024;
+    const dm = decimals < 0 ? 0 : decimals;
+    const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
+
+    const i = Math.floor(Math.log(bytes) / Math.log(k));
+
+    return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i];
+}
+
+function formatDate(dateString) {
+    const date = new Date(dateString);
+    return date.toLocaleDateString('ko-KR');  // 'ko-KR'은 한국어 날짜 형식을 의미합니다.
 }

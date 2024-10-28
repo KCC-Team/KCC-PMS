@@ -24,9 +24,12 @@
         WHERE fl_ms_no = #{fileMasterNumber}
     </select>
 
-    <delete id="deleteFileDetails" parameterType="long">
-        DELETE FROM filedetail
-        WHERE fl_no = #{fileNumber}
+    <delete id="deleteFileDetails" parameterType="map">
+        update filedetail set del_id=#{deleteName}, del_dt=sysdate where fl_ms_no = #{fileMasterNumber}
+    </delete>
+
+    <delete id="deleteFileDetail" parameterType="map">
+        update filedetail set del_id=#{deleteName}, del_dt=sysdate where fl_no = #{fileDetailNumber}
     </delete>
 
     <select id="getFileDetailsRes" parameterType="long" resultType="FileResponseDto">
@@ -37,10 +40,25 @@
             fl_size AS fileSize
         FROM filedetail
         WHERE fl_ms_no = #{fileMasterNumber, jdbcType=NUMERIC}
+        and del_id is null
     </select>
 
     <select id="deleteFileMaster" parameterType="long">
         DELETE FROM filemaster
         WHERE fl_ms_no = #{fileMasterNumber}
+    </select>
+
+    <select id="findFileMasterNumber" parameterType="long">
+        SELECT
+            fl_ms_no AS fileMasterNumber
+        FROM Output
+        WHERE opt_no = #{outputNumber}
+    </select>
+
+    <select id="findFileDetailTitle" parameterType="long">
+        SELECT
+            file_path AS filePath
+        FROM filedetail
+        WHERE fl_no = #{fileNumber}
     </select>
 </mapper>

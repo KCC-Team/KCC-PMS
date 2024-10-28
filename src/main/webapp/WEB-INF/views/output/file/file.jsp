@@ -23,10 +23,9 @@
 <script>
     Dropzone.autoDiscover = false;
 
-    function initDropzone(selector, preDiv, previewTemplate) {
-        const url = "http://localhost:8085";
+    function initDropzone(selector, preDiv, previewTemplate, path) {
         return new Dropzone(selector, {
-            url: url + "/api/risk",
+            url: path,
             method: "post",
             contentType: false,
             autoProcessQueue: false,

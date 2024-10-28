@@ -133,54 +133,59 @@
         overflow-y: auto;
     }
 </style>
-<div class="modal fade" id="insertModal" tabindex="-1" aria-labelledby="fileModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-in modal-dialog-centered">
-        <div class="modal-content modal-content-in">
-            <div class="modal-header">
-                <h5 class="modal-title" id="fileModalLabel" style="color: #070606; font-weight: bold">새 산출물 등록</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body modal-body-in">
-                <section class="info-section">
-                    <div class="d-flex justify-content-between">
-                        <section class="info-item p-2 me-3">
-                            <div class="info-item d-flex flex-column align-items-start">
-                                <div class="d-flex justify-content-start">
-                                    <div><label class="text-nowrap">제목&nbsp;&nbsp;&nbsp;<span class="es-star">*</span></label></div>
-                                    <span><textarea class="txt-area" style="width: 270px"></textarea></span>
-                                </div>
-                                <div>
-                                    <br>
-                                    <div><label>파일 위치&nbsp;&nbsp;&nbsp;<label class="es-star">*</label></label></div>
-                                    <div><span class="file-loc" style="font-size: 13px"></span>&nbsp;&nbsp;</div>
-                                    <div class="jstree-div" style="width: 325px!important; height: 400px">
-                                        <jsp:include page="../jstree-folder.jsp" />
+<form id="outputForm">
+    <div class="modal fade" id="insertModal" tabindex="-1" aria-labelledby="fileModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-in modal-dialog-centered">
+            <div class="modal-content modal-content-in">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="fileModalLabel" style="color: #070606; font-weight: bold">새 산출물 등록</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body modal-body-in">
+                    <section class="info-section">
+                        <div class="d-flex justify-content-between">
+                            <section class="info-item p-2 me-3">
+                                <div class="info-item d-flex flex-column align-items-start">
+                                    <div class="d-flex justify-content-start">
+                                        <div><label class="text-nowrap">제목&nbsp;&nbsp;&nbsp;<span class="es-star">*</span></label></div>
+                                        <span><textarea name="title" class="txt-area" style="width: 270px"></textarea></span>
+                                    </div>
+                                    <div>
+                                        <br>
+                                        <div><label>파일 위치&nbsp;&nbsp;&nbsp;<label class="es-star">*</label></label></div>
+                                        <div><span class="file-loc" style="font-size: 13px"></span>&nbsp;&nbsp;</div>
+                                        <div class="jstree-div" style="width: 325px!important; height: 400px">
+                                            <jsp:include page="../jstree-folder.jsp" />
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                        </section>
-                        <section class="file-zone w-100 p-2">
-                            <div class="file-section" style="height: 506px">
-                                <div class="info-item d-flex flex-column align-items-start">
-                                    <div class="mb-2"><label>파일 선택</label></div>
-                                    <div id="insert-file-dropzone" class="dropzone"></div>
-                                    <jsp:include page="../file/file.jsp" />
+                            </section>
+                            <section class="file-zone w-100 p-2">
+                                <div class="file-section" style="height: 506px">
+                                    <div class="info-item d-flex flex-column align-items-start">
+                                        <div class="mb-2"><label>파일 선택</label></div>
+                                        <div id="insert-file-dropzone" class="dropzone"></div>
+                                        <jsp:include page="../file/file.jsp" />
+                                    </div>
                                 </div>
-                            </div>
-                        </section>
-                    </div>
-                </section>
-            </div>
-            <div class="modal-footer d-flex justify-content-center">
-                <button type="button" class="save-button" data-bs-dismiss="modal">&nbsp;&nbsp;저장하기&nbsp;&nbsp;</button>&nbsp;&nbsp;
-                <button type="button" class="cancel-button" data-bs-dismiss="modal">&nbsp;&nbsp;닫기&nbsp;&nbsp;</button>
+                            </section>
+                        </div>
+                    </section>
+                </div>
+                <div class="modal-footer d-flex justify-content-center">
+                    <button type="button" id="output-save" class="save-button" data-bs-dismiss="modal">&nbsp;&nbsp;저장하기&nbsp;&nbsp;</button>&nbsp;&nbsp;
+                    <button type="button" class="cancel-button" data-bs-dismiss="modal">&nbsp;&nbsp;닫기&nbsp;&nbsp;</button>
+                </div>
             </div>
         </div>
     </div>
-</div>
+</form>
 
 <script>
+    let selectedNode = null;
+    let myDropzone;
     $(function () {
+        Dropzone.autoDiscover = false;
         const $selectElement = $('#task-select');
         const $selectBox = $('.select-box');
 
@@ -235,7 +240,7 @@
 
         // 노드 선택 이벤트 핸들러
         $('.jstree-folder').on("select_node.jstree", function (e, data) {
-            let selectedNode = data.node;
+            selectedNode = data.node;
             let fullPath = getFullPath(selectedNode);
             $('.file-loc').text(fullPath);
         });
@@ -258,31 +263,20 @@
     });
 
     document.addEventListener('DOMContentLoaded', function() {
-        if (Dropzone.instances.length > 0) {
-            Dropzone.instances.forEach(function(dz) {
-                dz.destroy();
-            });
-        }
-
         const dropzonePreviewNode = document.querySelector('.file-zone .dropzone-preview-list');
         dropzonePreviewNode.id = '';
         const previewTemplate = dropzonePreviewNode.parentNode.innerHTML;
         dropzonePreviewNode.parentNode.removeChild(dropzonePreviewNode);
 
-        const dropzone = initDropzone('#insert-file-dropzone', '.file-zone', previewTemplate);
+        if (!myDropzone) {
+            myDropzone = initDropzone('#insert-file-dropzone', '.file-zone', previewTemplate);
+        }
 
-        $('.save-button').on('click', function(e) {
-            e.preventDefault();
-            dropzone.processQueue();
+        $('#output-save').on('click', function() {
+            insertData(myDropzone, $('#outputForm')[0]);
         });
-
-        // 미구현 경로 임으로 임시로 처리
-        dropzone.processQueue = function() {
-            this.emit('queuecomplete');
-        };
     });
 
-    Dropzone.autoDiscover = false;
     function initDropzone(selector, preDiv, previewTemplate) {
         const url = "http://localhost:8085";
         return new Dropzone(selector, {
@@ -293,5 +287,116 @@
             previewTemplate: previewTemplate,
             previewsContainer: preDiv + ' .dropzone-preview',
         });
+    }
+
+    function insertData(dropzone, $form) {
+
+        if (!selectedNode) {
+            console.log('노드를 선택해주세요.');
+            alert('노드를 선택해주세요.');
+            return;
+        }
+
+        // 선택된 노드를 부모로 설정
+        let parentNodeId = selectedNode.id;
+
+        // 새 노드 ID 생성 (고유 ID 생성 방식 필요)
+
+        let newNode = {
+            id: findMaxId(window.treeData[0]) + 1,
+            text: $form.title.value,
+            type: 'n'
+        };
+
+        // jsTree에 새 노드 추가
+        $('.jstree-folder').jstree('create_node', parentNodeId, newNode, "last", function(new_node) {
+            $('.jstree-folder').jstree('deselect_all', true);
+            $('.jstree-folder').jstree('select_node', new_node);
+            $('.jstree-folder').jstree('open_node', parentNodeId);
+        });
+
+        let files = dropzone.files;
+
+        let formData = new FormData($form);
+        if (files.length > 0) {
+            files.forEach(file => {
+                formData.append('files', file);
+            });
+        }
+
+        let treeData = $('.jstree-folder').jstree(true).get_json('#', { flat: false });
+        let updatedTreeData = transformTreeData(treeData);
+
+        formData.append('res', new Blob([JSON.stringify(updatedTreeData)], { type: "application/json" }));
+        formData.append('res', JSON.stringify(updatedTreeData));
+        $.ajax({
+            url: '/projects/outputs/api/save',
+            type: 'post',
+            data: formData,
+            contentType: false,
+            processData: false,
+            success: function(response) {
+                if (files.length > 0) {
+                    files.forEach(file => {
+                        file.status = Dropzone.SUCCESS;
+                        dropzone.emit("complete", file);
+                    });
+                    alert('산출물이 성공적으로 저장되었습니다.');
+                }
+                window.location.href = '/projects/outputs';
+            },
+            error: function(response) {
+                console.error(response);
+            }
+        });
+    }
+
+    function transformTreeData(treeNodes, parentId = null) {
+        refineTreeIds(treeNodes);
+        return treeNodes.map(node => {
+            const nodeId = Number(node.id.split('.').pop());
+            const children = node.children ? transformTreeData(node.children, nodeId) : [];
+
+            return {
+                id: nodeId,
+                text: node.text,
+                type: node.type,
+                parentId: parentId,
+                children: children
+            };
+        });
+    }
+
+    function refineTreeIds(treeData) {
+        function traverseNodes(node) {
+            if (Array.isArray(node)) {
+                node.forEach(childNode => traverseNodes(childNode));
+            } else {
+                // 마지막 '.'의 위치를 찾고 그 뒤의 숫자를 새로운 ID로 사용
+                let lastIndex = node.id.lastIndexOf('.');
+                if (lastIndex !== -1) {
+                    node.id = node.id.substring(lastIndex + 1);
+                }
+                // 자식 노드가 있다면 재귀적으로 처리
+                if (node.children && node.children.length > 0) {
+                    traverseNodes(node.children);
+                }
+            }
+        }
+        traverseNodes(treeData);
+        return treeData;
+    }
+
+    function findMaxId(node) {
+        let maxId = parseInt(node.id);
+        if (node.children) {
+            node.children.forEach(child => {
+                const childMaxId = findMaxId(child);
+                if (childMaxId > maxId) {
+                    maxId = childMaxId;
+                }
+            });
+        }
+        return maxId;
     }
 </script>
