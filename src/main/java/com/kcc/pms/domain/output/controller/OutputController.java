@@ -114,4 +114,9 @@ public class OutputController {
         outputService.deleteOutputFiles(principalDetail.getMember().getMemberName(), files);
         return ResponseEntity.ok().body("success");
     }
+
+    @GetMapping("/search")
+    public String searchOutput() {
+        return "output/output-search";
+    }
 }
