@@ -33,12 +33,14 @@ public class DefectController {
 
     private static final String PRIORITY = "PMS006";
     private static final String STATUS = "PMS007";
+    private static final String TYPE = "PMS008";
 
     @GetMapping("/defect")
     public String showInsertForm(Model model) {
         model.addAttribute("req", new DefectDto());
         model.addAttribute("priority", commonService.getCommonCodeSelectList(PRIORITY));
         model.addAttribute("status", commonService.getCommonCodeSelectList(STATUS));
+        model.addAttribute("type", commonService.getCommonCodeSelectList(TYPE));
         return "defect/defect";
     }
 
@@ -48,10 +50,11 @@ public class DefectController {
                                  DefectDto req, DefectFileRequestDto files,
                                  @AuthenticationPrincipal PrincipalDetail principalDetail,
                                  @ModelAttribute("priority") String priority,
-                                 @ModelAttribute("status") String status) {
+                                 @ModelAttribute("status") String status,
+                                 @ModelAttribute("type") String type) {
 //        Long projectNo = (Long) session.getAttribute("prgNo");
         Long projectNo = 1L;
-        Long defectNumber = defectService.saveDefect(projectNo, principalDetail.getMember().getMemberName(), req, files, priority, status);
+        Long defectNumber = defectService.saveDefect(projectNo, principalDetail.getMember().getMemberName(), req, files, priority, status,type);
         String redirectUrl = "/projects/defects/" + defectNumber;
         return ResponseEntity.ok().body(redirectUrl);
     }
@@ -79,6 +82,7 @@ public class DefectController {
         model.addAttribute("workFilesJson", workFilesJson);
         model.addAttribute("priority", commonService.getCommonCodeSelectList(PRIORITY));
         model.addAttribute("status", commonService.getCommonCodeSelectList(STATUS));
+        model.addAttribute("type", commonService.getCommonCodeSelectList(TYPE));
 
         return "defect/defect";
     }
@@ -88,10 +92,11 @@ public class DefectController {
     public ResponseEntity<String> update(@PathVariable Long no, DefectDto req, DefectFileRequestDto files,
                                          @AuthenticationPrincipal PrincipalDetail principalDetail,
                                          @ModelAttribute("priority") String priority,
-                                         @ModelAttribute("status") String status) {
+                                         @ModelAttribute("status") String status,
+                                         @ModelAttribute("type") String type) {
         //        Long prgNo = (Long) session.getAttribute("prgNo");
         Long projectNumber = 1L;
-        defectService.updateDefect(projectNumber, principalDetail.getMember().getMemberName(), no, req, files, priority, status);
+        defectService.updateDefect(projectNumber, principalDetail.getMember().getMemberName(), no, req, files, priority, status, type);
         String redirectUrl = "/projects/defects/" + no;
         return ResponseEntity.ok().body(redirectUrl);
     }

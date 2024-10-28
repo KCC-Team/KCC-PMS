@@ -271,6 +271,7 @@ CREATE TABLE Defect (
     df_ttl VARCHAR2(100) NOT NULL,
     stat_cd CHAR(8) NOT NULL,               -- 결함상태
     pri_cd CHAR(8) NOT NULL,                -- 우선순위
+    type_cd CHAR(8) NOT NULL,               -- 결함구분
     df_cont VARCHAR2(500) NOT NULL,         -- 결함내용
     df_fd_dt DATE NOT NULL,                 -- 결함발견일
     due_dt DATE NULL,                       -- 결함 조치 희망일
@@ -460,6 +461,8 @@ ALTER TABLE Defect ADD CONSTRAINT FK_Code_To_Defect_2 FOREIGN KEY(
                                                                   stat_cd) REFERENCES CodeDetail (cd_dtl_no);
 ALTER TABLE Defect ADD CONSTRAINT FK_Code_To_Defect_3 FOREIGN KEY(
                                                                   pri_cd) REFERENCES CodeDetail (cd_dtl_no);
+ALTER TABLE Defect ADD CONSTRAINT FK_Code_To_Defect_4 FOREIGN KEY(
+                                                                type_cd) REFERENCES CodeDetail (cd_dtl_no);
 ALTER TABLE Risk ADD CONSTRAINT FK_Code_To_Risk_1 FOREIGN KEY(
                                                               type_cd) REFERENCES CodeDetail (cd_dtl_no);
 ALTER TABLE Risk ADD CONSTRAINT FK_Code_To_Risk_2 FOREIGN KEY(
@@ -1245,69 +1248,66 @@ INSERT INTO FeatureTest (feat_no, test_dtl_no) VALUES (3, 1);
 update codedetail set field_2 = 'Y' where common_cd_no = 'PMS004';
 update codedetail set field_3 = 'Y' where common_cd_no = 'PMS004' and cd_dtl_no IN ('PMS00402', 'PMS00403', 'PMS00404');
 
-INSERT INTO Defect (df_no, df_id, df_ttl, stat_cd, pri_cd, df_cont, df_fd_dt, mem_fd_no, prj_no)
-VALUES (seq_defect.nextval, 'DF-0001', '로그인 오류', 'PMS00701', 'PMS00601', '사용자가 로그인할 수 없습니다.', TO_DATE('2024-10-01', 'YYYY-MM-DD'), 1, 1);
-INSERT INTO Defect (df_no, df_id, df_ttl, stat_cd, pri_cd, df_cont, df_fd_dt, mem_fd_no, prj_no)
-VALUES (seq_defect.nextval, 'DF-0002', '데이터 저장 실패', 'PMS00702', 'PMS00602', '새로운 데이터를 저장할 때 오류 발생.', TO_DATE('2024-10-02', 'YYYY-MM-DD'), 1, 1);
-INSERT INTO Defect (df_no, df_id, df_ttl, stat_cd, pri_cd, df_cont, df_fd_dt, mem_fd_no, prj_no)
-VALUES (seq_defect.nextval, 'DF-0003', '화면 로딩 지연', 'PMS00703', 'PMS00603', '메인 화면 로딩 시간이 오래 걸립니다.', TO_DATE('2024-10-03', 'YYYY-MM-DD'), 1, 1);
-INSERT INTO Defect (df_no, df_id, df_ttl, stat_cd, pri_cd, df_cont, df_fd_dt, mem_fd_no, prj_no)
-VALUES (seq_defect.nextval, 'DF-0004', '그래프 표시 오류', 'PMS00704', 'PMS00604', '통계 그래프가 올바르게 표시되지 않습니다.', TO_DATE('2024-10-04', 'YYYY-MM-DD'), 1, 1);
-INSERT INTO Defect (df_no, df_id, df_ttl, stat_cd, pri_cd, df_cont, df_fd_dt, mem_fd_no, prj_no)
-VALUES (seq_defect.nextval, 'DF-0005', '파일 업로드 실패', 'PMS00701', 'PMS00605', '파일 업로드 시 에러 메시지 발생.', TO_DATE('2024-10-05', 'YYYY-MM-DD'), 1, 1);
-INSERT INTO Defect (df_no, df_id, df_ttl, stat_cd, pri_cd, df_cont, df_fd_dt, mem_fd_no, prj_no)
-VALUES (seq_defect.nextval, 'DF-0006', '메일 전송 오류', 'PMS00702', 'PMS00601', '인증 메일이 전송되지 않습니다.', TO_DATE('2024-10-06', 'YYYY-MM-DD'), 1, 1);
-INSERT INTO Defect (df_no, df_id, df_ttl, stat_cd, pri_cd, df_cont, df_fd_dt, mem_fd_no, prj_no)
-VALUES (seq_defect.nextval, 'DF-0007', '권한 설정 문제', 'PMS00703', 'PMS00602', '관리자 권한이 부여되지 않습니다.', TO_DATE('2024-10-07', 'YYYY-MM-DD'), 1, 1);
-INSERT INTO Defect (df_no, df_id, df_ttl, stat_cd, pri_cd, df_cont, df_fd_dt, mem_fd_no, prj_no)
-VALUES (seq_defect.nextval, 'DF-0008', '페이지 이동 오류', 'PMS00704', 'PMS00603', '특정 페이지로 이동할 수 없습니다.', TO_DATE('2024-10-08', 'YYYY-MM-DD'), 1, 1);
-INSERT INTO Defect (df_no, df_id, df_ttl, stat_cd, pri_cd, df_cont, df_fd_dt, mem_fd_no, prj_no)
-VALUES (seq_defect.nextval, 'DF-0009', '알림 기능 미작동', 'PMS00701', 'PMS00604', '새로운 알림이 표시되지 않습니다.', TO_DATE('2024-10-09', 'YYYY-MM-DD'), 1, 1);
-INSERT INTO Defect (df_no, df_id, df_ttl, stat_cd, pri_cd, df_cont, df_fd_dt, mem_fd_no, prj_no)
-VALUES (seq_defect.nextval, 'DF-0010', '검색 기능 오류', 'PMS00702', 'PMS00605', '검색 결과가 표시되지 않습니다.', TO_DATE('2024-10-10', 'YYYY-MM-DD'), 1, 1);
-INSERT INTO Defect (df_no, df_id, df_ttl, stat_cd, pri_cd, df_cont, df_fd_dt, mem_fd_no, prj_no)
-VALUES (seq_defect.nextval, 'DF-0011', '세션 만료 문제', 'PMS00703', 'PMS00601', '세션이 예상보다 빨리 만료됩니다.', TO_DATE('2024-10-11', 'YYYY-MM-DD'), 1, 1);
-INSERT INTO Defect (df_no, df_id, df_ttl, stat_cd, pri_cd, df_cont, df_fd_dt, mem_fd_no, prj_no)
-VALUES (seq_defect.nextval, 'DF-0012', 'UI 깨짐 현상', 'PMS00704', 'PMS00602', '브라우저 호환성 문제로 UI가 깨집니다.', TO_DATE('2024-10-12', 'YYYY-MM-DD'), 1, 1);
-INSERT INTO Defect (df_no, df_id, df_ttl, stat_cd, pri_cd, df_cont, df_fd_dt, mem_fd_no, prj_no)
-VALUES (seq_defect.nextval, 'DF-0013', '다국어 지원 오류', 'PMS00701', 'PMS00603', '일부 텍스트가 번역되지 않습니다.', TO_DATE('2024-10-13', 'YYYY-MM-DD'), 1, 1);
-INSERT INTO Defect (df_no, df_id, df_ttl, stat_cd, pri_cd, df_cont, df_fd_dt, mem_fd_no, prj_no)
-VALUES (seq_defect.nextval, 'DF-0014', '데이터 동기화 문제', 'PMS00702', 'PMS00604', '데이터 동기화가 제대로 이루어지지 않습니다.', TO_DATE('2024-10-14', 'YYYY-MM-DD'), 1, 1);
-INSERT INTO Defect (df_no, df_id, df_ttl, stat_cd, pri_cd, df_cont, df_fd_dt, mem_fd_no, prj_no)
-VALUES (seq_defect.nextval, 'DF-0015', '접속 불가 현상', 'PMS00703', 'PMS00605', '일부 사용자가 접속할 수 없습니다.', TO_DATE('2024-10-15', 'YYYY-MM-DD'), 1, 1);
-INSERT INTO Defect (df_no, df_id, df_ttl, stat_cd, pri_cd, df_cont, df_fd_dt, mem_fd_no, prj_no)
-VALUES (seq_defect.nextval, 'DF-0016', '캐시 문제', 'PMS00704', 'PMS00601', '업데이트 후에도 이전 내용이 표시됩니다.', TO_DATE('2024-10-16', 'YYYY-MM-DD'), 1, 1);
-INSERT INTO Defect (df_no, df_id, df_ttl, stat_cd, pri_cd, df_cont, df_fd_dt, mem_fd_no, prj_no)
-VALUES (seq_defect.nextval, 'DF-0017', '로그아웃 불가', 'PMS00701', 'PMS00602', '사용자가 로그아웃할 수 없습니다.', TO_DATE('2024-10-17', 'YYYY-MM-DD'), 1, 1);
-INSERT INTO Defect (df_no, df_id, df_ttl, stat_cd, pri_cd, df_cont, df_fd_dt, mem_fd_no, prj_no)
-VALUES (seq_defect.nextval, 'DF-0018', '이미지 로딩 실패', 'PMS00702', 'PMS00603', '이미지가 로딩되지 않습니다.', TO_DATE('2024-10-18', 'YYYY-MM-DD'), 1, 1);
-INSERT INTO Defect (df_no, df_id, df_ttl, stat_cd, pri_cd, df_cont, df_fd_dt, mem_fd_no, prj_no)
-VALUES (seq_defect.nextval, 'DF-0019', 'API 호출 오류', 'PMS00703', 'PMS00604', '외부 API 호출 시 오류 발생.', TO_DATE('2024-10-19', 'YYYY-MM-DD'), 1, 1);
-INSERT INTO Defect (df_no, df_id, df_ttl, stat_cd, pri_cd, df_cont, df_fd_dt, mem_fd_no, prj_no)
-VALUES (seq_defect.nextval, 'DF-0020', '보안 취약점 발견', 'PMS00704', 'PMS00605', 'SQL 인젝션 취약점 발견.', TO_DATE('2024-10-20', 'YYYY-MM-DD'), 1, 1);
-INSERT INTO Defect (df_no, df_id, df_ttl, stat_cd, pri_cd, df_cont, df_fd_dt, mem_fd_no, prj_no)
-VALUES (seq_defect.nextval, 'DF-0021', '데이터 삭제 불가', 'PMS00701', 'PMS00601', '데이터를 삭제할 수 없습니다.', TO_DATE('2024-10-21', 'YYYY-MM-DD'), 1, 1);
-INSERT INTO Defect (df_no, df_id, df_ttl, stat_cd, pri_cd, df_cont, df_fd_dt, mem_fd_no, prj_no)
-VALUES (seq_defect.nextval, 'DF-0022', '푸시 알림 오류', 'PMS00702', 'PMS00602', '푸시 알림이 수신되지 않습니다.', TO_DATE('2024-10-22', 'YYYY-MM-DD'), 1, 1);
-INSERT INTO Defect (df_no, df_id, df_ttl, stat_cd, pri_cd, df_cont, df_fd_dt, mem_fd_no, prj_no)
-VALUES (seq_defect.nextval, 'DF-0023', '프로필 업데이트 문제', 'PMS00703', 'PMS00603', '프로필 정보 수정 시 오류 발생.', TO_DATE('2024-10-23', 'YYYY-MM-DD'), 1, 1);
-INSERT INTO Defect (df_no, df_id, df_ttl, stat_cd, pri_cd, df_cont, df_fd_dt, mem_fd_no, prj_no)
-VALUES (seq_defect.nextval, 'DF-0024', '로그 파일 생성 안됨', 'PMS00704', 'PMS00604', '서버 로그 파일이 생성되지 않습니다.', TO_DATE('2024-10-24', 'YYYY-MM-DD'), 1, 1);
-INSERT INTO Defect (df_no, df_id, df_ttl, stat_cd, pri_cd, df_cont, df_fd_dt, mem_fd_no, prj_no)
-VALUES (seq_defect.nextval, 'DF-0025', '시간대 설정 오류', 'PMS00701', 'PMS00605', '시간대 변경이 적용되지 않습니다.', TO_DATE('2024-10-25', 'YYYY-MM-DD'), 1, 1);
-INSERT INTO Defect (df_no, df_id, df_ttl, stat_cd, pri_cd, df_cont, df_fd_dt, mem_fd_no, prj_no)
-VALUES (seq_defect.nextval, 'DF-0026', '자동 저장 기능 문제', 'PMS00702', 'PMS00601', '자동 저장이 작동하지 않습니다.', TO_DATE('2024-10-26', 'YYYY-MM-DD'), 1, 1);
-INSERT INTO Defect (df_no, df_id, df_ttl, stat_cd, pri_cd, df_cont, df_fd_dt, mem_fd_no, prj_no)
-VALUES (seq_defect.nextval, 'DF-0027', '메모리 누수 현상', 'PMS00703', 'PMS00602', '장시간 사용 시 메모리 사용량 증가.', TO_DATE('2024-10-27', 'YYYY-MM-DD'), 1, 1);
-INSERT INTO Defect (df_no, df_id, df_ttl, stat_cd, pri_cd, df_cont, df_fd_dt, mem_fd_no, prj_no)
-VALUES (seq_defect.nextval, 'DF-0028', '페이지 권한 오류', 'PMS00704', 'PMS00603', '비인가 사용자가 페이지에 접근 가능합니다.', TO_DATE('2024-10-28', 'YYYY-MM-DD'), 1, 1);
-INSERT INTO Defect (df_no, df_id, df_ttl, stat_cd, pri_cd, df_cont, df_fd_dt, mem_fd_no, prj_no)
-VALUES (seq_defect.nextval, 'DF-0029', '텍스트 입력 문제', 'PMS00701', 'PMS00604', '특정 필드에 입력이 불가능합니다.', TO_DATE('2024-10-29', 'YYYY-MM-DD'), 1, 1);
-INSERT INTO Defect (df_no, df_id, df_ttl, stat_cd, pri_cd, df_cont, df_fd_dt, mem_fd_no, prj_no)
-VALUES (seq_defect.nextval, 'DF-0030', '비밀번호 변경 오류', 'PMS00702', 'PMS00605', '비밀번호 변경 시 오류 발생.', TO_DATE('2024-10-30', 'YYYY-MM-DD'), 1, 1);
-
-
-
+INSERT INTO Defect (df_no, df_id, df_ttl, stat_cd, pri_cd, df_cont, df_fd_dt, mem_fd_no, prj_no, type_cd)
+VALUES (seq_defect.nextval, 'DF-0001', '로그인 오류', 'PMS00701', 'PMS00601', '사용자가 로그인할 수 없습니다.', TO_DATE('2024-10-01', 'YYYY-MM-DD'), 1, 1, 'PMS00801');
+INSERT INTO Defect (df_no, df_id, df_ttl, stat_cd, pri_cd, df_cont, df_fd_dt, mem_fd_no, prj_no, type_cd)
+VALUES (seq_defect.nextval, 'DF-0002', '데이터 저장 실패', 'PMS00702', 'PMS00602', '새로운 데이터를 저장할 때 오류 발생.', TO_DATE('2024-10-02', 'YYYY-MM-DD'), 1, 1, 'PMS00802');
+INSERT INTO Defect (df_no, df_id, df_ttl, stat_cd, pri_cd, df_cont, df_fd_dt, mem_fd_no, prj_no, type_cd)
+VALUES (seq_defect.nextval, 'DF-0003', '화면 로딩 지연', 'PMS00703', 'PMS00603', '메인 화면 로딩 시간이 오래 걸립니다.', TO_DATE('2024-10-03', 'YYYY-MM-DD'), 1, 1, 'PMS00803');
+INSERT INTO Defect (df_no, df_id, df_ttl, stat_cd, pri_cd, df_cont, df_fd_dt, mem_fd_no, prj_no, type_cd)
+VALUES (seq_defect.nextval, 'DF-0004', '그래프 표시 오류', 'PMS00704', 'PMS00604', '통계 그래프가 올바르게 표시되지 않습니다.', TO_DATE('2024-10-04', 'YYYY-MM-DD'), 1, 1, 'PMS00801');
+INSERT INTO Defect (df_no, df_id, df_ttl, stat_cd, pri_cd, df_cont, df_fd_dt, mem_fd_no, prj_no, type_cd)
+VALUES (seq_defect.nextval, 'DF-0005', '파일 업로드 실패', 'PMS00701', 'PMS00605', '파일 업로드 시 에러 메시지 발생.', TO_DATE('2024-10-05', 'YYYY-MM-DD'), 1, 1, 'PMS00802');
+INSERT INTO Defect (df_no, df_id, df_ttl, stat_cd, pri_cd, df_cont, df_fd_dt, mem_fd_no, prj_no, type_cd)
+VALUES (seq_defect.nextval, 'DF-0006', '메일 전송 오류', 'PMS00702', 'PMS00601', '인증 메일이 전송되지 않습니다.', TO_DATE('2024-10-06', 'YYYY-MM-DD'), 1, 1, 'PMS00803');
+INSERT INTO Defect (df_no, df_id, df_ttl, stat_cd, pri_cd, df_cont, df_fd_dt, mem_fd_no, prj_no, type_cd)
+VALUES (seq_defect.nextval, 'DF-0007', '권한 설정 문제', 'PMS00703', 'PMS00602', '관리자 권한이 부여되지 않습니다.', TO_DATE('2024-10-07', 'YYYY-MM-DD'), 1, 1, 'PMS00801');
+INSERT INTO Defect (df_no, df_id, df_ttl, stat_cd, pri_cd, df_cont, df_fd_dt, mem_fd_no, prj_no, type_cd)
+VALUES (seq_defect.nextval, 'DF-0008', '페이지 이동 오류', 'PMS00704', 'PMS00603', '특정 페이지로 이동할 수 없습니다.', TO_DATE('2024-10-08', 'YYYY-MM-DD'), 1, 1, 'PMS00802');
+INSERT INTO Defect (df_no, df_id, df_ttl, stat_cd, pri_cd, df_cont, df_fd_dt, mem_fd_no, prj_no, type_cd)
+VALUES (seq_defect.nextval, 'DF-0009', '알림 기능 미작동', 'PMS00701', 'PMS00604', '새로운 알림이 표시되지 않습니다.', TO_DATE('2024-10-09', 'YYYY-MM-DD'), 1, 1, 'PMS00803');
+INSERT INTO Defect (df_no, df_id, df_ttl, stat_cd, pri_cd, df_cont, df_fd_dt, mem_fd_no, prj_no, type_cd)
+VALUES (seq_defect.nextval, 'DF-0010', '검색 기능 오류', 'PMS00702', 'PMS00605', '검색 결과가 표시되지 않습니다.', TO_DATE('2024-10-10', 'YYYY-MM-DD'), 1, 1, 'PMS00801');
+INSERT INTO Defect (df_no, df_id, df_ttl, stat_cd, pri_cd, df_cont, df_fd_dt, mem_fd_no, prj_no, type_cd)
+VALUES (seq_defect.nextval, 'DF-0011', '세션 만료 문제', 'PMS00703', 'PMS00601', '세션이 예상보다 빨리 만료됩니다.', TO_DATE('2024-10-11', 'YYYY-MM-DD'), 1, 1, 'PMS00802');
+INSERT INTO Defect (df_no, df_id, df_ttl, stat_cd, pri_cd, df_cont, df_fd_dt, mem_fd_no, prj_no, type_cd)
+VALUES (seq_defect.nextval, 'DF-0012', 'UI 깨짐 현상', 'PMS00704', 'PMS00602', '브라우저 호환성 문제로 UI가 깨집니다.', TO_DATE('2024-10-12', 'YYYY-MM-DD'), 1, 1, 'PMS00803');
+INSERT INTO Defect (df_no, df_id, df_ttl, stat_cd, pri_cd, df_cont, df_fd_dt, mem_fd_no, prj_no, type_cd)
+VALUES (seq_defect.nextval, 'DF-0013', '다국어 지원 오류', 'PMS00701', 'PMS00603', '일부 텍스트가 번역되지 않습니다.', TO_DATE('2024-10-13', 'YYYY-MM-DD'), 1, 1, 'PMS00801');
+INSERT INTO Defect (df_no, df_id, df_ttl, stat_cd, pri_cd, df_cont, df_fd_dt, mem_fd_no, prj_no, type_cd)
+VALUES (seq_defect.nextval, 'DF-0014', '데이터 동기화 문제', 'PMS00702', 'PMS00604', '데이터 동기화가 제대로 이루어지지 않습니다.', TO_DATE('2024-10-14', 'YYYY-MM-DD'), 1, 1, 'PMS00802');
+INSERT INTO Defect (df_no, df_id, df_ttl, stat_cd, pri_cd, df_cont, df_fd_dt, mem_fd_no, prj_no, type_cd)
+VALUES (seq_defect.nextval, 'DF-0015', '접속 불가 현상', 'PMS00703', 'PMS00605', '일부 사용자가 접속할 수 없습니다.', TO_DATE('2024-10-15', 'YYYY-MM-DD'), 1, 1, 'PMS00803');
+INSERT INTO Defect (df_no, df_id, df_ttl, stat_cd, pri_cd, df_cont, df_fd_dt, mem_fd_no, prj_no, type_cd)
+VALUES (seq_defect.nextval, 'DF-0016', '캐시 문제', 'PMS00704', 'PMS00601', '업데이트 후에도 이전 내용이 표시됩니다.', TO_DATE('2024-10-16', 'YYYY-MM-DD'), 1, 1, 'PMS00801');
+INSERT INTO Defect (df_no, df_id, df_ttl, stat_cd, pri_cd, df_cont, df_fd_dt, mem_fd_no, prj_no, type_cd)
+VALUES (seq_defect.nextval, 'DF-0017', '로그아웃 불가', 'PMS00701', 'PMS00602', '사용자가 로그아웃할 수 없습니다.', TO_DATE('2024-10-17', 'YYYY-MM-DD'), 1, 1, 'PMS00802');
+INSERT INTO Defect (df_no, df_id, df_ttl, stat_cd, pri_cd, df_cont, df_fd_dt, mem_fd_no, prj_no, type_cd)
+VALUES (seq_defect.nextval, 'DF-0018', '이미지 로딩 실패', 'PMS00702', 'PMS00603', '이미지가 로딩되지 않습니다.', TO_DATE('2024-10-18', 'YYYY-MM-DD'), 1, 1, 'PMS00803');
+INSERT INTO Defect (df_no, df_id, df_ttl, stat_cd, pri_cd, df_cont, df_fd_dt, mem_fd_no, prj_no, type_cd)
+VALUES (seq_defect.nextval, 'DF-0019', 'API 호출 오류', 'PMS00703', 'PMS00604', '외부 API 호출 시 오류 발생.', TO_DATE('2024-10-19', 'YYYY-MM-DD'), 1, 1, 'PMS00801');
+INSERT INTO Defect (df_no, df_id, df_ttl, stat_cd, pri_cd, df_cont, df_fd_dt, mem_fd_no, prj_no, type_cd)
+VALUES (seq_defect.nextval, 'DF-0020', '보안 취약점 발견', 'PMS00704', 'PMS00605', 'SQL 인젝션 취약점 발견.', TO_DATE('2024-10-20', 'YYYY-MM-DD'), 1, 1, 'PMS00802');
+INSERT INTO Defect (df_no, df_id, df_ttl, stat_cd, pri_cd, df_cont, df_fd_dt, mem_fd_no, prj_no, type_cd)
+VALUES (seq_defect.nextval, 'DF-0021', '데이터 삭제 불가', 'PMS00701', 'PMS00601', '데이터를 삭제할 수 없습니다.', TO_DATE('2024-10-21', 'YYYY-MM-DD'), 1, 1, 'PMS00803');
+INSERT INTO Defect (df_no, df_id, df_ttl, stat_cd, pri_cd, df_cont, df_fd_dt, mem_fd_no, prj_no, type_cd)
+VALUES (seq_defect.nextval, 'DF-0022', '푸시 알림 오류', 'PMS00702', 'PMS00602', '푸시 알림이 수신되지 않습니다.', TO_DATE('2024-10-22', 'YYYY-MM-DD'), 1, 1, 'PMS00801');
+INSERT INTO Defect (df_no, df_id, df_ttl, stat_cd, pri_cd, df_cont, df_fd_dt, mem_fd_no, prj_no, type_cd)
+VALUES (seq_defect.nextval, 'DF-0023', '프로필 업데이트 문제', 'PMS00703', 'PMS00603', '프로필 정보 수정 시 오류 발생.', TO_DATE('2024-10-23', 'YYYY-MM-DD'), 1, 1, 'PMS00802');
+INSERT INTO Defect (df_no, df_id, df_ttl, stat_cd, pri_cd, df_cont, df_fd_dt, mem_fd_no, prj_no, type_cd)
+VALUES (seq_defect.nextval, 'DF-0024', '로그 파일 생성 안됨', 'PMS00704', 'PMS00604', '서버 로그 파일이 생성되지 않습니다.', TO_DATE('2024-10-24', 'YYYY-MM-DD'), 1, 1, 'PMS00803');
+INSERT INTO Defect (df_no, df_id, df_ttl, stat_cd, pri_cd, df_cont, df_fd_dt, mem_fd_no, prj_no, type_cd)
+VALUES (seq_defect.nextval, 'DF-0025', '시간대 설정 오류', 'PMS00701', 'PMS00605', '시간대 변경이 적용되지 않습니다.', TO_DATE('2024-10-25', 'YYYY-MM-DD'), 1, 1, 'PMS00801');
+INSERT INTO Defect (df_no, df_id, df_ttl, stat_cd, pri_cd, df_cont, df_fd_dt, mem_fd_no, prj_no, type_cd)
+VALUES (seq_defect.nextval, 'DF-0026', '자동 저장 기능 문제', 'PMS00702', 'PMS00601', '자동 저장이 작동하지 않습니다.', TO_DATE('2024-10-26', 'YYYY-MM-DD'), 1, 1, 'PMS00802');
+INSERT INTO Defect (df_no, df_id, df_ttl, stat_cd, pri_cd, df_cont, df_fd_dt, mem_fd_no, prj_no, type_cd)
+VALUES (seq_defect.nextval, 'DF-0027', '메모리 누수 현상', 'PMS00703', 'PMS00602', '장시간 사용 시 메모리 사용량 증가.', TO_DATE('2024-10-27', 'YYYY-MM-DD'), 1, 1, 'PMS00803');
+INSERT INTO Defect (df_no, df_id, df_ttl, stat_cd, pri_cd, df_cont, df_fd_dt, mem_fd_no, prj_no, type_cd)
+VALUES (seq_defect.nextval, 'DF-0028', '페이지 권한 오류', 'PMS00704', 'PMS00603', '비인가 사용자가 페이지에 접근 가능합니다.', TO_DATE('2024-10-28', 'YYYY-MM-DD'), 1, 1, 'PMS00801');
+INSERT INTO Defect (df_no, df_id, df_ttl, stat_cd, pri_cd, df_cont, df_fd_dt, mem_fd_no, prj_no, type_cd)
+VALUES (seq_defect.nextval, 'DF-0029', '텍스트 입력 문제', 'PMS00701', 'PMS00604', '특정 필드에 입력이 불가능합니다.', TO_DATE('2024-10-29', 'YYYY-MM-DD'), 1, 1, 'PMS00802');
+INSERT INTO Defect (df_no, df_id, df_ttl, stat_cd, pri_cd, df_cont, df_fd_dt, mem_fd_no, prj_no, type_cd)
+VALUES (seq_defect.nextval, 'DF-0030', '비밀번호 변경 오류', 'PMS00702', 'PMS00605', '비밀번호 변경 시 오류 발생.', TO_DATE('2024-10-30', 'YYYY-MM-DD'), 1, 1, 'PMS00803');
 
 INSERT INTO FEATURE (FEAT_NO, FEAT_ID, FEAT_TITLE, FEAT_CONT, PRE_ST_DT, PRE_END_DT, ST_DT, END_DT, STAT_CD, PRI_CD, PRG, DIFF_CD, CLASS_CD, USE_YN, SYS_NO, MEM_NO, TM_NO, PRJ_NO)
 VALUES (seq_feature.nextval, 'F001', '기능1', '내용1', TO_DATE('21/01/01', 'YY/MM/DD'), TO_DATE('21/01/01', 'YY/MM/DD'), TO_DATE('21/01/01', 'YY/MM/DD'), TO_DATE('21/01/01', 'YY/MM/DD'), 'PMS00901', 'PMS00603', 100, 'PMS01103', 'PMS01001', 'Y', 1, 1, 1, 1);

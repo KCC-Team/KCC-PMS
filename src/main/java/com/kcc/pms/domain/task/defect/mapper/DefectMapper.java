@@ -14,9 +14,9 @@ import java.util.Optional;
 public interface DefectMapper {
     int saveDefect(Long projectNumber, DefectDto defect,
                    @Param(value = "fileMasterFoundNumber") Long fileMasterFoundNumber, @Param(value = "fileMasterWorkNumber") Long fileMasterWorkNumber,
-                   String priority, String status);
+                   String priority, String status, String type);
     int deleteDefect(Long no);
-    int updateDefect(Long no, DefectDto defect, String priority, String status);
+    int updateDefect(Long no, DefectDto defect, String priority, String status, String type);
     Optional<DefectDto> getDefect(Long no);
     Optional<FileMasterNumbers> getFileMasterNumbers(Long no);
     List<DefectResponseDto> getDefectList(Long projectNumber, Long workNo, String status, String search, int page, int limit);

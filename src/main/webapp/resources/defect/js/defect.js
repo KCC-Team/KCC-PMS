@@ -23,7 +23,7 @@ document.addEventListener('DOMContentLoaded', function() {
     `;
   
     const dropzone1 = initDropzone('#df-insert-file-dropzone_1', '.file-zone_1', previewTemplate, "/projects/defects/defect");
-    const dropzone2 = initDropzone('#df-insert-file-dropzone_2', '.file-zone_2', previewTemplate);
+    const dropzone2 = initDropzone('#df-insert-file-dropzone_2', '.file-zone_2', previewTemplate, "/projects/defects/defect");
 
     discoverFiles.forEach(function(file) {
         let mockFile = {
@@ -31,10 +31,11 @@ document.addEventListener('DOMContentLoaded', function() {
             name: file.fileName,
             size: file.fileSize,
             url: file.filePath,
-            isExisting: true // 기존 파일임을 나타냅니다.
+            isExisting: true
         };
 
         dropzone1.emit("addedfile", mockFile);
+        console.log(file);
         dropzone1.emit("thumbnail", mockFile, file.filePath);
         dropzone1.emit("complete", mockFile);
 
@@ -51,7 +52,39 @@ document.addEventListener('DOMContentLoaded', function() {
         dropzone1.files.push(mockFile);
     });
 
+    workFiles.forEach(function(file) {
+        let mockFile = {
+            id: file.fileNumber,
+            name: file.fileName,
+            size: file.fileSize,
+            url: file.filePath,
+            isExisting: true
+        };
+
+        dropzone2.emit("addedfile", mockFile);
+        dropzone2.emit("thumbnail", mockFile, file.filePath);
+        dropzone2.emit("complete", mockFile);
+
+        let previewElement = mockFile.previewElement;
+        if (previewElement) {
+            previewElement.classList.add("existing-file");
+
+            let removeButton = previewElement.querySelector("[data-dz-remove]");
+            let imageLink = previewElement.querySelector(".dz-image-link");
+            if (imageLink) {
+                imageLink.href = file.filePath;
+            }
+        }
+        dropzone2.files.push(mockFile);
+    });
+
     dropzone1.on("removedfile", function(file) {
+        if (file.isExisting) {
+            deletedFiles.push(file.id);
+        }
+    });
+
+    dropzone2.on("removedfile", function(file) {
         if (file.isExisting) {
             deletedFiles.push(file.id);
         }
@@ -108,18 +141,16 @@ $(function () {
 
         let systemNo = $('#systemNo').val();
         if (systemNo) {
-            // 메뉴 데이터에서 해당 systemNo를 가진 메뉴 항목을 찾음
-            let selectedPath = findMenuPathBySystemNo(menuData, systemNo);
-            if (selectedPath) {
-                // 선택된 시스템 경로를 표시
-                $('#system-select span:first-child').text(selectedPath);
-            }
+            setSystemPath(systemNo);
         }
     });
 
     $('#system-select').click(function() {
         $('#system-menu').slideToggle();
     });
+
+    let val = $('#systemNo').val();
+    setSystemPath(val);
 });
 
 function getDefectNumberFromPath() {
@@ -227,7 +258,7 @@ function updateData(dropzone_dis, dropzone_work, $form, defectNumber) {
 
 function fetchMenuData() {
     return $.ajax({
-        url: '/systems',
+        url: '/systems?prjNo=' + prjNo,
         method: 'GET',
         dataType: 'json',
         success: function(response) {
@@ -239,40 +270,44 @@ function fetchMenuData() {
     });
 }
 
+
 function createMenu(menuData) {
     createMenuHTML(menuData, $('#system-menu'), "");
 }
 
 function createMenuHTML(menuData, parentElement, path) {
     menuData.forEach(function(menuItem) {
-        const listItem = $('<li class="menu-item"></li>');
-        const itemLabel = $('<span></span>').text(menuItem.systemTitle);
-        listItem.append(itemLabel);
-
-        const subMenu = $('<ul class="system-submenu"></ul>');
-        const currentPath = path ? path + " > " + menuItem.systemTitle : menuItem.systemTitle;
+        let currentPath = path ? path + " > " + menuItem.systemTitle : menuItem.systemTitle;
+        let listItem = $('<li>', {
+            'class': 'menu-item',
+            'data-system-no': menuItem.systemNo,
+            'data-parent-path': currentPath,
+            'text': menuItem.systemTitle
+        });
 
         // 하위 메뉴가 있는 경우
         if (menuItem.subSystems && menuItem.subSystems.length > 0) {
+            let subMenu = $('<ul>', {'class': 'system-submenu'});
             createMenuHTML(menuItem.subSystems, subMenu, currentPath);
             listItem.append(subMenu);
-
-            // 하위 메뉴 토글 기능 추가
-            itemLabel.click(function(event) {
-                event.stopPropagation();
-                subMenu.slideToggle();
-            });
-        } else {
-            // 하위 메뉴가 없는 경우 클릭 시 시스템 선택
-            itemLabel.click(function(event) {
-                event.stopPropagation();
-                $('#system-select span:first-child').text(currentPath);  // 사용자가 선택한 경로 표시
-                $('#systemNo').val(menuItem.systemNo);  // systemNo를 숨겨진 필드에 저장
-                $('#system-menu').slideUp();  // 메뉴 숨기기
-            });
         }
+
+        listItem.click(function(event) {
+            event.stopPropagation();
+            $('#system-select span:first-child').text(currentPath); // 선택된 경로 표시
+            $('#systemNo').val(menuItem.systemNo); // 시스템 번호를 숨겨진 필드에 저장
+            $('.mymenu').slideUp(); // 메뉴 숨기기
+        });
 
         parentElement.append(listItem);
     });
 }
 
+function setSystemPath(systemNo) {
+    let selectedItem = $('[data-system-no="' + systemNo + '"]');
+    console.log(selectedItem);
+    if (selectedItem.length) {
+        let path = selectedItem.data('parent-path') || selectedItem.text();
+        $('#system-select span:first-child').text(path);
+    }
+}

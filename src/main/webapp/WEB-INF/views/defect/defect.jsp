@@ -45,6 +45,18 @@
 <c:set var="scheduleDate" value="${req.scheduleWorkDate}" />
 <c:set var="workDate" value="${req.workDate}" />
 
+<%
+    Object prjNo = session.getAttribute("prjNo");
+    Long prjNoInt = null;
+    if (prjNo instanceof Long) {
+        prjNoInt = (Long) prjNo;
+    }
+%>
+
+<script type="text/javascript">
+    let prjNo = '<%= prjNoInt != null ? prjNoInt.toString() : "" %>';
+</script>
+
     <div class="popup-header">
         <span class="popup-title">결함 정보</span>
     </div>
@@ -52,7 +64,7 @@
         <form id="defectForm">
             <input type="hidden" name="defectNumber" value="${req.defectNumber}" >
             <div class="d-flex justify-content-left">
-                <div class="me-4" style="width: 550px !important;">
+                <div class="me-3" style="width: 550px !important;">
                     <table class="defect-table w-100">
                         <tr>
                             <td class="td-title">결함 명&nbsp;&nbsp;&nbsp;<span class="es-star">*</span></td>
@@ -62,7 +74,7 @@
                             <td class="td-title">시스템-업무 분류</td>
                             <td>
                                 <input type="hidden" id="systemNo" name="systemNumber" value="${req.systemNumber}" >
-                                <div class="system-select-wrapper">
+                                <div class="system-select-wrapper w-100">
                                     <span class="system-select-button" id="system-select">
                                         <span>시스템/업무 선택</span>
                                     </span>
@@ -76,6 +88,26 @@
                                 <input type="text" name="defectId" value="${req.defectId}" required >
                             </td>
                             <td class="td-title">테스트 ID</td>
+                            <td>
+                                <a href="#">${req.testId}</a>
+                                <input type="hidden" name="testNumber" value="${req.testNumber}" >
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="td-title">결함 구분&nbsp;&nbsp;&nbsp;<span class="es-star">*</span></td>
+                            <td>
+                                <select name="type" class="type" required >
+                                    <option value="" selected disabled>결함 분류 선택</option>
+                                    <c:forEach var="item" items="${type}">
+                                        <option value="${item.codeDetailNo}"
+                                                <c:if test="${item.codeDetailNo eq req.typeSelect}">
+                                                    selected="selected"
+                                                </c:if>
+                                        >${item.codeDetailName}</option>
+                                    </c:forEach>
+                                </select>
+                            </td>
+                            <td class="td-title">기능 ID</td>
                             <td>
                                 <a href="#">${req.testId}</a>
                                 <input type="hidden" name="testNumber" value="${req.testNumber}" >
@@ -130,7 +162,7 @@
                         <tr>
                             <td class="td-title">조치희망일</td>
                             <td colspan="3">
-                                <div class="d-flex justify-content-left" style="width: 136px">
+                                <div class="d-flex justify-content-left" style="width: 149px">
                                     <input type="text" name="scheduleWorkDate" value="${fn:substring(scheduleDate,0,10) }" class="defect-date" placeholder="yyyy-mm-dd" >
                                 </div>
                             </td>

@@ -11,7 +11,7 @@ $(function () {
                     return '<input type=hidden name=defect_id value=${item.defectNumber} />' +
                         '<a href="/projects/defects/' + encodeURIComponent(item.defectNumber) + '" class="defect-id" style="color: #2383f8; font-size: 13px; font-weight: bold; text-decoration: none;">' + item.defectId + '</a>';
                 }},
-            {key: "defectTitle", label: "결함명", width: 400, align: "center" , formatter: function (){
+            {key: "defectTitle", label: "결함명", width: 400, align: "left" , formatter: function (){
                     return '<span style="font-size: 12px;">' + this.value + '</span>';
                 }},
             {key: "priority", label: "우선순위", width: 100, align: "center", formatter: function (){
@@ -68,12 +68,12 @@ $(function () {
 
     $(document).on('click', '.defect-id', function(e) {
         e.preventDefault();
-       let popup = window.open($(this).attr('href'), 'popup', 'width=1100, height=740');
+       let popup = window.open($(this).attr('href'), 'popup', 'width=1150, height=790');
     });
 
     $(document).on('click', '.add-defect', function(e) {
         e.preventDefault();
-        let popup = window.open('/projects/defects/defect', 'popup', 'width=1100, height=740');
+        let popup = window.open('/projects/defects/defect', 'popup', 'width=1150, height=790');
     });
 
     fetchMenuData().then(function(menuData) {
@@ -100,7 +100,6 @@ function fetchMenuData() {
         method: 'GET',
         dataType: 'json',
         success: function(response) {
-            console.log("systems: " + response);
             return response;
         },
         error: function(error) {
