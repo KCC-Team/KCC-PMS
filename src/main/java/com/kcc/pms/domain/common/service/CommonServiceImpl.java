@@ -16,8 +16,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
 @Service
 @Slf4j
@@ -37,7 +39,7 @@ public class CommonServiceImpl implements CommonService {
 
     @Transactional
     @Override
-    public Long fileUpload(List<MultipartFile> files,
+    public Long fileUpload(List<MultipartFile> files, String memberName,
                            Long projectNumber, String fileCode) {
         List<Map<String, Object>> fileList = new ArrayList<>();
         FileMasterVO fileMasterVO = new FileMasterVO(fileCode);
@@ -47,13 +49,28 @@ public class CommonServiceImpl implements CommonService {
         }
 
         try {
-            generateFiles(projectNumber, files, fileMasterVO.getFileMasterNumber());
+            generateFiles(projectNumber, memberName, files, fileMasterVO.getFileMasterNumber());
         } catch (Exception e) {
             log.error("파일 업로드 중 오류가 발생했습니다.", e);
             throw new RuntimeException("파일 업로드 중 오류가 발생했습니다.");
         }
 
         return fileMasterVO.getFileMasterNumber();
+    }
+
+    @Transactional
+    @Override
+    public Long fileUploadToOutput(List<MultipartFile> files, String memberName, Long projectNumber, Long outputNumber) {
+        Long fileMasterNumber = fileMapper.findFileMasterNumber(outputNumber);
+
+        try {
+            generateFiles(projectNumber, memberName, files, fileMasterNumber);
+        } catch (Exception e) {
+            log.error("파일 업로드 중 오류가 발생했습니다.", e);
+            throw new RuntimeException("파일 업로드 중 오류가 발생했습니다.");
+        }
+
+        return fileMasterNumber;
     }
 
     @Override
@@ -70,8 +87,8 @@ public class CommonServiceImpl implements CommonService {
 
     @Transactional
     @Override
-    public void deleteFileDetails(Long fileMasterNumber) {
-        int isDeleted = fileMapper.deleteFileDetails(fileMasterNumber);
+    public void deleteFileDetails(String deleteName, Long fileMasterNumber) {
+        int isDeleted = fileMapper.deleteFileDetails(deleteName, fileMasterNumber);
         if (isDeleted != 1) {
             throw new RuntimeException("파일 삭제 중 오류가 발생했습니다.");
         }
@@ -88,16 +105,26 @@ public class CommonServiceImpl implements CommonService {
         }
     }
 
+    @Override
+    public void deleteFileDetail(String deleteName, Long fileDetailNumber) {
+        String filePath = fileMapper.findFileDetailTitle(fileDetailNumber);
+        awsS3Utils.deleteImage(filePath);
+        int isDeleted = fileMapper.deleteFileDetail(deleteName, fileDetailNumber);
+        if (isDeleted != 1) {
+            throw new RuntimeException("파일 삭제 중 오류가 발생했습니다.");
+        }
+    }
+
     @Transactional
     @Override
-    public void generateFiles(Long projectNumber, List<MultipartFile> files, Long fileMasterNumber) {
+    public void generateFiles(Long projectNumber, String memberName, List<MultipartFile> files, Long fileMasterNumber) {
         String fileName = UUID.randomUUID().toString();
         SqlSession sqlSession = sqlSessionFactory.openSession(ExecutorType.BATCH);
         try {
             FileMapper fileMapper = sqlSession.getMapper(FileMapper.class);
             for (MultipartFile file : files) {
                 fileMapper.saveFileDetails(file.getOriginalFilename(), file.getContentType(), file.getSize(),
-                        fileMasterNumber, "홍길동", awsS3Utils.saveFile(file, projectNumber + "/" + fileName));
+                        fileMasterNumber, memberName, awsS3Utils.saveFile(file, projectNumber + "/" + fileName));
             }
             sqlSession.flushStatements();
             sqlSession.commit();

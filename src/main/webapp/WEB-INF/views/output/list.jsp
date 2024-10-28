@@ -17,22 +17,8 @@
 
 <link rel="stylesheet" type="text/css" href="../../../resources/output/css/list.css">
 
-<!-- 샘플 데이터 -->
-<%@ page import="java.util.List" %>
-<%@ page import="java.util.ArrayList" %>
-
-<%
-    // 데이터 목록 준비
-    List<String> tasks = new ArrayList<>();
-    tasks.add("연결 작업 1");
-    tasks.add("연결 작업 2");
-    tasks.add("연결 작업 3");
-    // JSP 페이지의 Attribute로 데이터 목록을 설정
-    request.setAttribute("tasks", tasks);
-%>
-
 <main class="content" id="content">
-    <div class="main_content">
+    <div class="main_content" style="height: 87%">
         <div class="div-section">
             <label class="div-info">
                 프로젝트 산출물 관리</label>
@@ -62,31 +48,32 @@
                                 산출물 상세</label>
                             <hr style="margin-top: 7px; margin-bottom: 7px;">
                             <div class="d-flex justify-content-end pe-3">
-                                <button id="file-delete-his-btn" class="custom-button me-2" type="button">&nbsp;&nbsp;삭제 기록&nbsp;&nbsp;</button>
-                                <button class="custom-button file-modify-btn" type="button">&nbsp;&nbsp;<i class="modify-icon"></i>&nbsp;&nbsp;저장&nbsp;&nbsp;</button>
+                                <button id="output-delete-btn" class="custom-button me-2" type="button">&nbsp;&nbsp;&nbsp;산출물 삭제&nbsp;&nbsp;&nbsp;</button>
+                                <button id="output-save-btn" class="custom-button file-modify-btn" type="button">&nbsp;&nbsp;<i class="modify-icon"></i>&nbsp;&nbsp;저장&nbsp;&nbsp;</button>
                             </div>
                             <div>
                                 <h5 class="text-black">&nbsp;&nbsp;&nbsp;산출물명</h5>
-                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input class="input-area" value="A 업무 시스템 요구사항 정의서"/>
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input id="outputTitle" class="input-area" value=""/>
                             </div>
                             <br>
                             <div>
                                 <h5 class="text-black">&nbsp;&nbsp;&nbsp;연결 작업</h5>
-                                <c:forEach var="task" items="${tasks}">
-                                    <a href="#" class="task ms-4">${task}</a>
-                                    <br>
-                                </c:forEach>
+                                <div id="outputTask">
+                                </div>
                             </div>
                             <br>
                             <div class="d-flex align-items-center mb-1">
                                 <h5 class="text-black me-3">&nbsp;&nbsp;&nbsp;파일 목록</h5>
-                                <span class="label me-5">파일: &nbsp;<label id="detail-cnt">0</label></span>
-                                <button type="button" class="green-btn me-2">&nbsp;&nbsp;&nbsp;선택 다운로드&nbsp;&nbsp;&nbsp;</button>
-                                <button type="button" class="red-btn">&nbsp;&nbsp;&nbsp;선택 삭제&nbsp;&nbsp;&nbsp;</button>
-                                <button type="button" id="file-insert" class="custom-button ms-auto me-3 d-flex justify-content-end">&nbsp;&nbsp;파일 추가&nbsp;&nbsp;</button>
+                                <span class="label me-3">파일: &nbsp;<label id="detail-cnt">0</label></span>
+                                <button id="file-delete-his-btn" class="custom-button " type="button">&nbsp;&nbsp;삭제 기록&nbsp;&nbsp;</button>&nbsp;&nbsp;&nbsp;
+                                    <button type="button" id="file-insert" class="custom-button me-2">&nbsp;&nbsp;파일 추가&nbsp;&nbsp;</button>
+                                <div class="ms-auto d-flex justify-content-end">
+                                    <button type="button" class="ms-auto green-btn me-2">&nbsp;&nbsp;&nbsp;선택 다운로드&nbsp;&nbsp;&nbsp;</button>
+                                    <button type="button" id="file-delete-btn" class="red-btn">&nbsp;&nbsp;&nbsp;선택 삭제&nbsp;&nbsp;&nbsp;</button>
+                                </div>
                             </div>
                             <div class="d-flex justify-content-center">
-                                <div class="ax5-ui" style="width: 97%;">
+                                <div class="ax5-ui" style="width: 100%;">
                                     <div data-ax5grid="my-grid" style="height: 300px;">
                                     </div>
                                 </div>

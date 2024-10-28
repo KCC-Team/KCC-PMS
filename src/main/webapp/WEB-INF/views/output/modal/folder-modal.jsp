@@ -45,9 +45,65 @@
                 </section>
             </div>
             <div class="modal-footer d-flex justify-content-center">
-                <button type="button" class="save-button" data-bs-dismiss="modal">&nbsp;&nbsp;저장하기&nbsp;&nbsp;</button>&nbsp;&nbsp;
+                <button type="button" id="save-folder" class="save-button" data-bs-dismiss="modal">&nbsp;&nbsp;저장하기&nbsp;&nbsp;</button>&nbsp;&nbsp;
                 <button type="button" class="cancel-button" data-bs-dismiss="modal">&nbsp;&nbsp;닫기&nbsp;&nbsp;</button>
             </div>
         </div>
     </div>
 </div>
+
+<script>
+    $('#save-folder').on('click', function() {
+        let treeData = $('.jstree-folder-in').jstree(true).get_json('#', { flat: false });
+        let updatedTreeData = transformTreeData(treeData);
+        $.ajax({
+            url: '/projects/outputs/api/update?option=y',
+            method: 'PUT',
+            contentType: 'application/json',
+            data: JSON.stringify(updatedTreeData),
+            success: function(response) {
+                alert('폴더가 성공적으로 저장되었습니다.');
+                window.location.href = '/projects/outputs';
+            },
+            error: function(xhr, status, error) {
+                alert('폴더 저장 중 에러가 발생했습니다.');
+            }
+        });
+    });
+
+    function transformTreeData(treeNodes, parentId = null) {
+        refineTreeIds(treeNodes);
+        return treeNodes.map(node => {
+            const nodeId = Number(node.id.split('.').pop());
+            const children = node.children ? transformTreeData(node.children, nodeId) : [];
+
+            return {
+                id: nodeId,
+                text: node.text,
+                type: node.type,
+                parentId: parentId,
+                children: children
+            };
+        });
+    }
+
+    function refineTreeIds(treeData) {
+        function traverseNodes(node) {
+            if (Array.isArray(node)) {
+                node.forEach(childNode => traverseNodes(childNode));
+            } else {
+                // 마지막 '.'의 위치를 찾고 그 뒤의 숫자를 새로운 ID로 사용
+                let lastIndex = node.id.lastIndexOf('.');
+                if (lastIndex !== -1) {
+                    node.id = node.id.substring(lastIndex + 1);
+                }
+                // 자식 노드가 있다면 재귀적으로 처리
+                if (node.children && node.children.length > 0) {
+                    traverseNodes(node.children);
+                }
+            }
+        }
+        traverseNodes(treeData);
+        return treeData;
+    }
+</script>

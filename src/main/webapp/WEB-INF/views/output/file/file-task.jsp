@@ -5,11 +5,9 @@
 
 <script>
     Dropzone.autoDiscover = false;
-
     function initDropzone(selector, preDiv, previewTemplate, path) {
-        const url = "http://localhost:8085";
         return new Dropzone(selector, {
-            url: url + path,
+            url: path,
             method: "post",
             contentType: false,
             autoProcessQueue: false,
