@@ -120,7 +120,6 @@ $(function () {
     $('#system-select').click(function() {
         $('#system-menu').slideToggle();
     });
-
 });
 
 function getDefectNumberFromPath() {
@@ -159,7 +158,6 @@ function insertData(dropzone_dis, dropzone_work, $form) {
                 });
             }
             if (work_files.length > 0) {
-
                 work_files.forEach(file => {
                     file.status = Dropzone.SUCCESS;
                     dropzone_work.emit("complete", file);
@@ -233,7 +231,6 @@ function fetchMenuData() {
         method: 'GET',
         dataType: 'json',
         success: function(response) {
-            console.log("systems: " + response);
             return response;
         },
         error: function(error) {

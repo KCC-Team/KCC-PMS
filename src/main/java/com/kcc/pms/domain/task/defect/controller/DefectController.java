@@ -2,6 +2,7 @@ package com.kcc.pms.domain.task.defect.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.kcc.pms.auth.PrincipalDetail;
 import com.kcc.pms.domain.common.model.dto.FileResponseDto;
 import com.kcc.pms.domain.common.model.vo.FileMasterNumbers;
 import com.kcc.pms.domain.common.service.CommonService;
@@ -12,6 +13,7 @@ import com.kcc.pms.domain.task.defect.service.DefectService;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -44,11 +46,12 @@ public class DefectController {
     @ResponseBody
     public ResponseEntity<String> insert(HttpSession session,
                                  DefectDto req, DefectFileRequestDto files,
+                                 @AuthenticationPrincipal PrincipalDetail principalDetail,
                                  @ModelAttribute("priority") String priority,
                                  @ModelAttribute("status") String status) {
 //        Long projectNo = (Long) session.getAttribute("prgNo");
         Long projectNo = 1L;
-        Long defectNumber = defectService.saveDefect(projectNo, req, files, priority, status);
+        Long defectNumber = defectService.saveDefect(projectNo, principalDetail.getMember().getMemberName(), req, files, priority, status);
         String redirectUrl = "/projects/defects/" + defectNumber;
         return ResponseEntity.ok().body(redirectUrl);
     }
@@ -83,11 +86,12 @@ public class DefectController {
     @PutMapping("/{no}")
     @ResponseBody
     public ResponseEntity<String> update(@PathVariable Long no, DefectDto req, DefectFileRequestDto files,
+                                         @AuthenticationPrincipal PrincipalDetail principalDetail,
                                          @ModelAttribute("priority") String priority,
                                          @ModelAttribute("status") String status) {
         //        Long prgNo = (Long) session.getAttribute("prgNo");
         Long projectNumber = 1L;
-        defectService.updateDefect(projectNumber, no, req, files, priority, status);
+        defectService.updateDefect(projectNumber, principalDetail.getMember().getMemberName(), no, req, files, priority, status);
         String redirectUrl = "/projects/defects/" + no;
         return ResponseEntity.ok().body(redirectUrl);
     }
