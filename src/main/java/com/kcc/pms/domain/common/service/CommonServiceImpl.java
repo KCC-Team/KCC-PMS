@@ -118,13 +118,12 @@ public class CommonServiceImpl implements CommonService {
     @Transactional
     @Override
     public void generateFiles(Long projectNumber, String memberName, List<MultipartFile> files, Long fileMasterNumber) {
-        String fileName = UUID.randomUUID().toString();
         SqlSession sqlSession = sqlSessionFactory.openSession(ExecutorType.BATCH);
         try {
             FileMapper fileMapper = sqlSession.getMapper(FileMapper.class);
             for (MultipartFile file : files) {
                 fileMapper.saveFileDetails(file.getOriginalFilename(), file.getContentType(), file.getSize(),
-                        fileMasterNumber, memberName, awsS3Utils.saveFile(file, projectNumber + "/" + fileName));
+                        fileMasterNumber, memberName, awsS3Utils.saveFile(file, projectNumber + "/" + UUID.randomUUID()));
             }
             sqlSession.flushStatements();
             sqlSession.commit();
