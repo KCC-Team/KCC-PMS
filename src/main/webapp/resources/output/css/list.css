@@ -52,6 +52,27 @@
     margin-right: 12px;
     background-color: #fff;
     border: 1px solid #C5C5C5;
+    transition: opacity 0.5s, transform 0.5s;
+    opacity: 1;
+    transform: translateY(0);
+}
+
+#outputTask {
+    width: 100%;
+    height: 100px;
+    padding: 10px;
+    border: none;
+    overflow-y: auto;
+}
+
+.fade-out {
+    opacity: 0;
+    transform: translateY(-20px);
+}
+
+.fade-in {
+    opacity: 1;
+    transform: translateY(0);
 }
 
 .input-area {
@@ -93,4 +114,12 @@ input.input-area:disabled {
 
 .file-btn:hover {
     background-color: #AFABAB;
+}
+
+.ellipsis {
+    max-width: 140px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    text-align: center;
 }
