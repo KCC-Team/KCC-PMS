@@ -89,7 +89,7 @@
                             <c:if test="${list.end_dt == null}">
                                 <td> - </td>
                             </c:if>
-                            <td><progress id="bar01" value="<c:out value="${list.prg}" />" max="100"></progress> <c:out value="${list.prg}" />%</td>
+                            <td><progress class="bar-prg" value="<c:out value="${list.prg}" />" max="100"></progress> <c:out value="${list.prg}" />%</td>
                         </tr>
                     </c:forEach>
                 </c:if>
