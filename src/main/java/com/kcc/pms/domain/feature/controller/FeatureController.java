@@ -2,6 +2,7 @@ package com.kcc.pms.domain.feature.controller;
 
 import com.kcc.pms.domain.common.model.dto.CommonCodeOptions;
 import com.kcc.pms.domain.feature.model.dto.FeatureCreateRequestDto;
+import com.kcc.pms.domain.feature.model.dto.FeatureDetailResponseDto;
 import com.kcc.pms.domain.feature.model.dto.FeatureProgressResponseDto;
 import com.kcc.pms.domain.feature.model.dto.FeatureSummaryResponseDto;
 import com.kcc.pms.domain.feature.service.FeatureService;
@@ -30,9 +31,12 @@ public class FeatureController {
     }
 
     @GetMapping("/register")
-    public String featureInfo(HttpSession session, Model model){
+    public String featureInfo(@RequestParam(value = "featureNo", required=false) Long featureNo,
+                              HttpSession session, Model model) {
         Long prjNo = (Long) session.getAttribute("prjNo");
         model.addAttribute("prjNo", prjNo);
+        model.addAttribute("featureNo", featureNo);
+
         return "feature/featureInfo";
     }
 
@@ -113,5 +117,33 @@ public class FeatureController {
         }
     }
 
+    @GetMapping("/details")
+    @ResponseBody
+    public ResponseEntity<FeatureDetailResponseDto> getFeatureDetail(@RequestParam("featNo") Long featNo){
+        FeatureDetailResponseDto featureDetail = service.getFeatureDetail(featNo);
+
+        if(featureDetail != null){
+            return ResponseEntity.ok(featureDetail);
+        } else{
+            return ResponseEntity.notFound().build();
+        }
+
+    }
+
+    @PutMapping()
+    @ResponseBody
+    public ResponseEntity<?> update(FeatureDetailResponseDto requestDto, HttpSession session){
+        Long prjNo = (Long) session.getAttribute("prjNo");
+        requestDto.setPrjNo(prjNo);
+
+        System.out.println("update requestDto = " + requestDto);
+        Integer result = service.updateFeature(requestDto);
+
+        if (result == null || result == 0) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("생성에 실패하였습니다.");
+        }
+
+        return ResponseEntity.status(HttpStatus.CREATED).body("성공적으로 수정되었습니다.");
+    }
 
 }

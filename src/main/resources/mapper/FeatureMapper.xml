@@ -34,19 +34,19 @@
         stat_cd, pri_cd, prg, diff_cd, class_cd, use_yn, sys_no, mem_no, tm_no, prj_no
         ) VALUES (
         #{featNo}, #{featId}, #{featTitle}, #{featDescription},
-        <if test="preStartDate != null and preStartDate != ''">#{preStartDate},</if>
-        <if test="preStartDate == null or preStartDate == ''">NULL,</if>
-        <if test="preEndDate != null and preEndDate != ''">#{preEndDate},</if>
-        <if test="preEndDate == null or preEndDate == ''">NULL,</if>
-        <if test="startDate != null and startDate != ''">#{startDate},</if>
-        <if test="startDate == null or startDate == ''">NULL,</if>
-        <if test="endDate != null and endDate != ''">#{endDate},</if>
-        <if test="endDate == null or endDate == ''">NULL,</if>
+        <if test="preStartDateStr != null and preStartDateStr != ''">#{preStartDateStr},</if>
+        <if test="preStartDateStr == null or preStartDateStr == ''">NULL,</if>
+        <if test="preEndDateStr != null and preEndDateStr != ''">#{preEndDateStr},</if>
+        <if test="preEndDateStr == null or preEndDateStr == ''">NULL,</if>
+        <if test="startDateStr != null and startDateStr != ''">#{startDateStr},</if>
+        <if test="startDateStr == null or startDateStr == ''">NULL,</if>
+        <if test="endDateStr != null and endDateStr != ''">#{endDateStr},</if>
+        <if test="endDateStr == null or endDateStr == ''">NULL,</if>
         #{statusCode}, #{priorCode}, #{progress},
         <if test="diffCode != null and diffCode != ''">#{diffCode},</if>
         <if test="diffCode == null or diffCode == ''">NULL,</if>
-        <if test="featClassCode != null and featClassCode != ''">#{featClassCode},</if>
-        <if test="featClassCode == null or featClassCode == ''">NULL,</if>
+        <if test="classCode != null and classCode != ''">#{classCode},</if>
+        <if test="classCode == null or classCode == ''">NULL,</if>
         'Y',
         <if test="systemNo != null">#{systemNo},</if>
         <if test="systemNo == null">NULL,</if>
@@ -103,7 +103,7 @@
         feature f
         JOIN
         system s ON f.sys_no = s.sys_no
-        JOIN
+        LEFT JOIN
         member m ON f.mem_no = m.mem_no
         JOIN
         codedetail st ON f.stat_cd = st.cd_dtl_no
@@ -170,4 +170,93 @@
           AND s.prj_no = #{prjNo}
         ORDER BY st.order_no
     </select>
+
+    <select id="getFeatureDetail" resultType="com.kcc.pms.domain.feature.model.dto.FeatureDetailResponseDto">
+        SELECT
+            f.feat_no as featNo,
+            f.feat_id as featId,
+            f.feat_title as featTitle,
+            f.feat_cont as featDescription,
+            f.pre_st_dt as preStartDate,
+            f.pre_end_dt as preEndDate,
+            f.st_dt as startDate,
+            f.end_dt as endDate,
+            f.stat_cd as statusCode,
+            f.pri_cd as priorCode,
+            f.prg as progress,
+            f.diff_cd as diffCode,
+            f.class_cd as classCode,
+            f.sys_no as systemNo,
+            f.mem_no as memberNo,
+            f.tm_no as teamNo,
+            f.prj_no as prjNo,
+            s.sys_ttl as systemTitle,
+            m.mem_nm as memberName,
+            stat.cd_dtl_nm AS status,
+            pri.cd_dtl_nm AS priority,
+            diff.cd_dtl_nm AS difficulty,
+            class.cd_dtl_nm AS className
+        FROM
+            feature f,
+            system s,
+            member m,
+            codedetail stat,
+            codedetail pri,
+            codedetail diff,
+            codedetail class
+        WHERE
+            f.sys_no = s.sys_no
+          AND f.mem_no = m.mem_no(+)
+          AND f.stat_cd = stat.cd_dtl_no
+          AND f.pri_cd = pri.cd_dtl_no
+          AND f.diff_cd = diff.cd_dtl_no
+          AND f.class_cd = class.cd_dtl_no
+          AND f.feat_no = #{featNo}
+    </select>
+
+    <update id="updateFeature" parameterType="com.kcc.pms.domain.feature.model.dto.FeatureDetailResponseDto">
+        UPDATE feature
+        SET
+        feat_id = #{featId},
+        feat_title = #{featTitle},
+        feat_cont = #{featDescription}
+        <if test="preStartDateStr != null and preStartDateStr != ''">
+            , pre_st_dt = TO_DATE(#{preStartDateStr}, 'YYYY-MM-DD')
+        </if>
+        <if test="preEndDateStr != null and preEndDateStr != ''">
+            , pre_end_dt = TO_DATE(#{preEndDateStr}, 'YYYY-MM-DD')
+        </if>
+        <if test="startDateStr != null and startDateStr != ''">
+            , st_dt = TO_DATE(#{startDateStr}, 'YYYY-MM-DD')
+        </if>
+        <if test="endDateStr != null and endDateStr != ''">
+            , end_dt = TO_DATE(#{endDateStr}, 'YYYY-MM-DD')
+        </if>
+        <if test="statusCode != null and statusCode != ''">
+            , stat_cd = #{statusCode}
+        </if>
+        <if test="priorCode != null and priorCode != ''">
+            , pri_cd = #{priorCode}
+        </if>
+        <if test="progress != null">
+            , prg = #{progress}
+        </if>
+        <if test="diffCode != null and diffCode != ''">
+            , diff_cd = #{diffCode}
+        </if>
+        <if test="classCode != null and classCode != ''">
+            , class_cd = #{classCode}
+        </if>
+        <if test="systemNo != null">
+            , sys_no = #{systemNo}
+        </if>
+        <if test="memberNo != null">
+            , mem_no = #{memberNo}
+        </if>
+        <if test="teamNo != null">
+            , tm_no = #{teamNo}
+        </if>
+        WHERE feat_no = #{featNo}
+    </update>
+
 </mapper>

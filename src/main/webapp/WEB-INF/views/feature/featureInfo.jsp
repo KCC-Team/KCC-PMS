@@ -12,6 +12,7 @@
     <title>기능 정보</title>
     <script type="text/javascript">
         var prjNo = "${prjNo}";
+        var featureNo = "${featureNo}";
     </script>
 </head>
 <body>
@@ -30,6 +31,7 @@
                     <input type="hidden" id="mem_no" name="memberNo">
                     <input type="hidden" id="tm_no" name="teamNo">
                     <input type="hidden" id="systemNo" name="systemNo">
+                    <input type="hidden" id="featNo" name="featNo">
                     <table class="form-table">
                         <tr>
                             <th><label for="feat_title">기능명 <span class="required-icon">*</span></label></th>
@@ -40,7 +42,7 @@
                         <tr>
                             <th><label>기능분류 <span class="required-icon">*</span></label></th>
                             <td>
-                                <select id="PMS010" name="featClassCode">
+                                <select id="PMS010" name="classCode">
                                     <option value="" selected>선택</option>
                                 </select>
                             </td>
@@ -74,15 +76,15 @@
                         </tr>
                         <tr>
                             <th><label for="pre_st_dt">예정 시작일 <span class="required-icon">*</span></label></th>
-                            <td><input type="text" id="pre_st_dt" name="preStartDate" placeholder="yyyy-mm-dd" required></td>
+                            <td><input type="text" id="pre_st_dt" name="preStartDateStr" placeholder="yyyy-mm-dd" required></td>
                             <th><label for="pre_end_dt">예정 종료일 <span class="required-icon">*</span></label></th>
-                            <td><input type="text" id="pre_end_dt" name="preEndDate" placeholder="yyyy-mm-dd" required></td>
+                            <td><input type="text" id="pre_end_dt" name="preEndDateStr" placeholder="yyyy-mm-dd" required></td>
                         </tr>
                         <tr>
                             <th>시작일</th>
-                            <td><input type="text" id="st_dt" name="startDate" placeholder="yyyy-mm-dd"></td>
+                            <td><input type="text" id="st_dt" name="startDateStr" placeholder="yyyy-mm-dd"></td>
                             <th>종료일</th>
-                            <td><input type="text" id="end_dt" name="endDate" placeholder="yyyy-mm-dd"></td>
+                            <td><input type="text" id="end_dt" name="endDateStr" placeholder="yyyy-mm-dd"></td>
                         </tr>
                         <tr>
                             <th><label>상태 <span class="required-icon">*</span></label></th>
