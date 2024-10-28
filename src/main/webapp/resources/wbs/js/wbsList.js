@@ -84,6 +84,7 @@ function getProjectResult() {
 
             // 평균 진척률 구하기
             let avgPrg = Math.floor(totalPrg / prgCount);
+            avgPrg = Math.round(avgPrg / 10) * 10;
             if (avgPrg > 0) {
                 updateProjectPrg(avgPrg);
             }
