@@ -2,6 +2,7 @@ package com.kcc.pms.domain.feature.controller;
 
 import com.kcc.pms.domain.common.model.dto.CommonCodeOptions;
 import com.kcc.pms.domain.feature.model.dto.FeatureCreateRequestDto;
+import com.kcc.pms.domain.feature.model.dto.FeatureDetailResponseDto;
 import com.kcc.pms.domain.feature.model.dto.FeatureProgressResponseDto;
 import com.kcc.pms.domain.feature.model.dto.FeatureSummaryResponseDto;
 import com.kcc.pms.domain.feature.service.FeatureService;
@@ -13,7 +14,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 @Controller
 @RequiredArgsConstructor
@@ -28,9 +31,12 @@ public class FeatureController {
     }
 
     @GetMapping("/register")
-    public String featureInfo(HttpSession session, Model model){
+    public String featureInfo(@RequestParam(value = "featureNo", required=false) Long featureNo,
+                              HttpSession session, Model model) {
         Long prjNo = (Long) session.getAttribute("prjNo");
         model.addAttribute("prjNo", prjNo);
+        model.addAttribute("featureNo", featureNo);
+
         return "feature/featureInfo";
     }
 
@@ -43,9 +49,7 @@ public class FeatureController {
     @PostMapping()
     @ResponseBody
     public ResponseEntity<?> createFeature(FeatureCreateRequestDto requestDto, HttpSession session){
-        System.out.println("requestDto = " + requestDto);
         Long prjNo = (Long) session.getAttribute("prjNo");
-        System.out.println("prjNo = " + prjNo);
 
         requestDto.setPrjNo(prjNo);
 
@@ -60,14 +64,13 @@ public class FeatureController {
 
     @GetMapping("/progress")
     @ResponseBody
-    public ResponseEntity<FeatureProgressResponseDto> getProgressSummary(@RequestParam("systemNo") Long systemNo,
-                                                                         @RequestParam("featClassCd") String featClassCd,
+    public ResponseEntity<FeatureProgressResponseDto> getProgressSummary(@RequestParam(value = "systemNo", required = false) Optional<Long> systemNo,
+                                                                         @RequestParam(value = "featClassCd", required = false) String featClassCd,
                                                                          HttpSession session){
         Long prjNo = (Long) session.getAttribute("prjNo");
-        System.out.println("prjNo = " + prjNo);
-        System.out.println("systemNo = " + systemNo);
-        System.out.println("featClassCd = " + featClassCd);
-        FeatureProgressResponseDto progressSummary = service.getProgressSummary(systemNo, featClassCd, prjNo);
+        Long systemNoValue = systemNo.orElse(null);
+
+        FeatureProgressResponseDto progressSummary = service.getProgressSummary(systemNoValue, featClassCd, prjNo);
 
         if (progressSummary != null) {
             return ResponseEntity.ok(progressSummary);
@@ -78,17 +81,69 @@ public class FeatureController {
 
     @GetMapping("/list")
     @ResponseBody
-    public ResponseEntity<List<FeatureSummaryResponseDto>> getFeatureSummary(@RequestParam("systemNo") Long systemNo,
-                                                                             @RequestParam("featClassCd") String featClassCd,
-                                                                             HttpSession session){
+    public ResponseEntity<List<FeatureSummaryResponseDto>> getFeatureSummary(@RequestParam(value = "systemNo", required = false) Long systemNo,
+                                                                             @RequestParam(value = "featClassCd", required = false) String featClassCd,
+                                                                             HttpSession session) {
         Long prjNo = (Long) session.getAttribute("prjNo");
         List<FeatureSummaryResponseDto> systemFeatureList = service.getSystemFeatureList(systemNo, featClassCd, prjNo);
+        System.out.println("systemFeatureList = " + systemFeatureList);
+        return ResponseEntity.ok(systemFeatureList != null ? systemFeatureList : Collections.emptyList());
+    }
 
-        if (systemFeatureList != null && !systemFeatureList.isEmpty()) {
-            return ResponseEntity.ok(systemFeatureList);
+    @GetMapping("/totalProgress")
+    @ResponseBody
+    public ResponseEntity<FeatureProgressResponseDto> getProjectFeatureProgressSummary(HttpSession session) {
+        Long prjNo = (Long) session.getAttribute("prjNo");
+        FeatureProgressResponseDto progressSummary = service.getProjectProgressSummary(prjNo);
+
+        if (progressSummary != null) {
+            return ResponseEntity.ok(progressSummary);
         } else {
             return ResponseEntity.notFound().build();
         }
+    }
+
+
+    @GetMapping("/totalList")
+    @ResponseBody
+    public ResponseEntity<List<FeatureSummaryResponseDto>> getProjectFeatureSummary(HttpSession session){
+        Long prjNo = (Long) session.getAttribute("prjNo");
+        List<FeatureSummaryResponseDto> projectFeatureList = service.getProjectFeatureList(prjNo);
+
+        if (projectFeatureList != null && !projectFeatureList.isEmpty()) {
+            return ResponseEntity.ok(projectFeatureList);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @GetMapping("/details")
+    @ResponseBody
+    public ResponseEntity<FeatureDetailResponseDto> getFeatureDetail(@RequestParam("featNo") Long featNo){
+        FeatureDetailResponseDto featureDetail = service.getFeatureDetail(featNo);
+
+        if(featureDetail != null){
+            return ResponseEntity.ok(featureDetail);
+        } else{
+            return ResponseEntity.notFound().build();
+        }
+
+    }
+
+    @PutMapping()
+    @ResponseBody
+    public ResponseEntity<?> update(FeatureDetailResponseDto requestDto, HttpSession session){
+        Long prjNo = (Long) session.getAttribute("prjNo");
+        requestDto.setPrjNo(prjNo);
+
+        System.out.println("update requestDto = " + requestDto);
+        Integer result = service.updateFeature(requestDto);
+
+        if (result == null || result == 0) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("생성에 실패하였습니다.");
+        }
+
+        return ResponseEntity.status(HttpStatus.CREATED).body("성공적으로 수정되었습니다.");
     }
 
 }

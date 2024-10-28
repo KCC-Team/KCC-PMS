@@ -1,10 +1,15 @@
 var firstGrid;
-function openFeaturePopup(){
-    window.open(
-        "/projects/features/register",
-        "기능등록",
-        "width=810, height=620, resizable=yes"
-    );
+
+function openFeaturePopup(featureNo) {
+    let url;
+    if(featureNo != null){
+        url = '/projects/features/register?featureNo=' + encodeURIComponent(featureNo);
+    } else {
+        url = '/projects/features/register'
+    }
+
+    let popupOptions = 'width=810,height=620,resizable=yes';
+    window.open(url, '기능등록', popupOptions);
 }
 
 document.addEventListener("DOMContentLoaded", function() {
@@ -12,18 +17,14 @@ document.addEventListener("DOMContentLoaded", function() {
 });
 
 
-$(document).ready(function (){
 
-    // toggle-btn 클릭 후 실행되는 작업들
-    $(".circle").circleProgress({ //들어갈 div class명을 넣어주세요
-        value: 0.9,    //진행된 수를 넣어주세요. 1이 100기준입니다.
-        size: 260,       //도넛의 크기를 결정해줍니다.
-        fill: {
-            gradient: ["#3b82f6", "#f59e0b"]    //도넛의 색을 결정해줍니다.
+$(document).ready(function (){
+    window.addEventListener('message', function(event) {
+        if (event.data.status === 'success') {
+            console.log('Received:', event.data.message);
+            window.location.reload();
         }
-    }).on('circle-animation-progress', function(event, progress) {    //라벨을 넣어줍니다.
-        $(this).find('strong').html(parseInt(100 * 0.9) + '<i>%</i>');
-    });
+    }, false);
 
     $(document).on('click', '.feat-info-row', function() {
         $(this).siblings().removeClass("on");
@@ -42,13 +43,18 @@ $(document).ready(function (){
 
     $("#system-select span:first").text("시스템 선택");
 
-    setTimeout(function() {
-        initGrid();
-    }, 200); // 100ms 지연 후 표시
 
-    getProgressSummary();
+    initGrid().then(() => {
+        getProjectFeatureProgressSummary();
+    });
 
+    initMemberGrid();
 
+    initDelayGrid();
+
+    getParentSystems(1,3);
+
+    setPageInfo(4);
 });
 
 
@@ -64,12 +70,18 @@ document.addEventListener("DOMContentLoaded", function() {
 
 function getProgressSummary(systemNo, featClassCd){
     featClassCd = $('#featClassOption').val();
-    console.log("ajax 요청할 systemNo = " + systemNo)
-    console.log("ajax 요청할 featClassCd = " + featClassCd)
+    console.log("ajax 요청할 systemNo = " + systemNo);
+    console.log("ajax 요청할 featClassCd = " + featClassCd);
+
+    // 파라미터 설정 객체 생성
+    let listParams = {};
+    if (systemNo) listParams.systemNo = systemNo;
+    if (featClassCd) listParams.featClassCd = featClassCd;
 
     $.ajax({
-        url:'/projects/features/list?systemNo=' + systemNo + '&featClassCd=' + featClassCd,
+        url: '/projects/features/list',
         type: 'GET',
+        data: listParams,
         success: function (response){
             console.log("기능 목록 :", response);
             firstGrid.setData(response);
@@ -80,32 +92,12 @@ function getProgressSummary(systemNo, featClassCd){
     })
 
     $.ajax({
-        url: '/projects/features/progress?systemNo=' + systemNo + '&featClassCd=' + featClassCd,
+        url: '/projects/features/progress',
         type: 'GET',
+        data: listParams,
         success: function (response) {
           console.log(response);
-
-            $("#midSystemFeatureTitle").text(
-                $('#system-select span:first-child').text() +
-                ($('#featClassOption').val() ? " > " + $('#featClassOption option:selected').text() : "")
-            );
-
-
-          $("#midFeatBar").attr("value", response.progress);
-          if (response.progress == null || isNaN(response.progress)) {
-              $("#midFPrgVal").text("0%");
-          } else {
-              $("#midFPrgVal").text(response.progress + "%");
-          }
-
-
-          var midbar = $("#midFeatBar")[0];
-          animateProgressBar(midbar, response.progress);
-
-          $("#midTotalCnt").text(response.total);
-          $("#midCompleteCnt").text(response.complete);
-          $("#midContinueCnt").text(response.presentCount);
-          $("#midDelayCnt").text(response.delay);
+          updateMidPanel(response, $('#system-select span:first-child').text());
         },
         error: function (xhr, status, error) {
             console.error('Error:', error);
@@ -113,93 +105,84 @@ function getProgressSummary(systemNo, featClassCd){
     })
 }
 
+// 중앙 패널 업데이트 함수
+function updateMidPanel(response, systemTitle) {
+    $("#midSystemFeatureTitle").text(
+        systemTitle + ($('#featClassOption').val() ? " > " + $('#featClassOption option:selected').text() : "")
+    );
+
+    $("#midFeatBar").attr("value", response.progress);
+    if (response.progress == null || isNaN(response.progress)) {
+        $("#midFPrgVal").text("0%");
+    } else {
+        $("#midFPrgVal").text(response.progress + "%");
+    }
+
+    var midbar = $("#midFeatBar")[0];
+    animateProgressBar(midbar, response.progress);
+
+    $("#midTotalCnt").text(response.total);
+    $("#midCompleteCnt").text(response.complete);
+    $("#midContinueCnt").text(response.presentCount);
+    $("#midDelayCnt").text(response.delay);
+}
 
 function initGrid(){
-    firstGrid = new ax5.ui.grid();
+    return new Promise((resolve) => {
+        firstGrid = new ax5.ui.grid();
 
-    firstGrid.setConfig({
-        target: $('[data-ax5grid="first-grid"]'),
-        columns: [
-            {key: "featureId", label: "기능ID", align: "center", width: 70, formatter: function() {
-                    var title = this.value;
-                    return '<a href="/projects/issueInfo?title=' + encodeURIComponent(title) + '" class="danger-title" style="color: #0044cc; font-size: 13px; font-weight: bold; text-decoration: none;">' + title + '</a>';
-                }},
-            {key: "featureTitle", label: "기능명", width: 100, align: "center", formatter: function (){
-                    return '<span style="font-size: 13px;">' + this.value + '</span>';
-                }},
-            {key: "status", label: "상태", width: 70, align: "center", formatter: function (){
-                    var status = this.value.trim();
-                    var statusClass = 'status-label ';  // 기본 클래스
+        firstGrid.setConfig({
+            target: $('[data-ax5grid="first-grid"]'),
+            columns: [
+                {key: "featureId", label: "기능ID", align: "center", width: 70, formatter: function() {
+                        var featureNo = this.item.featureNo; // featureNo을 이용
+                        var title = this.value;
+                        console.log("기능NO: " + featureNo);
+                        return '<a href="#" onclick="openFeaturePopup(' + featureNo + ')" class="danger-title" style="color: #0044cc; font-size: 13px; font-weight: bold; text-decoration: none;">' + title + '</a>';
+                    }},
+                {key: "featureTitle", label: "기능명", width: 100, align: "center", formatter: function (){
+                        return '<span style="font-size: 13px;">' + this.value + '</span>';
+                    }},
+                {key: "status", label: "상태", width: 70, align: "center", formatter: function (){
+                        var status = this.value.trim();
+                        var statusClass = 'status-label ';
 
-                    if (status === '신규') {
-                        statusClass += 'status-in-progress';  // 위험일 경우
-                    } else if (status === '개발중') {
-                        statusClass += 'status-before';  // 진행 중일 경우
-                    } else if (status === '고객확인') {
-                        statusClass += 'status-completed';  // 완료일 경우
-                    }
+                        if (status === '신규') {
+                            statusClass += 'status-new';
+                        } else if (status === '개발중') {
+                            statusClass += 'status-in-progress';
+                        } else if (status === '고객확인') {
+                            statusClass += 'status-client-check';
+                        } else if (status === '개발완료'){
+                            statusClass += 'status-complete';
+                        } else if (status === '단위테스트완료'){
+                            statusClass += 'status-unit-test-complete';
+                        } else if (status === 'PL확인') {
+                            statusClass += 'status-pl-check';
+                        }
 
-                    return '<span class="' + statusClass + '" style="font-size: 13px;">' + status + '</span>';
-                }},
-            {key: "memberName", label: "작업자", width: 70, align: "center" , formatter: function (){
-                    return '<span style="font-size: 13px;">' + this.value + '</span>';
-                }},
-            {key: "system", label: "시스템/업무", width: 82, align: "center", formatter: function (){
-                    return '<span style="font-size: 13px;">' + this.value + '</span>';
-                }},
-            {key: "progress", label: "진척도", width: 70, align: "center", formatter: function (){
-                    return '<span style="font-size: 13px;">' + this.value + '</span>';
-                }},
-            {key: "remainingDays", label: "남은일수", width: 70, align: "center", formatter: function (){
-                    return '<span style="font-size: 13px;">' + this.value + '</span>';
-                }}
-        ]
-    });
+                        return '<span class="' + statusClass + '" style="font-size: 13px;">' + status + '</span>';
+                    }},
+                {key: "memberName", label: "작업자", width: 70, align: "center" , formatter: function (){
+                        return '<span style="font-size: 13px;">' + (this.value ? this.value : '-') + '</span>';
+                    }},
+                {key: "system", label: "시스템/업무", width: 82, align: "center", formatter: function (){
+                        return '<span style="font-size: 13px;">' + this.value + '</span>';
+                    }},
+                {key: "progress", label: "진척도", width: 70, align: "center", formatter: function (){
+                        return '<span style="font-size: 13px;">' + this.value + '</span>';
+                    }},
+                {key: "remainingDays", label: "남은일수", width: 70, align: "center", formatter: function (){
+                        return '<span style="font-size: 13px;">' + this.value + '</span>';
+                    }}
+            ]
+        });
 
+        resolve(); // 초기화 완료 후 resolve 호출
+    })
+}
 
-    var memberGrid = new ax5.ui.grid();
-
-    memberGrid.setConfig({
-        target: $('[data-ax5grid="member-grid"]'),
-        columns: [
-            {key: "memberName", label: "작업자", align: "center", width: 120, formatter: function() {
-                    var title = this.value;
-                    return '<a href="/projects/issueInfo?title=' + encodeURIComponent(title) + '" class="danger-title" style="color: #0044cc; font-size: 13px; font-weight: bold; text-decoration: none;">' + title + '</a>';
-                }},
-            {key: "total", label: "전체건", width: 70, align: "center", formatter: function (){
-                    return '<span style="font-size: 13px;">' + this.value + '</span>';
-                }},
-            {key: "continue", label: "진행건", width: 70, align: "center"},
-            {key: "delay", label: "지연건", width: 70, align: "center", formatter: function (){
-                    return '<span style="font-size: 13px; color: red;">' + this.value + '</span>';
-                }},
-            {key: "team", label: "소속팀", width: 128, align: "center", formatter: function (){
-                    return '<span style="font-size: 13px;">' + this.value + '</span>';
-                }},
-            {key: "progress", label: "진척도", width: 70, align: "center", formatter: function (){
-                    return '<span style="font-size: 13px;">' + this.value + '</span>';
-                }}
-        ]
-    });
-
-    var memberData = [
-        {memberName: "홍길동", total: 10, continue: 5, delay: 2, team: "팀1", progress: "50%"},
-        {memberName: "이순신", total: 8, continue: 3, delay: 1, team: "팀2", progress: "37.5%"},
-        {memberName: "장보고", total: 15, continue: 10, delay: 3, team: "팀1", progress: "66%"},
-        {memberName: "유관순", total: 12, continue: 12, delay: 0, team: "팀3", progress: "100%"},
-        {memberName: "강감찬", total: 20, continue: 15, delay: 5, team: "팀2", progress: "75%"},
-        {memberName: "홍길동", total: 10, continue: 5, delay: 2, team: "팀1", progress: "50%"},
-        {memberName: "이순신", total: 8, continue: 3, delay: 1, team: "팀2", progress: "37.5%"},
-        {memberName: "장보고", total: 15, continue: 10, delay: 3, team: "팀1", progress: "66%"},
-        {memberName: "유관순", total: 12, continue: 12, delay: 0, team: "팀3", progress: "100%"},
-        {memberName: "강감찬", total: 20, continue: 15, delay: 5, team: "팀2", progress: "75%"}
-    ]
-
-    memberGrid.setData(memberData);
-
-
-
-
+function initDelayGrid(){
     var delayGrid = new ax5.ui.grid();
 
     delayGrid.setConfig({
@@ -256,6 +239,48 @@ function initGrid(){
     delayGrid.setData(delayData);
 }
 
+function initMemberGrid(){
+    var memberGrid = new ax5.ui.grid();
+
+    memberGrid.setConfig({
+        target: $('[data-ax5grid="member-grid"]'),
+        columns: [
+            {key: "memberName", label: "작업자", align: "center", width: 120, formatter: function() {
+                    var title = this.value;
+                    return '<a href="/projects/issueInfo?title=' + encodeURIComponent(title) + '" class="danger-title" style="color: #0044cc; font-size: 13px; font-weight: bold; text-decoration: none;">' + title + '</a>';
+                }},
+            {key: "total", label: "전체건", width: 70, align: "center", formatter: function (){
+                    return '<span style="font-size: 13px;">' + this.value + '</span>';
+                }},
+            {key: "continue", label: "진행건", width: 70, align: "center"},
+            {key: "delay", label: "지연건", width: 70, align: "center", formatter: function (){
+                    return '<span style="font-size: 13px; color: red;">' + this.value + '</span>';
+                }},
+            {key: "team", label: "소속팀", width: 128, align: "center", formatter: function (){
+                    return '<span style="font-size: 13px;">' + this.value + '</span>';
+                }},
+            {key: "progress", label: "진척도", width: 70, align: "center", formatter: function (){
+                    return '<span style="font-size: 13px;">' + this.value + '</span>';
+                }}
+        ]
+    });
+
+    var memberData = [
+        {memberName: "홍길동", total: 10, continue: 5, delay: 2, team: "팀1", progress: "50%"},
+        {memberName: "이순신", total: 8, continue: 3, delay: 1, team: "팀2", progress: "37.5%"},
+        {memberName: "장보고", total: 15, continue: 10, delay: 3, team: "팀1", progress: "66%"},
+        {memberName: "유관순", total: 12, continue: 12, delay: 0, team: "팀3", progress: "100%"},
+        {memberName: "강감찬", total: 20, continue: 15, delay: 5, team: "팀2", progress: "75%"},
+        {memberName: "홍길동", total: 10, continue: 5, delay: 2, team: "팀1", progress: "50%"},
+        {memberName: "이순신", total: 8, continue: 3, delay: 1, team: "팀2", progress: "37.5%"},
+        {memberName: "장보고", total: 15, continue: 10, delay: 3, team: "팀1", progress: "66%"},
+        {memberName: "유관순", total: 12, continue: 12, delay: 0, team: "팀3", progress: "100%"},
+        {memberName: "강감찬", total: 20, continue: 15, delay: 5, team: "팀2", progress: "75%"}
+    ]
+
+    memberGrid.setData(memberData);
+}
+
 
 function fetchMenuData() {
     return $.ajax({
@@ -274,7 +299,22 @@ function fetchMenuData() {
 
 
 function createMenu(menuData) {
-    createMenuHTML(menuData, $('#system-menu'), "");
+    const parentElement = $('#system-menu');
+
+    // "전체" 메뉴 항목 추가
+    const allMenuItem = $('<li class="menu-item"></li>').text("전체");
+    allMenuItem.click(function(event) {
+        event.stopPropagation();
+        let projectTitle = document.querySelector('.common-project-title').textContent.trim();
+        $('#system-select span:first-child').text(projectTitle);
+        $('#systemNo').val("");  // 전체 시스템을 의미하도록 systemNo 필드 비우기
+        $('.mymenu').slideUp();  // 메뉴 숨기기
+        getProgressSummary();
+    });
+    parentElement.append(allMenuItem);  // "전체" 메뉴 항목을 최상단에 추가
+
+    // 기존 메뉴 생성
+    createMenuHTML(menuData, parentElement, "");
 }
 
 function createMenuHTML(menuData, parentElement, path) {
@@ -330,18 +370,72 @@ $('#featClassOption').change(function() {
     console.log("선택된 기능코드값:", selectedValue);
     console.log("선택된 기능분류명:", selectedText);
 
-    const selectedSystemNo = $("#systemNo").val();
+    const selectedSystemNo = $("#systemNo").val(); // `systemNo`가 비어 있으면 `null`로 설정
     console.log("선택된 systemNo:", selectedSystemNo);
-
-    if (!selectedSystemNo) {
-        return;
-    }
 
     getProgressSummary(selectedSystemNo, selectedValue);
 });
 
+function getParentSystems(pageNumber, pageSize){
+    const systemContainer = $("#system-container");
+    systemContainer.empty(); // 새로운 페이지 로드 시 기존 데이터를 비워줌
 
+    $.ajax({
+        url: '/systems/parents?page=' + pageNumber + '&size=' + pageSize,
+        type: 'GET',
+        success: function (response){
+            console.log("부모 시스템 page : " + pageNumber + " : ", response);
+            response.forEach(system => {
+                fetchSystemProgress(system.systemNo, system.systemTitle);
+            })
+        },
+        error: function (xhr, status, error){
+            console.error('Error fetching parent systems:', error);
+        }
+    })
+}
 
+function fetchSystemProgress(parentSystemNo, parentSystemTitle){
+    var featSystemClassCd = "";
+    $.ajax({
+        url: '/projects/features/progress?systemNo=' + parentSystemNo + '&featClassCd=' + featSystemClassCd,
+        type: 'GET',
+        success: function (response) {
+            console.log("부모시스템 조회", response);
+            updateSystemProgressUI(parentSystemTitle, response);
+        },
+        error: function (xhr, status, error) {
+            console.error('Error:', error);
+        }
+    })
+}
+
+function updateSystemProgressUI(systemTitle, data) {
+    const systemContainer = $("#system-container");
+    const systemHTML = `
+        <div class="feat-info-row">
+            <div class="feat-title">${systemTitle}</div>
+            <div class="prg-bar">
+                <progress class="feat-bar" value="${data.progress || 0}" max="100"></progress>
+                <span class="prg-val">${data.progress || 0}%</span>
+            </div>
+            <div class="feat-total">
+                <span class="feat-total-cnt">${data.total || 0}</span><span class="total-name">건 - </span>
+                <span class="total-name">(</span>
+                <span class="feat-complete-cnt">${data.complete || 0}</span>
+                <span class="total-name">건 완료, </span>
+                <span class="feat-continue-cnt">${data.presentCount || 0}</span><span class="total-name">건 진행중, </span>
+                <span class="feat-delay-cnt">${data.delay || 0}</span><span class="total-name">건 지연)</span>
+            </div>
+        </div>
+    `;
+
+    systemContainer.append(systemHTML);
+
+    // 방금 추가한 요소에서 진척도 바를 선택하고 애니메이션 적용
+    const progressBar = systemContainer.find(".feat-bar").last()[0];
+    animateProgressBar(progressBar, data.progress || 0);
+}
 
 function animateProgressBar(progressBar, targetValue) {
     var value = 0;
@@ -357,4 +451,119 @@ function animateProgressBar(progressBar, targetValue) {
     }
 
     animateProgress();
+}
+
+let currentPage = 1; // 현재 페이지
+const pageSize = 3; // 한 페이지에 표시할 부모 시스템 개수
+let totalPageCount = 0; // 총 페이지 수
+const pageDisplayLimit = 3; // 화면에 표시할 페이지 번호 수
+
+// 페이지 정보를 설정하는 함수
+function setPageInfo(totalItems) {
+    totalPageCount = Math.ceil(totalItems / pageSize); // 총 페이지 수 계산
+    updatePaginationUI();
+}
+
+// 페이지 네비게이션 UI 업데이트
+function updatePaginationUI() {
+    const pageNumbersContainer = document.getElementById("page-numbers");
+    pageNumbersContainer.innerHTML = ""; // 초기화
+
+    // << 버튼
+    const firstButton = document.createElement("button");
+    firstButton.innerText = "<<";
+    firstButton.onclick = () => changePage(1);
+    firstButton.disabled = currentPage === 1;
+    pageNumbersContainer.appendChild(firstButton);
+
+    // < 버튼
+    const prevButton = document.createElement("button");
+    prevButton.innerText = "<";
+    prevButton.onclick = () => changePage(currentPage - 1);
+    prevButton.disabled = currentPage === 1;
+    pageNumbersContainer.appendChild(prevButton);
+
+    // 중간 페이지 번호 버튼들
+    const startPage = Math.max(1, currentPage - Math.floor(pageDisplayLimit / 2));
+    const endPage = Math.min(totalPageCount, startPage + pageDisplayLimit - 1);
+
+    for (let i = startPage; i <= endPage; i++) {
+        const pageButton = document.createElement("button");
+        pageButton.innerText = i;
+        pageButton.onclick = () => changePage(i);
+
+        if (i === currentPage) {
+            pageButton.classList.add("active"); // 현재 페이지에 강조 표시
+        }
+
+        pageNumbersContainer.appendChild(pageButton);
+    }
+
+    // > 버튼
+    const nextButton = document.createElement("button");
+    nextButton.innerText = ">";
+    nextButton.onclick = () => changePage(currentPage + 1);
+    nextButton.disabled = currentPage === totalPageCount;
+    pageNumbersContainer.appendChild(nextButton);
+
+    // >> 버튼
+    const lastButton = document.createElement("button");
+    lastButton.innerText = ">>";
+    lastButton.onclick = () => changePage(totalPageCount);
+    lastButton.disabled = currentPage === totalPageCount;
+    pageNumbersContainer.appendChild(lastButton);
+}
+
+// 페이지 변경 시 호출되는 함수
+function changePage(pageNumber) {
+    if (pageNumber < 1 || pageNumber > totalPageCount) return; // 페이지 범위를 벗어나는 경우 무시
+    currentPage = pageNumber;
+    getParentSystems(currentPage, pageSize); // 새로운 페이지의 데이터 로드
+    updatePaginationUI(); // 페이지 이동 후 UI 업데이트
+}
+
+
+function getProjectFeatureProgressSummary(){
+    $.ajax({
+        url: '/projects/features/totalProgress',
+        type: 'GET',
+        success: function (response){
+            console.log("전체 진척도 및 기능 건수", response);
+
+            // response에서 progress 값을 가져와서 사용
+            var progressValue = response.progress / 100; // 100분율로 계산된 값을 1 기준으로 맞춤
+
+            // circleProgress의 값을 업데이트
+            $(".circle").circleProgress({
+                value: progressValue,
+                size: 260,
+                fill: {
+                    gradient: ["#3b82f6", "#f59e0b"]
+                }
+            }).on('circle-animation-progress', function (event, progress) {
+                $(this).find('strong').html(parseInt(response.progress) + '<i>%</i>');
+            });
+            let projectTitle = document.querySelector('.common-project-title').textContent.trim();
+            updateMidPanel(response, projectTitle);
+            getProgressSummary();
+        },
+        error: function (xhr, status, error){
+            console.error('Error:', error);
+        }
+    })
+}
+
+
+function getProjectFeatureList(){
+    $.ajax({
+        url:'/projects/features/totalList',
+        type: 'GET',
+        success: function (response){
+            console.log("전체 기능 목록 :", response);
+            firstGrid.setData(response);
+        },
+        error: function (xhr, status, error) {
+            console.error('Error:', error);
+        }
+    })
 }

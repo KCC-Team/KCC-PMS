@@ -10,12 +10,12 @@ public class FeatureCreateRequestDto {
     private String featId;
     private String featTitle;
     private String featDescription;
-    private String preStartDate;
-    private String preEndDate;
-    private String startDate;
-    private String endDate;
+    private String preStartDateStr;
+    private String preEndDateStr;
+    private String startDateStr;
+    private String endDateStr;
     private String diffCode;
-    private String featClassCode;
+    private String classCode;
     private String statusCode;
     private String priorCode;
     private Long teamNo;
