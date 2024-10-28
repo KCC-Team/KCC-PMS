@@ -206,19 +206,18 @@ CREATE TABLE FileDetail (
     fl_no number NOT NULL,
     original_ttl VARCHAR2(100) NOT NULL,
     file_path VARCHAR2(500) NOT NULL,
-    fl_type VARCHAR2(20) NOT NULL,
+    fl_type VARCHAR2(80) NOT NULL,
     fl_size NUMBER NOT NULL,
     fl_ms_no NUMBER NOT NULL,
     reg_id VARCHAR2(100) NOT NULL,
     reg_dt DATE NOT NULL,
-    mod_id VARCHAR2(100) NULL,
-    mod_dt DATE NULL
+    del_id VARCHAR2(100) NULL,
+    del_dt DATE NULL
 );
 
 CREATE TABLE Output (
     opt_no number NOT NULL,
     opt_ttl VARCHAR2(50) NOT NULL,
-    depth number null,
     prj_no NUMBER NOT NULL,
     high_folder_no NUMBER NULL,
     fld_yn VARCHAR2(1) NOT NULL,
@@ -1241,21 +1240,6 @@ INSERT INTO FeatureTest (feat_no, test_dtl_no) VALUES (3, 1);
 update codedetail set field_2 = 'Y' where common_cd_no = 'PMS004';
 update codedetail set field_3 = 'Y' where common_cd_no = 'PMS004' and cd_dtl_no IN ('PMS00402', 'PMS00403', 'PMS00404');
 
-INSERT INTO Output (opt_no, opt_ttl, depth, prj_no, high_folder_no, fld_yn, use_yn)
-VALUES (seq_output.nextval, '차세대 공공 프로젝트', 1, 1, NULL, 'Y', 'Y');
-
-INSERT INTO FileMaster (fl_ms_no, use_yn)
-VALUES (seq_filemaster.nextval, 'Y');
-
-INSERT INTO FileDetail (fl_no, original_ttl, file_path, fl_type, fl_size, fl_ms_no, reg_id, reg_dt)
-VALUES (seq_filedetail.nextval, '노트북_123123123라이언', 'https://kcc-bucket.s3.ap-northeast-2.amazonaws.com/kcc_pms/1/%EB%85%B8%ED%8A%B8%EB%B6%81_123123123%EB%9D%BC%EC%9D%B4%EC%96%B8.png', 'png', 7270, 1, '홍길동', sysdate);
-INSERT INTO FileDetail (fl_no, original_ttl, file_path, fl_type, fl_size, fl_ms_no, reg_id, reg_dt)
-VALUES (seq_filedetail.nextval, 'spri123123123123ngboot ', 'https://kcc-bucket.s3.ap-northeast-2.amazonaws.com/kcc_pms/1/spri123123123123ngboot.png', 'png', 25293, 1, '홍길동', sysdate);
-
-INSERT INTO Output (opt_no, opt_ttl, depth, prj_no, high_folder_no, fld_yn, use_yn, fl_ms_no)
-VALUES (seq_output.nextval, 'A 업무 요구사항 정의서', 2, 1, 1, 'N', 'Y', 1);
-
-
 INSERT INTO Defect (df_no, df_id, df_ttl, stat_cd, pri_cd, df_cont, df_fd_dt, mem_fd_no, prj_no)
 VALUES (seq_defect.nextval, 'DF-0001', '로그인 오류', 'PMS00701', 'PMS00601', '사용자가 로그인할 수 없습니다.', TO_DATE('2024-10-01', 'YYYY-MM-DD'), 1, 1);
 INSERT INTO Defect (df_no, df_id, df_ttl, stat_cd, pri_cd, df_cont, df_fd_dt, mem_fd_no, prj_no)
@@ -1427,6 +1411,222 @@ VALUES (seq_feature.nextval, 'F019', '기능19', '내용19', TO_DATE('23/11/15',
 
 INSERT INTO FEATURE (FEAT_NO, FEAT_ID, FEAT_TITLE, FEAT_CONT, PRE_ST_DT, PRE_END_DT, ST_DT, END_DT, STAT_CD, PRI_CD, PRG, DIFF_CD, CLASS_CD, USE_YN, SYS_NO, MEM_NO, TM_NO, PRJ_NO)
 VALUES (seq_feature.nextval, 'F020', '기능20', '내용20', TO_DATE('24/01/15', 'YY/MM/DD'), TO_DATE('24/02/01', 'YY/MM/DD'), NULL, NULL, 'PMS00905', 'PMS00602', 90, 'PMS01102', 'PMS01002', 'Y', 5, 2, 1, 1);
+
+-- output
+InSERT InTO Output (opt_no, opt_ttl, prj_no, high_folder_no, fld_yn, use_yn)
+VALUES (seq_output.nextval, '차세대 시스템', 1, nULL, 'y', 'y');
+
+-- 철도 신호 시스템 폴더 생성
+InSERT InTO Output (opt_no, opt_ttl, prj_no, high_folder_no, fld_yn, use_yn)
+VALUES (seq_output.nextval, '철도 신호 시스템', 1, 1, 'y', 'y');
+
+-- 철도 물류 관리 시스템 폴더 생성
+InSERT InTO Output (opt_no, opt_ttl, prj_no, high_folder_no, fld_yn, use_yn)
+VALUES (seq_output.nextval, '철도 물류 관리 시스템', 1, 1, 'y', 'y');
+
+-- 철도 안전 관리 시스템 폴더 생성
+InSERT InTO Output (opt_no, opt_ttl, prj_no, high_folder_no, fld_yn, use_yn)
+VALUES (seq_output.nextval, '철도 안전 관리 시스템', 1, 1, 'y', 'y');
+
+-- 철도 예매 시스템 폴더 생성
+InSERT InTO Output (opt_no, opt_ttl, prj_no, high_folder_no, fld_yn, use_yn)
+VALUES (seq_output.nextval, '철도 예매 시스템', 1, 1, 'y', 'y');
+
+-- 철도 인력 관리 시스템 폴더 생성
+InSERT InTO Output (opt_no, opt_ttl, prj_no, high_folder_no, fld_yn, use_yn)
+VALUES (seq_output.nextval, '철도 인력 관리 시스템', 1, 1, 'y', 'y');
+
+InSERT InTO FileMaster (fl_ms_no, use_yn)
+VALUES (seq_filemaster.nextval, 'y');
+
+-- 파일 상세 정보 생성 (fl_ms_no = 1로 가정)
+InSERT InTO FileDetail (fl_no, original_ttl, file_path, fl_type, fl_size, fl_ms_no, reg_id, reg_dt)
+VALUES (
+           seq_filedetail.nextval,
+           '신호 시스템 설계서.docx',
+           'https://kcc-bucket.s3.ap-northeast-2.amazonaws.com/kcc_pms/1/%EB%85%B8%ED%8A%B8%EB%B6%81_123123123%EB%9D%BC%EC%9D%B4%EC%96%B8.png',
+           'docx',
+           102400,
+           1,
+           '홍길동',
+           SySDATE
+       );
+
+-- 산출물 생성 (opt_no = 7로 가정)
+InSERT InTO Output (opt_no, opt_ttl, prj_no, high_folder_no, fld_yn, use_yn, fl_ms_no)
+VALUES (
+           seq_output.nextval,
+           '신호 시스템 설계서',
+           1,
+           2,  -- 철도 신호 시스템 폴더의 opt_no
+           'n',
+           'y',
+           1   -- fl_ms_no
+       );
+
+-- 파일 마스터 생성
+InSERT InTO FileMaster (fl_ms_no, use_yn)
+VALUES (seq_filemaster.nextval, 'y');
+
+-- 파일 상세 정보 생성 (fl_ms_no = 2로 가정)
+InSERT InTO FileDetail (fl_no, original_ttl, file_path, fl_type, fl_size, fl_ms_no, reg_id, reg_dt)
+VALUES (
+           seq_filedetail.nextval,
+           '물류 관리 시스템 요구사항.xlsx',
+           '/files/물류 관리 시스템 요구사항.xlsx',
+           'xlsx',
+           204800,
+           2,
+           '홍길동',
+           SySDATE
+       );
+
+-- 산출물 생성 (opt_no = 8로 가정)
+InSERT InTO Output (opt_no, opt_ttl, prj_no, high_folder_no, fld_yn, use_yn, fl_ms_no)
+VALUES (
+           seq_output.nextval,
+           '물류 관리 시스템 요구사항',
+           1,
+           3,  -- 철도 물류 관리 시스템 폴더의 opt_no
+           'n',
+           'y',
+           2   -- fl_ms_no
+       );
+
+InSERT InTO FileMaster (fl_ms_no, use_yn)
+VALUES (seq_filemaster.nextval, 'y');
+
+-- 파일 상세 정보 생성 (fl_ms_no = 3로 가정)
+InSERT InTO FileDetail (fl_no, original_ttl, file_path, fl_type, fl_size, fl_ms_no, reg_id, reg_dt)
+VALUES (
+           seq_filedetail.nextval,
+           '안전 관리 시스템 분석보고서.pdf',
+           '/files/안전 관리 시스템 분석보고서.pdf',
+           'pdf',
+           512000,
+           3,
+           '홍길동',
+           SySDATE
+       );
+
+-- 산출물 생성 (opt_no = 9로 가정)
+InSERT InTO Output (opt_no, opt_ttl, prj_no, high_folder_no, fld_yn, use_yn, fl_ms_no)
+VALUES (
+           seq_output.nextval,
+           '안전 관리 시스템 분석보고서',
+           1,
+           4,  -- 철도 안전 관리 시스템 폴더의 opt_no
+           'n',
+           'y',
+           3   -- fl_ms_no
+       );
+
+InSERT InTO FileMaster (fl_ms_no, use_yn)
+VALUES (seq_filemaster.nextval, 'y');
+
+-- 파일 상세 정보 생성 (fl_ms_no = 4로 가정)
+InSERT InTO FileDetail (fl_no, original_ttl, file_path, fl_type, fl_size, fl_ms_no, reg_id, reg_dt)
+VALUES (
+           seq_filedetail.nextval,
+           '예매 시스템 UI 디자인.png',
+           '/files/예매 시스템 UI 디자인.png',
+           'png',
+           256000,
+           4,
+           '홍길동',
+           SySDATE
+       );
+
+-- 산출물 생성 (opt_no = 10로 가정)
+InSERT InTO Output (opt_no, opt_ttl, prj_no, high_folder_no, fld_yn, use_yn, fl_ms_no)
+VALUES (
+           seq_output.nextval,
+           '예매 시스템 UI 디자인',
+           1,
+           5,  -- 철도 예매 시스템 폴더의 opt_no
+           'n',
+           'y',
+           4   -- fl_ms_no
+       );
+
+InSERT InTO FileMaster (fl_ms_no, use_yn)
+VALUES (seq_filemaster.nextval, 'y');
+
+-- 파일 상세 정보 생성 (fl_ms_no = 5로 가정)
+InSERT InTO FileDetail (fl_no, original_ttl, file_path, fl_type, fl_size, fl_ms_no, reg_id, reg_dt)
+VALUES (
+           seq_filedetail.nextval,
+           '인력 관리 시스템 DB 설계.sql',
+           '/files/인력 관리 시스템 DB 설계.sql',
+           'sql',
+           128000,
+           5,
+           '홍길동',
+           SySDATE
+       );
+
+-- 산출물 생성 (opt_no = 11로 가정)
+InSERT InTO Output (opt_no, opt_ttl, prj_no, high_folder_no, fld_yn, use_yn, fl_ms_no)
+VALUES (
+           seq_output.nextval,
+           '인력 관리 시스템 DB 설계',
+           1,
+           6,  -- 철도 인력 관리 시스템 폴더의 opt_no
+           'n',
+           'y',
+           5   -- fl_ms_no
+       );
+
+-- 파일 마스터 생성
+InSERT InTO FileMaster (fl_ms_no, use_yn)
+VALUES (seq_filemaster.nextval, 'y');
+
+-- 파일 상세 정보 생성 (fl_ms_no = 6로 가정)
+InSERT InTO FileDetail (fl_no, original_ttl, file_path, fl_type, fl_size, fl_ms_no, reg_id, reg_dt)
+VALUES (
+           seq_filedetail.nextval,
+           '신호 시스템 테스트 계획서.docx',
+           '/files/신호 시스템 테스트 계획서.docx',
+           'docx',
+           150000,
+           6,
+           '홍길동',
+           SySDATE
+       );
+
+-- 산출물 생성 (opt_no = 12로 가정)
+InSERT InTO Output (opt_no, opt_ttl, prj_no, high_folder_no, fld_yn, use_yn, fl_ms_no)
+VALUES (
+           seq_output.nextval,
+           '신호 시스템 테스트 계획서',
+           1,
+           2,  -- 철도 신호 시스템 폴더의 opt_no
+           'n',
+           'y',
+           6   -- fl_ms_no
+       );
+
+-- 파일 마스터 생성 (fl_ms_no = 7)
+InSERT InTO FileMaster (fl_ms_no, use_yn) VALUES (seq_filemaster.nextval, 'y');
+
+-- 파일 상세 정보 생성
+InSERT InTO FileDetail (fl_no, original_ttl, file_path, fl_type, fl_size, fl_ms_no, reg_id, reg_dt)
+VALUES (seq_filedetail.nextval, '신호 시스템 운영 매뉴얼.pdf', '/files/신호 시스템 운영 매뉴얼.pdf', 'pdf', 200000, 7, '홍길동', SySDATE);
+
+-- 산출물 생성 (opt_no = 13)
+InSERT InTO Output (opt_no, opt_ttl, prj_no, high_folder_no, fld_yn, use_yn, fl_ms_no)
+VALUES (seq_output.nextval, '신호 시스템 운영 매뉴얼', 1, 2, 'n', 'y', 7);
+
+-- 파일 마스터 생성 (fl_ms_no = 8)
+InSERT InTO FileMaster (fl_ms_no, use_yn) VALUES (seq_filemaster.nextval, 'y');
+
+-- 파일 상세 정보 생성
+InSERT InTO FileDetail (fl_no, original_ttl, file_path, fl_type, fl_size, fl_ms_no, reg_id, reg_dt)
+VALUES (seq_filedetail.nextval, '물류 관리 시스템 데이터 모델링.pptx', '/files/물류 관리 시스템 데이터 모델링.pptx', 'pptx', 250000, 8, '홍길동', SySDATE);
+
+-- 산출물 생성 (opt_no = 14)
+InSERT InTO Output (opt_no, opt_ttl, prj_no, high_folder_no, fld_yn, use_yn, fl_ms_no)
+VALUES (seq_output.nextval, '물류 관리 시스템 데이터 모델링', 1, 3, 'n', 'y', 8);
 
 -----------------------------------------------------------------------------------------------------------------
 COMMIT;
