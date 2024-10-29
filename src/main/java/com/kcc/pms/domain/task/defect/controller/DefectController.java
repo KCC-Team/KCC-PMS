@@ -51,7 +51,8 @@ public class DefectController {
     public ResponseEntity<String> insert(HttpSession session,
                                  DefectDto req, DefectFileRequestDto files,
                                  @AuthenticationPrincipal PrincipalDetail principalDetail) {
-        Long projectNo = (Long) session.getAttribute("prgNo");
+//        Long projectNo = (Long) session.getAttribute("prgNo");
+        Long projectNo = 1L;
         Long defectNumber = defectService.saveDefect(projectNo, principalDetail.getMember().getMemberName(), req, files);
         String redirectUrl = "/projects/defects/" + defectNumber;
         return ResponseEntity.ok().body(redirectUrl);
