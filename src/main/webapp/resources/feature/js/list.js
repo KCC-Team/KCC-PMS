@@ -20,9 +20,16 @@ document.addEventListener("DOMContentLoaded", function() {
 
 $(document).ready(function (){
     window.addEventListener('message', function(event) {
-        if (event.data.status === 'success') {
+        if (event.data.status === 'register') {
             console.log('Received:', event.data.message);
-            window.location.reload();
+            console.log(event.data.featClassCd);
+            console.log(event.data.systemNo);
+            $('#featClassOption').val(event.data.featClassCd);
+            $('#systemNo').val(event.data.systemNo);
+            getProgressSummary(event.data.systemNo);
+            setSystemPath(event.data.systemNo);
+            fetchGridData(1);
+            getParentSystems(1,3);
         }
     }, false);
 
@@ -31,7 +38,8 @@ $(document).ready(function (){
         $(this).addClass("on");
     });
 
-    getFeatureClassCommonCode();
+    getFeatureClassCommonCode('PMS010');
+    getFeatureClassCommonCode('PMS009');
 
     fetchMenuData().then(function(menuData) {
         createMenu(menuData);
@@ -77,19 +85,6 @@ function getProgressSummary(systemNo, featClassCd){
     let listParams = {};
     if (systemNo) listParams.systemNo = systemNo;
     if (featClassCd) listParams.featClassCd = featClassCd;
-
-    $.ajax({
-        url: '/projects/features/list',
-        type: 'GET',
-        data: listParams,
-        success: function (response){
-            console.log("기능 목록 :", response);
-            firstGrid.setData(response);
-        },
-        error: function (xhr, status, error) {
-            console.error('Error:', error);
-        }
-    })
 
     $.ajax({
         url: '/projects/features/progress',
@@ -167,7 +162,7 @@ function initGrid(){
                         return '<span style="font-size: 13px;">' + (this.value ? this.value : '-') + '</span>';
                     }},
                 {key: "system", label: "시스템/업무", width: 82, align: "center", formatter: function (){
-                        return '<span style="font-size: 13px;">' + this.value + '</span>';
+                        return '<span style="font-size: 13px;">' + (this.value ? this.value : '-') + '</span>';
                     }},
                 {key: "progress", label: "진척도", width: 70, align: "center", formatter: function (){
                         return '<span style="font-size: 13px;">' + this.value + '</span>';
@@ -175,12 +170,75 @@ function initGrid(){
                 {key: "remainingDays", label: "남은일수", width: 70, align: "center", formatter: function (){
                         return '<span style="font-size: 13px;">' + this.value + '</span>';
                     }}
-            ]
+            ],
+            page: {
+                navigationItemCount: 5,
+                size: 10,
+                display: true,
+                firstIcon: '<i class="fa fa-step-backward" aria-hidden="true"></i>',
+                prevIcon: '<i class="fa fa-caret-left" aria-hidden="true"></i>',
+                nextIcon: '<i class="fa fa-caret-right" aria-hidden="true"></i>',
+                lastIcon: '<i class="fa fa-step-forward" aria-hidden="true"></i>',
+                onChange: function () {
+                    // 페이지가 바뀔 때 데이터 로드
+                    var selectedPage = this.page.selectPage + 1;
+                    fetchGridData(selectedPage);
+                }
+            }
         });
 
         resolve(); // 초기화 완료 후 resolve 호출
     })
 }
+
+function fetchGridData(page) {
+    let pageSize = 10;
+    let systemNo = $('#systemNo').val();
+    let featClassCd = $('#featClassOption').val();
+    let type = $('#featStatusOption').val();
+    let keyword = $('#midSearchBar').val();
+
+    let listParams = {
+        systemNo: systemNo,
+        featClassCd: featClassCd,
+        page: page,
+        pageSize: pageSize,
+        type: type,
+        keyword: keyword
+    };
+
+    $.ajax({
+        url: '/projects/features/list',
+        type: 'GET',
+        data: listParams,
+        success: function (response) {
+            console.log("pagination!!!!!!", response);
+            // 서버로부터 받은 데이터를 그리드와 페이지네이션에 반영
+            // firstGrid.setData(response.items); // 그리드 데이터 설정
+            updatePagination(response.items, response.pageInfo); // 페이지네이션 정보 업데이트
+        },
+        error: function (xhr, status, error) {
+            console.error('Error:', error);
+        }
+    });
+}
+
+function updatePagination(items, pageInfo) {
+    console.log(pageInfo.cri.pageNum);
+    console.log(pageInfo.total);
+    console.log(Math.ceil(pageInfo.total / 10));
+    firstGrid.setData({
+        list: items,
+        page: {
+            currentPage: pageInfo.cri.pageNum - 1,
+            totalElements: pageInfo.total,
+            totalPages: Math.ceil(pageInfo.total / 10),
+            pageSize: 10
+        }
+    })
+}
+
+
 
 function initDelayGrid(){
     var delayGrid = new ax5.ui.grid();
@@ -310,6 +368,7 @@ function createMenu(menuData) {
         $('#systemNo').val("");  // 전체 시스템을 의미하도록 systemNo 필드 비우기
         $('.mymenu').slideUp();  // 메뉴 숨기기
         getProgressSummary();
+        fetchGridData(1);
     });
     parentElement.append(allMenuItem);  // "전체" 메뉴 항목을 최상단에 추가
 
@@ -319,19 +378,20 @@ function createMenu(menuData) {
 
 function createMenuHTML(menuData, parentElement, path) {
     menuData.forEach(function(menuItem) {
-        const listItem = $('<li class="menu-item"></li>').text(menuItem.systemTitle);
-        const subMenu = $('<ul class="system-submenu"></ul>');
-
-        const currentPath = path ? path + " > " + menuItem.systemTitle : menuItem.systemTitle;
+        var currentPath = path ? path + " > " + menuItem.systemTitle : menuItem.systemTitle;
+        var listItem = $('<li>', {
+            'class': 'menu-item',
+            'data-system-no': menuItem.systemNo,
+            'data-parent-path': currentPath,
+            'text': menuItem.systemTitle
+        });
 
         // 하위 메뉴가 있는 경우
         if (menuItem.subSystems && menuItem.subSystems.length > 0) {
+            var subMenu = $('<ul>', {'class': 'system-submenu'});
             createMenuHTML(menuItem.subSystems, subMenu, currentPath);
             listItem.append(subMenu);
         }
-
-        // systemNo을 data attribute로 추가
-        listItem.data("systemNo", menuItem.systemNo);
 
         listItem.click(function(event) {
             event.stopPropagation();
@@ -339,15 +399,16 @@ function createMenuHTML(menuData, parentElement, path) {
             $('#systemNo').val(menuItem.systemNo);  // systemNo를 숨겨진 필드에 저장
             $('.mymenu').slideUp();  // 메뉴 숨기기
             getProgressSummary(menuItem.systemNo);
+            fetchGridData(1)
         });
 
         parentElement.append(listItem);
     });
 }
 
-function getFeatureClassCommonCode(){
+function getFeatureClassCommonCode(commonCodeNo){
     $.ajax({
-        url: '/getCommonCodeList?commonCodeNo=PMS010',
+        url: '/getCommonCodeList?commonCodeNo=' + commonCodeNo,
         type: 'GET',
         success: function (response){
             console.log("기능 종류 공통 코드 = " + response);
@@ -357,7 +418,12 @@ function getFeatureClassCommonCode(){
                     value: option.codeDetailNo,
                     text: option.codeDetailName.trim()
                 });
-                $('#featClassOption').append($option);
+                if(commonCodeNo === 'PMS010'){
+                    $('#featClassOption').append($option);
+                } else {
+                    $('#featStatusOption').append($option)
+                }
+
             })
         }
     })
@@ -374,7 +440,18 @@ $('#featClassOption').change(function() {
     console.log("선택된 systemNo:", selectedSystemNo);
 
     getProgressSummary(selectedSystemNo, selectedValue);
+    fetchGridData(1);
 });
+
+
+$('#featStatusOption').change(function (){
+    fetchGridData(1);
+})
+
+$('#featureSearch').click(function (e){
+    e.preventDefault();
+    fetchGridData(1);
+})
 
 function getParentSystems(pageNumber, pageSize){
     const systemContainer = $("#system-container");
@@ -545,7 +622,7 @@ function getProjectFeatureProgressSummary(){
             });
             let projectTitle = document.querySelector('.common-project-title').textContent.trim();
             updateMidPanel(response, projectTitle);
-            getProgressSummary();
+            fetchGridData(1);
         },
         error: function (xhr, status, error){
             console.error('Error:', error);
@@ -554,16 +631,10 @@ function getProjectFeatureProgressSummary(){
 }
 
 
-function getProjectFeatureList(){
-    $.ajax({
-        url:'/projects/features/totalList',
-        type: 'GET',
-        success: function (response){
-            console.log("전체 기능 목록 :", response);
-            firstGrid.setData(response);
-        },
-        error: function (xhr, status, error) {
-            console.error('Error:', error);
-        }
-    })
+function setSystemPath(systemNo) {
+    var selectedItem = $('[data-system-no="' + systemNo + '"]');
+    if (selectedItem.length) {
+        var path = selectedItem.data('parent-path') || selectedItem.text(); // 'data-parent-path'를 사용하되, 없다면 text() 사용
+        $('#system-select span:first-child').text(path);
+    }
 }

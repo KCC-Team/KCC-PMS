@@ -2,10 +2,7 @@ package com.kcc.pms.domain.feature.service;
 
 import com.kcc.pms.domain.common.model.dto.CommonCodeOptions;
 import com.kcc.pms.domain.feature.mapper.FeatureMapper;
-import com.kcc.pms.domain.feature.model.dto.FeatureCreateRequestDto;
-import com.kcc.pms.domain.feature.model.dto.FeatureDetailResponseDto;
-import com.kcc.pms.domain.feature.model.dto.FeatureProgressResponseDto;
-import com.kcc.pms.domain.feature.model.dto.FeatureSummaryResponseDto;
+import com.kcc.pms.domain.feature.model.dto.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -34,8 +31,12 @@ public class FeatureServiceImpl implements FeatureService{
     }
 
     @Override
-    public List<FeatureSummaryResponseDto> getSystemFeatureList(Long systemNo, String featClassCd, Long prjNo) {
-        return mapper.getSystemFeatureList(systemNo, featClassCd, prjNo);
+    public List<FeatureSummaryResponseDto> getSystemFeatureList(Long systemNo, String featClassCd, Long prjNo, CriteriaY cri) {
+        System.out.println("cri = " + cri);
+        System.out.println("systemNo = " + systemNo);
+        System.out.println("featClassCd = " + featClassCd);
+        System.out.println("prjNo = " + prjNo);
+        return mapper.getSystemFeatureList(systemNo, featClassCd, prjNo, cri);
     }
 
     @Override
@@ -43,10 +44,6 @@ public class FeatureServiceImpl implements FeatureService{
         return mapper.getProjectProgressSummary(prjNo);
     }
 
-    @Override
-    public List<FeatureSummaryResponseDto> getProjectFeatureList(Long prjNo) {
-        return mapper.getProjectFeatureList(prjNo);
-    }
 
     @Override
     public FeatureDetailResponseDto getFeatureDetail(Long featNo) {
@@ -73,6 +70,11 @@ public class FeatureServiceImpl implements FeatureService{
     @Override
     public Integer updateFeature(FeatureDetailResponseDto requestDto) {
         return mapper.updateFeature(requestDto);
+    }
+
+    @Override
+    public int countFeatures(Long systemNo, String featClassCd, Long prjNo, CriteriaY cri) {
+        return mapper.countFeatures(systemNo, featClassCd, prjNo, cri);
     }
 
 }

@@ -1,13 +1,14 @@
 package com.kcc.pms.domain.feature.model.dto;
 
-import lombok.Data;
+
 import lombok.Getter;
 import lombok.Setter;
 
 import java.io.Serializable;
 import java.util.Date;
 
-@Data
+@Getter
+@Setter
 public class FeatureDetailResponseDto implements Serializable {
     private Long featNo;
     private String featId;
