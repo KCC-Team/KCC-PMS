@@ -63,7 +63,7 @@
                         <button id="test-search-btn" class="custom-button d-flex align-items-center me-3 text-nowrap">&nbsp;&nbsp;&nbsp;&nbsp;검색&nbsp;&nbsp;&nbsp;&nbsp;</button>
                         <div class="action-buttons d-flex justify-content-end">
                             <a class="d-flex align-items-center text-nowrap">
-                                <button class="add-item">
+                                <button class="add-item add-test">
                                     <i class="fas fa-plus"></i>&nbsp;&nbsp;테스트 등록</button>
                             </a>
                         </div>

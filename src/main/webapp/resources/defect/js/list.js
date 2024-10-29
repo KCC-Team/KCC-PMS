@@ -29,7 +29,7 @@ $(function () {
                     return '<input type=hidden name=defect_id value=${item.defectNumber} />' +
                         '<a href="/projects/defects/' + encodeURIComponent(item.defectNumber) + '" class="defect-id" style="color: #2383f8; font-size: 13px; font-weight: bold; text-decoration: none;">' + item.defectId + '</a>';
                 }},
-            {key: "defectTitle", label: "결함명", width: 400, align: "left" , formatter: function (){
+            {key: "defectTitle", label: "결함명", width: 415, align: "left" , formatter: function (){
                     return '<span style="font-size: 12px;">' + this.value + '</span>';
                 }},
             {key: "priority", label: "우선순위", width: 100, align: "center", formatter: function (){
@@ -86,12 +86,12 @@ $(function () {
 
     $(document).on('click', '.defect-id', function(e) {
         e.preventDefault();
-       let popup = window.open($(this).attr('href'), 'popup', 'width=1150, height=790');
+       let popup = window.open($(this).attr('href'), 'popup', 'width=1150, height=810');
     });
 
     $(document).on('click', '.add-defect', function(e) {
         e.preventDefault();
-        let popup = window.open('/projects/defects/defect', 'popup', 'width=1150, height=790');
+        let popup = window.open('/projects/defects/defect', 'popup', 'width=1150, height=810');
     });
 
     fetchMenuData().then(function(menuData) {
@@ -114,11 +114,13 @@ $(function () {
         $('#systemNo').val() ? reloadData(testGrid, $('#systemNo').val(), $('.defect-opt').val(), $('.defect-status').val(), $('#searchDefect').val(), currentPage) :
         reloadData(testGrid, 0, $('.defect-opt').val(), $('.defect-status').val(), $('#searchDefect').val(), currentPage);
     });
+
+    fetchOptions();
 });
 
 function fetchMenuData() {
     return $.ajax({
-        url: '/systems',
+        url: '/systems?prjNo=' + prjNo,
         method: 'GET',
         dataType: 'json',
         success: function(response) {
@@ -130,41 +132,50 @@ function fetchMenuData() {
     });
 }
 
+
 function createMenu(menuData) {
-    createMenuHTML(menuData, $('#system-menu'), "");
+    const parentElement = $('#system-menu');
+
+    // "전체" 메뉴 항목 추가
+    const allMenuItem = $('<li class="menu-item"></li>').text("전체");
+    allMenuItem.click(function(event) {
+        event.stopPropagation();
+        let projectTitle = document.querySelector('.common-project-title').textContent.trim();
+        $('#system-select span:first-child').text(projectTitle);
+        $('#systemNo').val("");  // 전체 시스템을 의미하도록 systemNo 필드 비우기
+        $('.mymenu').slideUp();  // 메뉴 숨기기
+        reloadData(testGrid, $('#systemNo').val(), $('.defect-opt').val(), $('.defect-status').val(), "", currentPage);
+    });
+    parentElement.append(allMenuItem);  // "전체" 메뉴 항목을 최상단에 추가
+
+    // 기존 메뉴 생성
+    createMenuHTML(menuData, parentElement, "");
 }
 
 function createMenuHTML(menuData, parentElement, path) {
     menuData.forEach(function(menuItem) {
-        const listItem = $('<li class="menu-item"></li>');
-        const itemLabel = $('<span></span>').text(menuItem.systemTitle);
-        listItem.append(itemLabel);
-
-        const subMenu = $('<ul class="system-submenu"></ul>');
-        const currentPath = path ? path + " > " + menuItem.systemTitle : menuItem.systemTitle;
+        let currentPath = path ? path + " > " + menuItem.systemTitle : menuItem.systemTitle;
+        let listItem = $('<li>', {
+            'class': 'menu-item',
+            'data-system-no': menuItem.systemNo,
+            'data-parent-path': currentPath,
+            'text': menuItem.systemTitle
+        });
 
         // 하위 메뉴가 있는 경우
         if (menuItem.subSystems && menuItem.subSystems.length > 0) {
+            let subMenu = $('<ul>', {'class': 'system-submenu'});
             createMenuHTML(menuItem.subSystems, subMenu, currentPath);
             listItem.append(subMenu);
-
-            // 하위 메뉴 토글 기능 추가
-            itemLabel.click(function(event) {
-                event.stopPropagation();
-                subMenu.slideToggle();
-            });
-        } else {
-            // 하위 메뉴가 없는 경우 클릭 시 시스템 선택
-            itemLabel.click(function(event) {
-                event.stopPropagation();
-                $('#system-select span:first-child').text(currentPath);  // 사용자가 선택한 경로 표시
-                $('#systemNo').val(menuItem.systemNo);  // systemNo를 숨겨진 필드에 저장
-                $('#system-menu').slideUp();  // 메뉴 숨기기
-
-                let select = $('.defect-status').val();
-                reloadData(testGrid, menuItem.systemNo, $('.defect-opt').val(), select, "", currentPage);
-            });
         }
+
+        listItem.click(function(event) {
+            event.stopPropagation();
+            $('#system-select span:first-child').text(currentPath); // 선택된 경로 표시
+            $('#systemNo').val(menuItem.systemNo); // 시스템 번호를 숨겨진 필드에 저장
+            $('.mymenu').slideUp(); // 메뉴 숨기기
+            reloadData(testGrid, $('#systemNo').val(), $('.defect-opt').val(), $('.defect-status').val(), "", currentPage);
+        });
 
         parentElement.append(listItem);
     });
@@ -172,7 +183,6 @@ function createMenuHTML(menuData, parentElement, path) {
 
 function reloadData(testGrid, work, type, status, search, page) {
     const urlParams = new URLSearchParams(window.location.search);
-
     if (page !== currentPage) {
         currentPage = page;
     }
@@ -181,7 +191,6 @@ function reloadData(testGrid, work, type, status, search, page) {
         method: "GET",
         url: API_SERVER + "/projects/defects/api/list?workNo=" + work + "&type=" + type + "&status=" + status + "&search=" + search + "&page=" + page,
             success: function (res) {
-                console.log('그리드 데이터 가져오기 성공', res);
                 testGrid.setData({
                     list: res.defectList,
                     page: {
@@ -194,5 +203,41 @@ function reloadData(testGrid, work, type, status, search, page) {
         }, error: function (err) {
             console.error('그리드 데이터 가져오기 오류', err);
         }
+    });
+}
+
+function fetchOptions() {
+    $.ajax({
+        url: '/projects/defects/options',
+        method: 'GET',
+        success: function(data) {
+            console.log(data)
+            data.forEach(function(item) {
+                const selectId = '#' + item.common_cd_no;
+                const $selectElement = $(selectId);
+
+                if ($selectElement.length) {
+                    setOptions($selectElement, item.codes);
+
+                }
+            });
+        },
+        error: function(xhr, status, error) {
+            console.error('옵션 데이터를 가져오는데 실패했습니다.', error);
+        }
+    });
+}
+
+function setOptions($selectElement, options) {
+    options.forEach(function(option) {
+
+        // 각 option 태그 생성
+        const $option = $('<option>', {
+            value: option.cd_dtl_no,
+            text: option.cd_dtl_nm
+        });
+
+        $selectElement.append($option);
+
     });
 }

@@ -35,7 +35,6 @@ document.addEventListener('DOMContentLoaded', function() {
         };
 
         dropzone1.emit("addedfile", mockFile);
-        console.log(file);
         dropzone1.emit("thumbnail", mockFile, file.filePath);
         dropzone1.emit("complete", mockFile);
 
@@ -151,12 +150,49 @@ $(function () {
 
     let val = $('#systemNo').val();
     setSystemPath(val);
+    fetchOptions();
 });
 
 function getDefectNumberFromPath() {
     const path = window.location.pathname;
     const segments = path.split('/');
     return segments[segments.length - 1];
+}
+
+function fetchOptions() {
+    $.ajax({
+        url: '/projects/defects/options',
+        method: 'GET',
+        success: function(data) {
+            console.log(data)
+            data.forEach(function(item) {
+                const selectId = '#' + item.common_cd_no;
+                const $selectElement = $(selectId);
+
+                if ($selectElement.length) {
+                    setOptions($selectElement, item.codes);
+
+                }
+            });
+        },
+        error: function(xhr, status, error) {
+            console.error('옵션 데이터를 가져오는데 실패했습니다.', error);
+        }
+    });
+}
+
+function setOptions($selectElement, options) {
+    options.forEach(function(option) {
+
+        // 각 option 태그 생성
+        const $option = $('<option>', {
+            value: option.cd_dtl_no,
+            text: option.cd_dtl_nm
+        });
+
+        $selectElement.append($option);
+
+    });
 }
 
 function insertData(dropzone_dis, dropzone_work, $form) {
@@ -255,6 +291,22 @@ function updateData(dropzone_dis, dropzone_work, $form, defectNumber) {
         }
     });
 }
+
+window.addEventListener('message', function (event) {
+    if (event.origin !== "http://localhost:8085") {
+        return;
+    }
+
+    console.log(event.data);
+
+    if (event.data.type === 'defect1') {
+        $('#fd_mem_no').val(event.data.member[0].id);
+        $('#fd_mem_nm').val(event.data.member[0].memberName);
+    } else if (event.data.type === 'defect2') {
+        $('#work_mem_no').val(event.data.member[0].id);
+        $('#work_mem_nm').val(event.data.member[0].memberName);
+    }
+});
 
 function fetchMenuData() {
     return $.ajax({

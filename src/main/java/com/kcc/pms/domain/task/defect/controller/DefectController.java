@@ -3,24 +3,24 @@ package com.kcc.pms.domain.task.defect.controller;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.kcc.pms.auth.PrincipalDetail;
+import com.kcc.pms.domain.common.model.dto.CommonCodeOptions;
 import com.kcc.pms.domain.common.model.dto.FileResponseDto;
 import com.kcc.pms.domain.common.model.vo.FileMasterNumbers;
 import com.kcc.pms.domain.common.service.CommonService;
-import com.kcc.pms.domain.task.defect.domain.dto.DefectFileRequestDto;
 import com.kcc.pms.domain.task.defect.domain.dto.DefectDto;
+import com.kcc.pms.domain.task.defect.domain.dto.DefectFileRequestDto;
 import com.kcc.pms.domain.task.defect.domain.dto.DefectPageResponseDto;
-import com.kcc.pms.domain.task.defect.domain.dto.DefectResponseDto;
 import com.kcc.pms.domain.task.defect.service.DefectService;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -34,16 +34,15 @@ public class DefectController {
 
     private final ObjectMapper objectMapper;
 
-    private static final String PRIORITY = "PMS006";
-    private static final String STATUS = "PMS007";
-    private static final String TYPE = "PMS008";
+    @GetMapping("/options")
+    @ResponseBody
+    public ResponseEntity<List<CommonCodeOptions>> getDefectCommonCodeOptions() {
+        return ResponseEntity.ok().body(defectService.getDefectCommonCodeOptions());
+    }
 
     @GetMapping("/defect")
     public String showInsertForm(Model model) {
         model.addAttribute("req", new DefectDto());
-        model.addAttribute("priority", commonService.getCommonCodeSelectList(PRIORITY));
-        model.addAttribute("status", commonService.getCommonCodeSelectList(STATUS));
-        model.addAttribute("type", commonService.getCommonCodeSelectList(TYPE));
         return "defect/defect";
     }
 
@@ -51,12 +50,9 @@ public class DefectController {
     @ResponseBody
     public ResponseEntity<String> insert(HttpSession session,
                                  DefectDto req, DefectFileRequestDto files,
-                                 @AuthenticationPrincipal PrincipalDetail principalDetail,
-                                 @ModelAttribute("priority") String priority,
-                                 @ModelAttribute("status") String status,
-                                 @ModelAttribute("type") String type) {
+                                 @AuthenticationPrincipal PrincipalDetail principalDetail) {
         Long projectNo = (Long) session.getAttribute("prgNo");
-        Long defectNumber = defectService.saveDefect(projectNo, principalDetail.getMember().getMemberName(), req, files, priority, status,type);
+        Long defectNumber = defectService.saveDefect(projectNo, principalDetail.getMember().getMemberName(), req, files);
         String redirectUrl = "/projects/defects/" + defectNumber;
         return ResponseEntity.ok().body(redirectUrl);
     }
@@ -82,22 +78,15 @@ public class DefectController {
         model.addAttribute("req", defectService.getDefect(no));
         model.addAttribute("discoverFilesJson", discoverFilesJson);
         model.addAttribute("workFilesJson", workFilesJson);
-        model.addAttribute("priority", commonService.getCommonCodeSelectList(PRIORITY));
-        model.addAttribute("status", commonService.getCommonCodeSelectList(STATUS));
-        model.addAttribute("type", commonService.getCommonCodeSelectList(TYPE));
-
         return "defect/defect";
     }
 
     @PutMapping("/{no}")
     @ResponseBody
-    public ResponseEntity<String> update(HttpSession session, @PathVariable Long no, DefectDto req, DefectFileRequestDto files,
-                                         @AuthenticationPrincipal PrincipalDetail principalDetail,
-                                         @ModelAttribute("priority") String priority,
-                                         @ModelAttribute("status") String status,
-                                         @ModelAttribute("type") String type) {
+    public ResponseEntity<String> update(HttpServletResponse response, HttpSession session, @PathVariable Long no, DefectDto req, DefectFileRequestDto files,
+                                         @AuthenticationPrincipal PrincipalDetail principalDetail) throws IOException {
         Long prgNo = (Long) session.getAttribute("prgNo");
-        defectService.updateDefect(prgNo, principalDetail.getMember().getMemberName(), no, req, files, priority, status, type);
+        defectService.updateDefect(prgNo, principalDetail.getMember().getMemberName(), no, req, files);
         String redirectUrl = "/projects/defects/" + no;
         return ResponseEntity.ok().body(redirectUrl);
     }
@@ -110,22 +99,25 @@ public class DefectController {
     }
 
     @GetMapping
-    public String findAll(Model model) {
-        model.addAttribute("status", commonService.getCommonCodeSelectList(STATUS));
-        model.addAttribute("type", commonService.getCommonCodeSelectList(TYPE));
+    public String findAll() {
         return "defect/list";
     }
 
     @GetMapping("/api/list")
     @ResponseBody
-    public ResponseEntity<DefectPageResponseDto> findAll(
+    public ResponseEntity<DefectPageResponseDto> findAll(HttpServletResponse response,
             HttpSession session,
             @RequestParam(value = "workNo", defaultValue = "0") Long workNo,
             @RequestParam(value = "type", defaultValue = "all") String type,
             @RequestParam(value = "status", defaultValue = "all") String status,
             @RequestParam(value = "search", defaultValue = "") String search,
-            @RequestParam(value = "page", defaultValue = "1") int page) {
+            @RequestParam(value = "page", defaultValue = "1") int page) throws IOException {
         Long projectNo = (Long) session.getAttribute("prjNo");
+        if (projectNo == null) {
+            response.sendRedirect("/projects/dashboardInfo");
+            return ResponseEntity.ok().body(null);
+        }
+
         return ResponseEntity.ok().body(defectService.getDefectList(projectNo, workNo, type, status, search, page));
     }
 

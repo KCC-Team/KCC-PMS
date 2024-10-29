@@ -63,6 +63,8 @@
     <section style="height: 600px">
         <form id="defectForm">
             <input type="hidden" name="defectNumber" value="${req.defectNumber}" >
+            <input type="hidden" id="fd_mem_no" name="foundMemberNo" value="${req.foundMemberNo}">
+            <input type="hidden" id="work_mem_no" name="workMemberNo" value="${req.workMemberNo}">
             <div class="d-flex justify-content-left">
                 <div class="me-3" style="width: 550px !important;">
                     <table class="defect-table w-100">
@@ -96,7 +98,7 @@
                         <tr>
                             <td class="td-title">결함 구분&nbsp;&nbsp;&nbsp;<span class="es-star">*</span></td>
                             <td>
-                                <select name="type" class="type" required >
+                                <select id="PMS008" name="typeSelect" class="type" required >
                                     <option value="" selected disabled>결함 분류 선택</option>
                                     <c:forEach var="item" items="${type}">
                                         <option value="${item.codeDetailNo}"
@@ -124,7 +126,7 @@
                         <tr>
                             <td class="td-title">우선순위&nbsp;&nbsp;&nbsp;<span class="es-star">*</span></td>
                             <td>
-                                <select name="priority" class="type" required >
+                                <select id="PMS006" name="prioritySelect" class="type" required >
                                     <option value="" selected disabled>우선순위 선택</option>
                                     <c:forEach var="item" items="${priority}">
                                         <option value="${item.codeDetailNo}"
@@ -137,7 +139,7 @@
                             </td>
                             <td class="td-title">상태&nbsp;&nbsp;&nbsp;<span class="es-star">*</span></td>
                             <td>
-                                <select name="status" class="type" required >
+                                <select id="PMS007" name="statusSelect" class="type" required >
                                     <option value="" selected disabled>상태 선택</option>
                                     <c:forEach var="st" items="${status}">
                                         <option value="${st.codeDetailNo}"
@@ -151,8 +153,9 @@
                         </tr>
                         <tr>
                             <td class="td-title">발견자&nbsp;&nbsp;&nbsp;<span class="es-star">*</span></td>
-                            <td>
-                                <input type="text" name="discoverName" value="${req.discoverName}" required readonly >
+                            <td class="d-flex justify-content-center align-items-center">
+                                <input type="text" id="fd_mem_nm" name="foundMemberName" value="${req.foundMemberName}" readonly style="width: 90px">&nbsp;&nbsp;
+                                <button type="button" class="btn-select-user" onclick="openTeamPopUp('defect1')">선택</button>
                             </td>
                             <td class="td-title">발견일자&nbsp;&nbsp;&nbsp;<span class="es-star">*</span></td>
                             <td>
@@ -169,8 +172,9 @@
                         </tr>
                         <tr>
                             <td class="td-title">조치자</td>
-                            <td>
-                                <input type="text" name="workerName" value="${req.workerName}" readonly >
+                            <td class="d-flex justify-content-center align-items-center">
+                                <input type="text" id="work_mem_nm" name="workMemberName" value="${req.workMemberName}" readonly style="width: 90px">&nbsp;&nbsp;
+                                <button type="button" class="btn-select-user" onclick="openTeamPopUp('defect2')">선택</button>
                             </td>
                             <td class="td-title">조치일자</td>
                             <td>
@@ -217,6 +221,7 @@
         </form>
     </section>
 
+<script src="../../../resources/common/js/common.js"></script>
 <script type="text/javascript">
     let discoverFilesJson = '<c:out value="${discoverFilesJson}" escapeXml="false" />';
     let workFilesJson = '<c:out value="${workFilesJson}" escapeXml="false" />';

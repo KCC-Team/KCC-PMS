@@ -62,7 +62,7 @@ $(function () {
         }
     });
 
-    $('.test-add-btn').on('click', function () {
+    $('.add-test').on('click', function () {
         location.href = '/projects/tests/register';
     });
 });
