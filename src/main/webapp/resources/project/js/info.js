@@ -332,10 +332,6 @@ function setAllReadonly() {
 
 // 팝업 데이터 연결
 window.addEventListener('message', function (event) {
-    if (event.origin !== "http://localhost:8085") {
-        return;
-    }
-
     let addedMembers = event.data;
     // 멤버 이름과 ID 설정
     document.getElementById("mem_num").value = addedMembers[0].name;

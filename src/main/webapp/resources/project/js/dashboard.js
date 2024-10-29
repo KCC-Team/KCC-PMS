@@ -32,8 +32,6 @@ function getChartData() {
         url: '/projects/api/chart',
         type: 'GET',
         success: function(data) {
-            console.log(data);
-
             let task_counts = [data.TASK_COUNT_01, data.TASK_COUNT_02, data.TASK_COUNT_03];
             taskStatusChart.data.datasets[0].data = task_counts;
             taskStatusChart.data.labels = [
@@ -103,6 +101,7 @@ function getProjectInfo() {
             $('#org').text(response.project.org);
             $('#st_dt').text(response.project.st_dt);
             $('#end_dt').text(response.project.end_dt);
+            $('#pmName').text(response.projectManager.memNm);
         },
         error: function(xhr, status, error) {
             console.error('에러:', xhr.responseText);
@@ -166,8 +165,8 @@ const issueStatusChart = new Chart(issueStatusChartCtx, {
         labels: ['발생전(0)', '진행중(0)', '조치완료(0)', '취소(0)'],
         datasets: [{
             data: [0, 0, 0, 0],
-            backgroundColor: ['#FF6699', '#2ecc71', '#3498db', '#FFFF99'],
-            borderColor: ['#FF6699', '#2ecc71', '#3498db', '#FFFF99'],
+            backgroundColor: ['#FF6699', '#2ecc71', '#3498db', '#FFBB00'],
+            borderColor: ['#FF6699', '#2ecc71', '#3498db', '#FFBB00'],
             borderWidth: 1
         }]
     },
@@ -213,8 +212,8 @@ const dangerStatusChart = new Chart(dangerStatusChartCtx, {
         labels: ['발생전(0)', '진행중(0)', '조치완료(0)', '취소(0)'],
         datasets: [{
             data: [0, 0, 0, 0],
-            backgroundColor: ['#FF6699', '#2ecc71', '#3498db', '#FFFF99'],
-            borderColor: ['#FF6699', '#2ecc71', '#3498db', '#FFFF99'],
+            backgroundColor: ['#FF6699', '#2ecc71', '#3498db', '#FFBB00'],
+            borderColor: ['#FF6699', '#2ecc71', '#3498db', '#FFBB00'],
             borderWidth: 1
         }]
     },
@@ -260,8 +259,8 @@ const defectsStatusChart = new Chart(defectsStatusChartCtx, {
         labels: ['신규(0)', '진행중(0)', '해결(0)', '취소(0)',],
         datasets: [{
             data: [0, 0, 0, 0],
-            backgroundColor: ['#FF6699', '#2ecc71', '#3498db', '#FFFF99'],
-            borderColor: ['#FF6699', '#2ecc71', '#3498db', '#FFFF99'],
+            backgroundColor: ['#FF6699', '#2ecc71', '#3498db', '#FFBB00'],
+            borderColor: ['#FF6699', '#2ecc71', '#3498db', '#FFBB00'],
             borderWidth: 1
         }]
     },
