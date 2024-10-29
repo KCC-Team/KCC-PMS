@@ -22,7 +22,7 @@
                         </div>
                     </div>
                     <div class="card-footer">
-                        <a href="#">더보기 <span class="arrow">&rarr;</span></a>
+                        <a href="/projects/wbsList">더보기 <span class="arrow">&rarr;</span></a>
                     </div>
                 </div>
                 <div class="stat-box">
@@ -34,7 +34,7 @@
                         </div>
                     </div>
                     <div class="card-footer">
-                        <a href="#">더보기 <span class="arrow">&rarr;</span></a>
+                        <a href="/projects/features">더보기 <span class="arrow">&rarr;</span></a>
                     </div>
                 </div>
                 <div class="stat-box">
@@ -46,7 +46,7 @@
                         </div>
                     </div>
                     <div class="card-footer">
-                        <a href="#">더보기 <span class="arrow">&rarr;</span></a>
+                        <a href="/projects/issues">더보기 <span class="arrow">&rarr;</span></a>
                     </div>
                 </div>
                 <div class="stat-box">
@@ -58,7 +58,7 @@
                         </div>
                     </div>
                     <div class="card-footer">
-                        <a href="#">더보기 <span class="arrow">&rarr;</span></a>
+                        <a href="/projects/dangers">더보기 <span class="arrow">&rarr;</span></a>
                     </div>
                 </div>
                 <div class="stat-box">
@@ -70,7 +70,7 @@
                         </div>
                     </div>
                     <div class="card-footer">
-                        <a href="#">더보기 <span class="arrow">&rarr;</span></a>
+                        <a href="/projects/defects">더보기 <span class="arrow">&rarr;</span></a>
                     </div>
                 </div>
                 <div class="stat-box">

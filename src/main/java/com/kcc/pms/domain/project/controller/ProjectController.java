@@ -51,6 +51,9 @@ public class ProjectController {
 
     @GetMapping("/dashboardInfo")
     public String dashboard(@RequestParam Long prjNo, @RequestParam String prjTitle, HttpSession session, @AuthenticationPrincipal PrincipalDetail principalDetail) {
+        if (prjNo == null) {
+            prjNo = 1L;
+        }
         if (prjNo > 0 && prjTitle != null) {
             Long memNo = principalDetail.getMember().getMemNo();
             ProjectManagerResponseDto pmDto = projectService.getAuthCode(prjNo, memNo);

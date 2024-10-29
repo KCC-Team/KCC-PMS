@@ -38,5 +38,10 @@ public class SystemController {
         return ResponseEntity.ok(parentSystems);
     }
 
+    @GetMapping("/list")
+    public String list() {
+        return "system/list";
+    }
+
 
 }
