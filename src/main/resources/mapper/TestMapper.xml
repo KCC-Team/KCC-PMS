@@ -8,7 +8,8 @@
         <result property="testType" column="testType" />
         <result property="testTitle" column="testTitle" />
         <result property="workTitle" column="workTitle" />
-        <result property="testPeriod" column="testPeriod" />
+        <result property="testStartDate" column="testStartDate"/>
+        <result property="testEndDate" column="testEndDate"/>
         <result property="detailCount" column="detailCount" />
         <result property="defectCount" column="defectCount" />
         <result property="testStatus" column="testStatus" />
@@ -42,6 +43,24 @@
         <collection property="testCaseList" resultMap="TestDetailResultMap"/>
     </resultMap>
 
+    <resultMap id="codeOptions" type="com.kcc.pms.domain.common.model.dto.CommonCodeOptions">
+        <id column="COMMON_CD_NO" property="common_cd_no"/>
+        <collection property="codes" resultMap="codeDetails"/>
+    </resultMap>
+
+    <resultMap id="codeDetails" type="com.kcc.pms.domain.common.model.vo.CommonCodeVO">
+        <result column="CD_DTL_NO" property="cd_dtl_no"/>
+        <result column="CD_DTL_NM" property="cd_dtl_nm"/>
+        <result column="ORDER_NO" property="order_no"/>
+    </resultMap>
+
+    <select id="getCommonCodeOptions" resultMap="codeOptions">
+        SELECT common_cd_no, cd_dtl_no, cd_dtl_nm, order_no
+        FROM codedetail
+        WHERE common_cd_no IN( 'PMS012','PMS013')
+        ORDER BY common_cd_no, order_no
+    </select>
+
     <select id="findAllByOptions" parameterType="map" resultMap="testDto">
         SELECT *
         FROM (
@@ -53,7 +72,8 @@
         TRIM(cd_type.cd_dtl_nm) AS testType,
         t.test_title AS testTitle,
         sys_work.sys_ttl AS workTitle,
-        TO_CHAR(t.test_st_dt, 'YYYY-MM-DD') || ' ~ ' || TO_CHAR(t.test_end_dt, 'YYYY-MM-DD') AS testPeriod,
+        TO_CHAR(t.test_st_dt, 'YYYY-MM-DD') AS testStartDate,
+        TO_CHAR(t.test_end_dt, 'YYYY-MM-DD') AS testEndDate,
         COUNT(DISTINCT td.test_dtl_no) AS detailCount,
         COUNT(d.df_no) AS defectCount,
         TRIM(cd_stat.cd_dtl_nm) AS testStatus
@@ -63,7 +83,7 @@
         LEFT JOIN codedetail cd_stat ON t.stat_cd = cd_stat.cd_dtl_no
         LEFT JOIN defect d ON td.test_dtl_no = d.test_dtl_no
         LEFT JOIN system sys_work ON sys_work.sys_no = t.sys_work_no
-        WHERE t.prj_no = 1
+        WHERE t.prj_no = #{projectNumber}
         AND t.use_yn = 'Y'
         <if test="workNumber != 0">
             AND t.sys_work_no = #{workNumber, jdbcType=INTEGER}
@@ -75,15 +95,14 @@
             AND t.stat_cd = #{status, jdbcType=CHAR}
         </if>
         GROUP BY
-        t.test_no, t.test_id, cd_type.cd_dtl_nm, t.test_title, sys_work.sys_ttl, t.test_st_dt, t.test_end_dt, cd_stat.cd_dtl_nm
-        ORDER BY t.test_no
+        t.test_no, t.test_id, cd_type.cd_dtl_nm, t.test_title, sys_work.sys_ttl, t.test_st_dt, t.test_end_dt, cd_stat.cd_dtl_nm, t.reg_dt
+        ORDER BY t.reg_dt desc
         ) sub
         <![CDATA[
             WHERE ROWNUM <= #{page} * #{limit}
         ]]>
         )
         WHERE rn > (#{page} - 1) * #{limit}
-        ORDER BY testNumber
     </select>
 
     <insert id="saveTest" parameterType="map">
@@ -163,6 +182,27 @@
                  left join feature f ON f.feat_no = ft.feat_no
         where t.test_no = #{testNumber, jdbcType=INTEGER}
         order by td.test_dtl_no
+    </select>
+
+    <select id="getTestTotalCount" resultType="int">
+        SELECT count(*)
+        FROM testmaster t
+        LEFT JOIN testdetail td ON t.test_no = td.test_no
+        LEFT JOIN codedetail cd_type ON t.type_cd = cd_type.cd_dtl_no
+        LEFT JOIN codedetail cd_stat ON t.stat_cd = cd_stat.cd_dtl_no
+        LEFT JOIN defect d ON td.test_dtl_no = d.test_dtl_no
+        LEFT JOIN system sys_work ON sys_work.sys_no = t.sys_work_no
+        WHERE t.prj_no = #{projectNumber}
+        AND t.use_yn = 'Y'
+        <if test="workNumber != 0">
+            AND t.sys_work_no = #{workNumber, jdbcType=INTEGER}
+        </if>
+        <if test="testType != 'all'">
+            AND t.type_cd = #{testType, jdbcType=CHAR}
+        </if>
+        <if test="status != 'all'">
+            AND t.stat_cd = #{status, jdbcType=CHAR}
+        </if>
     </select>
 
     <update id="deleteTest" parameterType="long">

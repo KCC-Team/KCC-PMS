@@ -4,22 +4,8 @@
 <link rel="stylesheet" type="text/css" href="../../../resources/common/css/ax5grid.css">
 <link rel="stylesheet" type="text/css" href="../../../resources/test/css/list.css">
 
-<!-- 샘플 데이터 -->
-<%@ page import="java.util.List" %>
-<%@ page import="java.util.ArrayList" %>
-
-<%
-    // 데이터 목록 준비
-    List<String> tasks = new ArrayList<>();
-    tasks.add("연결 작업 1");
-    tasks.add("연결 작업 2");
-    tasks.add("연결 작업 3");
-    // JSP 페이지의 Attribute로 데이터 목록을 설정
-    request.setAttribute("tasks", tasks);
-%>
-
 <main class="content" id="content">
-    <div class="main_content">
+    <div class="main_content" style="height: 85%">
         <div class="div-section">
             <label class="div-info">
                 테스트 관리</label>
@@ -29,32 +15,28 @@
                 <div class="filter-section">
                     <div class="d-flex align-items-center" style="width: 100%">
                         <div class="me-4 d-flex justify-content-left align-items-center text-nowrap">
-                            업무 구분&nbsp;&nbsp;&nbsp;
-                            <label>
-                                <select name="taskSelect" class="form-select">
-                                    <c:forEach var="task" items="${tasks}">
-                                        <option value="${task}">${task}</option>
-                                    </c:forEach>
-                                </select>
-                            </label>
+                            <span class="text-nowrap">시스템 분류&nbsp;&nbsp;&nbsp;</span>
+                            <input type="hidden" id="systemNo" name="systemNumber" value="${req.systemNumber}" >
+                            <div class="system-select-wrapper w-75">
+                                    <span class="system-select-button" id="system-select">
+                                        <span>시스템/업무 선택</span>
+                                    </span>
+                                <ul class="mymenu" id="system-menu"></ul>
+                            </div>
                         </div>
                         <div class="me-4 d-flex justify-content-left align-items-center text-nowrap">
                             테스트 구분&nbsp;&nbsp;&nbsp;
                             <label>
-                                <select name="taskSelect" class="form-select">
-                                    <c:forEach var="task" items="${tasks}">
-                                        <option value="${task}">${task}</option>
-                                    </c:forEach>
+                                <select id="PMS012" name="taskSelect" class="test-opt form-select">
+                                    <option value="all" selected disabled>구분 선택</option>
                                 </select>
                             </label>
                         </div>
                         <div class="me-4 d-flex justify-content-left align-items-center text-nowrap">
                             상태&nbsp;&nbsp;&nbsp;
                             <label>
-                                <select name="taskSelect" class="form-select">
-                                    <c:forEach var="task" items="${tasks}">
-                                        <option value="${task}">${task}</option>
-                                    </c:forEach>
+                                <select id="PMS013" name="taskSelect" class="test-status form-select">
+                                    <option value="all" selected disabled>상태 선택</option>
                                 </select>
                             </label>
                         </div>
@@ -82,7 +64,7 @@
                                 body: {
                                     columnHeight: 48
                                 }
-                                }" style="height: 556.5px;">
+                                }" style="height: 562px;">
                             </div>
                         </div>
                     </div>

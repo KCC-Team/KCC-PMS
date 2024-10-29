@@ -100,13 +100,6 @@
                             <td>
                                 <select id="PMS008" name="typeSelect" class="type" required >
                                     <option value="" selected disabled>결함 분류 선택</option>
-                                    <c:forEach var="item" items="${type}">
-                                        <option value="${item.codeDetailNo}"
-                                                <c:if test="${item.codeDetailNo eq req.typeSelect}">
-                                                    selected="selected"
-                                                </c:if>
-                                        >${item.codeDetailName}</option>
-                                    </c:forEach>
                                 </select>
                             </td>
                             <td class="td-title">기능 ID</td>
@@ -128,26 +121,12 @@
                             <td>
                                 <select id="PMS006" name="prioritySelect" class="type" required >
                                     <option value="" selected disabled>우선순위 선택</option>
-                                    <c:forEach var="item" items="${priority}">
-                                        <option value="${item.codeDetailNo}"
-                                                <c:if test="${item.codeDetailNo eq req.prioritySelect}">
-                                                    selected="selected"
-                                                </c:if>
-                                        >${item.codeDetailName}</option>
-                                    </c:forEach>
                                 </select>
                             </td>
                             <td class="td-title">상태&nbsp;&nbsp;&nbsp;<span class="es-star">*</span></td>
                             <td>
                                 <select id="PMS007" name="statusSelect" class="type" required >
                                     <option value="" selected disabled>상태 선택</option>
-                                    <c:forEach var="st" items="${status}">
-                                        <option value="${st.codeDetailNo}"
-                                                <c:if test="${st.codeDetailNo eq req.statusSelect}">
-                                                    selected="selected"
-                                                </c:if>
-                                        >${st.codeDetailName}</option>
-                                    </c:forEach>
                                 </select>
                             </td>
                         </tr>
@@ -225,6 +204,9 @@
 <script type="text/javascript">
     let discoverFilesJson = '<c:out value="${discoverFilesJson}" escapeXml="false" />';
     let workFilesJson = '<c:out value="${workFilesJson}" escapeXml="false" />';
+    let typeSelect = '<c:out value="${req.typeSelect}" escapeXml="false" />';
+    let prioritySelect = '<c:out value="${req.prioritySelect}" escapeXml="false" />';
+    let statusSelect = '<c:out value="${req.statusSelect}" escapeXml="false" />';
     let discoverFiles = discoverFilesJson && discoverFilesJson.trim() !== '' ? JSON.parse(discoverFilesJson) : [];
     let workFiles = workFilesJson && workFilesJson.trim() !== '' ? JSON.parse(workFilesJson) : [];
 </script>
