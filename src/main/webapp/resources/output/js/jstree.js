@@ -11,7 +11,7 @@ $(function() {
                     "themes" : { "stripes" : true },
                     'check_callback': true
                 },
-                'plugins': ["types", "dnd", "wholerow", "search"],
+                'plugins': ["types", "dnd", "wholerow", "search", "contextmenu"],
                 'types': {
                     "default": {
                         "icon": "fa fa-folder text-warning"

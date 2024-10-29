@@ -12,7 +12,7 @@ $(document.body).ready(function () {
     let typeValue = urlParams.get('type');
     console.log("typeValue = " + typeValue);
 
-    if(typeValue === 'feature'){
+    if(typeValue === 'feature' || typeValue === 'defect1' || typeValue === 'defect2'){
         $('#grid-parent3').hide();
         $('#grid-parent').css('height', '250px');
         $('.member-add-button').on('click', function() {
@@ -27,7 +27,11 @@ $(document.body).ready(function () {
             }
 
             if (window.opener) {
-                window.opener.postMessage({ type: 'featureMember', member: selectedMember }, "*");
+                if (typeValue === 'defect1' || typeValue === 'defect2') {
+                    window.opener.postMessage({ type: typeValue, member: selectedMember }, "*");
+                } else {
+                    window.opener.postMessage({ type: 'featureMember', member: selectedMember }, "*");
+                }
                 window.close();
             } else {
                 console.log("부모 페이지가 없습니다.");

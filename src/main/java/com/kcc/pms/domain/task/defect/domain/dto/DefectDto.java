@@ -14,10 +14,12 @@ public class DefectDto {
     private String testId;
     private Long systemNumber;
     private String defectContent;
-    private String discoverName;
+    private Long foundMemberNo;
+    private String foundMemberName;
     private String discoverDate;
     private String scheduleWorkDate;
-    private String workerName;
+    private Long workMemberNo;
+    private String workMemberName;
     private String workDate;
     private String workContent;
     private String prioritySelect;
