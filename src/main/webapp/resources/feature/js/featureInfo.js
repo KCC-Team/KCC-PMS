@@ -52,8 +52,10 @@ $(document).ready(function (){
                 console.log(response);
                 alert("저장이 완료되었습니다.");
                 window.opener.postMessage({
-                    status: 'success',
-                    message: 'Feature saved successfully'
+                    status: 'register',
+                    message: 'Feature saved successfully',
+                    systemNo: formDataObject.systemNo,
+                    featClassCd: formDataObject.classCode
                 }, '*');
 
                 window.close();

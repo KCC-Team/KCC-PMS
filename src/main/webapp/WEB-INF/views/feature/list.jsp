@@ -4,7 +4,7 @@
 
 <link rel="stylesheet" href="../../../resources/feature/css/featureList.css">
 <link rel="stylesheet" href="../../../resources/common/css/ax5grid.css">
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<%--<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>--%>
 <script src="../../../resources/feature/js/circle-progress.min.js"></script>
 
 <!-- 콘텐츠 영역 -->
@@ -40,13 +40,10 @@
                 <div id="pagination" class="pagination">
                     <span id="page-numbers"></span> <!-- 여기에 동적으로 페이지 번호와 내비게이션 버튼을 삽입 -->
                 </div>
-
-
             </div>
 
 
             <div class="middle-section">
-
                 <div class="feat_content">
                     <div class="feat-info-title">기능별 진척도</div>
                 </div>
@@ -66,7 +63,7 @@
                 </div>
 
                 <div class="row-info">
-                     <div id="midSystemFeatureTitle"class="feat-title">차세대 공공 프로젝트 - (전체)</div>
+                     <div id="midSystemFeatureTitle" class="feat-title">차세대 공공 프로젝트 - (전체)</div>
                     <div class="prg-bar">
                         <progress id="midFeatBar" class="feat-bar" value="35" max="100"></progress><span id="midFPrgVal" class="prg-val">35%</span>
                     </div>
@@ -81,14 +78,11 @@
                 </div>
 
                 <form class="feat-search-form" id="feat_team_form" action="#" method="post">
-<%--                    <select class="feat-select-option" name="feat-option5">--%>
-<%--                        <option value="0">팀</option>--%>
-<%--                        <option value="1">팀1</option>--%>
-<%--                        <option value="2">팀2</option>--%>
-<%--                        <option value="3">팀3</option>--%>
-<%--                    </select>--%>
-                    <input type="text" class="search-text" name="" value="">
-                    <input id="featureSearch" type="submit" class="feat-submit-btn" value="검색">
+                    <select id="featStatusOption" class="feat-select-option" name="feat-option5">
+                        <option value="">전체</option>
+                    </select>
+                    <input id="midSearchBar" type="text" class="search-text" name="" value="">
+                    <button id="featureSearch" type="submit" class="feat-submit-btn">검색</button>
                 </form>
 
                 <div style="position: relative;height:100%; width: 98%;" id="grid-parent">

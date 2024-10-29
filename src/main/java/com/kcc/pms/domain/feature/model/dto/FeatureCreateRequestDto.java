@@ -1,10 +1,11 @@
 package com.kcc.pms.domain.feature.model.dto;
 
-import lombok.Data;
+
 import lombok.Getter;
 import lombok.Setter;
 
-@Data
+@Getter
+@Setter
 public class FeatureCreateRequestDto {
     private Long featNo;
     private String featId;

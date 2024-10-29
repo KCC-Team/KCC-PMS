@@ -1,10 +1,7 @@
 package com.kcc.pms.domain.feature.controller;
 
 import com.kcc.pms.domain.common.model.dto.CommonCodeOptions;
-import com.kcc.pms.domain.feature.model.dto.FeatureCreateRequestDto;
-import com.kcc.pms.domain.feature.model.dto.FeatureDetailResponseDto;
-import com.kcc.pms.domain.feature.model.dto.FeatureProgressResponseDto;
-import com.kcc.pms.domain.feature.model.dto.FeatureSummaryResponseDto;
+import com.kcc.pms.domain.feature.model.dto.*;
 import com.kcc.pms.domain.feature.service.FeatureService;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
@@ -14,9 +11,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Controller
 @RequiredArgsConstructor
@@ -81,13 +76,27 @@ public class FeatureController {
 
     @GetMapping("/list")
     @ResponseBody
-    public ResponseEntity<List<FeatureSummaryResponseDto>> getFeatureSummary(@RequestParam(value = "systemNo", required = false) Long systemNo,
+    public ResponseEntity<PagedResponse<FeatureSummaryResponseDto>> getFeatureSummary(@RequestParam(value = "systemNo", required = false) Long systemNo,
                                                                              @RequestParam(value = "featClassCd", required = false) String featClassCd,
+                                                                             @RequestParam(defaultValue = "1") int page,
+                                                                             @RequestParam(defaultValue = "10") int pageSize,
+                                                                             @RequestParam(value = "type", required = false) String type,
+                                                                             @RequestParam(value = "keyword", required = false) String keyword,
                                                                              HttpSession session) {
         Long prjNo = (Long) session.getAttribute("prjNo");
-        List<FeatureSummaryResponseDto> systemFeatureList = service.getSystemFeatureList(systemNo, featClassCd, prjNo);
+        CriteriaY cri = new CriteriaY(page, pageSize);
+        cri.setType(type);
+        cri.setKeyword(keyword);
+        System.out.println("cri = " + cri);
+        List<FeatureSummaryResponseDto> systemFeatureList = service.getSystemFeatureList(systemNo, featClassCd, prjNo, cri);
         System.out.println("systemFeatureList = " + systemFeatureList);
-        return ResponseEntity.ok(systemFeatureList != null ? systemFeatureList : Collections.emptyList());
+
+        int totalItems = service.countFeatures(systemNo, featClassCd, prjNo, cri);
+        System.out.println("totalItems = " + totalItems);
+        PageYDto pageInfo = new PageYDto(cri, totalItems);
+        PagedResponse<FeatureSummaryResponseDto> response = new PagedResponse<>(systemFeatureList, pageInfo);
+
+        return ResponseEntity.ok(response);
     }
 
     @GetMapping("/totalProgress")
@@ -103,19 +112,6 @@ public class FeatureController {
         }
     }
 
-
-    @GetMapping("/totalList")
-    @ResponseBody
-    public ResponseEntity<List<FeatureSummaryResponseDto>> getProjectFeatureSummary(HttpSession session){
-        Long prjNo = (Long) session.getAttribute("prjNo");
-        List<FeatureSummaryResponseDto> projectFeatureList = service.getProjectFeatureList(prjNo);
-
-        if (projectFeatureList != null && !projectFeatureList.isEmpty()) {
-            return ResponseEntity.ok(projectFeatureList);
-        } else {
-            return ResponseEntity.notFound().build();
-        }
-    }
 
     @GetMapping("/details")
     @ResponseBody
