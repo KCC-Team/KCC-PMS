@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class DeleteOutputResponseDto {
     private Long fileDetailNo;
-    private String fileName;
+    private String fileTitle;
     private String filePath;
     private String fileSize;
     private String fileType;

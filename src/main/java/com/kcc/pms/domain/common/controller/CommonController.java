@@ -81,4 +81,14 @@ public class CommonController {
         commonService.fileUpload(files, principalDetail.getMember().getMemberName(), prjNo, fl_cd);
         return ResponseEntity.ok().build();
     }
+
+    @GetMapping("/fileDownload")
+    @ResponseBody
+    public ResponseEntity<byte[]> fileDownload(@RequestParam("filePath") String filePath) {
+        try {
+            return ResponseEntity.ok().body(commonService.downloadFile(filePath));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().build();
+        }
+    }
 }

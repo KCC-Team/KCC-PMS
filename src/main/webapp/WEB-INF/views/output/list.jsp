@@ -68,7 +68,7 @@
                                 <button id="file-delete-his-btn" class="custom-button " type="button">&nbsp;&nbsp;삭제 기록&nbsp;&nbsp;</button>&nbsp;&nbsp;&nbsp;
                                     <button type="button" id="file-insert" class="custom-button me-2">&nbsp;&nbsp;파일 추가&nbsp;&nbsp;</button>
                                 <div class="ms-auto d-flex justify-content-end">
-                                    <button type="button" class="ms-auto green-btn me-2">&nbsp;&nbsp;&nbsp;선택 다운로드&nbsp;&nbsp;&nbsp;</button>
+                                    <button type="button" class="ms-auto green-btn me-2 download-btn">&nbsp;&nbsp;&nbsp;선택 다운로드&nbsp;&nbsp;&nbsp;</button>
                                     <button type="button" id="file-delete-btn" class="red-btn">&nbsp;&nbsp;&nbsp;선택 삭제&nbsp;&nbsp;&nbsp;</button>
                                 </div>
                             </div>

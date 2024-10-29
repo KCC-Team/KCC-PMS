@@ -21,4 +21,5 @@ public interface CommonService {
     void deleteFileDetails(String deleteName, Long fileMasterNumber);
     void deleteFile(Long fileMasterNumber);
     void deleteFileDetail(String deleteName, Long fileDetailNumber);
+    byte[] downloadFile(String filePath) throws IOException;
 }

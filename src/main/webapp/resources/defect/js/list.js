@@ -1,10 +1,28 @@
 const API_SERVER = 'http://localhost:8085';
+let currentPage = 1;
 let testGrid;
 $(function () {
-    testGrid = new ax5.ui.grid();
+    ax5.ui.grid.tmpl.page_status = function(){
+        return '<span>{{{progress}}} {{fromRowIndex}} - {{toRowIndex}} of {{dataRowCount}} {{#dataRealRowCount}}  현재페이지 {{.}}{{/dataRealRowCount}} {{#totalElements}}  전체갯수 {{.}}{{/totalElements}}</span>';
+    };
 
+
+    testGrid = new ax5.ui.grid();
     testGrid.setConfig({
         target: $('[data-ax5grid="first-grid"]'),
+        page: {
+            navigationItemCount: 10,
+            height: 30,
+            display: true,
+            firstIcon: '<i class="fa fa-step-backward" aria-hidden="true"></i>',
+            prevIcon: '<i class="fa fa-caret-left" aria-hidden="true"></i>',
+            nextIcon: '<i class="fa fa-caret-right" aria-hidden="true"></i>',
+            lastIcon: '<i class="fa fa-step-forward" aria-hidden="true"></i>',
+            onChange: function () {
+                $('#systemNo').val() ? reloadData(testGrid, $('#systemNo').val(), $('.defect-opt').val(), $('.defect-status').val(), $('#searchDefect').val(), this.page.selectPage+1) :
+                    reloadData(testGrid, 0, $('.defect-opt').val(), $('.defect-status').val(), $('#searchDefect').val(), this.page.selectPage+1);
+            }
+        },
         columns: [
             {key: "defectItem", label: "결함 ID", align: "center", width: 150, formatter: function() {
                     let item = this.value;
@@ -64,7 +82,7 @@ $(function () {
         ],
     });
 
-    reloadData(testGrid, 0, "all", "");
+    reloadData(testGrid, 0, "all", "all", "", currentPage);
 
     $(document).on('click', '.defect-id', function(e) {
         e.preventDefault();
@@ -85,12 +103,16 @@ $(function () {
     });
 
     $('.defect-status').change(function() {
-        $('#systemNo').val() ? reloadData(testGrid, $('#systemNo').val(), $(this).val(), "") : reloadData(testGrid, 0, $(this).val(), "");
+        $('#systemNo').val() ? reloadData(testGrid, $('#systemNo').val(), $('.defect-opt').val(), $(this).val(), "", currentPage) : reloadData(testGrid, 0, $('.defect-opt').val(), $(this).val(), "", currentPage);
+    });
+
+    $('.defect-opt').change(function() {
+        $('#systemNo').val() ? reloadData(testGrid, $('#systemNo').val(), $(this).val(), $('.defect-status').val(), "", currentPage) : reloadData(testGrid, 0, $('.defect-opt').val(), $('.defect-status').val(), "", currentPage);
     });
 
     $('#defect-search-btn').on('click', function(e) {
-        $('#systemNo').val() ? reloadData(testGrid, $('#systemNo').val(), $('.defect-status').val(), $('#searchDefect').val()) :
-        reloadData(testGrid, 0, $('.defect-status').val(), $('#searchDefect').val());
+        $('#systemNo').val() ? reloadData(testGrid, $('#systemNo').val(), $('.defect-opt').val(), $('.defect-status').val(), $('#searchDefect').val(), currentPage) :
+        reloadData(testGrid, 0, $('.defect-opt').val(), $('.defect-status').val(), $('#searchDefect').val(), currentPage);
     });
 });
 
@@ -140,7 +162,7 @@ function createMenuHTML(menuData, parentElement, path) {
                 $('#system-menu').slideUp();  // 메뉴 숨기기
 
                 let select = $('.defect-status').val();
-                reloadData(testGrid, menuItem.systemNo, select, "");
+                reloadData(testGrid, menuItem.systemNo, $('.defect-opt').val(), select, "", currentPage);
             });
         }
 
@@ -148,15 +170,27 @@ function createMenuHTML(menuData, parentElement, path) {
     });
 }
 
-function reloadData(testGrid, work, status, search) {
+function reloadData(testGrid, work, type, status, search, page) {
     const urlParams = new URLSearchParams(window.location.search);
-    const page = urlParams.get('page') || '1';
+
+    if (page !== currentPage) {
+        currentPage = page;
+    }
 
     $.ajax({
         method: "GET",
-        url: API_SERVER + "/projects/defects/api/list?workNo=" + work + "&status=" + status + "&search=" + search + "&page=" + page,
+        url: API_SERVER + "/projects/defects/api/list?workNo=" + work + "&type=" + type + "&status=" + status + "&search=" + search + "&page=" + page,
             success: function (res) {
-            testGrid.setData(res);
+                console.log('그리드 데이터 가져오기 성공', res);
+                testGrid.setData({
+                    list: res.defectList,
+                    page: {
+                        currentPage: currentPage-1,
+                        pageSize: 10,
+                        totalElements: res.totalElements,
+                        totalPages: res.totalPage
+                    }
+                });
         }, error: function (err) {
             console.error('그리드 데이터 가져오기 오류', err);
         }

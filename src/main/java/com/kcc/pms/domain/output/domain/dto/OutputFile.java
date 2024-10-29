@@ -22,5 +22,6 @@ public class OutputFile {
     public static class FileItem {
         private Long fileNo;
         private String fileTitle;
+        private String filePath;
     }
 }

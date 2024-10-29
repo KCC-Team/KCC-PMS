@@ -1,20 +1,26 @@
 package com.kcc.pms.domain.output.controller;
 
 import com.kcc.pms.auth.PrincipalDetail;
-import com.kcc.pms.domain.member.model.vo.MemberVO;
-import com.kcc.pms.domain.output.domain.dto.DeleteOutputResponseDto;
-import com.kcc.pms.domain.output.domain.dto.FileStructResponseDto;
-import com.kcc.pms.domain.output.domain.dto.OutputFile;
-import com.kcc.pms.domain.output.domain.dto.OutputResponseDto;
+import com.kcc.pms.domain.common.service.CommonService;
+import com.kcc.pms.domain.output.domain.dto.*;
 import com.kcc.pms.domain.output.service.OutputService;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.compress.archivers.zip.ZipArchiveEntry;
+import org.apache.commons.compress.archivers.zip.ZipArchiveOutputStream;
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.*;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Map;
 
@@ -23,6 +29,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class OutputController {
     private final OutputService outputService;
+    private final CommonService commonService;
 
     @GetMapping
     public String list() {
@@ -118,5 +125,60 @@ public class OutputController {
     @GetMapping("/search")
     public String searchOutput() {
         return "output/output-search";
+    }
+
+    @PostMapping("/api/downloadmultiple")
+    public ResponseEntity<InputStreamResource> downloadMultipleFiles(@RequestBody List<OutputDownloadRequestDto> files) {
+        try {
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            ZipArchiveOutputStream zos = new ZipArchiveOutputStream(baos);
+
+            for (OutputDownloadRequestDto output : files) {
+                try {
+                    byte[] fileData = commonService.downloadFile(output.getFilePath()); // S3에서 파일을 다운로드
+                    ZipArchiveEntry zipEntry = new ZipArchiveEntry(output.getFileTitle());
+                    zos.putArchiveEntry(zipEntry);
+                    zos.write(fileData);
+                    zos.closeArchiveEntry();
+                } catch (Exception e) {
+                    System.out.println("Error downloading from S3: " + e.getMessage());
+                }
+            }
+
+            zos.finish();
+            zos.close();
+
+            HttpHeaders headers = new HttpHeaders();
+            headers.add("Content-Disposition", "attachment; filename=\"download.zip\"");
+
+            return ResponseEntity.ok()
+                    .headers(headers)
+                    .contentLength(baos.size())
+                    .contentType(MediaType.parseMediaType("application/zip"))
+                    .body(new InputStreamResource(new ByteArrayInputStream(baos.toByteArray())));
+        } catch (Exception e) {
+            System.out.println("Error creating zip file: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+    @PostMapping("/api/download")
+    @ResponseBody
+    public ResponseEntity<byte[]> downloadFile(@RequestBody OutputDownloadRequestDto file) {
+        try {
+            byte[] downloadFile = commonService.downloadFile(file.getFilePath());
+            String contentType = "application/octet-stream";
+
+            String encodedFileName = URLEncoder.encode(file.getFileTitle(), StandardCharsets.UTF_8).replaceAll("\\+", "%20");
+            String contentDisposition = "attachment; filename=\"" + encodedFileName + "\"; filename*=UTF-8''" + encodedFileName;
+
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.parseMediaType(contentType));
+            headers.add(HttpHeaders.CONTENT_DISPOSITION, contentDisposition);
+
+            return ResponseEntity.ok().headers(headers).body(downloadFile);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().build();
+        }
     }
 }

@@ -4,6 +4,7 @@ import com.kcc.pms.domain.common.model.vo.FileMasterNumbers;
 import com.kcc.pms.domain.member.model.vo.MemberVO;
 import com.kcc.pms.domain.task.defect.domain.dto.DefectDto;
 import com.kcc.pms.domain.task.defect.domain.dto.DefectFileRequestDto;
+import com.kcc.pms.domain.task.defect.domain.dto.DefectPageResponseDto;
 import com.kcc.pms.domain.task.defect.domain.dto.DefectResponseDto;
 
 import java.util.List;
@@ -15,5 +16,5 @@ public interface DefectService {
     Optional<FileMasterNumbers> getFileMasterNumbers(Long no);
     DefectDto getDefect(Long no);
     void updateDefect(Long prgNo, String memberName, Long no, DefectDto req, DefectFileRequestDto files, String priority, String status, String type);
-    List<DefectResponseDto> getDefectList(Long prgNo, Long workNo, String status, String search, int page);
+    DefectPageResponseDto getDefectList(Long prgNo, Long workNo, String type, String status, String search, int page);
 }

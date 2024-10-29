@@ -4,6 +4,7 @@ import com.kcc.pms.domain.common.model.vo.FileMasterNumbers;
 import com.kcc.pms.domain.common.service.CommonService;
 import com.kcc.pms.domain.task.defect.domain.dto.DefectDto;
 import com.kcc.pms.domain.task.defect.domain.dto.DefectFileRequestDto;
+import com.kcc.pms.domain.task.defect.domain.dto.DefectPageResponseDto;
 import com.kcc.pms.domain.task.defect.domain.dto.DefectResponseDto;
 import com.kcc.pms.domain.task.defect.mapper.DefectMapper;
 import lombok.RequiredArgsConstructor;
@@ -58,8 +59,12 @@ public class DefectServiceImpl implements DefectService {
     }
 
     @Override
-    public List<DefectResponseDto> getDefectList(Long projectNumber, Long workNo, String status, String search, int page) {
-        return defectMapper.getDefectList(projectNumber, workNo, status, search, page, LIMIT);
+    public DefectPageResponseDto getDefectList(Long projectNumber, Long workNo, String type, String status, String search, int page) {
+        List<DefectResponseDto> defects = defectMapper.getDefectList(projectNumber, workNo, type, status, search, page, LIMIT);
+        int defectListCount = defectMapper.getDefectTotalCount(projectNumber, workNo, status, search);
+        int totalPage = (int) Math.ceil((double) defectListCount / LIMIT);
+
+        return new DefectPageResponseDto(defects, totalPage, defectListCount);
     }
 
     @Transactional

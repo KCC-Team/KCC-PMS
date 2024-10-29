@@ -1,5 +1,7 @@
 package com.kcc.pms.domain.common.service;
 
+import com.amazonaws.services.s3.model.S3ObjectInputStream;
+import com.amazonaws.util.IOUtils;
 import com.kcc.pms.domain.common.mapper.CommonMapper;
 import com.kcc.pms.domain.common.model.dto.CommonCodeSelectListResponseDto;
 import com.kcc.pms.domain.common.model.dto.FileResponseDto;
@@ -16,6 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -113,6 +116,14 @@ public class CommonServiceImpl implements CommonService {
         if (isDeleted != 1) {
             throw new RuntimeException("파일 삭제 중 오류가 발생했습니다.");
         }
+    }
+
+    @Override
+    public byte[] downloadFile(String filePath) throws IOException {
+        S3ObjectInputStream s3ObjectInputStream = awsS3Utils.downloadFile(filePath);
+        byte[] bytes = IOUtils.toByteArray(s3ObjectInputStream);
+        s3ObjectInputStream.close();
+        return bytes;
     }
 
     @Transactional

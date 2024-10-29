@@ -5,20 +5,6 @@
 <link rel="stylesheet" type="text/css" href="../../../resources/common/css/ax5grid.css">
 <link rel="stylesheet" type="text/css" href="../../../resources/defect/css/list.css">
 
-<!-- 샘플 데이터 -->
-<%@ page import="java.util.List" %>
-<%@ page import="java.util.ArrayList" %>
-
-<%
-    // 데이터 목록 준비
-    List<String> tasks = new ArrayList<>();
-    tasks.add("연결 작업 1");
-    tasks.add("연결 작업 2");
-    tasks.add("연결 작업 3");
-    // JSP 페이지의 Attribute로 데이터 목록을 설정
-    request.setAttribute("tasks", tasks);
-%>
-
 <main class="content" id="content">
     <div class="main_content">
         <div class="div-section">
@@ -40,6 +26,17 @@
                         </div>
                         <div class="me-4 d-flex justify-content-left align-items-center">
                             결함 분류&nbsp;&nbsp;&nbsp;
+                            <label>
+                                <select class="defect-opt" name="taskSelect">
+                                    <option value="all" selected>전체</option>
+                                    <c:forEach var="st" items="${type}">
+                                        <option value="${st.codeDetailNo}">${st.codeDetailName}</option>
+                                    </c:forEach>
+                                </select>
+                            </label>
+                        </div>
+                        <div class="me-4 d-flex justify-content-left align-items-center">
+                            상태 분류&nbsp;&nbsp;&nbsp;
                             <label>
                                 <select class="defect-status" name="taskSelect">
                                     <option value="all" selected>전체</option>
