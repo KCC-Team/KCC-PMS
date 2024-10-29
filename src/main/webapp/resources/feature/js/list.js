@@ -51,7 +51,6 @@ $(document).ready(function (){
 
     $("#system-select span:first").text("시스템 선택");
 
-
     initGrid().then(() => {
         getProjectFeatureProgressSummary();
     });
@@ -186,7 +185,6 @@ function initGrid(){
                 }
             }
         });
-
         resolve(); // 초기화 완료 후 resolve 호출
     })
 }
@@ -246,29 +244,31 @@ function initDelayGrid(){
     delayGrid.setConfig({
         target: $('[data-ax5grid="delay-grid"]'),
         columns: [
-            {key: "id", label: "기능ID", align: "center", width: 70, formatter: function() {
+            {key: "featureId", label: "기능ID", align: "center", width: 70, formatter: function() {
                     var title = this.value;
                     return '<a href="/projects/issueInfo?title=' + encodeURIComponent(title) + '" class="danger-title" style="color: #0044cc; font-size: 13px; font-weight: bold; text-decoration: none;">' + title + '</a>';
                 }},
-            {key: "name", label: "기능명", width: 100, align: "center", formatter: function (){
+            {key: "featureTitle", label: "기능명", width: 100, align: "center", formatter: function (){
                     return '<span style="font-size: 13px;">' + this.value + '</span>';
                 }},
             {key: "status", label: "상태", width: 70, align: "center", formatter: function (){
-                    var status = this.value;
+                    var status = this.value.trim();
                     var statusClass = 'status-label ';  // 기본 클래스
 
-                    if (status === '진행') {
-                        console.log('즉시찾음');
+                    if (status === '신규') {
                         statusClass += 'status-in-progress';  // 위험일 경우
-                    } else if (status === '발생전') {
+                    } else if (status === '개발중') {
                         statusClass += 'status-before';  // 진행 중일 경우
-                    } else if (status === '완료') {
+                    } else if (status === '고객확인') {
                         statusClass += 'status-completed';  // 완료일 경우
                     }
 
                     return '<span class="' + statusClass + '" style="font-size: 13px;">' + status + '</span>';
                 }},
-            {key: "priority", label: "작업자", width: 70, align: "center" , formatter: function (){
+            {key: "memberName", label: "작업자", width: 70, align: "center" , formatter: function (){
+                    return '<span style="font-size: 13px;">' + this.value + '</span>';
+                }},
+            {key: "system", label: "시스템/업무", width: 82, align: "center", formatter: function (){
                     return '<span style="font-size: 13px;">' + this.value + '</span>';
                 }},
             {key: "register", label: "시스템/업무", width: 83, align: "center", formatter: function (){

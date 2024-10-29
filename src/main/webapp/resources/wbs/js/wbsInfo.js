@@ -151,7 +151,7 @@ window.addEventListener('message', function (event) {
         $("#output_nm").val(outputNm);
         $("#folder_no").val(folderNo);
     }
-
+  
     if (event.data.type != "output") {
         addedMembers.forEach(function (member) {
             membersId += member.id + ", ";
@@ -233,7 +233,6 @@ function getTopTaskList(id) {
         }
     });
 }
-
 // WBS 연결된 산출물 조회
 function getTaskOutputList(id) {
     $.ajax({

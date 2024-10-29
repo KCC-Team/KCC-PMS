@@ -148,7 +148,6 @@
         ]]>
     </select>
 
-
     <select id="getFeatureDetail" resultType="com.kcc.pms.domain.feature.model.dto.FeatureDetailResponseDto">
         SELECT
             f.feat_no as featNo,
