@@ -1,5 +1,6 @@
 package com.kcc.pms.domain.task.defect.service;
 
+import com.kcc.pms.domain.common.model.dto.CommonCodeOptions;
 import com.kcc.pms.domain.common.model.vo.FileMasterNumbers;
 import com.kcc.pms.domain.common.service.CommonService;
 import com.kcc.pms.domain.task.defect.domain.dto.DefectDto;
@@ -23,11 +24,16 @@ public class DefectServiceImpl implements DefectService {
 
     private static final int LIMIT = 10;
 
+    @Override
+    public List<CommonCodeOptions> getDefectCommonCodeOptions() {
+        return defectMapper.getDefectCommonCodeOptions();
+    }
+
     @Transactional
     @Override
-    public Long saveDefect(Long projectNumber, String memberName, DefectDto defect, DefectFileRequestDto files, String priority, String status, String type) {
+    public Long saveDefect(Long projectNumber, String memberName, DefectDto defect, DefectFileRequestDto files) {
         Long[] numbers = generateFiles(projectNumber, memberName, files);
-        int isPassed = defectMapper.saveDefect(projectNumber, defect, numbers[0], numbers[1], priority, status, type);
+        int isPassed = defectMapper.saveDefect(projectNumber, defect, numbers[0], numbers[1]);
         if (isPassed != 1) {
             throw new RuntimeException("Defect 저장 중 오류가 발생했습니다.");
         }
@@ -37,7 +43,7 @@ public class DefectServiceImpl implements DefectService {
 
     @Transactional
     @Override
-    public void updateDefect(Long prgNo, String MemberName, Long no, DefectDto defect, DefectFileRequestDto files, String priority, String status, String type) {
+    public void updateDefect(Long prgNo, String MemberName, Long no, DefectDto defect, DefectFileRequestDto files) {
         Optional<FileMasterNumbers> numbers = defectMapper.getFileMasterNumbers(no);
         if (numbers.isPresent()) {
             if (numbers.get().getFileMasterFoundNumber() != null && files.getDisFiles() != null) {
@@ -46,13 +52,19 @@ public class DefectServiceImpl implements DefectService {
             if (numbers.get().getFileMasterWorkNumber() != null && files.getWorkFiles() != null) {
                 commonService.generateFiles(prgNo, MemberName, files.getWorkFiles(), numbers.get().getFileMasterWorkNumber());
             }
+        } else {
+            Long[] Numbers = generateFiles(prgNo, MemberName, files);
+            int isPassed = defectMapper.updateFileMasterNumbers(no, Numbers[0], Numbers[1]);
+            if (isPassed != 1) {
+                throw new RuntimeException("Defect 수정 중 오류가 발생했습니다.");
+            }
         }
 
         Optional.ofNullable(files.getDeleteFiles())
                 .ifPresent(deleteFiles -> deleteFiles.forEach(file -> {
                     commonService.deleteFileDetail(MemberName, file);
                 }));
-        int isPassed = defectMapper.updateDefect(no, defect, priority, status, type);
+        int isPassed = defectMapper.updateDefect(no, defect);
         if (isPassed != 1) {
             throw new RuntimeException("Defect 수정 중 오류가 발생했습니다.");
         }

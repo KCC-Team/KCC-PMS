@@ -238,13 +238,13 @@ $(function () {
         let filePath = $row.find('input[type="hidden"][name="filePath"]').val();
         let fileTitle = $row.find('input[type="hidden"][name="fileTitle"]').val();
 
-        file = {
+        let file = {
             filePath: filePath,
             fileTitle: fileTitle
         }
 
         fetch('/projects/outputs/api/download', {
-            method: 'POST',
+            method: 'post',
             headers: {
                 'Content-Type': 'application/json'
             },

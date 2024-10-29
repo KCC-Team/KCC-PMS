@@ -1,12 +1,11 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 
 <%@ include file="../common.jsp" %>
-<%--<link rel="stylesheet" type="text/css" href="https://cdn.rawgit.com/ax5ui/ax5ui-grid/master/dist/ax5grid.css">--%>
 <link rel="stylesheet" type="text/css" href="../../../resources/common/css/ax5grid.css">
 <link rel="stylesheet" type="text/css" href="../../../resources/defect/css/list.css">
 
 <main class="content" id="content">
-    <div class="main_content">
+    <div class="main_content" style="height: 90%">
         <div class="div-section">
             <label class="div-info">
                 결함 관리</label>
@@ -16,18 +15,19 @@
                 <div>
                     <div class="filter-section">
                         <div class="me-4 d-flex justify-content-left align-items-center">
-                            시스템 분류&nbsp;&nbsp;&nbsp;
-                            <div class="system-select-wrapper">
-                                <span class="system-select-button" id="system-select">
-                                    <span>시스템/업무 선택</span>
-                                </span>
+                            <span class="text-nowrap">시스템 분류&nbsp;&nbsp;&nbsp;</span>
+                            <input type="hidden" id="systemNo" name="systemNumber" value="${req.systemNumber}" >
+                            <div class="system-select-wrapper w-75">
+                                    <span class="system-select-button" id="system-select">
+                                        <span>시스템/업무 선택</span>
+                                    </span>
                                 <ul class="mymenu" id="system-menu"></ul>
                             </div>
                         </div>
                         <div class="me-4 d-flex justify-content-left align-items-center">
                             결함 분류&nbsp;&nbsp;&nbsp;
                             <label>
-                                <select class="defect-opt" name="taskSelect">
+                                <select id="PMS008" class="defect-opt" name="taskSelect">
                                     <option value="all" selected>전체</option>
                                     <c:forEach var="st" items="${type}">
                                         <option value="${st.codeDetailNo}">${st.codeDetailName}</option>
@@ -38,7 +38,7 @@
                         <div class="me-4 d-flex justify-content-left align-items-center">
                             상태 분류&nbsp;&nbsp;&nbsp;
                             <label>
-                                <select class="defect-status" name="taskSelect">
+                                <select id="PMS007" class="defect-status" name="taskSelect">
                                     <option value="all" selected>전체</option>
                                     <c:forEach var="st" items="${status}">
                                         <option value="${st.codeDetailNo}">${st.codeDetailName}</option>
@@ -72,7 +72,7 @@
                             body: {
                                 columnHeight: 48
                             }
-                        }" style="height: 557px;">
+                        }" style="height: 562.5px !important;">
                             </div>
                         </div>
                     </div>
