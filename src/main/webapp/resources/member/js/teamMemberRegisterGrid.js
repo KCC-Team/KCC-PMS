@@ -8,7 +8,6 @@ $(document.body).ready(function () {
     teamNo = urlParams.get('teamNo');
     prjNo = urlParams.get('prjNo');
 
-    console.log(prjNo);
 
     let typeValue = urlParams.get('type');
     console.log("typeValue = " + typeValue);
@@ -83,28 +82,26 @@ $(document.body).ready(function () {
     // 적용 버튼 클릭
     $(document).on('click', '.apply', function() {
         insertProject();
-
-        // let typeValue = urlParams.get('type');
-        // let pageValue = urlParams.get('page');
-        // if (typeValue != 'project' && pageValue != 'wbs') {
-        //     //registerMember();
-        // }
     });
 
     initGrid();
     checkProject();
+
+    $('#jstree').on("ready.jstree", function(e, data) {
+        // jstree가 준비된 후 첫 번째 노드 선택
+        let firstNode = $('#jstree').jstree(true).get_node('#').children[0]; // 첫 번째 자식 노드의 ID
+        if (firstNode) {
+            // 첫 번째 노드를 선택하고 select_node 이벤트 트리거
+            $('#jstree').jstree(true).select_node(firstNode);
+            $('#jstree').trigger('select_node.jstree', { node: $('#jstree').jstree(true).get_node(firstNode) });
+        }
+    });
+
 });
 
 function checkProject() {
     let urlParams = new URLSearchParams(window.location.search);
     let typeValue = urlParams.get('type');
-    // if (typeValue === 'project') {
-    //     document.getElementById('project_member_total').hidden = true;
-    // }
-    if (typeValue === 'wbs') {
-        //document.getElementById('group_total').hidden = true;
-        $('#project_member_total').trigger('click');
-    }
 }
 
 function insertProject() {

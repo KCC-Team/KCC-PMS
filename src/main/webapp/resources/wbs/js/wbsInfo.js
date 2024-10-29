@@ -11,10 +11,6 @@ if (type == "view" && id != null) {
 
 $(document).ready(function() {
 
-    // $("#pre_st_dt, #pre_end_dt, #st_dt, #end_dt").datepicker({
-    //     dateFormat: "yy-mm-dd"
-    // });
-
     $('.btn-select-output').on('click', function() {
        let popup = window.open('/projects/outputs/search', 'output', 'width=860, height=560, resizable=yes');
     });
@@ -130,38 +126,53 @@ $(document).ready(function() {
 });
 
 
-// 인력등록 팝업 연결
+// 인력등록 팝업, 산출물 연결 팝업
 window.addEventListener('message', function (event) {
-    if (event.origin !== "http://localhost:8085") {
-        return;
-    }
-
     let addedMembers = event.data;
     let membersId = "";
     let teamNo = "";
     let membersName = "";
 
-    console.log(addedMembers);
-
-    addedMembers.forEach(function(member) {
-        membersId += member.id + ", ";
-        teamNo += member.teamNo + ", ";
-        membersName += member.memberName + ", ";
-    });
-
-    if (membersId.includes(',')) {
-        membersId = membersId.substring(0, membersId.length - 2);
+    if (event.data.type === "output") {
+        let outputNm = "";
+        let folderNo = "";
+        let files = event.data.files;
+        files.forEach(function (file) {
+            console.log(file);
+            outputNm += file.text + ", ";
+            folderNo += file.id + ", ";
+        });
+        if (outputNm.includes(',')) {
+            outputNm = outputNm.substring(0, outputNm.length - 2);
+        }
+        if (folderNo.includes(',')) {
+            folderNo = folderNo.substring(0, folderNo.length - 2);
+        }
+        $("#output_nm").val(outputNm);
+        $("#folder_no").val(folderNo);
     }
-    if (teamNo.includes(',')) {
-        teamNo = teamNo.substring(0, teamNo.length - 2);
-    }
-    if (membersName.includes(',')) {
-        membersName = membersName.substring(0, membersName.length - 2);
-    }
 
-    $("#mem_no").val(membersId);
-    $("#tm_no").val(teamNo);
-    $("#mem_nm").val(membersName);
+    if (event.data.type != "output") {
+        addedMembers.forEach(function (member) {
+            membersId += member.id + ", ";
+            teamNo += member.teamNo + ", ";
+            membersName += member.memberName + ", ";
+        });
+
+        if (membersId.includes(',')) {
+            membersId = membersId.substring(0, membersId.length - 2);
+        }
+        if (teamNo.includes(',')) {
+            teamNo = teamNo.substring(0, teamNo.length - 2);
+        }
+        if (membersName.includes(',')) {
+            membersName = membersName.substring(0, membersName.length - 2);
+        }
+
+        $("#mem_no").val(membersId);
+        $("#tm_no").val(teamNo);
+        $("#mem_nm").val(membersName);
+    }
 });
 
 // 상세정보 조회
@@ -173,8 +184,6 @@ function getWbsInfo(id) {
             tsk_no: id
         },
         success: function (res) {
-            console.log(res[0]);
-
             $("#mem_no").val(res[0].mem_numbers);
             $("#tm_no").val(res[0].tm_numbers);
             $("#mem_nm").val(res[0].mem_nms);
@@ -185,6 +194,7 @@ function getWbsInfo(id) {
             $("#st_dt").val(res[0].st_dt);
             $("#end_dt").val(res[0].end_dt);
             $("#prg").val(res[0].prg);
+            res[0].weight_val = (res[0].weight_val == null) ? 0 : res[0].weight_val;
             $("#weight_val").val(res[0].weight_val);
             $("#rel_out_nm").val(res[0].rel_out_nm);
             $("#sys_no").val(res[0].sys_no);
@@ -197,6 +207,7 @@ function getWbsInfo(id) {
         }
     });
     getTopTaskList(id);
+    getTaskOutputList(id);
 }
 
 // 상위 작업 조회 후 노출
@@ -222,6 +233,35 @@ function getTopTaskList(id) {
         }
     });
 }
+
+// WBS 연결된 산출물 조회
+function getTaskOutputList(id) {
+    $.ajax({
+        url: '/projects/api/wbs/output',
+        type: 'GET',
+        data: {
+            tsk_no: id
+        },
+        success: function (res) {
+            let output_no = "";
+            let output_name = "";
+            res.forEach(function(item) {
+                output_no += item.optNo + ", ";
+                output_name += item.optTitle + ", ";
+            });
+            output_no = output_no.slice(0, -2);
+            output_name = output_name.slice(0, -2);
+            $("#output_nm").val(output_name);
+            $("#folder_no").val(output_no);
+        },
+        error: function (xhr, status, error) {
+            console.error('에러:', xhr.responseText);
+            alert('조회 중 에러가 발생했습니다. 다시 시도해 주세요.');
+            return false;
+        }
+    });
+}
+
 
 function handleStatusChange() {
     const statCd = document.getElementById('tsk_stat_cd').value;

@@ -36,6 +36,12 @@
         values (#{memNo}, #{tmNo}, #{prj_no}, #{tsk_no})
     </insert>
 
+    <insert id="saveWbsOutput" parameterType="com.kcc.pms.domain.wbs.model.dto.WbsRequestDto">
+        insert into taskoutput
+        (task_no, folder_no)
+        values (#{tsk_no}, #{folderNo})
+    </insert>
+
     <select id="getWbsList" resultType="com.kcc.pms.domain.wbs.model.dto.WbsResponseDto">
 
         SELECT
@@ -174,5 +180,18 @@
             CONNECT BY PRIOR tsk_no = par_task_no
         )
     </delete>
+
+    <delete id="deleteWbsOutput">
+        delete from taskoutput
+        where task_no = #{tsk_no}
+    </delete>
+
+    <select id="getWbsOutputList" resultType="com.kcc.pms.domain.wbs.model.dto.WbsResponseDto">
+        select o.opt_no as optNo,  o.opt_ttl as optTitle
+        from taskoutput t
+        join output o
+        on t.folder_no = o.opt_no
+        where t.task_no = #{tsk_no}
+    </select>
 
 </mapper>

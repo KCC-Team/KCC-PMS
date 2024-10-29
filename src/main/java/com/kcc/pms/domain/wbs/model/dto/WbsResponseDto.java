@@ -69,4 +69,8 @@ public class WbsResponseDto {
     private String mem_numbers;
 
     private String wbs_status;
+
+    private Long optNo;
+
+    private String optTitle;
 }

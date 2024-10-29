@@ -41,6 +41,7 @@
                         <input type="hidden" id="tm_no" name="tm_no" value="">
                         <input type="hidden" id="max_order_id" name="max_order_id" value="">
                         <input type="hidden" id="sys_no" name="sys_no" value="">
+                        <input type="hidden" id="folder_no" name="folder_no" value="">
 
                         <table class="form-table">
                             <tr>
