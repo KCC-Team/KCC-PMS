@@ -11,8 +11,8 @@ import java.util.Map;
 @Mapper
 public interface TestMapper {
     List<CommonCodeOptions> getCommonCodeOptions();
-    List<TestDto> findAllByOptions(Long projectNumber, Long workNumber, String testType, String status, int page, int limit);
-    int getTestTotalCount(Long projectNumber, Long workNumber, String testType, String status);
+    List<TestDto> findAllByOptions(Long projectNumber, Long workNumber, String testType, String status, String search, int page, int limit);
+    int getTestTotalCount(Long projectNumber, Long workNumber, String testType, String status, String search);
     Integer saveTest(Map<String, Object> parameters);
     Integer saveUnitTestDetails(Map<String, Object> parameters);
     TestRequestDto getUnitTest(Long testNo);

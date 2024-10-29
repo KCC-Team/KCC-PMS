@@ -86,11 +86,14 @@
         WHERE t.prj_no = #{projectNumber}
         AND t.use_yn = 'Y'
         <if test="workNumber != 0">
-            AND t.sys_work_no = #{workNumber, jdbcType=INTEGER}
+            AND t.sys_work_no = #{workNumber, jdbcType=INTEGER} OR sys_work.par_sys_no = #{workNumber, jdbcType=INTEGER}
         </if>
         <if test="testType != 'all'">
             AND t.type_cd = #{testType, jdbcType=CHAR}
         </if>
+       <if test="search != null">
+            AND (t.test_title LIKE '%' || #{search} || '%' OR t.test_id LIKE '%' || #{search} || '%')
+       </if>
         <if test="status != 'all'">
             AND t.stat_cd = #{status, jdbcType=CHAR}
         </if>
@@ -199,6 +202,9 @@
         </if>
         <if test="testType != 'all'">
             AND t.type_cd = #{testType, jdbcType=CHAR}
+        </if>
+        <if test="search != null">
+            AND (t.test_title LIKE '%' || #{search} || '%' OR t.test_id LIKE '%' || #{search} || '%')
         </if>
         <if test="status != 'all'">
             AND t.stat_cd = #{status, jdbcType=CHAR}

@@ -35,10 +35,10 @@ public class TestServiceImpl implements TestService {
     }
 
     @Override
-    public TestPageResponseDto getTestList(Long projectNumber, Long workNumber, String testType, String status, int page) {
+    public TestPageResponseDto getTestList(Long projectNumber, Long workNumber, String testType, String status, String search, int page) {
 
-        List<TestDto> tests = testMapper.findAllByOptions(projectNumber, workNumber, testType, status, page, LIMIT);
-        int testTotalCount = testMapper.getTestTotalCount(projectNumber, workNumber, testType, status);
+        List<TestDto> tests = testMapper.findAllByOptions(projectNumber, workNumber, testType, status, search, page, LIMIT);
+        int testTotalCount = testMapper.getTestTotalCount(projectNumber, workNumber, testType, search, status);
         int totalPage = (int) Math.ceil((double) testTotalCount / LIMIT);
 
         return new TestPageResponseDto(tests, totalPage, testTotalCount);

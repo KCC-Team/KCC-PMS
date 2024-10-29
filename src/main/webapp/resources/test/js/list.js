@@ -3,8 +3,11 @@ let currentPage = 1;
 let testGrid;
 
 $(function () {
-    testGrid = new ax5.ui.grid();
+    ax5.ui.grid.tmpl.page_status = function(){
+        return '<span>{{{progress}}} {{fromRowIndex}} - {{toRowIndex}} of {{dataRowCount}} {{#dataRealRowCount}}  현재페이지 {{.}}{{/dataRealRowCount}} {{#totalElements}}  전체갯수 {{.}}{{/totalElements}}</span>';
+    };
 
+    testGrid = new ax5.ui.grid();
     testGrid.setConfig({
         target: $('[data-ax5grid="first-grid"]'),
         page: {
@@ -49,7 +52,7 @@ $(function () {
 
                     return '<span class="' + statusClass + '" style="font-size: 12px;">' + this.value + '</span>';
                 }},
-            {key: "workTitle", label: "업무 구분", width: 115, align: "center", formatter: function (){
+            {key: "workTitle", label: "업무 구분", width: 117, align: "center", formatter: function (){
                     return '<span style="font-size: 13px;">' + this.value + '</span>';
                 }},
             {key: "testStartDate", label: "시작일자", width: 100, align: "center", formatter: function (){
@@ -67,11 +70,11 @@ $(function () {
         ],
     });
 
+    reloadDataTest(testGrid, 0, "all", "all", "", 1);
+
     fetchMenuData().then(function(menuData) {
         createMenu(menuData);
     });
-
-    fetchOptions();
 
     $('#system-select').click(function() {
         $('#system-menu').slideToggle();
@@ -80,18 +83,29 @@ $(function () {
     const urlParams = new URLSearchParams(window.location.search);
     const page = urlParams.get('page') || '1';
 
-    reloadDataTest(testGrid, 0, "all", "all", "", 1);
-
     $('.test-status').change(function() {
-        reloadDataTest(testGrid, $('#systemNo').val(), $('.test-opt').val(), $('.test-status').val(), $('#searchTest').val(), this.page.selectPage+1);
+        reloadDataTest(testGrid, $('#systemNo').val(), $('.test-opt').val(), $('.test-status').val(), $('#searchTest').val(), currentPage);
     });
 
     $('.test-opt').change(function() {
-        reloadDataTest(testGrid, $('#systemNo').val(), $('.test-opt').val(), $('.test-status').val(), $('#searchTest').val(), this.page.selectPage+1)
+        reloadDataTest(testGrid, $('#systemNo').val(), $('.test-opt').val(), $('.test-status').val(), $('#searchTest').val(), currentPage)
+    });
+
+    $('#searchTest').on('keypress', function(e) {
+        if (e.key === 'Enter') {
+            reloadDataTest(testGrid, $('#systemNo').val(), $('.test-opt').val(), $('.test-status').val(), $('#searchTest').val(), currentPage);
+        }
     });
 
     $('#test-search-btn').on('click', function(e) {
-        reloadDataTest(testGrid, $('#systemNo').val(), $('.test-opt').val(), $('.test-status').val(), $('#searchTest').val(), this.page.selectPage+1)
+        console.log('test-search-btn');
+        reloadDataTest(testGrid, $('#systemNo').val(), $('.test-opt').val(), $('.test-status').val(), $('#searchTest').val(), currentPage);
+    });
+
+    fetchOptions();
+
+    $('.add-test').on('click', function () {
+        location.href = '/projects/tests/test';
     });
 });
 
@@ -100,10 +114,9 @@ function reloadDataTest(testGrid, work, test, status, search, page) {
     if (page !== currentPage) {
         currentPage = page;
     }
-
     $.ajax({
         method: "GET",
-        url: API_SERVER + "/projects/tests/api/list?workNo=" + work + "&test=" + test + "&status=" + status + "&search=" + search + "&page=" + page,
+        url: API_SERVER + "/projects/tests/api/list?work=" + work + "&testType=" + test + "&status=" + status + "&search=" + search + "&page=" + page,
         success: function (res) {
             testGrid.setData({
                 list: res.testList,
@@ -175,9 +188,8 @@ function createMenuHTML(menuData, parentElement, path) {
             $('#system-select span:first-child').text(currentPath);
             $('#systemNo').val(menuItem.systemNo);
             $('.mymenu').slideUp();
-            reloadDataTest(testGrid, $('#systemNo').val(), $('.test-opt').val(), $('.test-status').val(), $('#searchTest').val(), selectPage);
+            reloadDataTest(testGrid, $('#systemNo').val(), $('.test-opt').val(), $('.test-status').val(), $('#searchTest').val(), currentPage);
         });
-
         parentElement.append(listItem);
     });
 }
@@ -213,6 +225,5 @@ function setOptions($selectElement, options) {
         });
 
         $selectElement.append($option);
-
     });
 }

@@ -27,16 +27,16 @@
                         <div class="me-4 d-flex justify-content-left align-items-center text-nowrap">
                             테스트 구분&nbsp;&nbsp;&nbsp;
                             <label>
-                                <select id="PMS012" name="taskSelect" class="test-opt form-select">
-                                    <option value="all" selected disabled>구분 선택</option>
+                                <select id="PMS012" name="testType" class="test-opt form-select">
+                                    <option value="all" selected>전체</option>
                                 </select>
                             </label>
                         </div>
                         <div class="me-4 d-flex justify-content-left align-items-center text-nowrap">
                             상태&nbsp;&nbsp;&nbsp;
                             <label>
-                                <select id="PMS013" name="taskSelect" class="test-status form-select">
-                                    <option value="all" selected disabled>상태 선택</option>
+                                <select id="PMS013" name="status" class="test-status form-select">
+                                    <option value="all" selected>전체</option>
                                 </select>
                             </label>
                         </div>

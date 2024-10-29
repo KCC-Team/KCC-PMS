@@ -9,7 +9,7 @@ import java.util.List;
 
 public interface TestService {
     List<CommonCodeOptions> getDefectCommonCodeOptions();
-    TestPageResponseDto getTestList(Long prj_no, Long work_no, String test_type, String status, int page);
+    TestPageResponseDto getTestList(Long prj_no, Long work_no, String test_type, String status, String search, int page);
     void saveTest(TestRequestDto testReq);
     TestRequestDto getTestDetail(Long testNo);
     void updateTest(TestRequestDto testReq);
