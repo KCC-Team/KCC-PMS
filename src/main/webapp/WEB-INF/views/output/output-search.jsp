@@ -16,6 +16,11 @@
 </head>
 
 <style>
+    body {
+        font-family: NanumGothic,NanumBarunGothic,"Apple SD Gothic Neo","Malgun Gothic",Dotum,sans-serif !important;
+        color: #666;
+    }
+
   .div-section {
     display: flex;
     padding-top: 15px;
@@ -50,14 +55,14 @@
   }
 
   .added-files-layout .file-list-item {
-    width: 90%;
+    width: 100%;
     margin-bottom: 5px;
     background-color: #f8f8f8;
-    padding: 5px;
+    padding: 3px;
     border-radius: 5px;
     display: flex;
     justify-content: space-between;
-    align-items: center;
+      align-items: center;
   }
 
   .added-files-layout .remove-btn {
@@ -70,7 +75,7 @@
   }
 
   button {
-    padding: 10px 20px;
+    padding: 6px 10px;
     border: none;
     border-radius: 4px;
     cursor: pointer;
@@ -85,6 +90,41 @@
     background-color: #8B8B8B;
     color: white;
   }
+
+  #search-output {
+      width: 300px;
+      height: 30px;
+      margin-left: 40px;
+      border: 1px solid #4f4e4e;
+  }
+
+  .modal-footer {
+      margin: 10px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 11px;
+  }
+
+  .btn-save-output {
+      padding: 5px 9px 5px 9px !important;
+      border: none;
+      border-radius: 5px;
+      color: white;
+      cursor: pointer;
+      background-color: #1F80DA;
+      font-size: 15px !important;
+  }
+
+  .btn-close-output {
+      padding: 5px 9px 5px 9px;
+      border: none;
+      border-radius: 5px;
+      color: white;
+      cursor: pointer;
+      background-color: gray;
+  }
+
 </style>
 
 <body>
@@ -94,7 +134,7 @@
         산출물 검색</label>
     </div>
     <div>
-      <input type="text" class="form-control" id="search-output" placeholder="산출물을 검색하세요." style="width: 300px; margin-left: 40px; border: 1px solid #4f4e4e">
+      <input type="text" class="form-control" id="search-output" placeholder="산출물을 검색하세요.">
     </div>
     <section class="d-flex justify-content-left ms-4 p-3">
       <section class="jstree-layout" style="width: 400px; height: 350px; border: 1px solid #656565">
@@ -112,9 +152,9 @@
       </section>
     </section>
     <section>
-        <div class="d-flex justify-content-center mt-3">
-          <button type="submit" class="save-btn me-3" id="save-output">&nbsp;<i class="fa-solid fa-check"></i>&nbsp;적용하기&nbsp;</button>
-          <button class="btn btn-secondary" id="can-output">&nbsp;&nbsp;&nbsp;닫기&nbsp;&nbsp;&nbsp;</button>
+        <div class="modal-footer">
+            <button type="submit" class="btn-save-output">저장</button>
+            <button onclick="window.close();" class="btn-close-output">닫기</button>
         </div>
     </section>
 
@@ -161,6 +201,17 @@
     console.log(selectedFiles);
   }
 
+  // 저장 버튼 클릭
+  $(document).on('click', '.btn-save-output', function() {
+      if (window.opener) {
+          const messageData = {
+              type: "output",       // 구분값
+              files: selectedFiles  // 파일 데이터
+          };
+          window.opener.postMessage(messageData);
+          window.close();
+      }
+  });
 
 </script>
 </html>

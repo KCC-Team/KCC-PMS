@@ -39,7 +39,12 @@ public class WbsServiceImpl implements WbsService {
         if (result > 0
                 && wbs.getMem_no() != null && !wbs.getMem_no().isEmpty()
                 && wbs.getTm_no() != null && !wbs.getTm_no().isEmpty()) {
-            return addMember(wbs);
+            addMember(wbs);
+        }
+
+        if (result > 0
+                && wbs.getFolder_no() != null && !wbs.getFolder_no().isEmpty()) {
+            addOutput(wbs);
         }
 
         return result;
@@ -76,6 +81,11 @@ public class WbsServiceImpl implements WbsService {
         return wbsMapper.getTopTaskList(prjNo, tsk_no);
     }
 
+    @Override
+    public List<WbsResponseDto> getWbsOutputList(Long tsk_no) {
+        return wbsMapper.getWbsOutputList(tsk_no);
+    }
+
     public int addMember(WbsRequestDto wbs) {
         String memNos = wbs.getMem_no();
         String tmNos = wbs.getTm_no();
@@ -103,6 +113,31 @@ public class WbsServiceImpl implements WbsService {
             wbs.setTmNo(tmNo);
 
             int result = wbsMapper.saveWbsMember(wbs);
+            if (result <= 0) {
+                return result;
+            }
+        }
+
+        return 1;
+    }
+
+    public int addOutput(WbsRequestDto wbs) {
+        String folderNos = wbs.getFolder_no();
+
+        String[] folderNoArray;
+
+        if (folderNos.contains(",")) {
+            folderNoArray = folderNos.split(",");
+        } else {
+            folderNoArray = new String[] { folderNos };
+        }
+
+        for (int i = 0; i < folderNoArray.length; i++) {
+            long folderNo = Long.parseLong(folderNoArray[i].trim());
+
+            wbs.setFolderNo(folderNo);
+
+            int result = wbsMapper.saveWbsOutput(wbs);
             if (result <= 0) {
                 return result;
             }
@@ -169,14 +204,18 @@ public class WbsServiceImpl implements WbsService {
                 && wbs.getMem_no() != null && !wbs.getMem_no().isEmpty()
                 && wbs.getTm_no() != null && !wbs.getTm_no().isEmpty()) {
             wbsMapper.deleteWbsMember(wbs.getPrj_no(), wbs.getTsk_no());
-            return addMember(wbs);
+            addMember(wbs);
+        }
+        if (result > 0
+                && wbs.getFolder_no() != null && !wbs.getFolder_no().isEmpty()) {
+            wbsMapper.deleteWbsOutput(wbs.getTsk_no());
+            addOutput(wbs);
         }
         return result;
     }
 
     @Override
     public int deleteWbs(Long prj_no, Long tsk_no) {
-        //wbsMapper.deleteWbsMember(prj_no, tsk_no);
         return wbsMapper.deleteWbs(prj_no, tsk_no);
     }
 

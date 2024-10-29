@@ -115,6 +115,9 @@
 
 #mem_nm {
     width: 81%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 #sys_no {
@@ -123,6 +126,9 @@
 
 #output_nm {
     width: 81%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 #rel_out_nm {

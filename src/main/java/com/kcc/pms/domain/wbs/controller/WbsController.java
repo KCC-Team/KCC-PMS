@@ -66,6 +66,14 @@ public class WbsController {
         return ResponseEntity.ok(wbsList);
     }
 
+    @GetMapping("/api/wbs/output")
+    @ResponseBody
+    public ResponseEntity<List<WbsResponseDto>> output(Long tsk_no) {
+        List<WbsResponseDto> wbsOutputList = wbsService.getWbsOutputList(tsk_no);
+
+        return ResponseEntity.ok(wbsOutputList);
+    }
+
     @PostMapping("/api/wbs")
     @ResponseBody
     public ResponseEntity<String> saveWbs(WbsRequestDto wbs, HttpSession session, @AuthenticationPrincipal PrincipalDetail principalDetail) {

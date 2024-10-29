@@ -66,4 +66,7 @@ public class WbsRequestDto {
 
     private Long max_order_id;
 
+    private String folder_no;
+
+    private Long folderNo;
 }

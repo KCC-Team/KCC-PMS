@@ -31,6 +31,9 @@ $(document).ready(function() {
                 },
                 'plugins': ["search", "dnd"]
             });
+            $('#jstree').on('ready.jstree', function() {
+                $('#jstree').jstree('open_all');
+            });
         },
     });
 
