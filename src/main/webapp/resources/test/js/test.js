@@ -1,16 +1,19 @@
 const API_SERVER = 'http://localhost:8085';
 
 $(function() {
-    function updateButtonVisibility() {
-        let selectedOption = $('#testType').val();
-        if (selectedOption === '0') {
-            $('.tc-btn').hide();
-        } else {
-            $('.tc-btn').show();
+    $(".test-date").datepicker({
+        dateFormat: "yy-mm-dd"
+    });
+
+    fetchMenuData().then(function(menuData) {
+        createMenu(menuData);
+
+        let systemNo = $('#systemNo').val();
+        if (systemNo) {
+            setSystemPath(systemNo);
         }
-    }
-    updateButtonVisibility();
-    $('#testType').change(updateButtonVisibility);
+    });
+    fetchOptions();
 
     let testCaseIdx = 0;
     let testCaseCnt = 1;
@@ -390,4 +393,105 @@ function assignValue(obj, keys, value) {
 
         pointer[lastKey] = value;
     }
+}
+
+function fetchMenuData() {
+    return $.ajax({
+        url: '/systems?prjNo=' + prjNo,
+        method: 'GET',
+        dataType: 'json',
+        success: function(response) {
+            console.log("systems: " + response);
+            return response;
+        },
+        error: function(error) {
+            console.error("Error fetching data:", error);
+        }
+    });
+}
+
+
+function createMenu(menuData) {
+    createMenuHTML(menuData, $('#system-menu'), "");
+}
+
+function createMenuHTML(menuData, parentElement, path) {
+    menuData.forEach(function(menuItem) {
+        var currentPath = path ? path + " > " + menuItem.systemTitle : menuItem.systemTitle;
+        var listItem = $('<li>', {
+            'class': 'menu-item',
+            'data-system-no': menuItem.systemNo,
+            'data-parent-path': currentPath,
+            'text': menuItem.systemTitle
+        });
+
+        // 하위 메뉴가 있는 경우
+        if (menuItem.subSystems && menuItem.subSystems.length > 0) {
+            var subMenu = $('<ul>', {'class': 'system-submenu'});
+            createMenuHTML(menuItem.subSystems, subMenu, currentPath);
+            listItem.append(subMenu);
+        }
+
+        listItem.click(function(event) {
+            event.stopPropagation();
+            $('#system-select span:first-child').text(currentPath); // 선택된 경로 표시
+            $('#systemNo').val(menuItem.systemNo); // 시스템 번호를 숨겨진 필드에 저장
+            $('.mymenu').slideUp(); // 메뉴 숨기기
+        });
+
+        parentElement.append(listItem);
+    });
+}
+
+function setSystemPath(systemNo) {
+    let selectedItem = $('[data-system-no="' + systemNo + '"]');
+    console.log(selectedItem);
+    if (selectedItem.length) {
+        let path = selectedItem.data('parent-path') || selectedItem.text();
+        $('#system-select span:first-child').text(path);
+    }
+}
+
+function fetchOptions() {
+    $.ajax({
+        url: '/projects/tests/options',
+        method: 'GET',
+        success: function(data) {
+            data.forEach(function(item) {
+                const selectId = '#' + item.common_cd_no;
+                const $selectElement = $(selectId);
+
+                if ($selectElement.length) {
+                    setOptions($selectElement, item.codes);
+
+                }
+            });
+        },
+        error: function(xhr, status, error) {
+            console.error('옵션 데이터를 가져오는데 실패했습니다.', error);
+        }
+    });
+}
+
+function setOptions($selectElement, options) {
+    options.forEach(function(option) {
+
+        // 각 option 태그 생성
+        const $option = $('<option>', {
+            value: option.cd_dtl_no,
+            text: option.cd_dtl_nm
+        });
+
+        // if (option.cd_dtl_no === typeSelect) {
+        //     $option.attr('selected', 'selected');
+        // } else if (option.cd_dtl_no === prioritySelect) {
+        //     $option.attr('selected', 'selected');
+        // } else if (option.cd_dtl_no === statusSelect) {
+        //     $option.attr('selected', 'selected');
+        // }
+
+
+        $selectElement.append($option);
+
+    });
 }

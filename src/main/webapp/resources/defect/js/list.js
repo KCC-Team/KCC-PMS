@@ -6,7 +6,6 @@ $(function () {
         return '<span>{{{progress}}} {{fromRowIndex}} - {{toRowIndex}} of {{dataRowCount}} {{#dataRealRowCount}}  현재페이지 {{.}}{{/dataRealRowCount}} {{#totalElements}}  전체갯수 {{.}}{{/totalElements}}</span>';
     };
 
-
     testGrid = new ax5.ui.grid();
     testGrid.setConfig({
         target: $('[data-ax5grid="first-grid"]'),
@@ -106,6 +105,13 @@ $(function () {
         $('#systemNo').val() ? reloadData(testGrid, $('#systemNo').val(), $('.defect-opt').val(), $(this).val(), "", currentPage) : reloadData(testGrid, 0, $('.defect-opt').val(), $(this).val(), $('#searchDefect').val(), currentPage);
     });
 
+    $('#searchDefect').on('keypress', function(e) {
+        if (e.key === 'Enter') {
+            $('#systemNo').val() ? reloadData(testGrid, $('#systemNo').val(), $('.defect-opt').val(), $('.defect-status').val(), $('#searchDefect').val(), currentPage) :
+            reloadData(testGrid, 0, $('.defect-opt').val(), $('.defect-status').val(), $('#searchDefect').val(), currentPage);
+        }
+    });
+
     $('.defect-opt').change(function() {
         $('#systemNo').val() ? reloadData(testGrid, $('#systemNo').val(), $(this).val(), $('.defect-status').val(), "", currentPage) : reloadData(testGrid, 0, $('.defect-opt').val(), $('.defect-status').val(), $('#searchDefect').val(), currentPage);
     });
@@ -176,7 +182,6 @@ function createMenuHTML(menuData, parentElement, path) {
             $('.mymenu').slideUp(); // 메뉴 숨기기
             reloadData(testGrid, $('#systemNo').val(), $('.defect-opt').val(), $('.defect-status').val(), $('#searchDefect').val(), currentPage);
         });
-
         parentElement.append(listItem);
     });
 }
