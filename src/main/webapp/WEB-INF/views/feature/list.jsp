@@ -28,7 +28,7 @@
                         <div class="circle">
                             <strong class="circle_strong">라벨</strong>
                         </div>
-<%--                        <canvas id="systemProgressChart"></canvas>--%>
+                        <%--                        <canvas id="systemProgressChart"></canvas>--%>
                     </div>
                 </div>
 
@@ -63,7 +63,7 @@
                 </div>
 
                 <div class="row-info">
-                     <div id="midSystemFeatureTitle" class="feat-title">차세대 공공 프로젝트 - (전체)</div>
+                    <div id="midSystemFeatureTitle" class="feat-title">차세대 공공 프로젝트 - (전체)</div>
                     <div class="prg-bar">
                         <progress id="midFeatBar" class="feat-bar" value="35" max="100"></progress><span id="midFPrgVal" class="prg-val">35%</span>
                     </div>

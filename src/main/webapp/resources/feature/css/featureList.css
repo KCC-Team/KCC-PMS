@@ -398,6 +398,7 @@ progress::-webkit-progress-value {
 .system-select-button:focus {
     outline: none;
 }
+
 .pagination {
     display: flex;
     justify-content: center;

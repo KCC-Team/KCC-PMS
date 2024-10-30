@@ -23,6 +23,6 @@ public interface FeatureMapper {
     FeatureDetailResponseDto getFeatureDetail(@Param("featNo") Long featNo);
     Integer updateFeature(FeatureDetailResponseDto requestDto);
     int countFeatures(@Param("systemNo") Long systemNo,
-                          @Param("featClassCd") String featClassCd,
-                          @Param("prjNo") Long prjNo, @Param("cri") CriteriaY cri);
+                      @Param("featClassCd") String featClassCd,
+                      @Param("prjNo") Long prjNo, @Param("cri") CriteriaY cri);
 }
