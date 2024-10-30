@@ -12,7 +12,7 @@ if (type == "view" && id != null) {
 $(document).ready(function() {
 
     $('.btn-select-output').on('click', function() {
-       let popup = window.open('/projects/outputs/search', 'output', 'width=860, height=560, resizable=yes');
+        let popup = window.open('/projects/outputs/search', 'output', 'width=860, height=560, resizable=yes');
     });
 
     $("#pre_st_dt").datepicker({
@@ -151,7 +151,7 @@ window.addEventListener('message', function (event) {
         $("#output_nm").val(outputNm);
         $("#folder_no").val(folderNo);
     }
-  
+
     if (event.data.type != "output") {
         addedMembers.forEach(function (member) {
             membersId += member.id + ", ";
@@ -233,6 +233,7 @@ function getTopTaskList(id) {
         }
     });
 }
+
 // WBS 연결된 산출물 조회
 function getTaskOutputList(id) {
     $.ajax({

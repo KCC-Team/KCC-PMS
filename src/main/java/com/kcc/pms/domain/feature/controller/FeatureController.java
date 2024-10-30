@@ -77,12 +77,12 @@ public class FeatureController {
     @GetMapping("/list")
     @ResponseBody
     public ResponseEntity<PagedResponse<FeatureSummaryResponseDto>> getFeatureSummary(@RequestParam(value = "systemNo", required = false) Long systemNo,
-                                                                             @RequestParam(value = "featClassCd", required = false) String featClassCd,
-                                                                             @RequestParam(defaultValue = "1") int page,
-                                                                             @RequestParam(defaultValue = "10") int pageSize,
-                                                                             @RequestParam(value = "type", required = false) String type,
-                                                                             @RequestParam(value = "keyword", required = false) String keyword,
-                                                                             HttpSession session) {
+                                                                                      @RequestParam(value = "featClassCd", required = false) String featClassCd,
+                                                                                      @RequestParam(defaultValue = "1") int page,
+                                                                                      @RequestParam(defaultValue = "10") int pageSize,
+                                                                                      @RequestParam(value = "type", required = false) String type,
+                                                                                      @RequestParam(value = "keyword", required = false) String keyword,
+                                                                                      HttpSession session) {
         Long prjNo = (Long) session.getAttribute("prjNo");
         CriteriaY cri = new CriteriaY(page, pageSize);
         cri.setType(type);

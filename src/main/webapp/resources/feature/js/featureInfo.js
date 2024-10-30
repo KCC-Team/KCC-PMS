@@ -111,13 +111,13 @@ function fetchOptions() {
 function setOptions($selectElement, options) {
     options.forEach(function(option) {
 
-            // 각 option 태그 생성
-            const $option = $('<option>', {
-                value: option.cd_dtl_no,
-                text: option.cd_dtl_nm
-            });
+        // 각 option 태그 생성
+        const $option = $('<option>', {
+            value: option.cd_dtl_no,
+            text: option.cd_dtl_nm
+        });
 
-            $selectElement.append($option);
+        $selectElement.append($option);
 
     });
 }
