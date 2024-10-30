@@ -236,7 +236,7 @@ async function loadTeamData(prjNo) {
     console.log("loadTeamData call");
     return new Promise((resolve, reject) => {
         $.ajax({
-            url: 'http://localhost:8085/teams',
+            url: '/teams',
             method: 'GET',
             data: { projectNo: prjNo },
             cache: false,
@@ -555,7 +555,7 @@ function loadProjectMembers(prjNo) {
     }
 
     $.ajax({
-        url: 'http://localhost:8085/projects/projectmembers?projectNo=' + prjNo,
+        url: '/projects/projectmembers?projectNo=' + prjNo,
         method: 'GET',
         dataType: 'json',
         cache: false,

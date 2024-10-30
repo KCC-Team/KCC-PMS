@@ -1,11 +1,9 @@
-const API_SERVER = 'http://localhost:8085';
 let currentPage = 1;
 let testGrid;
 $(function () {
     ax5.ui.grid.tmpl.page_status = function(){
         return '<span>{{{progress}}} {{fromRowIndex}} - {{toRowIndex}} of {{dataRowCount}} {{#dataRealRowCount}}  현재페이지 {{.}}{{/dataRealRowCount}} {{#totalElements}}  전체갯수 {{.}}{{/totalElements}}</span>';
     };
-
 
     testGrid = new ax5.ui.grid();
     testGrid.setConfig({
@@ -103,16 +101,23 @@ $(function () {
     });
 
     $('.defect-status').change(function() {
-        $('#systemNo').val() ? reloadData(testGrid, $('#systemNo').val(), $('.defect-opt').val(), $(this).val(), "", currentPage) : reloadData(testGrid, 0, $('.defect-opt').val(), $(this).val(), "", currentPage);
+        $('#systemNo').val() ? reloadData(testGrid, $('#systemNo').val(), $('.defect-opt').val(), $(this).val(), "", currentPage) : reloadData(testGrid, 0, $('.defect-opt').val(), $(this).val(), $('#searchDefect').val(), currentPage);
+    });
+
+    $('#searchDefect').on('keypress', function(e) {
+        if (e.key === 'Enter') {
+            $('#systemNo').val() ? reloadData(testGrid, $('#systemNo').val(), $('.defect-opt').val(), $('.defect-status').val(), $('#searchDefect').val(), currentPage) :
+            reloadData(testGrid, 0, $('.defect-opt').val(), $('.defect-status').val(), $('#searchDefect').val(), currentPage);
+        }
     });
 
     $('.defect-opt').change(function() {
-        $('#systemNo').val() ? reloadData(testGrid, $('#systemNo').val(), $(this).val(), $('.defect-status').val(), "", currentPage) : reloadData(testGrid, 0, $('.defect-opt').val(), $('.defect-status').val(), "", currentPage);
+        $('#systemNo').val() ? reloadData(testGrid, $('#systemNo').val(), $(this).val(), $('.defect-status').val(), "", currentPage) : reloadData(testGrid, 0, $('.defect-opt').val(), $('.defect-status').val(), $('#searchDefect').val(), currentPage);
     });
 
     $('#defect-search-btn').on('click', function(e) {
         $('#systemNo').val() ? reloadData(testGrid, $('#systemNo').val(), $('.defect-opt').val(), $('.defect-status').val(), $('#searchDefect').val(), currentPage) :
-        reloadData(testGrid, 0, $('.defect-opt').val(), $('.defect-status').val(), $('#searchDefect').val(), currentPage);
+        reloadData(testGrid, $('#systemNo').val(), $('.defect-opt').val(), $('.defect-status').val(), $('#searchDefect').val(), currentPage);
     });
 
     fetchOptions();
@@ -144,7 +149,7 @@ function createMenu(menuData) {
         $('#system-select span:first-child').text(projectTitle);
         $('#systemNo').val("");  // 전체 시스템을 의미하도록 systemNo 필드 비우기
         $('.mymenu').slideUp();  // 메뉴 숨기기
-        reloadData(testGrid, $('#systemNo').val(), $('.defect-opt').val(), $('.defect-status').val(), "", currentPage);
+        reloadData(testGrid, $('#systemNo').val(), $('.defect-opt').val(), $('.defect-status').val(), $('#searchDefect').val(), currentPage);
     });
     parentElement.append(allMenuItem);  // "전체" 메뉴 항목을 최상단에 추가
 
@@ -174,9 +179,8 @@ function createMenuHTML(menuData, parentElement, path) {
             $('#system-select span:first-child').text(currentPath); // 선택된 경로 표시
             $('#systemNo').val(menuItem.systemNo); // 시스템 번호를 숨겨진 필드에 저장
             $('.mymenu').slideUp(); // 메뉴 숨기기
-            reloadData(testGrid, $('#systemNo').val(), $('.defect-opt').val(), $('.defect-status').val(), "", currentPage);
+            reloadData(testGrid, $('#systemNo').val(), $('.defect-opt').val(), $('.defect-status').val(), $('#searchDefect').val(), currentPage);
         });
-
         parentElement.append(listItem);
     });
 }
@@ -189,7 +193,7 @@ function reloadData(testGrid, work, type, status, search, page) {
 
     $.ajax({
         method: "GET",
-        url: API_SERVER + "/projects/defects/api/list?workNo=" + work + "&type=" + type + "&status=" + status + "&search=" + search + "&page=" + page,
+        url: "/projects/defects/api/list?workNo=" + work + "&type=" + type + "&status=" + status + "&search=" + search + "&page=" + page,
             success: function (res) {
                 testGrid.setData({
                     list: res.defectList,

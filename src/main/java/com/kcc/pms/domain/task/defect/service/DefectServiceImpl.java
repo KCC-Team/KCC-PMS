@@ -11,6 +11,7 @@ import com.kcc.pms.domain.task.defect.mapper.DefectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.Optional;
@@ -48,9 +49,15 @@ public class DefectServiceImpl implements DefectService {
         if (numbers.isPresent()) {
             if (numbers.get().getFileMasterFoundNumber() != null && files.getDisFiles() != null) {
                 commonService.generateFiles(prgNo, MemberName, files.getDisFiles(), numbers.get().getFileMasterFoundNumber());
+            } else if (numbers.get().getFileMasterFoundNumber() == null && files.getDisFiles() != null) {
+                Long Number = generateFile(prgNo, MemberName, files.getDisFiles());
+                int isPassed = defectMapper.updateFileMasterNumbers(no, Number, null);
             }
             if (numbers.get().getFileMasterWorkNumber() != null && files.getWorkFiles() != null) {
                 commonService.generateFiles(prgNo, MemberName, files.getWorkFiles(), numbers.get().getFileMasterWorkNumber());
+            } else if (numbers.get().getFileMasterWorkNumber() == null && files.getWorkFiles() != null) {
+                Long Number = generateFile(prgNo, MemberName, files.getWorkFiles());
+                int isPassed = defectMapper.updateFileMasterNumbers(no, null, Number);
             }
         } else {
             Long[] Numbers = generateFiles(prgNo, MemberName, files);
@@ -112,5 +119,9 @@ public class DefectServiceImpl implements DefectService {
         }
 
         return numbers;
+    }
+
+    private Long generateFile(Long projectNumber, String memberName, List<MultipartFile> files) {
+        return commonService.fileUpload(files, memberName, projectNumber, null);
     }
 }

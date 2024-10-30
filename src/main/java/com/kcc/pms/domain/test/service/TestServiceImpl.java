@@ -1,6 +1,9 @@
 package com.kcc.pms.domain.test.service;
 
+import com.kcc.pms.domain.common.model.dto.CommonCodeOptions;
+import com.kcc.pms.domain.task.defect.domain.dto.DefectPageResponseDto;
 import com.kcc.pms.domain.test.domain.dto.TestDetailRequestDto;
+import com.kcc.pms.domain.test.domain.dto.TestPageResponseDto;
 import com.kcc.pms.domain.test.domain.dto.TestRequestDto;
 import com.kcc.pms.domain.test.domain.dto.TestDto;
 import com.kcc.pms.domain.test.mapper.TestMapper;
@@ -27,15 +30,18 @@ public class TestServiceImpl implements TestService {
     private final static int LIMIT = 10;
 
     @Override
-    public List<TestDto> getTestList(Long projectNumber, Long workNumber, String testType, String status, int page) {
-        Map<String, Object> parameters = new HashMap<>();
-        parameters.put("projectNumber", projectNumber);
-        parameters.put("workNumber", workNumber);
-        parameters.put("testType", testType);
-        parameters.put("status", status);
-        parameters.put("page", page);
-        parameters.put("limit", LIMIT);
-        return testMapper.findAllByOptions(parameters);
+    public List<CommonCodeOptions> getDefectCommonCodeOptions() {
+        return testMapper.getCommonCodeOptions();
+    }
+
+    @Override
+    public TestPageResponseDto getTestList(Long projectNumber, Long workNumber, String testType, String status, String search, int page) {
+
+        List<TestDto> tests = testMapper.findAllByOptions(projectNumber, workNumber, testType, status, search, page, LIMIT);
+        int testTotalCount = testMapper.getTestTotalCount(projectNumber, workNumber, testType, search, status);
+        int totalPage = (int) Math.ceil((double) testTotalCount / LIMIT);
+
+        return new TestPageResponseDto(tests, totalPage, testTotalCount);
     }
 
     @Transactional

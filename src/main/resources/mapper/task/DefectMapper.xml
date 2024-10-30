@@ -108,23 +108,25 @@
         SELECT sub.*, ROWNUM rn
         FROM (
         SELECT
-        df_no AS defectNumber,
-        df_id AS defectId,
-        df_ttl AS defectTitle,
+        defect.df_no AS defectNumber,
+        defect.df_id AS defectId,
+        defect.df_ttl AS defectTitle,
         pri.cd_dtl_nm AS priority,
         st.cd_dtl_nm AS status,
         mem_fd.mem_nm as discoverName,
         mem_work.mem_nm as workName,
-        df_fd_dt AS discoverDate,
-        due_dt AS scheduleWorkDate,
-        work_dt AS workDate
+        defect.df_fd_dt AS discoverDate,
+        defect.due_dt AS scheduleWorkDate,
+        defect.work_dt AS workDate
         FROM defect
         LEFT JOIN member mem_fd ON defect.mem_fd_no = mem_fd.mem_no
         LEFT JOIN member mem_work ON defect.mem_work_no = mem_work.mem_no
         LEFT JOIN codedetail pri ON defect.pri_cd = pri.cd_dtl_no
+        LEFT JOIN System sys ON defect.work_no = sys.sys_no
         LEFT JOIN codedetail st ON defect.stat_cd = st.cd_dtl_no
-        WHERE prj_no = #{projectNumber}
-        <if test="workNo != 0">AND work_no = #{workNo}
+        WHERE defect.prj_no = #{projectNumber}
+        <if test="workNo != 0">
+          AND defect.work_no = #{workNo} OR sys.par_sys_no = #{workNo}
         </if>
         <if test="
         type != 'all'">AND type_cd = #{type}
@@ -180,9 +182,14 @@
 
     <update id="updateFileMasterNumbers" parameterType="map">
         UPDATE defect
-        SET
-            fl_ms_fd_no = #{fileMasterFoundNumber, jdbcType=NUMERIC},
-            fl_ms_work_no = #{fileMasterWorkNumber, jdbcType=NUMERIC}
+        <set>
+            <if test="fileMasterFoundNumber != null">
+                fl_ms_fd_no = #{fileMasterFoundNumber, jdbcType=NUMERIC},
+            </if>
+            <if test="fileMasterWorkNumber != null">
+                fl_ms_work_no = #{fileMasterWorkNumber, jdbcType=NUMERIC}
+            </if>
+        </set>
         WHERE df_no = #{no}
     </update>
 </mapper>

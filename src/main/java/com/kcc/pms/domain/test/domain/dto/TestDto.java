@@ -14,7 +14,8 @@ public class TestDto implements Serializable {
     private String testType;
     private String testTitle;
     private String workTitle;
-    private String testPeriod;
+    private String testStartDate;
+    private String testEndDate;
     private Integer detailCount;
     private Integer defectCount;
     private String testStatus;

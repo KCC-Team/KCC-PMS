@@ -29,9 +29,6 @@
                             <label>
                                 <select id="PMS008" class="defect-opt" name="taskSelect">
                                     <option value="all" selected>전체</option>
-                                    <c:forEach var="st" items="${type}">
-                                        <option value="${st.codeDetailNo}">${st.codeDetailName}</option>
-                                    </c:forEach>
                                 </select>
                             </label>
                         </div>
@@ -40,9 +37,6 @@
                             <label>
                                 <select id="PMS007" class="defect-status" name="taskSelect">
                                     <option value="all" selected>전체</option>
-                                    <c:forEach var="st" items="${status}">
-                                        <option value="${st.codeDetailNo}">${st.codeDetailName}</option>
-                                    </c:forEach>
                                 </select>
                             </label>
                         </div>
