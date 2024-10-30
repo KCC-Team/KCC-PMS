@@ -12,7 +12,7 @@ if (type == "view" && id != null) {
 $(document).ready(function() {
 
     $('.btn-select-output').on('click', function() {
-       let popup = window.open('/projects/outputs/search', 'output', 'width=860, height=560, resizable=yes');
+        let popup = window.open('/projects/outputs/search', 'output', 'width=860, height=560, resizable=yes');
     });
 
     $("#pre_st_dt").datepicker({

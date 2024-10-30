@@ -21,72 +21,72 @@
             <div class="project-info"><%=titleName%></div>
         </div>
 
-            <form class="project-form" action="#" method="post" enctype="multipart/form-data">
-                <input type="hidden" name="type_cd" value="PMS00302">
-
+            <form id="riskForm" class="project-form" action="#" method="post" enctype="multipart/form-data">
+                <input type="hidden" name="issueRiskType" value="PMS00302">
+                <input type="hidden" id="riskNumber" name="riskNumber" value="" >
                 <div class="all-section">
 
                     <table class="overview-table">
                         <tr>
                             <td class="text-align-left">
-                                <label for="risk_ttl">제목 <span class="required-icon">*</span></label>
+                                <label for="riskTitle">제목 <span class="required-icon">*</span></label>
                             </td>
                             <td>
-                                <input type="text" id="risk_ttl" name="risk_ttl" value="" required>
+                                <input type="text" id="riskTitle" name="riskTitle" value="" required>
                             </td>
                             <td class="text-align-left">
                                 <label>위험분류 <span class="required-icon">*</span></label>
                             </td>
                             <td>
-                                <select id="PMS005" name="class_cd" required>
+                                <select id="PMS005" name="classCode" required>
                                     <option value="">선택하세요.</option>
                                 </select>
                             </td>
                         </tr>
                         <tr>
                             <td class="text-align-left">
-                                <label for="risk_id">위험 ID <span class="required-icon">*</span></label>
+                                <label for="riskId">위험 ID <span class="required-icon">*</span></label>
                             </td>
                             <td>
-                                <input type="text" id="risk_id" name="risk_id" value="" required>
+                                <input type="text" id="riskId" name="riskId" value="" required>
                             </td>
                             <td class="text-align-left">
                                 <label>우선순위 <span class="required-icon">*</span></label>
                             </td>
                             <td>
-                                <select id="PMS006" name="pri_cd" required>
+                                <select id="PMS006" name="priorCode" required>
                                     <option value="">선택하세요.</option>
                                 </select>
                             </td>
                         </tr>
                         <tr>
                             <td class="text-align-left">
-                                <label for="rick_cont">위험내용 <span class="required-icon">*</span></label>
+                                <label for="riskContent">위험내용 <span class="required-icon">*</span></label>
                             </td>
                             <td colspan="4">
-                                <textarea id="rick_cont" name="rick_cont" required></textarea>
+                                <textarea id="riskContent" name="riskContent" required></textarea>
                             </td>
                         </tr>
                         <tr>
                             <td class="text-align-left">
-                                <label for="risk_plan">위험완화계획 </label>
+                                <label for="riskPlan">위험완화계획 </label>
                             </td>
                             <td colspan="4">
-                                <textarea id="risk_plan" name="risk_plan"></textarea>
+                                <textarea id="riskPlan" name="riskPlan"></textarea>
                             </td>
                         </tr>
                         <tr>
                             <td class="text-align-left">
-                                <label for="due_dt">조치희망일 <span class="required-icon">*</span></label>
+                                <label for="dueDate">조치희망일 <span class="required-icon">*</span></label>
                             </td>
                             <td>
-                                <input type="date" id="due_dt" name="due_dt" value="" required>
+                                <input type="date" id="dueDate" name="dueDate" value="" required>
                             </td>
                             <td class="text-align-left">
-                                <label for="compl_date">조치완료일</label>
+                                <label for="completeDate">조치완료일</label>
                             </td>
                             <td>
-                                <input type="date" id="compl_date" name="compl_date" value="">
+                                <input type="date" id="completeDate" name="completeDate" value="">
                             </td>
                         </tr>
                         <tr>
@@ -94,15 +94,16 @@
                                 <label>위험상태 <span class="required-icon">*</span></label>
                             </td>
                             <td>
-                                <select id="PMS004" name="stat_cd" required>
+                                <select id="PMS004" name="statusCode" required>
                                     <option value="">선택하세요.</option>
                                 </select>
                             </td>
                             <td class="text-align-left">
-                                <label for="mem_no">발견자 <span class="required-icon">*</span></label>
+                                <label for="memberNo">발견자 <span class="required-icon">*</span></label>
                             </td>
                             <td>
-                                <input type="text" id="mem_no" name="mem_no" value="" required>
+                                <input type="hidden" id="memberNo" name="memberNo" value="" required>
+                                <input type="text" id="memberName" name="memberName" value="" readonly>
                             </td>
                         </tr>
                         <tr>
@@ -110,10 +111,11 @@
                                 <label>시스템/업무</label>
                             </td>
                             <td colspan="4">
+                                <input type="hidden" name="systemNo" id="systemNo">
                                 <div class="system-select-wrapper">
-                                    <button class="system-select-button" id="system-select">
+                                    <span class="system-select-button" id="system-select">
                                         <span>시스템/업무 선택</span>
-                                    </button>
+                                    </span>
                                     <!-- 메뉴 리스트 -->
                                     <ul class="mymenu" id="system-menu"></ul>
                                 </div>
@@ -124,21 +126,20 @@
 
                     <div class="right-section">
 
-                        <div class="file-zone_1 w-100">
-                            <div class="file-section mt-3">
-                                <div class="info-item d-flex flex-column align-items-start">
-                                    <div class="mb-2"><label>위험 발견 첨부파일</label></div>
-                                    <div id="df-insert-file-dropzone_1" class="dropzone"></div>
-                                    <jsp:include page="../output/file/file-task.jsp" />
-                                </div>
+                        <div class="mt-3 file-zone_1" style="width: 600px">
+                        <div class="file-section">
+                            <div class="info-item d-flex flex-column align-items-start">
+                                <div class="mb-2"><label>위험 발견 첨부파일</label></div>
+                                <div id="risk-insert-file-dropzone_1" class="dropzone"></div>
+                                <jsp:include page="../output/file/file-task.jsp" />
                             </div>
                         </div>
-
-                        <div class="file-zone_2 w-100">
+                        </div>
+                        <div class="file-zone_2 mt-3" style="width: 600px">
                             <div class="file-section mt-3">
                                 <div class="info-item d-flex flex-column align-items-start">
                                     <div class="mb-2"><label>위험 조치 첨부파일</label></div>
-                                    <div id="df-insert-file-dropzone_2" class="dropzone"></div>
+                                    <div id="risk-insert-file-dropzone_2" class="dropzone"></div>
                                     <jsp:include page="../output/file/file-task.jsp" />
                                 </div>
                             </div>
@@ -150,7 +151,7 @@
                                 <i class="fa-solid fa-check"></i>&nbsp; 위험조치
                             </button>
                             <% } %>
-                            <button type="submit" class="save-btn">
+                            <button id="saveRisk" type="submit" class="save-btn">
                                 <i class="fa-solid fa-check"></i>&nbsp; 저장
                             </button>
                             <% if (type == null) { %>
@@ -230,5 +231,8 @@
 </main>
 
 <script src="../../../resources/danger/js/info.js"></script>
+<script type="text/javascript">
+    let registerMember = JSON.parse('${registerMemberJson}');
+</script>
 
 <%@ include file="../footer.jsp" %>

@@ -24,4 +24,74 @@
         ORDER BY COMMON_CD_NO, ORDER_NO
     </select>
 
+    <insert id="saveRisk">
+        <selectKey keyProperty="req.riskNumber" resultType="long" order="BEFORE">
+            SELECT seq_risk.nextval FROM dual
+        </selectKey>
+
+        INSERT INTO RISK
+        (risk_no, risk_id, rsk_ttl, type_cd, class_cd, stat_cd, pri_cd, risk_cont, risk_plan, due_dt, compl_dt,
+        prj_no, sys_no, mem_no, fl_ms_act_no, fl_ms_fd_no)
+        VALUES
+        (
+        #{req.riskNumber}, #{req.riskId, jdbcType=VARCHAR}, #{req.riskTitle, jdbcType=VARCHAR},
+        'PMS00302', #{req.classCode, jdbcType=VARCHAR}, #{req.statusCode, jdbcType=VARCHAR}, #{req.priorCode, jdbcType=VARCHAR},
+         #{req.riskContent, jdbcType=VARCHAR}, #{req.riskPlan, jdbcType=VARCHAR}, #{req.dueDate, jdbcType=DATE},
+          #{req.completeDate, jdbcType=DATE}, #{req.prjNo}, #{req.systemNo, jdbcType=NUMERIC}, #{req.memberNo, jdbcType=NUMERIC},
+        #{fileMasterWorkNumber, jdbcType=NUMERIC}, #{fileMasterFoundNumber, jdbcType=NUMERIC}
+        )
+    </insert>
+
+    <select id="getFileMasterNumbers" resultType="FileMasterNumbers">
+        SELECT
+            fl_ms_fd_no AS fileMasterFoundNumber,
+            fl_ms_act_no AS fileMasterWorkNumber
+        FROM risk
+        WHERE risk_no = #{riskNo}
+    </select>
+
+    <select id="getRiskByNo" resultType="com.kcc.pms.domain.risk.model.dto.RiskDto">
+        SELECT
+            r.risk_no as riskNumber,
+            r.risk_id as riskId,
+            r.rsk_ttl as riskTitle,
+            r.class_cd as classCode,
+            r.stat_cd as statusCode,
+            r.pri_cd as priorCode,
+            r.risk_cont as riskContent,
+            r.risk_plan as riskPlan,
+            r.due_dt as dueDate,
+            r.compl_dt as completeDate,
+            r.prj_no as prjNo,
+            r.sys_no as systemNo,
+            r.mem_no as memberNo,
+            m.mem_nm as memberName
+        FROM
+            risk r,
+            member m
+        WHERE
+            r.type_cd = 'PMS00302'
+          AND r.mem_no = m.mem_no
+          AND r.risk_no = #{riskNo}
+    </select>
+
+
+    <update id="updateRiskInfo" parameterType="com.kcc.pms.domain.risk.model.dto.RiskDto">
+        UPDATE risk
+        <set>
+            <if test="riskTitle != null">RSK_TTL = #{riskTitle},</if>
+            <if test="classCode != null">CLASS_CD = #{classCode},</if>
+            <if test="riskId != null">RISK_ID = #{riskId},</if>
+            <if test="priorCode != null">PRI_CD = #{priorCode},</if>
+            <if test="riskContent != null">RISK_CONT = #{riskContent},</if>
+            <if test="riskPlan != null">RISK_PLAN = #{riskPlan},</if>
+            <if test="dueDate != null">DUE_DT = #{dueDate},</if>
+            <if test="completeDate != null">COMPL_DT = #{completeDate},</if>
+            <if test="statusCode != null">STAT_CD = #{statusCode},</if>
+            SYS_NO = #{systemNo, jdbcType=NUMERIC},
+            <if test="memberNo != null">MEM_NO = #{memberNo},</if>
+            <if test="prjNo != null">PRJ_NO = #{prjNo}</if>
+        </set>
+        WHERE RISK_NO = #{riskNumber}
+    </update>
 </mapper>

@@ -91,8 +91,8 @@ function getProgressSummary(systemNo, featClassCd){
         type: 'GET',
         data: listParams,
         success: function (response) {
-          console.log(response);
-          updateMidPanel(response, $('#system-select span:first-child').text());
+            console.log(response);
+            updateMidPanel(response, $('#system-select span:first-child').text());
         },
         error: function (xhr, status, error) {
             console.error('Error:', error);
