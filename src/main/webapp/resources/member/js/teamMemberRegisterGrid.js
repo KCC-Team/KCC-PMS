@@ -117,7 +117,7 @@ function insertProject() {
             alert("PM만 등록 가능합니다.")
             return false;
         }
-        window.opener.postMessage(addedMembers, "http://localhost:8085");
+        window.opener.postMessage(addedMembers);
         window.close();
     } else {
         console.log("부모 창을 인식하지 못했습니다.");
