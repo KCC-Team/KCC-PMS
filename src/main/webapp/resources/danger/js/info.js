@@ -1,5 +1,46 @@
-$(document).ready(function() {
-    console.log("prjNo = " + prjNo);
+let deletedFiles = []
+let discoverFiles;
+let workFiles;
+let dropzone1;
+let dropzone2;
+document.addEventListener('DOMContentLoaded', function() {
+    if (Dropzone.instances.length > 0) {
+        Dropzone.instances.forEach(function(dz) {
+            dz.destroy();
+        });
+    }
+
+    const previewTemplate = `
+        <div class="dz-preview dz-file-preview">
+            <a target="_blank" class="dz-image-link">
+                <img data-dz-thumbnail style="width: 65px; height: 65px"/>
+            </a>
+            <div class="dz-details">
+                <div class="dz-filename"><span data-dz-name style="width: 100px"></span></div>
+                <div class="dz-size" data-dz-size></div>
+                <span class="button-icon" data-dz-remove><i class="fas fa-trash-alt"></i></span>
+            </div>
+            <div class="dz-progress"><span class="dz-upload" data-dz-uploadprogress></span></div>
+            <div class="dz-error-message"><span data-dz-errormessage></span></div>
+        </div>
+    `;
+
+    dropzone1 = initDropzone('#risk-insert-file-dropzone_1', '.file-zone_1', previewTemplate, "/projects/risks/risk");
+    dropzone2 = initDropzone('#risk-insert-file-dropzone_2', '.file-zone_2', previewTemplate, "/projects/risks/risk");
+
+
+    dropzone1.on("removedfile", function(file) {
+        if (file.isExisting) {
+            deletedFiles.push(file.id);
+        }
+    });
+
+    dropzone2.on("removedfile", function(file) {
+        if (file.isExisting) {
+            deletedFiles.push(file.id);
+        }
+    });
+
     const dateInput = $('#record_dt');
     if (!dateInput.val()) {
         dateInput.val(getTodayDate());
@@ -15,10 +56,24 @@ $(document).ready(function() {
         compl_input.val(getTodayDate());
     }
 
+    const urlParams = new URLSearchParams(window.location.search);
+    const type = urlParams.get('type');
+    const riskNo = urlParams.get('no');
+    console.log("riskNo = " + riskNo);
+    if (type === 'register') {
+        console.log("registerMember = ", registerMember);
+        console.log(typeof registerMember);
+        $('#memberNo').val(registerMember.memNo); // memberNo 설정
+        $('#memberName').val(registerMember.memberName); // memberName 설정
+    }
+
     fetchOptions();
 
     fetchMenuData().then(function(menuData) {
         createMenu(menuData);
+        if(riskNo){
+            getRiskInfo(riskNo);
+        }
     });
 
     $('#system-select').click(function() {
@@ -27,103 +82,227 @@ $(document).ready(function() {
 
     $("#system-select span:first").text("시스템 선택");
 
+    $('#saveRisk').on('click', function(e) {
+        e.preventDefault();
+        let $form = $('#riskForm')[0];
+
+        let requestUrl = "/projects/risks/risk";
+        let requestMethod = "POST";
+
+        if (riskNo) {  // featNo가 존재하면 업데이트로 가정
+            requestMethod = "PUT";
+        }
+        console.log("form Data", $form);
+        insertData(dropzone1, dropzone2, $form, requestUrl, requestMethod);
+    });
+
+    $('.del-btn').on('click', function(e) {
+        e.preventDefault();
+        let riskNumber = riskNo;
+        if (riskNumber == null) {
+            window.close();
+        }
+
+        $.ajax({
+            url: "/projects/risks/" + riskNumber,
+            type: 'delete',
+            success: function (response) {
+                window.close();
+            },
+            error: function (response) {
+                alert('삭제 실패');
+            }
+        });
+    });
+
+    $('#can-df').on('click', function(e) {
+        e.preventDefault();
+        window.close();
+    });
+
 });
 
 
 
-document.addEventListener('DOMContentLoaded', function() {
-    let defectActionContent = '${defectActionContent}';
-    let hasDefectActionContent = defectActionContent && defectActionContent.trim() !== '';
+function insertData(dropzone_dis, dropzone_work, $form, requestUrl, requestMethod) {
+    let formData;
+    let dis_files;
+    let work_files
+    if(requestMethod === 'POST'){
+        dis_files = dropzone_dis.files;
+        work_files = dropzone_work.files;
 
-    if (Dropzone.instances.length > 0) {
-        Dropzone.instances.forEach(function(dz) {
-            dz.destroy();
-        });
-    }
-
-    // 첫 번째 Dropzone
-    const dropzonePreviewContainer1 = document.querySelector('.file-zone_1 .dropzone-preview');
-    if (dropzonePreviewContainer1) {
-        // 미리보기 템플릿 정의
-        const previewTemplate1 = `
-            <div class="dz-preview dz-file-preview">
-                <a href="" target="_blank" class="dz-image-link">
-                    <img data-dz-thumbnail style="width: 85px;"/>
-                </a>
-                <div class="dz-details">
-                    <div class="dz-filename"><span data-dz-name style="width: 100px"></span></div>
-                    <div class="dz-size" data-dz-size></div>
-                    <span class="button-icon" data-dz-remove><i class="fas fa-trash-alt"></i></span>
-                </div>
-                <div class="dz-progress"><span class="dz-upload" data-dz-uploadprogress></span></div>
-                <div class="dz-error-message"><span data-dz-errormessage></span></div>
-            </div>
-        `;
-
-        const dropzone1 = initDropzone('#df-insert-file-dropzone_1', '.file-zone_1', previewTemplate1);
-
-        // 업로드 성공 시 이미지 링크 설정
-        dropzone1.on("success", function(file, response) {
-            // 서버에서 이미지 URL을 반환한다고 가정
-            const imageUrl = response.imageUrl;
-            const previewElement = file.previewElement;
-            const imageLink = previewElement.querySelector(".dz-image-link");
-            imageLink.href = imageUrl;
-        });
-
-        // 미구현 경로 임으로 임시로 처리
-        dropzone1.processQueue = function() {
-            this.emit('queuecomplete');
-        };
-
-        $('.save-button').on('click', function(e) {
-            e.preventDefault();
-            dropzone1.processQueue();
-        });
-    }
-
-    if (hasDefectActionContent) {
-        const dropzonePreviewContainer2 = document.querySelector('.file-zone_2 .dropzone-preview');
-        if (dropzonePreviewContainer2) {
-            // 미리보기 템플릿 정의
-            const previewTemplate2 = `
-                <div class="dz-preview dz-file-preview">
-                    <a href="" target="_blank" class="dz-image-link">
-                        <img data-dz-thumbnail />
-                    </a>
-                    <div class="dz-details">
-                        <div class="dz-filename"><span data-dz-name></span></div>
-                        <div class="dz-size" data-dz-size></div>
-                    </div>
-                    <div class="dz-progress"><span class="dz-upload" data-dz-uploadprogress></span></div>
-                    <div class="dz-error-message"><span data-dz-errormessage></span></div>
-                </div>
-            `;
-
-            const dropzone2 = initDropzone('#df-insert-file-dropzone_2', '.file-zone_2', previewTemplate2);
-
-            // 업로드 성공 시 이미지 링크 설정
-            dropzone2.on("success", function(file, response) {
-                // 서버에서 이미지 URL을 반환한다고 가정
-                const imageUrl = response.imageUrl;
-                const previewElement = file.previewElement;
-                const imageLink = previewElement.querySelector(".dz-image-link");
-                imageLink.href = imageUrl;
+        formData = new FormData($form);
+        if (dis_files.length > 0) {
+            dis_files.forEach(file => {
+                formData.append('disFiles', file);
             });
+        }
+        if (work_files.length > 0) {
+            work_files.forEach(file => {
+                formData.append('workFiles', file);
+            });
+        }
+    } else if(requestMethod === 'PUT'){
+        dis_files = dropzone_dis.files;
+        work_files = dropzone_work.files;
 
-            dropzone2.processQueue = function() {
-                this.emit('queuecomplete');
-            };
-
-            $('.save-button').on('click', function(e) {
-                e.preventDefault();
-                dropzone2.processQueue();
+        formData = new FormData($form);
+        if (dis_files.length > 0) {
+            dis_files.forEach(file => {
+                if (!file.isExisting) {
+                    formData.append('disFiles', file);
+                }
+            });
+        }
+        if (work_files.length > 0) {
+            work_files.forEach(file => {
+                if (!file.isExisting) {
+                    formData.append('workFiles', file);
+                }
+            });
+        }
+        if (deletedFiles.length > 0) {
+            deletedFiles.forEach(file => {
+                formData.append('deleteFiles', file);
             });
         }
     }
-});
+
+    $.ajax({
+        url: requestUrl,
+        type: requestMethod,
+        data: formData,
+        contentType: false,
+        processData: false,
+        success: function(response) {
+            if (dis_files.length > 0) {
+                dis_files.forEach(file => {
+                    file.status = Dropzone.SUCCESS;
+                    dropzone_dis.emit("complete", file);
+                });
+            }
+            if (work_files.length > 0) {
+                work_files.forEach(file => {
+                    file.status = Dropzone.SUCCESS;
+                    dropzone_work.emit("complete", file);
+                });
+            }
+            console.log("redirect url");
+            console.log(response);
+            window.location.href = response;
+        },
+        error: function(response) {
+            console.error(response);
+        }
+    });
+}
 
 
+
+function getRiskInfo(riskNo){
+    $.ajax({
+        url: '/projects/risks/risk/' + riskNo,
+        type: 'GET',
+        success: function (response){
+            console.log("riskInfo = ", response);
+            discoverFiles = JSON.parse(response.discoverFilesJson || '[]');
+            workFiles = JSON.parse(response.workFilesJson || '[]');
+            push();
+            updateForm(response);
+        },
+        error: function (xhr, status, error) {
+            alert("조회 중 문제가 발생했습니다. 다시 시도해주세요.");
+            console.log(xhr, status, error);
+        }
+    })
+}
+
+function push(){
+
+    workFiles.forEach(function(file) {
+        let mockFile = {
+            id: file.fileNumber,
+            name: file.fileName,
+            size: file.fileSize,
+            url: file.filePath,
+            isExisting: true
+        };
+
+        dropzone2.emit("addedfile", mockFile);
+        dropzone2.emit("thumbnail", mockFile, file.filePath);
+        dropzone2.emit("complete", mockFile);
+
+        let previewElement = mockFile.previewElement;
+        if (previewElement) {
+            previewElement.classList.add("existing-file");
+
+            let removeButton = previewElement.querySelector("[data-dz-remove]");
+            let imageLink = previewElement.querySelector(".dz-image-link");
+            if (imageLink) {
+                imageLink.href = file.filePath;
+            }
+        }
+        dropzone2.files.push(mockFile);
+    });
+
+
+    discoverFiles.forEach(function(file) {
+        let mockFile = {
+            id: file.fileNumber,
+            name: file.fileName,
+            size: file.fileSize,
+            url: file.filePath,
+            isExisting: true
+        };
+
+        dropzone1.emit("addedfile", mockFile);
+        console.log(file);
+        dropzone1.emit("thumbnail", mockFile, file.filePath);
+        dropzone1.emit("complete", mockFile);
+
+        let previewElement = mockFile.previewElement;
+        if (previewElement) {
+            previewElement.classList.add("existing-file");
+
+            let removeButton = previewElement.querySelector("[data-dz-remove]");
+            let imageLink = previewElement.querySelector(".dz-image-link");
+            if (imageLink) {
+                imageLink.href = file.filePath;
+            }
+        }
+        dropzone1.files.push(mockFile);
+    });
+
+
+}
+
+
+function updateForm(data){
+    $('#risk_ttl').val(data.riskTitle);
+    $('#riskNumber').val(data.riskNumber);
+    $('#riskTitle').val(data.riskTitle);
+    $('#PMS005').val(data.classCode);
+    $('#riskId').val(data.riskId);
+    $('#PMS006').val(data.priorCode);
+    $('#riskContent').val(data.riskContent);
+    $('#riskPlan').val(data.riskPlan);
+    $('#dueDate').val(data.dueDate);
+    $('#completeDate').val(data.completeDate);
+    $('#PMS004').val(data.statusCode);
+    $('#memberNo').val(data.memberNo);
+    $('#memberName').val(data.memberName);
+    $('#systemNo').val(data.systemNo);
+    setSystemPath(data.systemNo);
+}
+
+function setSystemPath(systemNo) {
+    var selectedItem = $('[data-system-no="' + systemNo + '"]');
+    if (selectedItem.length) {
+        var path = selectedItem.data('parent-path') || selectedItem.text(); // 'data-parent-path'를 사용하되, 없다면 text() 사용
+        $('#system-select span:first-child').text(path);
+    }
+}
 
 // 오늘 날짜를 "YYYY-MM-DD" 형식으로 반환하는 함수
 function getTodayDate() {
@@ -186,18 +365,36 @@ function setOptions($selectElement, options) {
 
 
 function createMenu(menuData) {
-    createMenuHTML(menuData, $('#system-menu'), "");
+    const parentElement = $('#system-menu');
+
+    // "전체" 메뉴 항목 추가
+    const allMenuItem = $('<li class="menu-item"></li>').text("전체");
+    allMenuItem.click(function(event) {
+        event.stopPropagation();
+        let projectTitle = document.querySelector('.common-project-title').textContent.trim();
+        $('#system-select span:first-child').text('전체');
+        $('#systemNo').val("");  // 전체 시스템을 의미하도록 systemNo 필드 비우기
+        $('.mymenu').slideUp();  // 메뉴 숨기기
+    });
+    parentElement.append(allMenuItem);  // "전체" 메뉴 항목을 최상단에 추가
+
+    // 기존 메뉴 생성
+    createMenuHTML(menuData, parentElement, "");
 }
 
 function createMenuHTML(menuData, parentElement, path) {
     menuData.forEach(function(menuItem) {
-        const listItem = $('<li class="menu-item"></li>').text(menuItem.systemTitle);
-        const subMenu = $('<ul class="system-submenu"></ul>');
-
-        const currentPath = path ? path + " > " + menuItem.systemTitle : menuItem.systemTitle;
+        var currentPath = path ? path + " > " + menuItem.systemTitle : menuItem.systemTitle;
+        var listItem = $('<li>', {
+            'class': 'menu-item',
+            'data-system-no': menuItem.systemNo,
+            'data-parent-path': currentPath,
+            'text': menuItem.systemTitle
+        });
 
         // 하위 메뉴가 있는 경우
         if (menuItem.subSystems && menuItem.subSystems.length > 0) {
+            var subMenu = $('<ul>', {'class': 'system-submenu'});
             createMenuHTML(menuItem.subSystems, subMenu, currentPath);
             listItem.append(subMenu);
         }

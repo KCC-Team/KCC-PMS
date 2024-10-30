@@ -6,7 +6,7 @@ $(document.body).ready(function () {
         columns: [
             {key: "title", label: "위험명", align: "center", width: 290, formatter: function() {
                     var title = this.value;
-                    return '<a href="/projects/dangerInfo?title=' + encodeURIComponent(title) + '" class="danger-title" style="color: #0044cc; font-size: 13px; font-weight: bold; text-decoration: none;">' + title + '</a>';
+                    return '<a href="/projects/dangerInfo?no=' + encodeURIComponent(3) + '" class="danger-title" style="color: #0044cc; font-size: 13px; font-weight: bold; text-decoration: none;">' + title + '</a>';
                 }},
             {key: "type", label: "위험구분", width: 190, align: "center", formatter: function (){
                 return '<span style="font-size: 13px;">' + this.value + '</span>';
