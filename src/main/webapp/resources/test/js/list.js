@@ -1,4 +1,3 @@
-const API_SERVER = 'http://localhost:8085';
 let currentPage = 1;
 let testGrid;
 
@@ -116,7 +115,7 @@ function reloadDataTest(testGrid, work, test, status, search, page) {
     }
     $.ajax({
         method: "GET",
-        url: API_SERVER + "/projects/tests/api/list?work=" + work + "&testType=" + test + "&status=" + status + "&search=" + search + "&page=" + page,
+        url: "/projects/tests/api/list?work=" + work + "&testType=" + test + "&status=" + status + "&search=" + search + "&page=" + page,
         success: function (res) {
             testGrid.setData({
                 list: res.testList,

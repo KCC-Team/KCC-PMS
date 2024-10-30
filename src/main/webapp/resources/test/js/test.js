@@ -1,4 +1,3 @@
-const API_SERVER = 'http://localhost:8085';
 
 $(function() {
     $(".test-date").datepicker({
@@ -301,7 +300,7 @@ $(function() {
         }
 
         $.ajax({
-            url: API_SERVER + '/projects/tests/register',
+            url: '/projects/tests/register',
             type: 'POST',
             contentType: 'application/json',
             data: JSON.stringify(jsonObject),
@@ -325,7 +324,7 @@ $(function() {
     if (match){
         let testNo = match[1];
         $.ajax({
-            url: `${API_SERVER}/projects/tests/api/${testNo}`,
+            url: `/projects/tests/api/${testNo}`,
             type: 'GET',
             success: function (data) {
                 console.log(data);
@@ -353,7 +352,7 @@ $(function() {
     $('.delete-btn').click(function() {
         let testNo = $('#testNo').val();
         $.ajax({
-            url: `${API_SERVER}/projects/tests/${testNo}`,
+            url: `/projects/tests/${testNo}`,
             type: 'DELETE',
             success: function(response) {
                 location.href = '/projects/tests';

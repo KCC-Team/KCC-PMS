@@ -29,108 +29,108 @@ import java.util.Optional;
 @RequiredArgsConstructor
 @RequestMapping("/projects/defects")
 public class DefectController {
-    private final DefectService defectService;
-    private final CommonService commonService;
+	private final DefectService defectService;
+	private final CommonService commonService;
 
-    private final ObjectMapper objectMapper;
+	private final ObjectMapper objectMapper;
 
-    @GetMapping("/options")
-    @ResponseBody
-    public ResponseEntity<List<CommonCodeOptions>> getDefectCommonCodeOptions() {
-        return ResponseEntity.ok().body(defectService.getDefectCommonCodeOptions());
-    }
+	@GetMapping("/options")
+	@ResponseBody
+	public ResponseEntity<List<CommonCodeOptions>> getDefectCommonCodeOptions() {
+		return ResponseEntity.ok().body(defectService.getDefectCommonCodeOptions());
+	}
 
-    @GetMapping("/defect")
-    public String showInsertForm(Model model) {
-        model.addAttribute("req", new DefectDto());
-        return "defect/defect";
-    }
+	@GetMapping("/defect")
+	public String showInsertForm(Model model) {
+		model.addAttribute("req", new DefectDto());
+		return "defect/defect";
+	}
 
-    @PostMapping("/defect")
-    @ResponseBody
-    public ResponseEntity<String> insert(HttpSession session,
-                                 DefectDto req, DefectFileRequestDto files,
-                                 @AuthenticationPrincipal PrincipalDetail principalDetail) {
+	@PostMapping("/defect")
+	@ResponseBody
+	public ResponseEntity<String> insert(HttpSession session, DefectDto req, DefectFileRequestDto files,
+			@AuthenticationPrincipal PrincipalDetail principalDetail) {
 //        Long projectNo = (Long) session.getAttribute("prgNo");
-        Long projectNo = 1L;
-        Long defectNumber = defectService.saveDefect(projectNo, principalDetail.getMember().getMemberName(), req, files);
-        String redirectUrl = "/projects/defects/" + defectNumber;
-        return ResponseEntity.ok().body(redirectUrl);
-    }
+		Long projectNo = 1L;
+		Long defectNumber = defectService.saveDefect(projectNo, principalDetail.getMember().getMemberName(), req,
+				files);
+		String redirectUrl = "/projects/defects/" + defectNumber;
+		return ResponseEntity.ok().body(redirectUrl);
+	}
 
-    @GetMapping("/{no}")
-    public String findDefect(Model model, @PathVariable Long no) {
-        Optional<FileMasterNumbers> fileMasterNumbers = defectService.getFileMasterNumbers(no);
+	@GetMapping("/{no}")
+	public String findDefect(Model model, @PathVariable Long no) {
+		Optional<FileMasterNumbers> fileMasterNumbers = defectService.getFileMasterNumbers(no);
 
-        List<FileResponseDto> discoverFiles = new ArrayList<>();
-        List<FileResponseDto> workFiles = new ArrayList<>();
-        if (fileMasterNumbers.isPresent()) {
-            if (fileMasterNumbers.get().getFileMasterFoundNumber() != null) {
-                discoverFiles = commonService.getFileList(fileMasterNumbers.get().getFileMasterFoundNumber());
-            }
-            if (fileMasterNumbers.get().getFileMasterWorkNumber() != null) {
-                workFiles = commonService.getFileList(fileMasterNumbers.get().getFileMasterWorkNumber());
-            }
-        }
+		List<FileResponseDto> discoverFiles = new ArrayList<>();
+		List<FileResponseDto> workFiles = new ArrayList<>();
+		if (fileMasterNumbers.isPresent()) {
+			if (fileMasterNumbers.get().getFileMasterFoundNumber() != null) {
+				discoverFiles = commonService.getFileList(fileMasterNumbers.get().getFileMasterFoundNumber());
+			}
+			if (fileMasterNumbers.get().getFileMasterWorkNumber() != null) {
+				workFiles = commonService.getFileList(fileMasterNumbers.get().getFileMasterWorkNumber());
+			}
+		}
 
-        String discoverFilesJson = generateFilesJson(discoverFiles);
-        String workFilesJson = generateFilesJson(workFiles);
+		String discoverFilesJson = generateFilesJson(discoverFiles);
+		String workFilesJson = generateFilesJson(workFiles);
 
-        model.addAttribute("req", defectService.getDefect(no));
-        model.addAttribute("discoverFilesJson", discoverFilesJson);
-        model.addAttribute("workFilesJson", workFilesJson);
-        return "defect/defect";
-    }
+		model.addAttribute("req", defectService.getDefect(no));
+		model.addAttribute("discoverFilesJson", discoverFilesJson);
+		model.addAttribute("workFilesJson", workFilesJson);
+		return "defect/defect";
+	}
 
-    @PutMapping("/{no}")
-    @ResponseBody
-    public ResponseEntity<String> update(HttpServletResponse response, HttpSession session, @PathVariable Long no, DefectDto req, DefectFileRequestDto files,
-                                         @AuthenticationPrincipal PrincipalDetail principalDetail) throws IOException {
-        Long prgNo = (Long) session.getAttribute("prgNo");
-        defectService.updateDefect(prgNo, principalDetail.getMember().getMemberName(), no, req, files);
-        String redirectUrl = "/projects/defects/" + no;
-        return ResponseEntity.ok().body(redirectUrl);
-    }
+	@PutMapping("/{no}")
+	@ResponseBody
+	public ResponseEntity<String> update(HttpServletResponse response, HttpSession session, @PathVariable Long no,
+			DefectDto req, DefectFileRequestDto files, @AuthenticationPrincipal PrincipalDetail principalDetail)
+			throws IOException {
+		Long prjNo = (Long) session.getAttribute("prjNo");
+		defectService.updateDefect(prjNo, principalDetail.getMember().getMemberName(), no, req, files);
+		String redirectUrl = "/projects/defects/" + no;
+		return ResponseEntity.ok().body(redirectUrl);
+	}
 
-    @DeleteMapping("/{no}")
-    @ResponseBody
-    public ResponseEntity<String> delete(@PathVariable Long no) {
-        defectService.deleteDefect(no);
-        return ResponseEntity.ok().body("success");
-    }
+	@DeleteMapping("/{no}")
+	@ResponseBody
+	public ResponseEntity<String> delete(@PathVariable Long no) {
+		defectService.deleteDefect(no);
+		return ResponseEntity.ok().body("success");
+	}
 
-    @GetMapping
-    public String findAll() {
-        return "defect/list";
-    }
+	@GetMapping
+	public String findAll() {
+		return "defect/list";
+	}
 
-    @GetMapping("/api/list")
-    @ResponseBody
-    public ResponseEntity<DefectPageResponseDto> findAll(HttpServletResponse response,
-            HttpSession session,
-            @RequestParam(value = "workNo", defaultValue = "0") Long workNo,
-            @RequestParam(value = "type", defaultValue = "all") String type,
-            @RequestParam(value = "status", defaultValue = "all") String status,
-            @RequestParam(value = "search", defaultValue = "") String search,
-            @RequestParam(value = "page", defaultValue = "1") int page) throws IOException {
-        Long projectNo = (Long) session.getAttribute("prjNo");
-        if (projectNo == null) {
-            response.sendRedirect("/projects/dashboardInfo");
-            return ResponseEntity.ok().body(null);
-        }
+	@GetMapping("/api/list")
+	@ResponseBody
+	public ResponseEntity<DefectPageResponseDto> findAll(HttpServletResponse response, HttpSession session,
+			@RequestParam(value = "workNo", defaultValue = "0") Long workNo,
+			@RequestParam(value = "type", defaultValue = "all") String type,
+			@RequestParam(value = "status", defaultValue = "all") String status,
+			@RequestParam(value = "search", defaultValue = "") String search,
+			@RequestParam(value = "page", defaultValue = "1") int page) throws IOException {
+		Long projectNo = (Long) session.getAttribute("prjNo");
+		if (projectNo == null) {
+			response.sendRedirect("/projects/dashboardInfo");
+			return ResponseEntity.ok().body(null);
+		}
 
-        return ResponseEntity.ok().body(defectService.getDefectList(projectNo, workNo, type, status, search, page));
-    }
+		return ResponseEntity.ok().body(defectService.getDefectList(projectNo, workNo, type, status, search, page));
+	}
 
-    private String generateFilesJson(List<FileResponseDto> files) {
-        try {
-            if (files != null && !files.isEmpty()) {
-                return objectMapper.writeValueAsString(files);
-            } else {
-                return "[]";
-            }
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException("Error converting files to JSON: " + e.getMessage());
-        }
-    }
+	private String generateFilesJson(List<FileResponseDto> files) {
+		try {
+			if (files != null && !files.isEmpty()) {
+				return objectMapper.writeValueAsString(files);
+			} else {
+				return "[]";
+			}
+		} catch (JsonProcessingException e) {
+			throw new RuntimeException("Error converting files to JSON: " + e.getMessage());
+		}
+	}
 }

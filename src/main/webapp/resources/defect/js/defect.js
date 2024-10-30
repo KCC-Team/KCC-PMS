@@ -302,12 +302,6 @@ function updateData(dropzone_dis, dropzone_work, $form, defectNumber) {
 }
 
 window.addEventListener('message', function (event) {
-    if (event.origin !== "http://localhost:8085") {
-        return;
-    }
-
-    console.log(event.data);
-
     if (event.data.type === 'defect1') {
         $('#fd_mem_no').val(event.data.member[0].id);
         $('#fd_mem_nm').val(event.data.member[0].memberName);
