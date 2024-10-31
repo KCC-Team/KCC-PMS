@@ -11,6 +11,14 @@
     <div class="main_content">
         <div class="danger-content">
             <div class="danger-info">위험현황</div>
+            <div class="action-buttons">
+                <a href="/projects/dangerInfo?type=register">
+                    <button class="add-project">+ 위험등록</button>
+                </a>
+                <a href="#">
+                    <button class="danger-export-excel"><i class="fa-solid fa-download"></i> 액셀받기</button>
+                </a>
+            </div>
         </div>
 
         <div class="filter-section">
@@ -42,14 +50,6 @@
                     <input id="riskSearchName" type="text" name="title" class="search-text" placeholder="위험명을 검색하세요">
                     <button id="riskSearchBtn" type="submit" class="search" value="">검색</button>
                 </form>
-                <div class="action-buttons">
-                    <a href="/projects/dangerInfo?type=register">
-                        <button class="add-project">+ 위험등록</button>
-                    </a>
-                    <a href="#">
-                        <button class="danger-export-excel"><i class="fa-solid fa-download"></i> 액셀받기</button>
-                    </a>
-                </div>
             </form>
         </div>
 
