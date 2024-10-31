@@ -139,3 +139,11 @@
 .gantt_task_progress {
     background-color: #5A9BD5 !important;
 }
+
+.gantt_link_point {
+    display: none !important;
+}
+
+.gantt_task_drag.gantt_task_drag_move {
+    display: none !important;
+}

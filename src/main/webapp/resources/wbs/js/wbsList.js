@@ -100,6 +100,10 @@ function getProjectResult() {
             gantt.config.autosize = false;  // 자동 크기 비활성화
             gantt.config.fit_tasks = false;  // 작업을 화면 너비에 맞추지 않도록 설정
 
+            gantt.config.drag_move = false; // 차트 드래그앤드롭 불가
+            gantt.config.drag_resize = false;
+            gantt.config.drag_progress = false;
+
             gantt.init("gantt_here");  // Gantt 차트 초기화
             gantt.parse(tasks);  // 작업 데이터 로드
 
