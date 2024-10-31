@@ -1630,4 +1630,30 @@ InSERT InTO Output (opt_no, opt_ttl, prj_no, high_folder_no, fld_yn, use_yn, fl_
 VALUES (seq_output.nextval, '물류 관리 시스템 데이터 모델링', 1, 3, 'n', 'y', 8);
 
 -----------------------------------------------------------------------------------------------------------------
+INSERT INTO RISK VALUES(SEQ_RISK.nextval, 'PMS_RSK_01', '고우선순위 위험', 'PMS00302', 'PMS00501', 'PMS00402', 'PMS00601', '데이터 유출 가능성', '데이터 보안을 강화하여 유출 방지', null, null, 1, 1, 2, null, null);
+INSERT INTO RISK VALUES(SEQ_RISK.nextval, 'PMS_RSK_02', '시스템 장애 위험', 'PMS00302', 'PMS00502', 'PMS00401', 'PMS00602', '시스템 부하로 인해 장애 발생 가능성', '부하 분산을 통해 시스템 안정성 확보', null, null, 1, 2, 1, null, null);
+INSERT INTO RISK VALUES(SEQ_RISK.nextval, 'PMS_RSK_03', '데이터 손실 위험', 'PMS00302', 'PMS00503', 'PMS00403', 'PMS00603', '데이터 백업 실패로 인한 손실 가능성', '주기적인 백업 점검', null, null, 1, 3, 1, null, null);
+INSERT INTO RISK VALUES(SEQ_RISK.nextval, 'PMS_RSK_04', '네트워크 다운 위험', 'PMS00302', 'PMS00501', 'PMS00402', 'PMS00601', '네트워크 연결 장애 발생 가능성', '다중 네트워크 경로 확보', null, null, 1, 4, 2, null, null);
+INSERT INTO RISK VALUES(SEQ_RISK.nextval, 'PMS_RSK_05', '무단 접근 위험', 'PMS00302', 'PMS00502', 'PMS00403', 'PMS00602', '비인가 사용자의 무단 접근', '접근 제어 강화 및 이중 인증 도입', null, null, 1, 5, 1, null, null);
+INSERT INTO RISK VALUES(SEQ_RISK.nextval, 'PMS_RSK_06', '시스템 과부하', 'PMS00302', 'PMS00503', 'PMS00404', 'PMS00604', '과도한 트래픽으로 인한 시스템 불안정', '부하 분산 시스템 적용', null, null, 1, 6, 2, null, null);
+INSERT INTO RISK VALUES(SEQ_RISK.nextval, 'PMS_RSK_07', '설정 오류', 'PMS00302', 'PMS00501', 'PMS00401', 'PMS00601', '잘못된 설정으로 인한 운영 장애', '정기적인 설정 검토 및 문서화', null, null, 1, 1, 1, null, null);
+INSERT INTO RISK VALUES(SEQ_RISK.nextval, 'PMS_RSK_08', '하드웨어 장애', 'PMS00302', 'PMS00502', 'PMS00402', 'PMS00602', '하드웨어 고장으로 인한 서비스 중단', '예비 하드웨어 확보 및 교체 주기 관리', null, null, 1, 2, 2, null, null);
+INSERT INTO RISK VALUES(SEQ_RISK.nextval, 'PMS_RSK_09', '소프트웨어 버그', 'PMS00302', 'PMS00503', 'PMS00403', 'PMS00603', '버그로 인한 서비스 품질 저하', '버그 수정 및 테스트 강화', null, null, 1, 3, 1, null, null);
+INSERT INTO RISK VALUES(SEQ_RISK.nextval, 'PMS_RSK_10', '데이터 유실', 'PMS00302', 'PMS00501', 'PMS00404', 'PMS00604', '데이터 저장 실패로 인한 유실', '저장 시스템 점검 및 모니터링 강화', null, null, 1, 4, 2, null, null);
+INSERT INTO RISK VALUES(SEQ_RISK.nextval, 'PMS_RSK_11', '보안 취약점', 'PMS00302', 'PMS00502', 'PMS00402', 'PMS00601', '보안 취약점으로 인한 외부 침입 가능성', '보안 패치 및 방화벽 강화', null, null, 1, 5, 1, null, null);
+INSERT INTO RISK VALUES(SEQ_RISK.nextval, 'PMS_RSK_12', '치명적 오류', 'PMS00302', 'PMS00503', 'PMS00401', 'PMS00602', '오류로 인한 시스템 다운타임 발생', '오류 관리 프로세스 개선', null, null, 1, 6, 2, null, null);
+INSERT INTO RISK VALUES(SEQ_RISK.nextval, 'PMS_RSK_13', '운영 리스크', 'PMS00302', 'PMS00501', 'PMS00403', 'PMS00603', '운영상의 예기치 못한 상황', '위험 평가 및 대응 계획 수립', null, null, 1, 7, 1, null, null);
+INSERT INTO RISK VALUES(SEQ_RISK.nextval, 'PMS_RSK_14', '성능 저하', 'PMS00302', 'PMS00502', 'PMS00404', 'PMS00604', '성능 저하로 인한 사용자 불만 증가', '성능 모니터링 시스템 구축', null, null, 1, 1, 2, null, null);
+INSERT INTO RISK VALUES(SEQ_RISK.nextval, 'PMS_RSK_15', '자원 부족', 'PMS00302', 'PMS00503', 'PMS00402', 'PMS00601', '서버 자원 부족으로 인한 서비스 지연', '자원 관리 계획 수립', null, null, 1, 2, 1, null, null);
+INSERT INTO RISK VALUES(SEQ_RISK.nextval, 'PMS_RSK_16', '유지보수 지연', 'PMS00302', 'PMS00501', 'PMS00401', 'PMS00602', '유지보수가 지연될 가능성', '정기 유지보수 일정 관리', null, null, 1, 3, 2, null, null);
+INSERT INTO RISK VALUES(SEQ_RISK.nextval, 'PMS_RSK_17', '시스템 통합 문제', 'PMS00302', 'PMS00502', 'PMS00403', 'PMS00603', '통합 과정에서의 호환성 문제', '시스템 통합 테스트 강화', null, null, 1, 4, 1, null, null);
+INSERT INTO RISK VALUES(SEQ_RISK.nextval, 'PMS_RSK_18', '프로젝트 지연', 'PMS00302', 'PMS00503', 'PMS00402', 'PMS00604', '프로젝트 완료 시점 지연 가능성', '일정 관리 및 자원 배분 개선', null, null, 1, 5, 2, null, null);
+INSERT INTO RISK VALUES(SEQ_RISK.nextval, 'PMS_RSK_19', '예산 초과', 'PMS00302', 'PMS00501', 'PMS00401', 'PMS00601', '예산을 초과하여 비용 부담 증가', '비용 절감 방안 모색', null, null, 1, 6, 1, null, null);
+INSERT INTO RISK VALUES(SEQ_RISK.nextval, 'PMS_RSK_20', '범위 확장', 'PMS00302', 'PMS00502', 'PMS00403', 'PMS00602', '계획 범위 이상의 요구사항 추가', '범위 관리 프로세스 개선', null, null, 1, 7, 2, null, null);
+INSERT INTO RISK VALUES(SEQ_RISK.nextval, 'PMS_RSK_21', '품질 저하', 'PMS00302', 'PMS00503', 'PMS00402', 'PMS00603', '품질 관리 부재로 인한 불만', '품질 관리 프로세스 강화', null, null, 1, 1, 1, null, null);
+INSERT INTO RISK VALUES(SEQ_RISK.nextval, 'PMS_RSK_22', '고객 불만', 'PMS00302', 'PMS00501', 'PMS00404', 'PMS00604', '고객 만족도 저하 가능성', '고객 피드백 반영 시스템 마련', null, null, 1, 2, 2, null, null);
+INSERT INTO RISK VALUES(SEQ_RISK.nextval, 'PMS_RSK_23', '기술적 위험', 'PMS00302', 'PMS00502', 'PMS00402', 'PMS00601', '기술 부족으로 인한 프로젝트 리스크', '기술 교육 및 개발자 역량 강화', null, null, 1, 3, 1, null, null);
+INSERT INTO RISK VALUES(SEQ_RISK.nextval, 'PMS_RSK_24', '환경적 위험', 'PMS00302', 'PMS00503', 'PMS00401', 'PMS00602', '외부 환경 변화로 인한 프로젝트 리스크', '환경 변화 대응 계획 수립', null, null, 1, 4, 2, null, null);
+INSERT INTO RISK VALUES(SEQ_RISK.nextval, 'PMS_RSK_25', '재정적 위험', 'PMS00302', 'PMS00501', 'PMS00403', 'PMS00603', '재정 부족으로 인한 프로젝트 지연', '재정 관리 및 자원 확보 방안 마련', null, null, 1, 5, 1, null, null);
+INSERT INTO RISK VALUES(SEQ_RISK.nextval, 'PMS_RSK_26', '인력 부족 위험', 'PMS00302', 'PMS00502', 'PMS00404', 'PMS00604', '인력 부족으로 인한 일정 지연', '인력 계획 수립 및 채용 강화', null, null, 1, 6, 2, null, null);
 COMMIT;
