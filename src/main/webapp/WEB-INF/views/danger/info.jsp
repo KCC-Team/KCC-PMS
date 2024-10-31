@@ -215,14 +215,14 @@
                             <div>
                                 <div>
                                     <label for="record_dt">조치일자</label>
-                                    <input type="date" id="record_dt" name="record_dt" class="form-control">
+                                    <input type="date" id="record_dt" name="record_dt" class="form-control" required>
                                 </div>
                                 <label for="record_cont" class="form-label">조치내용</label>
                                 <textarea id="record_cont" name="record_cont" class="form-control" rows="4" placeholder="조치 내용을 입력하세요"></textarea>
                             </div>
                         </div>
                         <div class="modal-footer">
-                            <button type="submit" class="btn btn-primary">등록</button>
+                            <button id="addHistoryBtn" type="submit" class="btn btn-primary">등록</button>
                         </div>
                     </form>
 

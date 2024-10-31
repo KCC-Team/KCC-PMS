@@ -2,10 +2,7 @@ package com.kcc.pms.domain.risk.service;
 
 import com.kcc.pms.domain.common.model.dto.CommonCodeOptions;
 import com.kcc.pms.domain.common.model.vo.FileMasterNumbers;
-import com.kcc.pms.domain.risk.model.dto.CriteriaRisk;
-import com.kcc.pms.domain.risk.model.dto.RiskDto;
-import com.kcc.pms.domain.risk.model.dto.RiskFileRequestDto;
-import com.kcc.pms.domain.risk.model.dto.RiskSummaryResponseDto;
+import com.kcc.pms.domain.risk.model.dto.*;
 
 import java.util.List;
 import java.util.Optional;
@@ -18,4 +15,6 @@ public interface RiskService {
     void updateRisk(RiskDto req, RiskFileRequestDto files, String memberName);
     List<RiskSummaryResponseDto> getRiskList(CriteriaRisk cri);
     int countRisks(CriteriaRisk cri);
+    int createHistory(RiskHistoryDto req);
+    List<RiskHistoryDto> getHistories(Long riskNo);
 }

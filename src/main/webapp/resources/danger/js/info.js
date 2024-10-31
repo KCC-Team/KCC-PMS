@@ -3,6 +3,7 @@ let discoverFiles;
 let workFiles;
 let dropzone1;
 let dropzone2;
+let riskNo;
 document.addEventListener('DOMContentLoaded', function() {
     if (Dropzone.instances.length > 0) {
         Dropzone.instances.forEach(function(dz) {
@@ -58,7 +59,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     const urlParams = new URLSearchParams(window.location.search);
     const type = urlParams.get('type');
-    const riskNo = urlParams.get('no');
+    riskNo = urlParams.get('no');
     console.log("riskNo = " + riskNo);
     if (type === 'register') {
         console.log("registerMember = ", registerMember);
@@ -120,6 +121,7 @@ document.addEventListener('DOMContentLoaded', function() {
         window.close();
     });
 
+    getHisotries();
 });
 
 
@@ -408,4 +410,66 @@ function createMenuHTML(menuData, parentElement, path) {
 
         parentElement.append(listItem);
     });
+}
+
+
+$('#addHistoryBtn').click(function (e) {
+    e.preventDefault();
+    const recordDate = $('#record_dt').val();
+    const recordContent = $('#record_cont').val();
+
+    console.log(recordDate);
+    console.log(recordContent);
+
+    $.ajax({
+        url: '/projects/risks/history',
+        type: 'POST',
+        data: {
+            recordContent : recordContent,
+            recordDate: recordDate,
+            riskNo: riskNo
+        },
+        success: function (response){
+            // 모달 창 닫기
+            $('#exampleModal').modal('hide');
+
+            // 폼 초기화
+            $('#historyForm')[0].reset();
+
+            getHisotries();
+        }
+    })
+})
+
+function getHisotries(){
+    $.ajax({
+        url: '/projects/risks/history?riskNo=' + riskNo,
+        type: 'GET',
+        success: function (his){
+            console.log("his=" ,his);
+            // history-section 요소를 비웁니다
+            $('.history-section').empty();
+
+            // 이력 제목 추가
+            $('.history-section').append('<div class="history-title">이력</div>');
+
+            // 조회된 이력을 반복하여 각 항목을 history-item으로 추가
+            his.forEach(item => {
+                const formattedDate = item.recordDate.substring(0, 10); // '년-월-일' 형식으로 변환
+                const historyItemHtml = `
+                    <div class="history-item">
+                        <div class="history-header">
+                            <div class="history-name">${item.memberName}</div>
+                            <div class="history-date">${formattedDate}</div>
+                        </div>
+                        <div class="history-content">
+                            ${item.recordContent}
+                        </div>
+                    </div>
+                `;
+                // 생성한 HTML을 history-section에 추가
+                $('.history-section').append(historyItemHtml);
+            });
+        }
+    })
 }

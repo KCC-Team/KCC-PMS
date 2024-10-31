@@ -474,7 +474,7 @@ input:disabled, select:disabled, textarea:disabled {
 }
 
 .file-zone_1 .file-section, .file-zone_2 .file-section {
-    height: 207px;
+    height: 200px;
     border: 1px solid #C5C5C5;
     padding: 10px;
     overflow-y: auto;

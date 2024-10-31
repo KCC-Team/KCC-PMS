@@ -187,4 +187,35 @@
             AND LOWER(r.rsk_ttl) LIKE LOWER('%' || #{keyword} || '%')
         </if>
     </select>
+
+
+    <insert id="createHistory" parameterType="com.kcc.pms.domain.risk.model.dto.RiskHistoryDto">
+        INSERT INTO history (
+            history_no,
+            record_dt,
+            record_cont,
+            risk_no,
+            mem_no
+        ) VALUES (
+                     SEQ_HISTORY.nextval,
+                     #{recordDate, jdbcType=DATE},
+                     #{recordContent, jdbcType=VARCHAR},
+                     #{riskNo, jdbcType=NUMERIC},
+                     #{memberNo, jdbcType=NUMERIC}
+                 )
+    </insert>
+
+    <select id="getHistories" resultType="com.kcc.pms.domain.risk.model.dto.RiskHistoryDto">
+        SELECT
+            h.history_no AS historyNo,
+            h.record_dt AS recordDate,
+            h.record_cont AS recordContent,
+            m.mem_no AS memberNo,
+            m.mem_nm AS memberName,
+            h.risk_no AS riskNo
+        FROM history h
+                 JOIN member m ON h.mem_no = m.mem_no
+        WHERE h.risk_no = #{riskNo}
+        ORDER BY h.record_dt DESC
+    </select>
 </mapper>

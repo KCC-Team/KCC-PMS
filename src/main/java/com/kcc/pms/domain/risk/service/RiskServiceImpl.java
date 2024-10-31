@@ -4,10 +4,7 @@ import com.kcc.pms.domain.common.model.dto.CommonCodeOptions;
 import com.kcc.pms.domain.common.model.vo.FileMasterNumbers;
 import com.kcc.pms.domain.common.service.CommonService;
 import com.kcc.pms.domain.risk.mapper.RiskMapper;
-import com.kcc.pms.domain.risk.model.dto.CriteriaRisk;
-import com.kcc.pms.domain.risk.model.dto.RiskDto;
-import com.kcc.pms.domain.risk.model.dto.RiskFileRequestDto;
-import com.kcc.pms.domain.risk.model.dto.RiskSummaryResponseDto;
+import com.kcc.pms.domain.risk.model.dto.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -93,6 +90,16 @@ public class RiskServiceImpl implements RiskService {
         Map<String, Object> params = makeParams(cri);
         System.out.println("Params: " + params); // 로그로 파라미터 확인
         return mapper.countRisks(params);
+    }
+
+    @Override
+    public int createHistory(RiskHistoryDto req) {
+        return mapper.createHistory(req);
+    }
+
+    @Override
+    public List<RiskHistoryDto> getHistories(Long riskNo) {
+        return mapper.getHistories(riskNo);
     }
 
     private static Map<String, Object> makeParams(CriteriaRisk cri) {

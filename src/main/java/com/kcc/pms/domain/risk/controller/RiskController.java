@@ -128,7 +128,23 @@ public class RiskController {
         return ResponseEntity.ok(riskByNo);
     }
 
+    @PostMapping("/projects/risks/history")
+    public ResponseEntity<?> createHistory(RiskHistoryDto req, @AuthenticationPrincipal PrincipalDetail principalDetail){
+        req.setMemberNo(principalDetail.getMember().getMemNo());
+        int result = service.createHistory(req);
+        if (result > 0) {
+            return ResponseEntity.ok(req);
+        } else {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Failed to create history record.");
+        }
+    }
 
+    @GetMapping("/projects/risks/history")
+    public ResponseEntity<?> getHistories(@RequestParam("riskNo") Long riskNo){
+        List<RiskHistoryDto> histories = service.getHistories(riskNo);
+        return ResponseEntity.ok(histories);
+    }
 
     private String generateFilesJson(List<FileResponseDto> files) {
         try {
