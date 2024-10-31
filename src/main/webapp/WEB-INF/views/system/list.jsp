@@ -16,70 +16,34 @@
       <div class="left-section">
 
         <div class="btn-add-system">
-          <button class="add-feat" onclick="register1()">시스템 / 업무 등록</button>
+          <button class="add-feat" onclick="system_register()">시스템 등록</button>
         </div>
 
         <table class="system-table">
           <tr>
             <td class="system-title">
-              시스템/업무명
-            </td>
-          </tr>
-          <tr>
-            <td class="project-title">
-              차세대 공공 프로젝트
+              시스템명
             </td>
           </tr>
         </table>
 
       </div>
 
-<%--      <div class="right-section1">--%>
-
-<%--        <div class="system-content">--%>
-<%--          <div class="system-info">차세대 공공 프로젝트</div>--%>
-<%--        </div>--%>
-
-<%--        <div class="btn-register-system">--%>
-<%--          <button class="add-feat" onclick="register1()">저장</button>--%>
-<%--        </div>--%>
-
-<%--        <table class="system-info-table">--%>
-<%--          <tr>--%>
-<%--            <td class="sys-info-title">--%>
-<%--              시스템/업무명--%>
-<%--            </td>--%>
-<%--            <td>--%>
-<%--              <input type="text" class="sys-info-title-txt" name="" value="차세대 공공 프로젝트">--%>
-<%--            </td>--%>
-<%--          </tr>--%>
-<%--          <tr>--%>
-<%--            <td class="info-desc">--%>
-<%--              설명--%>
-<%--            </td>--%>
-<%--            <td class="sys-info-desc" colspan="2">--%>
-<%--              <textarea class="sys-info-desc-txt" name=""></textarea>--%>
-<%--            </td>--%>
-<%--          </tr>--%>
-<%--        </table>--%>
-<%--      </div>--%>
-
 
       <div class="right-section">
 
         <div class="system-content">
-          <div class="system-info">차세대 공공 프로젝트</div>
-        </div>
-
-        <div class="btn-modify-system">
-          <button class="add-feat" onclick="modify1()">저장</button>
-          <button class="add-feat" onclick="delete1()">삭제</button>
+          <div class="system-info"></div>
+          <div class="btn-modify-system">
+            <button class="add-feat btn-sys-save" onclick="modify1()">저장</button>
+            <button class="add-feat btn-sys-delete" onclick="delete1()">삭제</button>
+          </div>
         </div>
 
         <table class="system-info-table">
           <tr>
             <td class="sys-info-title">
-              시스템/업무명
+              시스템명
             </td>
             <td>
               <input type="text" class="sys-info-title-txt" name="" value="차세대 공공 프로젝트">
@@ -95,12 +59,12 @@
           </tr>
         </table>
 
-        <div class="system-content">
+        <div class="system-content work">
           <div class="system-info-list">업무 목록</div>
-        </div>
-
-        <div class="btn-modify-system">
-          <button class="add-feat" onclick="delete2()">삭제</button>
+          <div class="btn-modify-system">
+            <button class="add-feat" onclick="register_work()">업무 등록</button>
+            <button class="add-feat" onclick="delete2()">삭제</button>
+          </div>
         </div>
 
         <div class="table-wrapper">
@@ -116,62 +80,12 @@
                   설명
                 </td>
               </tr>
-              <tr>
-                <td class="submenu-list-title">
-                  <input type="checkbox" name="task" class="task-checkbox">
-                </td>
-                <td>
-                  <a href="#" class="task-link" data-task="업무1" data-desc="설명1">업무1</a>
-                </td>
-                <td>
-                  설명1
-                </td>
-              </tr>
-              <tr>
-                <td class="submenu-list-title">
-                  <input type="checkbox" name="task" class="task-checkbox">
-                </td>
-                <td>
-                  <a href="#" class="task-link" data-task="업무2" data-desc="설명2">업무2</a>
-                </td>
-                <td>
-                  설명2
-                </td>
-              </tr>
-              <tr>
-                <td class="submenu-list-title">
-                  <input type="checkbox" name="task" class="task-checkbox">
-                </td>
-                <td>
-                  <a href="#" class="task-link" data-task="업무3" data-desc="설명3">업무3</a>
-                </td>
-                <td>
-                  설명3
-                </td>
-              </tr>
-              <tr>
-                <td class="submenu-list-title">
-                  <input type="checkbox" name="task" class="task-checkbox">
-                </td>
-                <td>
-                  <a href="#" class="task-link" data-task="업무4" data-desc="설명4">업무4</a>
-                </td>
-                <td>
-                  설명4
-                </td>
-              </tr>
-            <tr>
-              <td class="submenu-list-title">
-                <input type="checkbox" name="task" class="task-checkbox">
-              </td>
-              <td>
-                <a href="#" class="task-link" data-task="업무5" data-desc="설명1">업무5</a>
-              </td>
-              <td>
-                설명5
-              </td>
-            </tr>
           </table>
+        </div>
+
+
+        <div class="btn-save-work">
+          <button class="add-feat btn-sys-save" onclick="modify1()">저장</button>
         </div>
 
         <table class="sub-info-table">
@@ -180,7 +94,7 @@
               업무명
             </td>
             <td>
-              <input type="text" class="sub-info-title-txt" name="" value="업무명">
+              <input type="text" class="sub-info-title-txt" name="" value="">
             </td>
           </tr>
           <tr>
@@ -188,7 +102,7 @@
               설명
             </td>
             <td colspan="2">
-              <textarea class="sub-info-desc-txt" name="">설명</textarea>
+              <textarea class="sub-info-desc-txt" name=""></textarea>
             </td>
           </tr>
         </table>

@@ -19,6 +19,24 @@
 
         <div class="project-content">
             <div class="project-info"><%=titleName%></div>
+            <div class="btn-actions">
+                <% if (type == null) { %>
+                <button type="button" class="action-btn" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                    <i class="fa-solid fa-check"></i>&nbsp; 위험조치
+                </button>
+                <% } %>
+                <button id="saveRisk" type="submit" class="save-btn">
+                    <i class="fa-solid fa-check"></i>&nbsp; 저장
+                </button>
+                <% if (type == null) { %>
+                <button class="del-btn">
+                    삭제
+                </button>
+                <% } %>
+                <button class="cancel-btn" onclick="history.back()">
+                    <i class="fa-solid fa-arrow-left-long"></i> 뒤로가기
+                </button>
+            </div>
         </div>
 
             <form id="riskForm" class="project-form" action="#" method="post" enctype="multipart/form-data">
@@ -26,176 +44,161 @@
                 <input type="hidden" id="riskNumber" name="riskNumber" value="" >
                 <div class="all-section">
 
-                    <table class="overview-table">
-                        <tr>
-                            <td class="text-align-left">
-                                <label for="riskTitle">제목 <span class="required-icon">*</span></label>
-                            </td>
-                            <td>
-                                <input type="text" id="riskTitle" name="riskTitle" value="" required>
-                            </td>
-                            <td class="text-align-left">
-                                <label>위험분류 <span class="required-icon">*</span></label>
-                            </td>
-                            <td>
-                                <select id="PMS005" name="classCode" required>
-                                    <option value="">선택하세요.</option>
-                                </select>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="text-align-left">
-                                <label for="riskId">위험 ID <span class="required-icon">*</span></label>
-                            </td>
-                            <td>
-                                <input type="text" id="riskId" name="riskId" value="" required>
-                            </td>
-                            <td class="text-align-left">
-                                <label>우선순위 <span class="required-icon">*</span></label>
-                            </td>
-                            <td>
-                                <select id="PMS006" name="priorCode" required>
-                                    <option value="">선택하세요.</option>
-                                </select>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="text-align-left">
-                                <label for="riskContent">위험내용 <span class="required-icon">*</span></label>
-                            </td>
-                            <td colspan="4">
-                                <textarea id="riskContent" name="riskContent" required></textarea>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="text-align-left">
-                                <label for="riskPlan">위험완화계획 </label>
-                            </td>
-                            <td colspan="4">
-                                <textarea id="riskPlan" name="riskPlan"></textarea>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="text-align-left">
-                                <label for="dueDate">조치희망일 <span class="required-icon">*</span></label>
-                            </td>
-                            <td>
-                                <input type="date" id="dueDate" name="dueDate" value="" required>
-                            </td>
-                            <td class="text-align-left">
-                                <label for="completeDate">조치완료일</label>
-                            </td>
-                            <td>
-                                <input type="date" id="completeDate" name="completeDate" value="">
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="text-align-left">
-                                <label>위험상태 <span class="required-icon">*</span></label>
-                            </td>
-                            <td>
-                                <select id="PMS004" name="statusCode" required>
-                                    <option value="">선택하세요.</option>
-                                </select>
-                            </td>
-                            <td class="text-align-left">
-                                <label for="memberNo">발견자 <span class="required-icon">*</span></label>
-                            </td>
-                            <td>
-                                <input type="hidden" id="memberNo" name="memberNo" value="" required>
-                                <input type="text" id="memberName" name="memberName" value="" readonly>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="text-align-left">
-                                <label>시스템/업무</label>
-                            </td>
-                            <td colspan="4">
-                                <input type="hidden" name="systemNo" id="systemNo">
-                                <div class="system-select-wrapper">
-                                    <span class="system-select-button" id="system-select">
-                                        <span>시스템/업무 선택</span>
-                                    </span>
-                                    <!-- 메뉴 리스트 -->
-                                    <ul class="mymenu" id="system-menu"></ul>
-                                </div>
-                            </td>
-                        </tr>
-                    </table>
+                    <div class="left-section">
 
+                        <table class="overview-table">
+                            <tr>
+                                <td class="text-align-left">
+                                    <label for="riskTitle">제목 <span class="required-icon">*</span></label>
+                                </td>
+                                <td colspan="5">
+                                    <input type="text" id="riskTitle" name="riskTitle" value="" required>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="text-align-left">
+                                    <label for="riskId">위험 ID <span class="required-icon">*</span></label>
+                                </td>
+                                <td class="td-row">
+                                    <input type="text" id="riskId" name="riskId" value="" required>
+                                </td>
+                                <td class="text-align-left">
+                                    <label>위험분류 <span class="required-icon">*</span></label>
+                                </td>
+                                <td class="td-row">
+                                    <select id="PMS005" name="classCode" required>
+                                        <option value="">선택하세요.</option>
+                                    </select>
+                                </td>
+                                <td class="text-align-left">
+                                    <label>우선순위 <span class="required-icon">*</span></label>
+                                </td>
+                                <td class="td-row">
+                                    <select id="PMS006" name="priorCode" required>
+                                        <option value="">선택하세요.</option>
+                                    </select>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="text-align-left">
+                                    <label>시스템/업무</label>
+                                </td>
+                                <td colspan="3">
+                                    <input type="hidden" name="systemNo" id="systemNo">
+                                    <div class="system-select-wrapper">
+                                        <span class="system-select-button" id="system-select">
+                                            <span>시스템/업무 선택</span>
+                                        </span>
+                                        <!-- 메뉴 리스트 -->
+                                        <ul class="mymenu" id="system-menu"></ul>
+                                    </div>
+                                </td>
+                                <td class="text-align-left">
+                                    <label>위험상태 <span class="required-icon">*</span></label>
+                                </td>
+                                <td>
+                                    <select id="PMS004" name="statusCode" required>
+                                        <option value="">선택하세요.</option>
+                                    </select>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="text-align-left">
+                                    <label for="riskContent">위험내용 <span class="required-icon">*</span></label>
+                                </td>
+                                <td colspan="5">
+                                    <textarea id="riskContent" name="riskContent" required></textarea>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="text-align-left">
+                                    <label for="riskPlan">위험완화계획 </label>
+                                </td>
+                                <td colspan="5">
+                                    <textarea id="riskPlan" name="riskPlan"></textarea>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="text-align-left">
+                                    <label for="dueDate">조치희망일 <span class="required-icon">*</span></label>
+                                </td>
+                                <td>
+                                    <input type="date" id="dueDate" name="dueDate" value="" required>
+                                </td>
+                                <td class="text-align-left">
+                                    <label for="completeDate">조치완료일</label>
+                                </td>
+                                <td>
+                                    <input type="date" id="completeDate" name="completeDate" value="">
+                                </td>
+                                <td class="text-align-left">
+                                    <label for="memberNo">발견자 <span class="required-icon">*</span></label>
+                                </td>
+                                <td>
+                                    <input type="hidden" id="memberNo" name="memberNo" value="" required>
+                                    <input type="text" id="memberName" name="memberName" value="" readonly>
+                                </td>
+                            </tr>
+                        </table>
+
+
+                        <div class="file-area">
+                            <div class="mt-3 file-zone_1" style="width: 99%">
+                                <div class="file-section">
+                                    <div class="info-item d-flex flex-column align-items-start">
+                                        <div><label class="file-find-title">위험 발견 첨부파일</label></div>
+                                        <div id="risk-insert-file-dropzone_1" class="dropzone"></div>
+                                        <jsp:include page="../output/file/file-task.jsp" />
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="file-zone_2 mt-3" style="width: 99%">
+                                <div class="file-section mt-3">
+                                    <div class="info-item d-flex flex-column align-items-start">
+                                        <div><label class="file-find-title">위험 조치 첨부파일</label></div>
+                                        <div id="risk-insert-file-dropzone_2" class="dropzone"></div>
+                                        <jsp:include page="../output/file/file-task.jsp" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div> <!-- left_section END -->
 
                     <div class="right-section">
 
-                        <div class="mt-3 file-zone_1" style="width: 600px">
-                        <div class="file-section">
-                            <div class="info-item d-flex flex-column align-items-start">
-                                <div class="mb-2"><label>위험 발견 첨부파일</label></div>
-                                <div id="risk-insert-file-dropzone_1" class="dropzone"></div>
-                                <jsp:include page="../output/file/file-task.jsp" />
+                        <% if (type == null) { %>
+                        <div class="history-section">
+                            <div class="history-title">이력</div>
+
+                            <div class="history-item">
+                                <div class="history-header">
+                                    <div class="history-name">홍길동</div>
+                                    <div class="history-date">2022-05-17</div>
+                                </div>
+                                <div class="history-content">
+                                    위험조치내용위험조치내용위험조치내용위험조치내용위험조치내용위험조치내용위험조치내용
+                                </div>
                             </div>
-                        </div>
-                        </div>
-                        <div class="file-zone_2 mt-3" style="width: 600px">
-                            <div class="file-section mt-3">
-                                <div class="info-item d-flex flex-column align-items-start">
-                                    <div class="mb-2"><label>위험 조치 첨부파일</label></div>
-                                    <div id="risk-insert-file-dropzone_2" class="dropzone"></div>
-                                    <jsp:include page="../output/file/file-task.jsp" />
+
+                            <div class="history-item">
+                                <div class="history-header">
+                                    <div class="history-name">홍길동</div>
+                                    <div class="history-date">2022-05-17</div>
+                                </div>
+                                <div class="history-content">
+                                    위험조치내용위험조치내용위험조치내용위험조치내용위험조치내용위험조치내용위험조치내용
                                 </div>
                             </div>
                         </div>
+                        <% } %>
 
-                        <div class="btn-actions">
-                            <% if (type == null) { %>
-                            <button type="button" class="action-btn" data-bs-toggle="modal" data-bs-target="#exampleModal">
-                                <i class="fa-solid fa-check"></i>&nbsp; 위험조치
-                            </button>
-                            <% } %>
-                            <button id="saveRisk" type="submit" class="save-btn">
-                                <i class="fa-solid fa-check"></i>&nbsp; 저장
-                            </button>
-                            <% if (type == null) { %>
-                            <button class="del-btn">
-                                삭제
-                            </button>
-                            <% } %>
-                            <button class="cancel-btn" onclick="history.back()">
-                                취소
-                            </button>
-                        </div>
-                    </div>
+                    </div> <!-- right_section END -->
 
-
-                </div>
+                </div> <!-- all_section END -->
 
             </form>
-
-
-        <% if (type == null) { %>
-        <div class="history-section">
-            <div class="history-title">이력</div>
-
-            <div class="history-item">
-                <div class="history-header">
-                    <div class="history-name">홍길동</div>
-                    <div class="history-date">2022-05-17</div>
-                </div>
-                <div class="history-content">
-                    위험조치내용위험조치내용위험조치내용위험조치내용위험조치내용위험조치내용위험조치내용
-                </div>
-            </div>
-
-            <div class="history-item">
-                <div class="history-header">
-                    <div class="history-name">홍길동</div>
-                    <div class="history-date">2022-05-17</div>
-                </div>
-                <div class="history-content">
-                    위험조치내용위험조치내용위험조치내용위험조치내용위험조치내용위험조치내용위험조치내용
-                </div>
-            </div>
-        </div>
-        <% } %>
 
 
         <!-- Modal -->

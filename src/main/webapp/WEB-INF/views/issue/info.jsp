@@ -19,185 +19,179 @@
 
         <div class="project-content">
             <div class="project-info"><%=titleName%></div>
+            <div class="btn-actions">
+                <% if (type == null) { %>
+                <button type="button" class="action-btn" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                    <i class="fa-solid fa-check"></i>&nbsp; 이슈조치
+                </button>
+                <% } %>
+                <button id="saveRisk" type="submit" class="save-btn">
+                    <i class="fa-solid fa-check"></i>&nbsp; 저장
+                </button>
+                <% if (type == null) { %>
+                <button class="del-btn">
+                    삭제
+                </button>
+                <% } %>
+                <button class="cancel-btn" onclick="history.back()">
+                    <i class="fa-solid fa-arrow-left-long"></i> 뒤로가기
+                </button>
+            </div>
         </div>
 
-        <form class="project-form" action="#" method="post" enctype="multipart/form-data">
-            <input type="hidden" name="type_cd" value="PMS00301">
+            <form id="riskForm" class="project-form" action="#" method="post" enctype="multipart/form-data">
+                <input type="hidden" name="issueRiskType" value="PMS00302">
+                <input type="hidden" id="riskNumber" name="riskNumber" value="" >
+                <div class="all-section">
 
-            <div class="all-section">
+                    <div class="left-section">
 
-                <table class="overview-table">
-                    <tr>
-                        <td class="text-align-left">
-                             <label for="risk_ttl">제목 <span class="required-icon">*</span></label>
-                        </td>
-                        <td>
-                            <input type="text" id="risk_ttl" name="risk_ttl" value="" required>
-                        </td>
-                        <td class="text-align-left">
-                            <label for="class_cd">이슈분류 <span class="required-icon">*</span></label>
-                        </td>
-                        <td>
-                            <select id="class_cd" name="class_cd" required>
-                                <option value="">선택하세요.</option>
-                                <option value="001">고객 변심</option>
-                                <option value="002">일정 지연</option>
-                                <option value="003">품질 문제</option>
-                                <option value="004">범위 관련</option>
-                                <option value="005">위험 관련</option>
-                                <option value="006">규정 관련</option>
-                            </select>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="text-align-left">
-                            <label for="risk_id">이슈 ID <span class="required-icon">*</span></label>
-                        </td>
-                        <td>
-                            <input type="text" id="risk_id" name="risk_id" value="" required>
-                        </td>
-                        <td class="text-align-left">
-                            <label for="pri_cd">우선순위 <span class="required-icon">*</span></label>
-                        </td>
-                        <td>
-                            <select id="pri_cd" name="pri_cd" required>
-                                <option value="">선택하세요.</option>
-                                <option value="001">즉시</option>
-                                <option value="002">긴급</option>
-                                <option value="003">높음</option>
-                                <option value="004">보통</option>
-                                <option value="005">낮음</option>
-                            </select>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="text-align-left">
-                            <label for="rick_cont">이슈내용 <span class="required-icon">*</span></label>
-                        </td>
-                        <td colspan="4">
-                            <textarea id="rick_cont" name="rick_cont" required></textarea>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="text-align-left">
-                            <label for="due_dt">조치희망일 <span class="required-icon">*</span></label>
-                        </td>
-                        <td>
-                            <input type="date" id="due_dt" name="due_dt" value="" required>
-                        </td>
-                        <td class="text-align-left">
-                            <label for="compl_date">조치완료일</label>
-                        </td>
-                        <td>
-                            <input type="date" id="compl_date" name="compl_date" value="">
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="text-align-left">
-                            <label for="stat_cd">이슈상태 <span class="required-icon">*</span></label>
-                        </td>
-                        <td>
-                            <select id="stat_cd" name="stat_cd" required>
-                                <option value="">선택하세요.</option>
-                                <option value="001">신규</option>
-                                <option value="002">진행</option>
-                                <option value="003">조치완료</option>
-                            </select>
-                        </td>
-                        <td class="text-align-left">
-                            <label for="mem_no">발견자 <span class="required-icon">*</span></label>
-                        </td>
-                        <td>
-                            <input type="text" id="mem_no" name="mem_no" value="" required>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="text-align-left">
-                            <label for="sys_no">시스템/업무</label>
-                        </td>
-                        <td colspan="4">
-                            <select id="sys_no" name="sys_no">
-                                <option value="">선택하세요.</option>
-                                <option value="001">A업무시스템</option>
-                                <option value="002">B업무시스템</option>
-                                <option value="003">C업무시스템</option>
-                            </select>
-                        </td>
-                    </tr>
-                </table>
+                        <table class="overview-table">
+                            <tr>
+                                <td class="text-align-left">
+                                    <label for="riskTitle">제목 <span class="required-icon">*</span></label>
+                                </td>
+                                <td colspan="5">
+                                    <input type="text" id="riskTitle" name="riskTitle" value="" required>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="text-align-left">
+                                    <label for="riskId">이슈 ID <span class="required-icon">*</span></label>
+                                </td>
+                                <td class="td-row">
+                                    <input type="text" id="riskId" name="riskId" value="" required>
+                                </td>
+                                <td class="text-align-left">
+                                    <label>이슈분류 <span class="required-icon">*</span></label>
+                                </td>
+                                <td class="td-row">
+                                    <select id="PMS005" name="classCode" required>
+                                        <option value="">선택하세요.</option>
+                                    </select>
+                                </td>
+                                <td class="text-align-left">
+                                    <label>우선순위 <span class="required-icon">*</span></label>
+                                </td>
+                                <td class="td-row">
+                                    <select id="PMS006" name="priorCode" required>
+                                        <option value="">선택하세요.</option>
+                                    </select>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="text-align-left">
+                                    <label>시스템/업무</label>
+                                </td>
+                                <td colspan="3">
+                                    <input type="hidden" name="systemNo" id="systemNo">
+                                    <div class="system-select-wrapper">
+                                        <span class="system-select-button" id="system-select">
+                                            <span>시스템/업무 선택</span>
+                                        </span>
+                                        <!-- 메뉴 리스트 -->
+                                        <ul class="mymenu" id="system-menu"></ul>
+                                    </div>
+                                </td>
+                                <td class="text-align-left">
+                                    <label>이슈상태 <span class="required-icon">*</span></label>
+                                </td>
+                                <td>
+                                    <select id="PMS004" name="statusCode" required>
+                                        <option value="">선택하세요.</option>
+                                    </select>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="text-align-left">
+                                    <label for="riskContent">이슈내용 <span class="required-icon">*</span></label>
+                                </td>
+                                <td colspan="5">
+                                    <textarea id="riskContent" name="riskContent" required></textarea>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="text-align-left">
+                                    <label for="dueDate">조치희망일 <span class="required-icon">*</span></label>
+                                </td>
+                                <td>
+                                    <input type="date" id="dueDate" name="dueDate" value="" required>
+                                </td>
+                                <td class="text-align-left">
+                                    <label for="completeDate">조치완료일</label>
+                                </td>
+                                <td>
+                                    <input type="date" id="completeDate" name="completeDate" value="">
+                                </td>
+                                <td class="text-align-left">
+                                    <label for="memberNo">발견자 <span class="required-icon">*</span></label>
+                                </td>
+                                <td>
+                                    <input type="hidden" id="memberNo" name="memberNo" value="" required>
+                                    <input type="text" id="memberName" name="memberName" value="" readonly>
+                                </td>
+                            </tr>
+                        </table>
 
-                <div class="right-section">
 
-                    <div class="file-zone_1 w-100">
-                        <div class="file-section mt-3">
-                            <div class="info-item d-flex flex-column align-items-start">
-                                <div class="mb-2"><label>이슈 발견 첨부파일</label></div>
-                                <div id="df-insert-file-dropzone_1" class="dropzone"></div>
-                                <jsp:include page="../output/file/file.jsp" />
+                        <div class="file-area">
+                            <div class="mt-3 file-zone_1" style="width: 99%">
+                                <div class="file-section">
+                                    <div class="info-item d-flex flex-column align-items-start">
+                                        <div><label class="file-find-title">이슈 발견 첨부파일</label></div>
+                                        <div id="risk-insert-file-dropzone_1" class="dropzone"></div>
+                                        <jsp:include page="../output/file/file-task.jsp" />
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="file-zone_2 mt-3" style="width: 99%">
+                                <div class="file-section mt-3">
+                                    <div class="info-item d-flex flex-column align-items-start">
+                                        <div><label class="file-find-title">이슈 조치 첨부파일</label></div>
+                                        <div id="risk-insert-file-dropzone_2" class="dropzone"></div>
+                                        <jsp:include page="../output/file/file-task.jsp" />
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                    </div>
 
-                    <div class="file-zone_2 w-100">
-                        <div class="file-section mt-3">
-                            <div class="info-item d-flex flex-column align-items-start">
-                                <div class="mb-2"><label>이슈 조치 첨부파일</label></div>
-                                <div id="df-insert-file-dropzone_2" class="dropzone"></div>
-                                <jsp:include page="../output/file/file.jsp" />
+                    </div> <!-- left_section END -->
+
+                    <div class="right-section">
+
+                        <% if (type == null) { %>
+                        <div class="history-section">
+                            <div class="history-title">이력</div>
+
+                            <div class="history-item">
+                                <div class="history-header">
+                                    <div class="history-name">홍길동</div>
+                                    <div class="history-date">2022-05-17</div>
+                                </div>
+                                <div class="history-content">
+                                    이슈조치내용이슈조치내용이슈조치내용이슈조치내용이슈조치내용이슈조치내용이슈조치내용
+                                </div>
+                            </div>
+
+                            <div class="history-item">
+                                <div class="history-header">
+                                    <div class="history-name">홍길동</div>
+                                    <div class="history-date">2022-05-17</div>
+                                </div>
+                                <div class="history-content">
+                                    이슈조치내용이슈조치내용이슈조치내용이슈조치내용이슈조치내용이슈조치내용이슈조치내용
+                                </div>
                             </div>
                         </div>
-                    </div>
-
-                    <div class="btn-actions">
-                        <% if (type == null) { %>
-                        <button type="button" class="action-btn" data-bs-toggle="modal" data-bs-target="#exampleModal">
-                            <i class="fa-solid fa-check"></i>&nbsp; 이슈조치
-                        </button>
                         <% } %>
-                        <button type="submit" class="save-btn">
-                            <i class="fa-solid fa-check"></i>&nbsp; 저장
-                        </button>
-                        <% if (type == null) { %>
-                        <button class="del-btn">
-                            삭제
-                        </button>
-                        <% } %>
-                        <button class="cancel-btn" onclick="history.back()">
-                            취소
-                        </button>
-                    </div>
-                </div>
 
-            </div>
+                    </div> <!-- right_section END -->
 
-        </form>
+                </div> <!-- all_section END -->
 
+            </form>
 
-        <% if (type == null) { %>
-            <div class="history-section">
-                <div class="history-title">이력</div>
-
-                <div class="history-item">
-                    <div class="history-header">
-                        <div class="history-name">홍길동</div>
-                        <div class="history-date">2022-05-17</div>
-                    </div>
-                    <div class="history-content">
-                        이슈조치내용이슈조치내용이슈조치내용이슈조치내용이슈조치내용이슈조치내용이슈조치내용
-                    </div>
-                </div>
-
-                <div class="history-item">
-                    <div class="history-header">
-                        <div class="history-name">홍길동</div>
-                        <div class="history-date">2022-05-17</div>
-                    </div>
-                    <div class="history-content">
-                        이슈조치내용이슈조치내용이슈조치내용이슈조치내용이슈조치내용이슈조치내용이슈조치내용
-                    </div>
-                </div>
-            </div>
-        <% } %>
 
         <!-- Modal -->
         <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -232,5 +226,8 @@
 </main>
 
 <script src="../../../resources/issue/js/info.js"></script>
+<script type="text/javascript">
+    let registerMember = JSON.parse('${registerMemberJson}');
+</script>
 
 <%@ include file="../footer.jsp" %>

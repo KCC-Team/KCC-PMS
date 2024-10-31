@@ -11,6 +11,14 @@
     <div class="main_content">
         <div class="issue-content">
             <div class="issue-info">이슈현황</div>
+            <div class="action-buttons">
+                <a href="/projects/issueInfo?type=register">
+                    <button class="add-project">+ 이슈등록</button>
+                </a>
+                <a href="#">
+                    <button class="danger-export-excel"><i class="fa-solid fa-download"></i> 액셀받기</button>
+                </a>
+            </div>
         </div>
 
         <div class="filter-section">
@@ -25,14 +33,6 @@
                 <input type="text" name="title" class="search-text" placeholder="이슈명을 검색하세요">
                 <input type="submit" class="search" value="검색">
             </form>
-            <div class="action-buttons">
-                <a href="/projects/issueInfo?type=register">
-                    <button class="add-project">+ 이슈등록</button>
-                </a>
-                <a href="#">
-                    <button class="danger-export-excel"><i class="fa-solid fa-download"></i> 액셀받기</button>
-                </a>
-            </div>
         </div>
 
         <div style="position: relative;height:100%; width: 94%;" id="grid-parent">

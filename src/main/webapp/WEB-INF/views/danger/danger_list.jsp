@@ -11,20 +11,6 @@
     <div class="main_content">
         <div class="danger-content">
             <div class="danger-info">위험현황</div>
-        </div>
-
-        <div class="filter-section">
-            <form action="#" method="post">
-                상태
-                <select name="status">
-                    <option>전체</option>
-                    <option value="1">발생전</option>
-                    <option value="2">진행</option>
-                    <option value="3">종료</option>
-                </select>
-                <input type="text" name="title" class="search-text" placeholder="위험명을 검색하세요">
-                <input type="submit" class="search" value="검색">
-            </form>
             <div class="action-buttons">
                 <a href="/projects/dangerInfo?type=register">
                     <button class="add-project">+ 위험등록</button>
@@ -35,17 +21,49 @@
             </div>
         </div>
 
+        <div class="filter-section">
+            <form action="#" method="post">
+                <input type="hidden" name="systemNo" id="systemNo">
+                시스템 분류&nbsp;&nbsp;
+                <div class="system-select-wrapper">
+                    <span class="system-select-button" id="system-select">
+                        <span>시스템/업무 선택</span>
+                    </span>
+                    <!-- 메뉴 리스트 -->
+                    <ul class="mymenu" id="system-menu"></ul>
+                </div>
+                위험분류
+                <select id="PMS005" name="classCode" required>
+                    <option value="">전체분류</option>
+                </select>
+
+                상태
+                <select id="PMS004" name="statusCode" required>
+                    <option value="">전체분류</option>
+                </select>
+
+                우선순위
+                <select id="PMS006" name="priorCode" required>
+                    <option value="">전체분류</option>
+                </select>
+                <form action="#" method="post">
+                    <input id="riskSearchName" type="text" name="title" class="search-text" placeholder="위험명을 검색하세요">
+                    <button id="riskSearchBtn" type="submit" class="search" value="">검색</button>
+                </form>
+            </form>
+        </div>
+
         <div style="position: relative;height:100%; width: 94%;" id="grid-parent">
             <!-- 위험 목록 테이블 -->
             <div class="list_table" data-ax5grid="first-grid"  data-ax5grid-config="{
                 sortable: true,
                 header: {
-                    columnHeight: 50
+                    columnHeight: 34
                 },
                 body: {
-                    columnHeight: 48
+                    columnHeight: 34
                 }
-            }" style="height: 557px; width: 100%">
+            }" style="height: 570px; width: 100%">
             </div>
         </div>
     </div>

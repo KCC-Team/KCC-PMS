@@ -58,7 +58,7 @@
     border-radius: 5px;
     color: white;
     cursor: pointer;
-    background-color: #8B8B8B;
+    background-color: #5c5c5c;
 }
 
 
@@ -75,7 +75,7 @@
 
 .gantt_grid_scale .gantt_grid_head_cell {
     font-weight: bold;
-    color: black !important;
+    color: grey !important;
     border-top:none!important;
     border-right: none!important;
     border-bottom:none!important;
@@ -117,13 +117,15 @@
 }
 
 .btn-task {
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    color: white;
     cursor: pointer;
-    background-color: #8B8B8B;
-    padding: 5px;
-    margin-bottom: 3px;
+    width: 100%;
+    margin-bottom: 5px;
+    background-color: white;
+    border: none;
+}
+
+.btn-task:hover {
+    color: #1F80DA;
 }
 
 #gantt_here, .btn-modify-wbs, #toggle-grid {
@@ -131,6 +133,17 @@
 }
 
 .gantt_task_line {
+    background-color: #D2D2D2 !important;
+}
+
+.gantt_task_progress {
     background-color: #5A9BD5 !important;
-    border-color: #2F5597 !important;
+}
+
+.gantt_link_point {
+    display: none !important;
+}
+
+.gantt_task_drag.gantt_task_drag_move {
+    display: none !important;
 }
