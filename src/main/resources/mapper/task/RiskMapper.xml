@@ -94,4 +94,97 @@
         </set>
         WHERE RISK_NO = #{riskNumber}
     </update>
+
+    <select id="getRiskList" parameterType="java.util.Map" resultType="com.kcc.pms.domain.risk.model.dto.RiskSummaryResponseDto">
+        SELECT *
+        FROM (
+        SELECT
+        r.risk_no AS riskNo,
+        r.rsk_ttl AS riskTitle,
+        m.mem_nm AS findMember,
+        class.cd_dtl_nm AS className,
+        stat.cd_dtl_nm AS status,
+        pri.cd_dtl_nm AS priority,
+        SUBSTR((SELECT SYS_CONNECT_BY_PATH(s2.sys_ttl, ' > ')
+        FROM system s2
+        WHERE s2.sys_no = s.sys_no
+        START WITH s2.par_sys_no IS NULL
+        CONNECT BY PRIOR s2.sys_no = s2.par_sys_no), 3) AS system,
+        r.due_dt AS dueDate,
+        r.compl_dt AS completeDate,
+        ROW_NUMBER() OVER (ORDER BY NVL(s.par_sys_no, s.sys_no), CASE WHEN s.par_sys_no IS NULL THEN 0 ELSE 1 END, s.sys_no) AS rn
+        FROM
+        risk r
+        LEFT JOIN system s ON r.sys_no = s.sys_no
+        LEFT JOIN member m ON r.mem_no = m.mem_no
+        JOIN codedetail type ON r.type_cd = type.cd_dtl_no
+        JOIN codedetail class ON r.class_cd = class.cd_dtl_no
+        JOIN codedetail stat ON r.stat_cd = stat.cd_dtl_no
+        JOIN codedetail pri ON r.pri_cd = pri.cd_dtl_no
+        WHERE
+        r.prj_no = #{prjNo, jdbcType=NUMERIC}
+
+        <if test="systemNo != null and systemNo !=''">
+            AND (s.sys_no = #{systemNo, jdbcType=NUMERIC}
+            OR s.sys_no IN (
+            SELECT sys_no FROM system
+            START WITH sys_no = #{systemNo, jdbcType=NUMERIC}
+            CONNECT BY PRIOR sys_no = par_sys_no))
+        </if>
+
+        <if test="selectedClassNo != null and selectedClassNo != ''">
+            AND r.class_cd = #{selectedClassNo}
+        </if>
+
+        <if test="selectedStatusNo != null and selectedStatusNo != ''">
+            AND r.stat_cd = #{selectedStatusNo}
+        </if>
+
+        <if test="selectedPriorNo != null and selectedPriorNo != ''">
+            AND r.pri_cd = #{selectedPriorNo}
+        </if>
+
+        <if test="keyword != null and keyword != ''">
+            AND LOWER(r.rsk_ttl) LIKE LOWER('%' || #{keyword} || '%')
+        </if>
+        ) WHERE rn BETWEEN #{startRow, jdbcType=NUMERIC} AND #{endRow, jdbcType=NUMERIC}
+    </select>
+
+    <select id="countRisks" parameterType="java.util.Map" resultType="int">
+        SELECT COUNT(*) AS totalRecords
+        FROM
+        risk r
+        LEFT JOIN system s ON r.sys_no = s.sys_no
+        LEFT JOIN member m ON r.mem_no = m.mem_no
+        JOIN codedetail type ON r.type_cd = type.cd_dtl_no
+        JOIN codedetail class ON r.class_cd = class.cd_dtl_no
+        JOIN codedetail stat ON r.stat_cd = stat.cd_dtl_no
+        JOIN codedetail pri ON r.pri_cd = pri.cd_dtl_no
+        WHERE
+        r.prj_no = #{prjNo, jdbcType=NUMERIC}
+
+        <if test="systemNo != null and systemNo !=''">
+            AND (s.sys_no = #{systemNo, jdbcType=NUMERIC}
+            OR s.sys_no IN (
+            SELECT sys_no FROM system
+            START WITH sys_no = #{systemNo, jdbcType=NUMERIC}
+            CONNECT BY PRIOR sys_no = par_sys_no))
+        </if>
+
+        <if test="selectedClassNo != null and selectedClassNo != ''">
+            AND r.class_cd = #{selectedClassNo}
+        </if>
+
+        <if test="selectedStatusNo != null and selectedStatusNo != ''">
+            AND r.stat_cd = #{selectedStatusNo}
+        </if>
+
+        <if test="selectedPriorNo != null and selectedPriorNo != ''">
+            AND r.pri_cd = #{selectedPriorNo}
+        </if>
+
+        <if test="keyword != null and keyword != ''">
+            AND LOWER(r.rsk_ttl) LIKE LOWER('%' || #{keyword} || '%')
+        </if>
+    </select>
 </mapper>

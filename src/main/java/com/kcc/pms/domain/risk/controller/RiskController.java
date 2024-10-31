@@ -8,8 +8,7 @@ import com.kcc.pms.domain.common.model.dto.CommonCodeOptions;
 import com.kcc.pms.domain.common.model.dto.FileResponseDto;
 import com.kcc.pms.domain.common.model.vo.FileMasterNumbers;
 import com.kcc.pms.domain.common.service.CommonService;
-import com.kcc.pms.domain.risk.model.dto.RiskDto;
-import com.kcc.pms.domain.risk.model.dto.RiskFileRequestDto;
+import com.kcc.pms.domain.risk.model.dto.*;
 import com.kcc.pms.domain.risk.service.RiskService;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
@@ -17,13 +16,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Controller
 @RequiredArgsConstructor
@@ -45,14 +40,39 @@ public class RiskController {
         }
     }
 
+    @GetMapping("/projects/risks")
+    @ResponseBody
+    public ResponseEntity<PagedRiskResponse<RiskSummaryResponseDto>> getRiskList(HttpSession session,
+                                                                                 @RequestParam(value = "pageNum", defaultValue = "1") int pageNum,
+                                                                                 @RequestParam(value = "amount", defaultValue = "15") int amount,
+                                                                                 @RequestParam Map<String, String> filters
+                                                                             ){
+
+        filters.remove("pageNum");
+        filters.remove("amount");
+
+        Long prjNo = (Long) session.getAttribute("prjNo");
+        CriteriaRisk cri = new CriteriaRisk(pageNum, amount);
+        cri.setFilters(filters);
+        cri.setPrjNo(prjNo);
+
+        List<RiskSummaryResponseDto> riskList = service.getRiskList(cri);
+
+        int total = service.countRisks(cri);
+
+        PageRiskDto pageInfo = new PageRiskDto(cri, total);
+
+        PagedRiskResponse<RiskSummaryResponseDto> response = new PagedRiskResponse<>(riskList, pageInfo);
+
+        return ResponseEntity.ok(response);
+    }
+
+
     @PostMapping("/projects/risks/risk")
     @ResponseBody
     public ResponseEntity<String> insert(HttpSession session, RiskDto req, RiskFileRequestDto files,
                                          @AuthenticationPrincipal PrincipalDetail principalDetail) {
         Long prjNo = (Long) session.getAttribute("prjNo");
-        System.out.println("prjNo = " + prjNo);
-        System.out.println("req = " + req);
-        System.out.println("files = " + files);
 
         String memberName = principalDetail.getMember().getMemberName();
 
@@ -106,13 +126,8 @@ public class RiskController {
         riskByNo.setWorkFilesJson(workFilesJson);
 
         return ResponseEntity.ok(riskByNo);
-//        service.getRisk(no);
-//
-//        model.addAttribute("req", defectService.getDefect(no));
-//        model.addAttribute("discoverFilesJson", discoverFilesJson);
-//        model.addAttribute("workFilesJson", workFilesJson);
-//        return "danger/info";
     }
+
 
 
     private String generateFilesJson(List<FileResponseDto> files) {

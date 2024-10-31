@@ -4,15 +4,16 @@ import com.kcc.pms.domain.common.model.dto.CommonCodeOptions;
 import com.kcc.pms.domain.common.model.vo.FileMasterNumbers;
 import com.kcc.pms.domain.common.service.CommonService;
 import com.kcc.pms.domain.risk.mapper.RiskMapper;
+import com.kcc.pms.domain.risk.model.dto.CriteriaRisk;
 import com.kcc.pms.domain.risk.model.dto.RiskDto;
 import com.kcc.pms.domain.risk.model.dto.RiskFileRequestDto;
+import com.kcc.pms.domain.risk.model.dto.RiskSummaryResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -66,6 +67,46 @@ public class RiskServiceImpl implements RiskService {
         if (isPassed != 1) {
             throw new RuntimeException("Risk 수정 중 오류가 발생했습니다.");
         }
+    }
+
+    @Override
+    public List<RiskSummaryResponseDto> getRiskList(CriteriaRisk cri) {
+        Map<String, Object> params = makeParams(cri);
+
+        List<RiskSummaryResponseDto> riskList = mapper.getRiskList(params);
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+
+        for (RiskSummaryResponseDto risk : riskList) {
+            if(risk.getCompleteDate() != null){
+                risk.setCompleteDateStr(sdf.format(risk.getCompleteDate()));
+            }
+            if(risk.getDueDate() != null){
+                risk.setDueDateStr(sdf.format(risk.getDueDate()));
+            }
+        }
+
+        return riskList;
+    }
+
+    @Override
+    public int countRisks(CriteriaRisk cri) {
+        Map<String, Object> params = makeParams(cri);
+        System.out.println("Params: " + params); // 로그로 파라미터 확인
+        return mapper.countRisks(params);
+    }
+
+    private static Map<String, Object> makeParams(CriteriaRisk cri) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("prjNo", cri.getPrjNo());
+        params.put("startRow", cri.getStartRow());
+        params.put("endRow", cri.getEndRow());
+
+        params.put("systemNo", cri.getFilters().get("systemNo"));
+        params.put("selectedClassNo", cri.getFilters().get("selectedClassNo"));
+        params.put("selectedStatusNo", cri.getFilters().get("selectedStatusNo"));
+        params.put("selectedPriorNo", cri.getFilters().get("selectedPriorNo"));
+        params.put("keyword", cri.getFilters().get("keyword"));
+        return params;
     }
 
 

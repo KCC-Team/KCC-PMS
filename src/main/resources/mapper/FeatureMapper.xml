@@ -89,47 +89,47 @@
     <select id="getSystemFeatureList" resultType="com.kcc.pms.domain.feature.model.dto.FeatureSummaryResponseDto">
         SELECT *
         FROM (
-        SELECT
-        sub.*,
-        ROW_NUMBER() OVER (ORDER BY sub.order_no) AS rn
-        FROM (
-        SELECT
-        f.feat_no AS featureNo,
-        f.feat_id AS featureId,
-        f.feat_title AS featureTitle,
-        m.mem_nm AS memberName,
-        f.prg AS progress,
-        s.sys_ttl AS system,
-        st.cd_dtl_nm AS status,
-        st.order_no,
-        CASE
-        WHEN f.pre_end_dt >= SYSDATE THEN 'D-' || TRUNC(f.pre_end_dt - SYSDATE)
-        ELSE 'D+' || ABS(TRUNC(SYSDATE - f.pre_end_dt))
-        END AS remainingDays
-        FROM
-        feature f
-        LEFT JOIN system s ON f.sys_no = s.sys_no
-        LEFT JOIN member m ON f.mem_no = m.mem_no
-        JOIN codedetail st ON f.stat_cd = st.cd_dtl_no
-        WHERE
-        f.prj_no = #{prjNo}
-        <if test="systemNo != null">
-            AND (s.sys_no = #{systemNo}
-            OR s.sys_no IN (
-            SELECT sys_no FROM system
-            START WITH sys_no = #{systemNo}
-            CONNECT BY PRIOR sys_no = par_sys_no))
-        </if>
-        <if test="featClassCd != null and featClassCd != ''">
-            AND f.class_cd = #{featClassCd}
-        </if>
-        <if test="cri.type != null and cri.type != ''">
-            AND f.stat_cd = #{cri.type}
-        </if>
-        <if test="cri.keyword != null and cri.keyword != ''">
-            AND LOWER(m.mem_nm) LIKE LOWER('%' || #{cri.keyword} || '%')
-        </if>
-        ) sub
+            SELECT
+                sub.*,
+                ROW_NUMBER() OVER (ORDER BY sub.order_no) AS rn
+            FROM (
+                SELECT
+                    f.feat_no AS featureNo,
+                    f.feat_id AS featureId,
+                    f.feat_title AS featureTitle,
+                    m.mem_nm AS memberName,
+                    f.prg AS progress,
+                    s.sys_ttl AS system,
+                    st.cd_dtl_nm AS status,
+                    st.order_no,
+                    CASE
+                    WHEN f.pre_end_dt >= SYSDATE THEN 'D-' || TRUNC(f.pre_end_dt - SYSDATE)
+                    ELSE 'D+' || ABS(TRUNC(SYSDATE - f.pre_end_dt))
+                    END AS remainingDays
+                FROM
+                feature f
+                LEFT JOIN system s ON f.sys_no = s.sys_no
+                LEFT JOIN member m ON f.mem_no = m.mem_no
+                JOIN codedetail st ON f.stat_cd = st.cd_dtl_no
+                WHERE
+                    f.prj_no = #{prjNo}
+                    <if test="systemNo != null">
+                        AND (s.sys_no = #{systemNo}
+                        OR s.sys_no IN (
+                        SELECT sys_no FROM system
+                        START WITH sys_no = #{systemNo}
+                        CONNECT BY PRIOR sys_no = par_sys_no))
+                    </if>
+                    <if test="featClassCd != null and featClassCd != ''">
+                        AND f.class_cd = #{featClassCd}
+                    </if>
+                    <if test="cri.type != null and cri.type != ''">
+                        AND f.stat_cd = #{cri.type}
+                    </if>
+                    <if test="cri.keyword != null and cri.keyword != ''">
+                        AND LOWER(m.mem_nm) LIKE LOWER('%' || #{cri.keyword} || '%')
+                    </if>
+            ) sub
         ) WHERE rn BETWEEN #{cri.startRow} AND #{cri.endRow}
     </select>
 
