@@ -9,20 +9,27 @@
 
 .danger-content, .issue-content {
     display: flex;
+    justify-content: space-between;
     padding-top: 15px;
     align-items: center;
-    overflow: hidden;
+    width: 94%;
+    margin-left: 38px;
+    margin-bottom: 16px;
+    border-bottom: 1px solid #989898;
 }
 
 .danger-info, .issue-info {
-    width: 94%;
-    margin: 4px 0px 20px 40px;
     font-size: 20px;
     font-weight: bold;
     color: black;
-    border-bottom: 1px solid #989898;
     padding-bottom: 5px;
-    float: left;
+    width: 68.6%;
+}
+
+.action-buttons {
+    width: auto;
+    margin-left: auto;
+    padding-bottom: 5px;
 }
 
 h5 {
