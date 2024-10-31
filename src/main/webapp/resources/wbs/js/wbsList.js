@@ -25,7 +25,7 @@ gantt.config.columns = [
     //     }
     //     return task.id;
     // }},
-    {name: "text", label: "작업명", align: "left", width: 130, tree: true, resize: true},
+    {name: "text", label: "작업명", align: "left", width: 180, tree: true, resize: true},
     {name: "tsk_stat_cd", label: "상태", width: 50, align: "center", resize: true},
     {name: "start_date", label: "예정 시작일", align: "center", width: 90, resize: true},
     {name: "end_date", label: "예정 종료일", align: "center", width: 90, resize: true},
@@ -100,10 +100,8 @@ function getProjectResult() {
             gantt.config.autosize = false;  // 자동 크기 비활성화
             gantt.config.fit_tasks = false;  // 작업을 화면 너비에 맞추지 않도록 설정
 
-
             gantt.init("gantt_here");  // Gantt 차트 초기화
             gantt.parse(tasks);  // 작업 데이터 로드
-            gantt.render();
 
 
             if (tasks.data.length > 0) {

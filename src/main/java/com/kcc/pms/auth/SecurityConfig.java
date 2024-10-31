@@ -4,11 +4,12 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.session.SessionRegistry;
+import org.springframework.security.core.session.SessionRegistryImpl;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
@@ -28,62 +29,70 @@ public class SecurityConfig {
         return new BCryptPasswordEncoder();
     }
 
-//    @Bean
-//    public PasswordEncoder passwordEncoder() {
-//        return NoOpPasswordEncoder.getInstance();
-//    }
-
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain securityFilterChain(HttpSecurity http, SessionRegistry sessionRegistry) throws Exception {
         http.csrf(csrf -> csrf
-                .ignoringRequestMatchers("/**") // 모든 경로에 대해 기본적으로 CSRF 비활성화
-                .requireCsrfProtectionMatcher(request -> {
-                    String uri = request.getRequestURI();
-                    return uri.equals("/loginForm"); // 로그인 페이지에서만 CSRF 활성화
-                })
+                .ignoringRequestMatchers("/**")
+                .requireCsrfProtectionMatcher(request -> request.getRequestURI().equals("/loginForm"))
         );
         http.authorizeHttpRequests(authorizeRequests ->
                         authorizeRequests
                                 .requestMatchers("/projects/**").authenticated()
                                 .requestMatchers(request -> "XMLHttpRequest".equals(request.getHeader("X-Requested-With"))).permitAll()
                                 .anyRequest().permitAll()
-                ).formLogin(formLogin -> formLogin.loginPage("/loginForm") // 로그인 페이지 지정
-                        .loginProcessingUrl("/login") // 컨트롤러 지정 없이 시큐리티에서 로그인 진행
+                )
+                .formLogin(formLogin -> formLogin
+                        .loginPage("/loginForm")
+                        .loginProcessingUrl("/login")
                         .successHandler((request, response, authentication) -> {
-                            //String prevPage = (String) request.getSession().getAttribute("prevPage");
-                            //if (prevPage != null) {
-                                //response.sendRedirect(prevPage);
-                            //}
                             SavedRequestAwareAuthenticationSuccessHandler defaultHandler = new SavedRequestAwareAuthenticationSuccessHandler();
-                            defaultHandler.setDefaultTargetUrl("/projects/list?type=projectList"); // 기본 경로 설정
+                            defaultHandler.setDefaultTargetUrl("/projects/list?type=projectList");
                             defaultHandler.onAuthenticationSuccess(request, response, authentication);
                         })
-                        .failureHandler(authenticationFailureHandler())) // 로그인 실패 시 처리할 핸들러 설정
+                        .failureHandler(authenticationFailureHandler())
+                )
                 .logout(logout -> logout
-                        .logoutUrl("/logout") // 로그아웃 요청 경로
-                        .logoutSuccessUrl("/loginForm") // 로그아웃 성공 시 이동할 경로
+                        .logoutUrl("/logout")
+                        .logoutSuccessUrl("/loginForm")
                         .invalidateHttpSession(true)
+                        .addLogoutHandler((request, response, auth) -> {
+                            // 모든 세션을 순회하면서 만료
+                            for (Object principal : sessionRegistry.getAllPrincipals()) {
+                                sessionRegistry.getAllSessions(principal, false).forEach(sessionInfo -> {
+                                    try {
+                                        sessionInfo.expireNow();
+                                    } catch (Exception e) {
+                                        e.printStackTrace();
+                                    }
+                                });
+                            }
+                        })
                 )
                 .headers(headers -> headers
-                        .frameOptions(HeadersConfigurer.FrameOptionsConfig::sameOrigin)) // 보안 헤더 설정 추가
-                // 인증되지 않은 AJAX 요청에 대해 401 반환
+                        .frameOptions(HeadersConfigurer.FrameOptionsConfig::sameOrigin))
                 .exceptionHandling(exceptionHandling -> exceptionHandling
                         .authenticationEntryPoint((request, response, authException) -> {
-                            // AJAX 요청 여부 확인
                             if ("XMLHttpRequest".equals(request.getHeader("X-Requested-With"))) {
-                                // AJAX 요청에 대해서는 401 Unauthorized 상태 코드 반환
                                 response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
                                 response.setContentType("application/json");
                                 response.getWriter().write("{\"error\": \"Unauthorized\", \"loginUrl\": \"/members/loginForm\"}");
                             } else {
-                                // 일반 요청에 대해서는 로그인 페이지로 리디렉션
                                 response.sendRedirect("/loginForm");
                             }
                         })
+                )
+                .sessionManagement(sessionManagement ->
+                        sessionManagement.maximumSessions(-1).sessionRegistry(sessionRegistry)
                 );
 
         return http.build();
     }
+
+    @Bean
+    public SessionRegistry sessionRegistry() {
+        return new SessionRegistryImpl();
+    }
+
 
     @Bean
     public HttpFirewall allowUrlEncodedSlashHttpFirewall() {
