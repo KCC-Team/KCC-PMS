@@ -23,7 +23,7 @@ public class DefectServiceImpl implements DefectService {
     private final DefectMapper defectMapper;
     private final CommonService commonService;
 
-    private static final int LIMIT = 10;
+    private static final int LIMIT = 15;
 
     @Override
     public List<CommonCodeOptions> getDefectCommonCodeOptions() {
@@ -61,6 +61,9 @@ public class DefectServiceImpl implements DefectService {
             }
         } else {
             Long[] Numbers = generateFiles(prgNo, MemberName, files);
+            if (Numbers[0] == null || Numbers[1] == null) {
+                return;
+            }
             int isPassed = defectMapper.updateFileMasterNumbers(no, Numbers[0], Numbers[1]);
             if (isPassed != 1) {
                 throw new RuntimeException("Defect 수정 중 오류가 발생했습니다.");
@@ -108,7 +111,7 @@ public class DefectServiceImpl implements DefectService {
         return defectMapper.getDefect(no).orElseThrow(() -> new RuntimeException("해당하는 Defect가 없습니다."));
     }
 
-    private Long[] generateFiles(Long projectNumber, String memberName, DefectFileRequestDto files) {
+    private Long[]  generateFiles(Long projectNumber, String memberName, DefectFileRequestDto files) {
         Long[] numbers = new Long[2];
 
         if (files.getDisFiles() != null) {

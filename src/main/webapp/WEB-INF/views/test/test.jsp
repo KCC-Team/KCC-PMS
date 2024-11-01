@@ -3,107 +3,124 @@
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 
 <%@ include file="../common.jsp" %>
-<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+
 <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.2/themes/smoothness/jquery-ui.css">
 <link rel="stylesheet" type="text/css" href="../../../resources/test/css/test.css">
 
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0"></script>
+
 <main class="content" id="content">
-    <div class="main_content">
-        <br>
-        <div class="ps-5 pe-5">
-            <section>
-                <div class="d-flex justify-content-between align-items-center">
-                    <label class="ms-4 fw-bold fs-2 text-black">
-                        테스트 상세</label>
+    <div class="main_content" style="width: 97%; height: 87%">
+        <div class="div-section">
+            <label class="div-info">
+                테스트 정보</label>
+            <div class="button-area">
+                <div class="d-flex justify-content-end me-5">
+                    <button type="submit" class="save-btn">
+                        &nbsp;&nbsp;&nbsp;&nbsp;저장&nbsp;&nbsp;&nbsp;&nbsp;
+                    </button>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    <button type="button" class="cancel-btn me-3">
+                        &nbsp;&nbsp;&nbsp;&nbsp;닫기&nbsp;&nbsp;&nbsp;&nbsp;
+                    </button>
                 </div>
-            </section>
-            <hr>
-            <section>
-                <div class="me-4">
-                    <label class="ms-4 fw-bold fs-4 text-black">
-                        테스트 기본 정보</label>
-                </div>
+            </div>
+        </div>
+        <section class="test-content ms-3 d-flex justify-content-left">
+            <section class="test-info-area">
                 <form id="test-form">
                     <input type="hidden" name="testNo" id="testNo" value="${testReq.testNumber}" >
-                    <table class="test-table ms-4">
+                    <table class="test-table">
                         <tr>
                             <td class="td-title">테스트 명&nbsp;&nbsp;&nbsp;<span class="es-star">*</span></td>
-                            <td>
-                                <input type="text" name="testTitle" value="${testReq.testTitle}" required >
+                            <td colspan="3">
+                                <input type="text" name="testTitle" value="${testReq.testTitle}" required style="width: 100%;">
                             </td>
+                        </tr>
+                        <tr>
                             <td class="td-title">테스트 ID&nbsp;&nbsp;&nbsp;<span class="es-star">*</span></td>
                             <td>
-                                <input id="test_id" type="text" name="testId" value="${testReq.testId}" required >
+                                <input id="test_id" type="text" name="testId" value="${testReq.testId}" required style="width: 100%;">
                             </td>
-                        </tr>
-                        <tr>
-                            <td class="td-title text-nowrap">테스트 시작일&nbsp;&nbsp;&nbsp;<span class="es-star">*</span></td>
-                            <td>
-                                <input type="text" name="testStartDate" value="${fn:substring(scheduleDate,0,10) }" class="test-date" placeholder="yyyy-mm-dd" >
-                            </td>
-                            <td class="td-title">테스트 종료일</td>
-                            <td>
-                                <input type="text" name="testEndDate" value="${fn:substring(scheduleDate,0,10) }" class="test-date" placeholder="yyyy-mm-dd" >
-                            </td>
-                        </tr>
-                        <tr>
                             <td class="td-title">테스트 구분&nbsp;&nbsp;&nbsp;<span class="es-star">*</span></td>
                             <td>
-                                <select name="testType" id="PMS012" required >
+                                <select name="testType" id="PMS012" required style="width: 100%;">
                                     <option value="" selected disabled>구분 선택</option>
                                 </select>
                             </td>
+                        </tr>
+                        <tr>
                             <td class="td-title">상태&nbsp;&nbsp;&nbsp;<span class="es-star">*</span></td>
                             <td>
-                                <select name="testStatus" id="PMS013" required >
+                                <select name="testStatus" id="PMS013" required style="width: 100%;">
                                     <option value="" selected disabled>상태 선택</option>
                                 </select>
                             </td>
-                        </tr>
-                        <tr>
-                            <td class="td-title">작성자</td>
-                            <td>
-                                <span>${memberName}</span>
-                            </td>
                             <td class="td-title">시스템-업무 분류</td>
                             <td>
-                                <input type="hidden" id="systemNo" name="systemNumber" value="${req.systemNumber}" >
+                                <input type="hidden" id="systemNo" name="systemNumber" value="${req.systemNumber}">
                                 <div class="system-select-wrapper w-100">
-                                    <span class="system-select-button" id="system-select">
-                                        <span>시스템/업무 선택</span>
-                                    </span>
+                                <span class="system-select-button" id="system-select">
+                                    <span>시스템/업무 선택</span>
+                                </span>
                                     <ul class="mymenu" id="system-menu"></ul>
                                 </div>
                             </td>
                         </tr>
                         <tr>
+                            <td class="td-title text-nowrap">테스트 시작일&nbsp;&nbsp;&nbsp;<span class="es-star">*</span></td>
+                            <td>
+                                <input type="text" name="testStartDate" value="${fn:substring(scheduleDate,0,10) }" class="test-date" placeholder="yyyy-mm-dd" style="width: 100%;">
+                            </td>
+                            <td class="td-title">테스트 종료일</td>
+                            <td>
+                                <input type="text" name="testEndDate" value="${fn:substring(scheduleDate,0,10) }" class="test-date" placeholder="yyyy-mm-dd" style="width: 100%;">
+                            </td>
+                        </tr>
+                        <tr>
                             <td class="td-title">테스트 설명&nbsp;&nbsp;&nbsp;<span class="es-star">*</span></td>
                             <td colspan="3">
-                                <textarea id="test-txt" name="testCont" required >${testReq.testContent}</textarea>
-                                <div class="word-count">0 / 500</div>
+                                <textarea id="test-txt" name="testCont" required style="width: 100%;">${testReq.testContent}</textarea>
                             </td>
                         </tr>
                     </table>
-                    <br>
-                    <div id="dynamic-content"></div>
-                    <div class="tc-area d-flex justify-content-center" style="display: none !important;">
-                        <button type="button" class="custom-button tc-btn fs-5">
-                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;테스트케이스 추가&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                        </button>
-                    </div>
-                    <br><br>
-                    <div class="d-flex justify-content-end pe-5">
-                        <button type="submit" class="custom-button" style="background-color: #62ce66">
-                            &nbsp;&nbsp;&nbsp;&nbsp;저장&nbsp;&nbsp;&nbsp;&nbsp;
-                        </button>
-                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                        <button type="button" class="custom-button cancel" style="background-color: #8B8B8B">
-                            &nbsp;&nbsp;&nbsp;&nbsp;닫기&nbsp;&nbsp;&nbsp;&nbsp;
-                        </button>
-                    </div>
                 </form>
             </section>
-        </div>
+            <section class="ms-2 test-rlt-area flex-column">
+                <div class="test-rlt-title fw-bold">테스트 개요</div>
+                <section class="d-flex justify-content-between">
+                    <div class="test-rlt-title w-100">테스트 케이스 상태</div>
+                    <div class="test-rlt-title w-100">결함 상태</div>
+                </section>
+                <div>
+                    <section class="d-flex justify-content-left" style="width: 98%; height: 98%">
+                        <div class="border pt-1 pb-1" style="height: 208px;">
+                            <canvas id="testCaseChart" width="295px"></canvas>
+                        </div>
+                        <div class="border pt-1 pb-1" style="height: 208px;">
+                            <canvas id="defectChart"></canvas>
+                        </div>
+                    </section>
+                </div>
+            </section>
+        </section>
+        <section>
+            <section>
+                <div class="feature-area">
+                    <label class="text-nowrap">기능 ID 선택&nbsp;&nbsp;&nbsp;</label>
+                    <select id="PMS014" class="feature-select" name="taskSelect">
+                        <option value="" selected disabled>기능 선택</option>
+                    </select>
+                </div>
+                <div class="testCase-section">
+                    <table id="test-case-area">
+
+                    </table>
+                </div>
+            </section>
+        </section>
     </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-serializeJSON/3.2.1/jquery.serializejson.min.js"></script>
