@@ -53,7 +53,7 @@ public class CommonController {
         session.setAttribute("prjNo", prjNo);
         session.setAttribute("prjTitle", prjTitle);
         session.setAttribute("authCode", authCode);
-
+        session.setAttribute("memberNo", memNo);
         String referer = request.getHeader("Referer");
 
         if (referer == null || referer.isEmpty()) {

@@ -20,4 +20,5 @@ public interface RiskService {
     RiskHistoryDto getHistoryByNo(Long historyNo);
     int updateHistory(RiskHistoryDto req,
                       RiskFileRequestDto files, Long prjNo);
+    int deleteHistory(Long historyNo);
 }

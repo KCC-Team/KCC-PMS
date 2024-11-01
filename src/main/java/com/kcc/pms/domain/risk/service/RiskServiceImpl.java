@@ -107,7 +107,7 @@ public class RiskServiceImpl implements RiskService {
     }
 
     @Override
-    public RiskHistoryDto getHistoryByNo(Long historyNo) {
+    public RiskHistoryDto  getHistoryByNo(Long historyNo) {
         return mapper.getHistoryByNo(historyNo);
     }
 
@@ -127,6 +127,18 @@ public class RiskServiceImpl implements RiskService {
             throw new RuntimeException("Risk 수정 중 오류가 발생했습니다.");
         }
         return isPassed;
+    }
+
+    @Override
+    public int deleteHistory(Long historyNo) {
+         RiskHistoryDto history = Optional.ofNullable(mapper.getHistoryByNo(historyNo))
+                 .orElseThrow(() -> new RuntimeException("해당 조치 이력을 찾을 수 없습니다."));
+
+        if (history.getFileMasterNo() != null) {
+            commonService.deleteFile(history.getFileMasterNo());
+        }
+
+        return mapper.deleteByNo(historyNo);
     }
 
 
