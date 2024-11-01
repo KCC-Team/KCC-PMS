@@ -23,5 +23,7 @@ public interface DefectMapper {
     Optional<FileMasterNumbers> getFileMasterNumbers(Long no);
     List<DefectResponseDto> getDefectList(Long projectNumber, Long workNo, String type, String status, String search, int page, int limit);
     int getDefectTotalCount(Long projectNumber, Long workNo, String status, String search);
-    int updateFileMasterNumbers(Long no, Long fileMasterFoundNumber, Long fileMasterWorkNumber);
+    int updateFileMasterNumbers(Long no,
+                                @Param(value = "fileMasterFoundNumber") Long fileMasterFoundNumber,
+                                @Param(value = "fileMasterWorkNumber") Long fileMasterWorkNumber);
 }
