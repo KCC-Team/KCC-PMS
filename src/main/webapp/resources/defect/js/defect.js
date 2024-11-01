@@ -1,4 +1,7 @@
 let deletedFiles = [];
+const imageExtensions = [
+    'jpg', 'jpeg', 'png', 'gif', 'bmp', 'tiff', 'svg', 'webp',
+];
 
 document.addEventListener('DOMContentLoaded', function() {
     if (Dropzone.instances.length > 0) {
@@ -10,10 +13,16 @@ document.addEventListener('DOMContentLoaded', function() {
     const previewTemplate = `
         <div class="dz-preview dz-file-preview">
             <a target="_blank" class="dz-image-link">
-                <img data-dz-thumbnail style="width: 65px; height: 65px"/>
+                <img
+                    data-dz-thumbnail
+                    style="width: 85px; height: 85px"
+                    src="#"
+                    class="dz-image-file"
+                    onerror="this.onerror=null; this.src='../../../../resources/output/images/file-icon.png';"
+                />
             </a>
             <div class="dz-details">
-                <div class="dz-filename"><span data-dz-name style="width: 100px"></span></div>
+                <div class="dz-filename"><span data-dz-name style="width: 80px"></span></div>
                 <div class="dz-size" data-dz-size></div>
                 <span class="button-icon" data-dz-remove><i class="fas fa-trash-alt"></i></span>
             </div>
@@ -105,16 +114,25 @@ document.addEventListener('DOMContentLoaded', function() {
         let defectNumber = getDefectNumberFromPath();
         if (defectNumber == null) {
             window.close();
+            return;
         }
 
-        $.ajax({
-            url: "/projects/defects/" + defectNumber,
-            type: 'delete',
-            success: function (response) {
-                window.close();
-            },
-            error: function (response) {
-                alert('삭제 실패');
+        isPassedAlert().then(function (isPassed) {
+            if (isPassed) {
+                $.ajax({
+                    url: '/projects/defects/' + defectNumber,
+                    method: 'delete',
+                    success: function (response) {
+                        if (window.opener && !window.opener.closed) {
+                            let event = new Event('defectDeleted');
+                            window.opener.dispatchEvent(event);
+                        }
+                        window.close();
+                    },
+                    error: function (xhr, status, error) {
+                        console.error('삭제에 실패했습니다.', error);
+                    }
+                });
             }
         });
     });
@@ -126,6 +144,24 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 $(function () {
+    let toast = new ax5.ui.toast({
+        containerPosition: "top-right",
+        onStateChanged: function(){
+            console.log(this);
+        }
+    });
+
+    const urlParams = new URLSearchParams(window.location.search);
+    const toastMsg = urlParams.get('toastMsg');
+
+    if (toastMsg === "defectDeleted") {
+        toast.push({
+            theme: 'success',
+            msg: "결함 내역 저장이 완료되었습니다."
+        });
+    }
+
+
     $(".defect-date").datepicker({
         dateFormat: "yy-mm-dd"
     });
@@ -149,8 +185,18 @@ $(function () {
     });
 
     let val = $('#systemNo').val();
+
     setSystemPath(val);
     fetchOptions();
+
+    $('.dz-image-file').on('click', function(e) {
+        if (e.target.src.includes('file-icon.png')) {
+            $.ajax({
+                url: '/fileDownload?=filePath=' + e.target.src,
+                method: 'GET',
+            });
+        }
+    });
 });
 
 function getDefectNumberFromPath() {
@@ -170,6 +216,7 @@ function fetchOptions() {
                 const $selectElement = $(selectId);
 
                 if ($selectElement.length) {
+                    console.log(item);
                     setOptions($selectElement, item.codes);
 
                 }
@@ -209,15 +256,12 @@ function insertData(dropzone_dis, dropzone_work, $form) {
     let work_files = dropzone_work.files;
 
     let formData = new FormData($form);
-    if (dis_files.length > 0) {
-        dis_files.forEach(file => {
-            formData.append('disFiles', file);
-        });
+    for (let file of dis_files) {
+        formData.append('disFiles', file);
     }
-    if (work_files.length > 0) {
-        work_files.forEach(file => {
-            formData.append('workFiles', file);
-        });
+
+    for (let file of work_files) {
+        formData.append('workFiles', file);
     }
 
     $.ajax({
@@ -227,18 +271,7 @@ function insertData(dropzone_dis, dropzone_work, $form) {
         contentType: false,
         processData: false,
         success: function(response) {
-            if (dis_files.length > 0) {
-                dis_files.forEach(file => {
-                    file.status = Dropzone.SUCCESS;
-                    dropzone_dis.emit("complete", file);
-                });
-            }
-            if (work_files.length > 0) {
-                work_files.forEach(file => {
-                    file.status = Dropzone.SUCCESS;
-                    dropzone_work.emit("complete", file);
-                });
-            }
+            // 성공 로직
             window.location.href = response;
         },
         error: function(response) {
@@ -250,24 +283,22 @@ function insertData(dropzone_dis, dropzone_work, $form) {
 function updateData(dropzone_dis, dropzone_work, $form, defectNumber) {
     let dis_files = dropzone_dis.files;
     let work_files = dropzone_work.files;
-
     let formData = new FormData($form);
-    if (dis_files.length > 0) {
-        dis_files.forEach(file => {
-            if (!file.isExisting) {
-                formData.append('disFiles', file);
-            }
-        });
+
+    for (let file of dis_files) {
+        if (!file.isExisting) {
+            formData.append('disFiles', file);
+        }
     }
-    if (work_files.length > 0) {
-        work_files.forEach(file => {
-            if (!file.isExisting) {
-                formData.append('workFiles', file);
-            }
-        });
+
+    for (let file of work_files) {
+        if (!file.isExisting) {
+            formData.append('workFiles', file);
+        }
     }
-    if (deletedFiles.length > 0) {
-        deletedFiles.forEach(file => {
+
+    if (window.deletedFiles && window.deletedFiles.length > 0) {
+        window.deletedFiles.forEach(file => {
             formData.append('deleteFiles', file);
         });
     }
@@ -286,14 +317,13 @@ function updateData(dropzone_dis, dropzone_work, $form, defectNumber) {
                 });
             }
             if (work_files.length > 0) {
-
                 work_files.forEach(file => {
                     file.status = Dropzone.SUCCESS;
                     dropzone_work.emit("complete", file);
                 });
             }
-            deletedFiles = [];
-            window.location.href = response;
+            window.deletedFiles = [];
+            window.location.href = response + "?toastMsg=defectDeleted";
         },
         error: function(response) {
             console.error(response);
@@ -365,4 +395,30 @@ function setSystemPath(systemNo) {
         let path = selectedItem.data('parent-path') || selectedItem.text();
         $('#system-select span:first-child').text(path);
     }
+}
+
+function confirmationDialog() {
+    return Swal.fire({
+        title: "확인",
+        text: "이 작업을 진행하시겠습니까?",
+        icon: "question",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "확인",
+        cancelButtonText: "취소",
+    });
+}
+
+function isPassedAlert() {
+    return new Promise(function(resolve, reject) {
+        confirmationDialog().then((result) => {
+            if (result.isConfirmed) {
+                Swal.fire("완료!", "작업이 성공적으로 완료되었습니다.", "success");
+                resolve(true);
+            } else {
+                resolve(false);
+            }
+        });
+    });
 }
