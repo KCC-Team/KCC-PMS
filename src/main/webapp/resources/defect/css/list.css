@@ -12,6 +12,34 @@ select {
     font-size: 14px;
 }
 
+.div-section {
+    display: flex;
+    padding-top: 15px;
+    align-items: center;
+}
+
+.div-info {
+    font-size: 20px;
+    font-weight: bold;
+    border-bottom: 1px solid #989898;
+    width: 91.5%;
+    margin: 4px 0px 20px 40px;
+    padding-bottom: 5px;
+    float: left;
+    color: #000;
+}
+
+.filter-section {
+    width: 1365px;
+    background-color: white;
+    padding: 10px;
+    border-radius: 10px;
+    border: 1px #ddd solid;
+    display: flex;
+    align-items: center;
+    margin: 2px 45px 30px 37px;
+}
+
 .save-btn-df {
     padding: 9px;
     border: 1px solid #ccc;
@@ -23,13 +51,18 @@ select {
     width: 70px;
 }
 
-
-.existing-file {
-    background-color: #f0f0f0;
+.button-area {
+    position: fixed;
+    top: 90px;
+    right: 120px;
+    display: flex;
+    justify-content: flex-end;
+    padding: 10px;
 }
 
-.new-file {
-    background-color: #9be79b;
+.defect-area {
+    width: 1450px;
+    margin-left: 38px;
 }
 
 .mymenu {
