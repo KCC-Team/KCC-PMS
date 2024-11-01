@@ -27,7 +27,7 @@ public class TestServiceImpl implements TestService {
     private final TestMapper testMapper;
     private final SqlSessionFactory sqlSessionFactory;
 
-    private final static int LIMIT = 10;
+    private final static int LIMIT = 15;
 
     @Override
     public List<CommonCodeOptions> getDefectCommonCodeOptions() {
