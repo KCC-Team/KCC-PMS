@@ -3,7 +3,10 @@ let discoverFiles;
 let workFiles;
 let dropzone1;
 let dropzone2;
+let riskNo;
+let historyDropzone;
 document.addEventListener('DOMContentLoaded', function() {
+    console.log('auth code !!!! !' + authCode);
     if (Dropzone.instances.length > 0) {
         Dropzone.instances.forEach(function(dz) {
             dz.destroy();
@@ -27,7 +30,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     dropzone1 = initDropzone('#risk-insert-file-dropzone_1', '.file-zone_1', previewTemplate, "/projects/risks/risk");
     dropzone2 = initDropzone('#risk-insert-file-dropzone_2', '.file-zone_2', previewTemplate, "/projects/risks/risk");
-
+    historyDropzone = initDropzone("#history-insert-file-dropzone", '.file-zone_3', previewTemplate, "/projects/risks/risk");
 
     dropzone1.on("removedfile", function(file) {
         if (file.isExisting) {
@@ -38,6 +41,14 @@ document.addEventListener('DOMContentLoaded', function() {
     dropzone2.on("removedfile", function(file) {
         if (file.isExisting) {
             deletedFiles.push(file.id);
+        }
+    });
+
+    historyDropzone.on("removedfile", function(file) {
+        if (file.isExisting && file.id) {
+            if (!deletedFiles.includes(file.id)) {
+                deletedFiles.push(file.id);
+            }
         }
     });
 
@@ -58,7 +69,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     const urlParams = new URLSearchParams(window.location.search);
     const type = urlParams.get('type');
-    const riskNo = urlParams.get('no');
+    riskNo = urlParams.get('no');
     console.log("riskNo = " + riskNo);
     if (type === 'register') {
         console.log("registerMember = ", registerMember);
@@ -120,6 +131,7 @@ document.addEventListener('DOMContentLoaded', function() {
         window.close();
     });
 
+    getHisotries();
 });
 
 
@@ -190,6 +202,7 @@ function insertData(dropzone_dis, dropzone_work, $form, requestUrl, requestMetho
             }
             console.log("redirect url");
             console.log(response);
+            deletedFiles = [];
             window.location.href = response;
         },
         error: function(response) {
@@ -409,3 +422,191 @@ function createMenuHTML(menuData, parentElement, path) {
         parentElement.append(listItem);
     });
 }
+
+
+$('#addHistoryBtn').click(function (e) {
+    e.preventDefault();
+    const recordDate = $('#record_dt').val();
+    const recordContent = $('#record_cont').val();
+    const historyNo = $('#historyNo').val();
+
+    console.log(recordDate);
+    console.log(recordContent);
+
+    if (!recordDate) {
+        alert("조치일자는 필수 입력 항목입니다.");
+        $('#record_dt').focus();
+        return;
+    }
+
+    let formData = new FormData();
+    formData.append('recordDate', recordDate);
+    formData.append('recordContent', recordContent);
+    formData.append('riskNo', riskNo);
+
+    // `historyNo`가 존재하면 수정으로 처리
+    if (historyNo) {
+        formData.append('historyNo', historyNo);
+    }
+
+    // Dropzone의 파일 첨부 처리: 새로 추가된 파일만 전송
+    historyDropzone.files.forEach(file => {
+        if (!file.isExisting) {  // 새로 추가된 파일만 전송
+            formData.append('historyFiles', file);
+        }
+    });
+
+    if (deletedFiles.length > 0) {
+        deletedFiles.forEach(file => {
+            formData.append('deleteFiles', file);
+        });
+    }
+
+    // FormData의 내용을 확인 (디버깅용)
+    for (let pair of formData.entries()) {
+        console.log(pair[0] + ', ' + pair[1]);
+    }
+
+    $.ajax({
+        url: '/projects/risks/history',
+        type: 'POST',
+        data: formData,
+        contentType: false,
+        processData: false,
+        success: function (response) {
+            historyDropzone.removeAllFiles(true);
+            $('#historyModal').modal('hide');
+            $('#historyForm')[0].reset();
+            $('#historyNo').val('');
+            deletedFiles = []
+            getHisotries();
+        },
+        error: function (xhr, status, error) {
+            console.error("Error:", error);
+            alert("요청 처리 중 문제가 발생했습니다. 다시 시도해주세요.");
+        }
+    });
+});
+
+
+
+function getHisotries(){
+    $.ajax({
+        url: '/projects/risks/history?riskNo=' + riskNo,
+        type: 'GET',
+        success: function(his) {
+            console.log("his=", his);
+            $('.history-section').empty();
+            $('.history-section').append('<div class="history-title">조치이력</div>');
+
+            his.forEach(item => {
+                const formattedDate = item.recordDate.substring(0, 10);
+                const filesHtml = generateFileLinks(item.historyFilesJson, item.historyNo);
+
+                const historyItemHtml = `
+                    <div class="history-item">
+                        <div class="history-header">
+                            <div class="history-name">${item.memberName}</div>
+                            <div class="history-date-wrapper">
+                                <button class="edit-history-btn" data-history-no="${item.historyNo}">수정</button>
+                                <button class="delete-history-btn" data-history-no="${item.historyNo}">삭제</button>
+                                <div class="history-date">${formattedDate}</div>
+                            </div>
+                        </div>
+                        <div class="history-content">
+                            ${item.recordContent}
+                        </div>
+                        <div class="history-files">
+                            ${filesHtml}
+                        </div>
+                    </div>
+                `;
+                $('.history-section').append(historyItemHtml);
+            });
+
+            // 삭제 버튼 클릭 이벤트 리스너 추가
+            $('.delete-history-btn').on('click', function() {
+                const historyNo = $(this).data('history-no');
+                deleteHistory(historyNo);
+            });
+        }
+    });
+}
+
+
+// 파일 링크를 생성하는 함수
+function generateFileLinks(filesJson) {
+    const files = JSON.parse(filesJson || '[]');
+    return files.map(file => {
+        const fileExtension = file.filePath.split('.').pop().toLowerCase();
+        const isImage = ['jpg', 'jpeg', 'png', 'gif', 'jfif'].includes(fileExtension);
+
+        if (isImage) {
+            return `<a href="${file.filePath}" target="_blank"><img src="${file.filePath}" class="thumbnail"></a>`;
+        } else {
+            return `<a href="${file.filePath}" target="_blank"><i class="fas fa-file"></i> ${file.fileName}</a>`;
+        }
+    }).join('');
+}
+
+
+$(document).on('click', '.edit-history-btn', function(e) {
+    e.preventDefault();
+    const historyNo = $(this).data('history-no');
+    console.log("historyNo = " + historyNo);
+    openEditHistoryModal(historyNo);
+});
+
+function openEditHistoryModal(historyNo) {
+    $.ajax({
+        url: '/projects/risks/history/' + historyNo,
+        type: 'GET',
+        success: function(response) {
+            console.log(response);
+            $('#record_dt').val(formatDate(response.recordDate));
+            $('#record_cont').val(response.recordContent);
+
+            // 중복 방지를 위해 기존 파일을 모두 제거하고 초기화
+            historyDropzone.removeAllFiles(true);
+            historyDropzone.files = [];  // files 배열을 초기화하여 중복 방지
+
+            const historyFiles = JSON.parse(response.historyFilesJson || '[]');
+
+            historyFiles.forEach(file => {
+                let mockFile = {
+                    id: file.fileNumber,
+                    name: file.fileName,
+                    size: file.fileSize,
+                    url: file.filePath,
+                    isExisting: true
+                };
+                historyDropzone.emit("addedfile", mockFile);
+                historyDropzone.emit("thumbnail", mockFile, file.filePath);
+                historyDropzone.emit("complete", mockFile);
+                historyDropzone.files.push(mockFile); // Dropzone의 files 배열에 추가
+            });
+
+            // 수정 시 사용할 historyNo 설정
+            $('#historyNo').val(historyNo);
+
+            $('#historyModal').modal('show'); // 모달 열기
+        }
+    });
+}
+
+
+function formatDate(dateString) {
+    const date = new Date(dateString);
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+}
+
+// 모달이 닫힐 때 dropzone 초기화
+$('#historyModal').on('hidden.bs.modal', function () {
+    historyDropzone.removeAllFiles(true);  // 기존 파일 제거
+    historyDropzone.files = [];  // Dropzone 파일 배열 초기화
+    $('#historyForm')[0].reset();  // 폼 초기화
+    $('#historyNo').val('');  // historyNo 초기화
+});
