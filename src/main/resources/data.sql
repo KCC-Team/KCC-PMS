@@ -404,7 +404,7 @@ ALTER TABLE TestMaster ADD CONSTRAINT fk_tm_prj_no_tm_002 FOREIGN KEY (prj_no) R
 ALTER TABLE TestMaster ADD CONSTRAINT fk_tm_sys_work_no_004 FOREIGN KEY (sys_work_no) REFERENCES System (sys_no);
 
 ALTER TABLE TestDetail ADD CONSTRAINT pk_td_test_dtl_no_001 PRIMARY KEY (test_dtl_no);
-ALTER TABLE TestDetail ADD CONSTRAINT fk_td_test_no_002 FOREIGN KEY (test_no) REFERENCES TestMaster (test_no);
+ALTER TABLE TestDetail ADD CONSTRAINT fk_td_test_no_002 FOREIGN KEY (test_no) REFERENCES TestMaster (test_no) ON DELETE CASCADE;
 ALTER TABLE TestDetail ADD CONSTRAINT fk_td_test_mem_no_003 FOREIGN KEY (mem_no) REFERENCES Member (mem_no);
 ALTER TABLE TestDetail ADD CONSTRAINT fk_td_test_par_test_dtl_no_004 FOREIGN KEY (par_test_dtl_no) REFERENCES TestDetail (test_dtl_no);
 
@@ -422,7 +422,7 @@ ALTER TABLE FeatureTest ADD CONSTRAINT fk_ft_feat_test_dtl_no_003 FOREIGN KEY (t
 ALTER TABLE FileMaster ADD CONSTRAINT pk_fl_ms_no_001 PRIMARY KEY (fl_ms_no);
 
 ALTER TABLE FileDetail ADD CONSTRAINT pk_fl_no_001 PRIMARY KEY (fl_no);
-ALTER TABLE FileDetail ADD CONSTRAINT fk_fl_ms_no_002 FOREIGN KEY (fl_ms_no) REFERENCES FileMaster (fl_ms_no);
+ALTER TABLE FileDetail ADD CONSTRAINT fk_fl_ms_no_002 FOREIGN KEY (fl_ms_no) REFERENCES FileMaster (fl_ms_no) ON DELETE CASCADE;
 
 ALTER TABLE Output ADD CONSTRAINT pk_opt_no_001 PRIMARY KEY (opt_no);
 ALTER TABLE Output ADD CONSTRAINT fk_opt_high_folder_no_002 FOREIGN KEY (high_folder_no) REFERENCES Output (opt_no);

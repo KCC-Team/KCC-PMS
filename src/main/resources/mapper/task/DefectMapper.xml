@@ -182,6 +182,7 @@
 
     <update id="updateFileMasterNumbers" parameterType="map">
         UPDATE defect
+        SET
         <set>
             <if test="fileMasterFoundNumber != null">
                 fl_ms_fd_no = #{fileMasterFoundNumber, jdbcType=NUMERIC},

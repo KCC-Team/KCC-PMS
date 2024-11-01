@@ -44,7 +44,6 @@ public class CommonServiceImpl implements CommonService {
     @Override
     public Long fileUpload(List<MultipartFile> files, String memberName,
                            Long projectNumber, String fileCode) {
-        List<Map<String, Object>> fileList = new ArrayList<>();
         FileMasterVO fileMasterVO = new FileMasterVO(fileCode);
         Integer isSaved = fileMapper.saveFileMaster(fileMasterVO);
         if (isSaved != 1) {
@@ -84,8 +83,12 @@ public class CommonServiceImpl implements CommonService {
     @Transactional
     @Override
     public void deleteFiles(FileMasterNumbers numbers) {
-        deleteFile(numbers.getFileMasterFoundNumber());
-        deleteFile(numbers.getFileMasterWorkNumber());
+        if (numbers.getFileMasterFoundNumber() != null) {
+            deleteFile(numbers.getFileMasterFoundNumber());
+        }
+        if (numbers.getFileMasterWorkNumber() != null) {
+            deleteFile(numbers.getFileMasterWorkNumber());
+        }
     }
 
     @Transactional
@@ -102,10 +105,7 @@ public class CommonServiceImpl implements CommonService {
     public void deleteFile(Long number) {
         List<String> filesDetails = fileMapper.findFilesDetails(number);
         awsS3Utils.deleteImages(filesDetails);
-        int isDeleted = commonMapper.deleteFileMaster(number);
-        if (isDeleted != 1) {
-            throw new RuntimeException("파일 삭제 중 오류가 발생했습니다.");
-        }
+        fileMapper.deleteFileMaster(number);
     }
 
     @Override

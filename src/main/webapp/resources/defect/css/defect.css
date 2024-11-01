@@ -76,14 +76,14 @@ td textarea {
 .file-zone_1 .select-box, .file-zone_2 .select-box {
     margin-left: 20px;
     width: 250px;
-    height: 150px;
+    height: 180px;
     padding: 10px;
 }
 
 .file-zone_1 .dropzone, .file-zone_2 .dropzone {
     border-radius: 5px;
     width: 100%;
-    min-height: 30px;
+    min-height: 50px;
     padding: 10px;
 }
 
@@ -100,11 +100,16 @@ td textarea {
     margin: 5px;
 }
 
+.info-item {
+    height: 278px;
+}
+
 .dropzone-preview {
     display: flex;
     flex-wrap: nowrap;
-    overflow-x: auto;
+    overflow-x: auto !important;
     overflow-y: hidden;
+    padding-bottom: 70px !important;
     max-width: 100%;
 }
 
@@ -159,15 +164,20 @@ td textarea {
 }
 
 .file-zone_1 .file-section, .file-zone_2 .file-section {
-    height: 272px;
+    margin-top: 20px;
+    height: 300px;
     border: 1px solid #C5C5C5;
     padding: 10px;
-    overflow-y: auto;
+    overflow-y: auto !important;
+}
+
+.dz-file-preview {
+    width: 80px !important;
 }
 
  .dz-filename span {
      display: block;
-     width: 100px;
+     width: 80px;
      overflow: hidden;
      white-space: nowrap;
      text-overflow: ellipsis;

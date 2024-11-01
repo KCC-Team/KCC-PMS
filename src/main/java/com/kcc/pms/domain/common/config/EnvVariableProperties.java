@@ -18,6 +18,7 @@ public class EnvVariableProperties {
     @Setter @Getter
     public static class S3 {
         private String bucket;
+        private String fakeUrl;
         private String url;
     }
 }
