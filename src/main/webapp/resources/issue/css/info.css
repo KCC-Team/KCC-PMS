@@ -649,12 +649,12 @@ input:disabled, select:disabled, textarea:disabled {
 }
 
 .edit-history-btn, .delete-history-btn {
-    font-size: 12px; /* 버튼의 폰트 크기 */
-    padding: 3px 6px; /* 버튼의 패딩 */
-    margin-right: 8px; /* 버튼 간격 */
+    font-size: 12px;
+    padding: 3px 6px;
+    margin-right: 8px;
     cursor: pointer;
 }
 
 .history-date {
-    margin-left: 8px; /* 날짜와 버튼 간격 */
+    margin-left: 8px; 
 }
