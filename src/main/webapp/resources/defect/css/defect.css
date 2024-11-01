@@ -109,12 +109,13 @@ td textarea {
     flex-wrap: nowrap;
     overflow-x: auto !important;
     overflow-y: hidden;
-    padding-bottom: 70px !important;
+    padding-bottom: 65px !important;
     max-width: 100%;
 }
 
 .file-zone_1 .dropzone-preview .dz-preview .dz-filename, .file-zone_2 .dropzone-preview .dz-preview .dz-filename {
     font-size: 12px;
+    width: 85px;
 }
 
 .file-zone_1 .dropzone-preview .dz-preview .dz-size,
@@ -122,6 +123,7 @@ td textarea {
 .file-zone_2 .dropzone-preview .dz-preview .dz-size,
 .file-zone_2 .dropzone-preview .dz-preview .dz-error-message
 {
+    width: 85px;
     font-size: 10px;
 }
 
@@ -144,7 +146,12 @@ td textarea {
     height: 25px;
 }
 
+.dz-image-preview {
+    width: 85px !important;
+}
+
 .file-zone_1 .dropzone-preview .dz-preview .dz-details, .file-zone_2 .dropzone-preview .dz-preview .dz-details {
+    width: 85px;
     flex: 1 1 auto;
     overflow: hidden;
 }

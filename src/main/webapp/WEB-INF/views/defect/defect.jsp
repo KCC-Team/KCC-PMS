@@ -193,7 +193,6 @@
                             <div class="info-item d-flex flex-column align-items-start">
                                 <div class="mb-2"><label>결함 조치 첨부파일</label></div>
                                 <div id="df-insert-file-dropzone_2" class="dropzone"></div>
-                                <br>
                                 <jsp:include page="../output/file/file-task.jsp" />
                             </div>
                         </div>

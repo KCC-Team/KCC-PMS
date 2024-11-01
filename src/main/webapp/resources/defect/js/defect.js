@@ -1,4 +1,4 @@
-let deletedFiles = [];
+let deleteFiles = [];
 
 document.addEventListener('DOMContentLoaded', function() {
     if (Dropzone.instances.length > 0) {
@@ -85,13 +85,13 @@ document.addEventListener('DOMContentLoaded', function() {
 
     dropzone1.on("removedfile", function(file) {
         if (file.isExisting) {
-            deletedFiles.push(file.id);
+            deleteFiles.push(file.id);
         }
     });
 
     dropzone2.on("removedfile", function(file) {
         if (file.isExisting) {
-            deletedFiles.push(file.id);
+            deleteFiles.push(file.id);
         }
     });
 
@@ -138,9 +138,7 @@ document.addEventListener('DOMContentLoaded', function() {
         e.preventDefault();
         window.close();
     });
-});
 
-$(function () {
     let toast = new ax5.ui.toast({
         containerPosition: "top-right",
         onStateChanged: function(){
@@ -207,7 +205,6 @@ function fetchOptions() {
         url: '/projects/defects/options',
         method: 'GET',
         success: function(data) {
-            console.log(data)
             data.forEach(function(item) {
                 const selectId = '#' + item.common_cd_no;
                 const $selectElement = $(selectId);
@@ -294,8 +291,8 @@ function updateData(dropzone_dis, dropzone_work, $form, defectNumber) {
         }
     }
 
-    if (window.deletedFiles && window.deletedFiles.length > 0) {
-        window.deletedFiles.forEach(file => {
+    if (deleteFiles && deleteFiles.length > 0) {
+        deleteFiles.forEach(file => {
             formData.append('deleteFiles', file);
         });
     }
@@ -319,7 +316,7 @@ function updateData(dropzone_dis, dropzone_work, $form, defectNumber) {
                     dropzone_work.emit("complete", file);
                 });
             }
-            window.deletedFiles = [];
+            deleteFiles = [];
             window.location.href = response + "?toastMsg=defectDeleted";
         },
         error: function(response) {
