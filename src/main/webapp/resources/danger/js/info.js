@@ -16,7 +16,13 @@ document.addEventListener('DOMContentLoaded', function() {
     const previewTemplate = `
         <div class="dz-preview dz-file-preview">
             <a target="_blank" class="dz-image-link">
-                <img data-dz-thumbnail style="width: 65px; height: 65px"/>
+                <img
+                    data-dz-thumbnail
+                    style="width: 85px; height: 85px"
+                    src="#"
+                    class="dz-image-file"
+                    onerror="this.onerror=null; this.src='../../../../resources/output/images/file-icon.png';"
+                />
             </a>
             <div class="dz-details">
                 <div class="dz-filename"><span data-dz-name style="width: 100px"></span></div>
@@ -129,6 +135,15 @@ document.addEventListener('DOMContentLoaded', function() {
     $('#can-df').on('click', function(e) {
         e.preventDefault();
         window.close();
+    });
+
+    $('.dz-image-file').on('click', function(e) {
+        if (e.target.src.includes('file-icon.png')) {
+            $.ajax({
+                url: '/fileDownload?=filePath=' + e.target.src,
+                method: 'GET',
+            });
+        }
     });
 
     getHisotries();

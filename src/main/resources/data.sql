@@ -315,7 +315,8 @@ CREATE TABLE History (
     record_dt DATE NULL,
     record_cont VARCHAR(500) NOT NULL,
     risk_no NUMBER NULL,
-    mem_no NUMBER NOT NULL
+    mem_no NUMBER NOT NULL,
+    fl_ms_NO NUMBER
 );
 
 CREATE TABLE Request (
