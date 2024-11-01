@@ -195,15 +195,31 @@
             record_dt,
             record_cont,
             risk_no,
-            mem_no
+            mem_no,
+            fl_ms_no
         ) VALUES (
                      SEQ_HISTORY.nextval,
                      #{recordDate, jdbcType=DATE},
                      #{recordContent, jdbcType=VARCHAR},
                      #{riskNo, jdbcType=NUMERIC},
-                     #{memberNo, jdbcType=NUMERIC}
+                     #{memberNo, jdbcType=NUMERIC},
+                     #{fileMasterNo, jdbcType=NUMERIC}
                  )
     </insert>
+
+    <select id="getHistoryByNo" resultType="com.kcc.pms.domain.risk.model.dto.RiskHistoryDto">
+        SELECT
+            h.history_no AS historyNo,
+            h.record_dt AS recordDate,
+            h.record_cont AS recordContent,
+            h.risk_no AS riskNo,
+            h.mem_no AS memberNo,
+            h.fl_ms_no AS fileMasterNo
+        FROM
+            history h
+        WHERE
+            h.history_no = #{historyNo}
+    </select>
 
     <select id="getHistories" resultType="com.kcc.pms.domain.risk.model.dto.RiskHistoryDto">
         SELECT
@@ -212,10 +228,25 @@
             h.record_cont AS recordContent,
             m.mem_no AS memberNo,
             m.mem_nm AS memberName,
-            h.risk_no AS riskNo
+            h.risk_no AS riskNo,
+            h.fl_ms_no AS fileMasterNo
         FROM history h
                  JOIN member m ON h.mem_no = m.mem_no
         WHERE h.risk_no = #{riskNo}
         ORDER BY h.record_dt DESC
     </select>
+
+    <update id="updateHistory" parameterType="com.kcc.pms.domain.risk.model.dto.RiskHistoryDto">
+        UPDATE history
+        <set>
+            <if test="recordDate != null">
+                record_dt = #{recordDate},
+            </if>
+            <if test="recordContent != null">
+                record_cont = #{recordContent}
+            </if>
+        </set>
+        WHERE history_no = #{historyNo}
+    </update>
+
 </mapper>

@@ -21,7 +21,7 @@
             <div class="project-info"><%=titleName%></div>
             <div class="btn-actions">
                 <% if (type == null) { %>
-                <button type="button" class="action-btn" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                <button type="button" class="action-btn" data-bs-toggle="modal" data-bs-target="#historyModal">
                     <i class="fa-solid fa-check"></i>&nbsp; 위험조치
                 </button>
                 <% } %>
@@ -33,7 +33,7 @@
                     삭제
                 </button>
                 <% } %>
-                <button class="cancel-btn" onclick="history.back()">
+                <button class="cancel-btn"  onclick="window.location.href='/projects/dangers'">
                     <i class="fa-solid fa-arrow-left-long"></i> 뒤로가기
                 </button>
             </div>
@@ -200,9 +200,9 @@
 
             </form>
 
-
+        <input type="hidden" id="historyNo" name="historyNo">
         <!-- Modal -->
-        <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal fade" id="historyModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -213,12 +213,23 @@
                     <form id="historyForm" action="#" method="post">
                         <div class="modal-body">
                             <div>
+
                                 <div>
                                     <label for="record_dt">조치일자</label>
                                     <input type="date" id="record_dt" name="record_dt" class="form-control" required>
                                 </div>
                                 <label for="record_cont" class="form-label">조치내용</label>
                                 <textarea id="record_cont" name="record_cont" class="form-control" rows="4" placeholder="조치 내용을 입력하세요"></textarea>
+                                <!-- 조치 첨부파일 Dropzone 추가 -->
+                                <div id="historyZone" class="file-zone_3 mt-3" style="width: 99%">
+                                    <div class="file-section mt-3">
+                                        <div class="info-item d-flex flex-column align-items-start">
+                                            <div><label class="file-find-title">위험 조치 첨부파일</label></div>
+                                            <div id="history-insert-file-dropzone" class="dropzone"></div>
+                                            <jsp:include page="../output/file/file-task.jsp" />
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                         <div class="modal-footer">

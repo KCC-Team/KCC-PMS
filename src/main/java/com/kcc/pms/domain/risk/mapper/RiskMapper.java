@@ -25,4 +25,6 @@ public interface RiskMapper {
     int countRisks(Map<String, Object> params);
     int createHistory(RiskHistoryDto req);
     List<RiskHistoryDto> getHistories(Long riskNo);
+    RiskHistoryDto getHistoryByNo(Long historyNo);
+    int updateHistory(RiskHistoryDto req);
 }

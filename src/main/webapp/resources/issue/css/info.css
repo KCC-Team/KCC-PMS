@@ -390,14 +390,14 @@ input:disabled, select:disabled, textarea:disabled {
 }
 
 
-.file-zone_1 .select-box, .file-zone_2 .select-box {
+.file-zone_1 .select-box, .file-zone_2 .select-box, .file-zone_3 .select-box {
     margin-left: 20px;
     width: 250px;
     height: 150px;
     padding: 10px;
 }
 
-.file-zone_1 .dropzone, .file-zone_2 .dropzone {
+.file-zone_1 .dropzone, .file-zone_2 .dropzone, .file-zone_3 .dropzone {
     border-radius: 5px;
     width: 99%;
     min-height: 30px;
@@ -412,7 +412,7 @@ input:disabled, select:disabled, textarea:disabled {
     margin: 0 !important;
 }
 
-.file-zone_1 .dropzone-preview .dz-preview, .file-zone_2 .dropzone-preview .dz-preview {
+.file-zone_1 .dropzone-preview .dz-preview, .file-zone_2 .dropzone-preview .dz-preview, .file-zone_3 .dropzone-preview .dz-preview {
     width: 70px;
     margin: 5px;
 }
@@ -425,41 +425,43 @@ input:disabled, select:disabled, textarea:disabled {
     max-width: 100%;
 }
 
-.file-zone_1 .dropzone-preview .dz-preview .dz-filename, .file-zone_2 .dropzone-preview .dz-preview .dz-filename {
+.file-zone_1 .dropzone-preview .dz-preview .dz-filename, .file-zone_2 .dropzone-preview .dz-preview .dz-filename, .file-zone_3 .dropzone-preview .dz-preview .dz-filename {
     font-size: 12px;
 }
 
 .file-zone_1 .dropzone-preview .dz-preview .dz-size,
 .file-zone_1 .dropzone-preview .dz-preview .dz-error-message,
 .file-zone_2 .dropzone-preview .dz-preview .dz-size,
-.file-zone_2 .dropzone-preview .dz-preview .dz-error-message
+.file-zone_2 .dropzone-preview .dz-preview .dz-error-message,
+.file-zone_3 .dropzone-preview .dz-preview .dz-size,
+.file-zone_3 .dropzone-preview .dz-preview .dz-error-message
 {
     font-size: 10px;
 }
 
-.file-zone_1 .dropzone-preview li.dz-preview, .file-zone_2 .dropzone-preview li.dz-preview {
+.file-zone_1 .dropzone-preview li.dz-preview, .file-zone_2 .dropzone-preview li.dz-preview, .file-zone_3 .dropzone-preview li.dz-preview {
     width: 100%;
     margin: 5px 0;
 }
 
 
 
-.file-zone_1 .dropzone-preview .dz-preview .dz-image, .file-zone_2 .dropzone-preview .dz-preview .dz-image {
+.file-zone_1 .dropzone-preview .dz-preview .dz-image, .file-zone_2 .dropzone-preview .dz-preview .dz-image, .file-zone_3 .dropzone-preview .dz-preview .dz-image {
     flex: 0 0 auto;
     margin-right: 15px;
 }
 
-.file-zone_1 .dz-image img, .file-zone_2 .dz-image img {
+.file-zone_1 .dz-image img, .file-zone_2 .dz-image img, .file-zone_3 .dz-image img {
     width: 25px !important;
     height: 25px;
 }
 
-.file-zone_1 .dropzone-preview .dz-preview .dz-details, .file-zone_2 .dropzone-preview .dz-preview .dz-details {
+.file-zone_1 .dropzone-preview .dz-preview .dz-details, .file-zone_2 .dropzone-preview .dz-preview .dz-details, .file-zone_3 .dropzone-preview .dz-preview .dz-details {
     flex: 1 1 auto;
     overflow: hidden;
 }
 
-.file-zone_1 .dropzone-preview .dz-preview .dz-remove, .file-zone_2 .dropzone-preview .dz-preview .dz-remove {
+.file-zone_1 .dropzone-preview .dz-preview .dz-remove, .file-zone_2 .dropzone-preview .dz-preview .dz-remove, .file-zone_3 .dropzone-preview .dz-preview .dz-remove {
     flex: 0 0 auto;
     margin-left: 15px;
 }
@@ -467,13 +469,15 @@ input:disabled, select:disabled, textarea:disabled {
 .file-zone_1 .dropzone-preview .dz-preview .dz-filename,
 .file-zone_1 .dropzone-preview .dz-preview .dz-size,
 .file-zone_2 .dropzone-preview .dz-preview .dz-filename,
-.file-zone_2 .dropzone-preview .dz-preview .dz-size {
+.file-zone_2 .dropzone-preview .dz-preview .dz-size,
+.file-zone_3 .dropzone-preview .dz-preview .dz-filename,
+.file-zone_3 .dropzone-preview .dz-preview .dz-size{
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
 }
 
-.file-zone_1 .file-section, .file-zone_2 .file-section {
+.file-zone_1 .file-section, .file-zone_2 .file-section, .file-zone_3 .file-section {
     height: 200px;
     border: 1px solid #C5C5C5;
     padding: 10px;
@@ -625,4 +629,32 @@ input:disabled, select:disabled, textarea:disabled {
 
 .file-find-title {
     padding-top: 0px !important;
+}
+
+#record_cont {
+    margin-bottom: 15px;
+}
+
+.thumbnail {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    margin-right: 10px;
+}
+
+.history-date-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+}
+
+.edit-history-btn, .delete-history-btn {
+    font-size: 12px; /* 버튼의 폰트 크기 */
+    padding: 3px 6px; /* 버튼의 패딩 */
+    margin-right: 8px; /* 버튼 간격 */
+    cursor: pointer;
+}
+
+.history-date {
+    margin-left: 8px; /* 날짜와 버튼 간격 */
 }

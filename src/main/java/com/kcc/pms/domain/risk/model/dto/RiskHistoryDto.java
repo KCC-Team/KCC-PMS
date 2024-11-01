@@ -14,4 +14,6 @@ public class RiskHistoryDto {
     private Long riskNo;
     private Long memberNo;
     private String memberName;
+    private Long fileMasterNo;
+    private String historyFilesJson;
 }

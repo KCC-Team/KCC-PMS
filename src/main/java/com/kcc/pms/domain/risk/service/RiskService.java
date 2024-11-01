@@ -15,6 +15,9 @@ public interface RiskService {
     void updateRisk(RiskDto req, RiskFileRequestDto files, String memberName);
     List<RiskSummaryResponseDto> getRiskList(CriteriaRisk cri);
     int countRisks(CriteriaRisk cri);
-    int createHistory(RiskHistoryDto req);
+    int createHistory(RiskHistoryDto req, RiskFileRequestDto files, Long prjNo);
     List<RiskHistoryDto> getHistories(Long riskNo);
+    RiskHistoryDto getHistoryByNo(Long historyNo);
+    int updateHistory(RiskHistoryDto req,
+                      RiskFileRequestDto files, Long prjNo);
 }

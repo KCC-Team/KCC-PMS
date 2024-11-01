@@ -5,6 +5,7 @@ import com.kcc.pms.domain.common.model.vo.FileMasterNumbers;
 import com.kcc.pms.domain.common.service.CommonService;
 import com.kcc.pms.domain.risk.mapper.RiskMapper;
 import com.kcc.pms.domain.risk.model.dto.*;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -93,7 +94,10 @@ public class RiskServiceImpl implements RiskService {
     }
 
     @Override
-    public int createHistory(RiskHistoryDto req) {
+    public int createHistory(RiskHistoryDto req, RiskFileRequestDto files, Long prjNo) {
+        Long[] numbers = generateFiles(prjNo, req.getMemberName(), files);
+        Long hisFileMasterNo = numbers[2];
+        req.setFileMasterNo(hisFileMasterNo);
         return mapper.createHistory(req);
     }
 
@@ -101,6 +105,30 @@ public class RiskServiceImpl implements RiskService {
     public List<RiskHistoryDto> getHistories(Long riskNo) {
         return mapper.getHistories(riskNo);
     }
+
+    @Override
+    public RiskHistoryDto getHistoryByNo(Long historyNo) {
+        return mapper.getHistoryByNo(historyNo);
+    }
+
+    @Override
+    public int updateHistory(RiskHistoryDto req, RiskFileRequestDto files, Long prjNo) {
+        RiskHistoryDto history = mapper.getHistoryByNo(req.getHistoryNo());
+        if(files.getHistoryFiles() != null){
+            Long updateFileMasterNo = history.getFileMasterNo();
+            commonService.generateFiles(prjNo, req.getMemberName(), files.getHistoryFiles(), updateFileMasterNo);
+        }
+        Optional.ofNullable(files.getDeleteFiles())
+                .ifPresent(deleteFiles -> deleteFiles.forEach(file -> {
+                    commonService.deleteFileDetail(req.getMemberName(), file);
+                }));
+        int isPassed = mapper.updateHistory(req);
+        if (isPassed != 1) {
+            throw new RuntimeException("Risk 수정 중 오류가 발생했습니다.");
+        }
+        return isPassed;
+    }
+
 
     private static Map<String, Object> makeParams(CriteriaRisk cri) {
         Map<String, Object> params = new HashMap<>();
@@ -118,10 +146,10 @@ public class RiskServiceImpl implements RiskService {
 
 
     private Long[] generateFiles(Long projectNumber, String memberName, RiskFileRequestDto files) {
-        Long[] numbers = new Long[2];
+        Long[] numbers = new Long[3];
         List<MultipartFile> nullDisFiles = new ArrayList<>();
         List<MultipartFile> nullWorkFiles = new ArrayList<>();
-
+        List<MultipartFile> nullHisFiles = new ArrayList<>();
         if (files.getDisFiles() == null) {
             numbers[0] = commonService.fileUpload(nullDisFiles, memberName, projectNumber, null);
         }
@@ -130,11 +158,19 @@ public class RiskServiceImpl implements RiskService {
             numbers[1] = commonService.fileUpload(nullWorkFiles, memberName, projectNumber, null);
         }
 
+        if (files.getHistoryFiles() == null) {
+            numbers[2] = commonService.fileUpload(nullHisFiles, memberName, projectNumber, null);
+        }
+
         if (files.getDisFiles() != null) {
             numbers[0] = commonService.fileUpload(files.getDisFiles(), memberName, projectNumber, null);
         }
         if (files.getWorkFiles() != null) {
             numbers[1] = commonService.fileUpload(files.getWorkFiles(), memberName, projectNumber, null);
+        }
+
+        if (files.getHistoryFiles() != null) {
+            numbers[2] = commonService.fileUpload(files.getHistoryFiles(), memberName, projectNumber, null);
         }
 
         return numbers;

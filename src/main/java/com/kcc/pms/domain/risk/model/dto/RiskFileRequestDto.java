@@ -15,5 +15,6 @@ import static lombok.AccessLevel.PROTECTED;
 public class RiskFileRequestDto {
     List<MultipartFile> disFiles;
     List<MultipartFile> workFiles;
+    List<MultipartFile> historyFiles;
     List<Long> deleteFiles;
 }

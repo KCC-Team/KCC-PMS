@@ -128,21 +128,96 @@ public class RiskController {
         return ResponseEntity.ok(riskByNo);
     }
 
+//    @PostMapping("/projects/risks/history")
+//    public ResponseEntity<?> createHistory(RiskHistoryDto req,RiskFileRequestDto files, HttpSession session,
+//                                           @AuthenticationPrincipal PrincipalDetail principalDetail){
+//        req.setMemberNo(principalDetail.getMember().getMemNo());
+//        req.setMemberName(principalDetail.getMember().getMemberName());
+//
+//        System.out.println("req = " + req);
+//        System.out.println("history files = " + files);
+//
+//        Long prjNo = (Long) session.getAttribute("prjNo");
+//
+//        int result = service.createHistory(req, files, prjNo);
+//        if (result > 0) {
+//            return ResponseEntity.ok(req);
+//        } else {
+//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+//                    .body("Failed to create history record.");
+//        }
+//    }
+
+
     @PostMapping("/projects/risks/history")
-    public ResponseEntity<?> createHistory(RiskHistoryDto req, @AuthenticationPrincipal PrincipalDetail principalDetail){
+    public ResponseEntity<?> createOrUpdateHistory(
+            RiskHistoryDto req,
+            RiskFileRequestDto files,
+            HttpSession session,
+            @AuthenticationPrincipal PrincipalDetail principalDetail) {
+
         req.setMemberNo(principalDetail.getMember().getMemNo());
-        int result = service.createHistory(req);
+        req.setMemberName(principalDetail.getMember().getMemberName());
+        Long prjNo = (Long) session.getAttribute("prjNo");
+        req.setHistoryNo(req.getHistoryNo());
+
+        int result;
+        if (req.getHistoryNo() != null) {
+            // historyNo가 존재하면 업데이트 처리
+            System.out.println("update call");
+            System.out.println("update req = " + req);
+            System.out.println("update files = " + files);
+            result = service.updateHistory(req, files, prjNo);
+        } else {
+            // historyNo가 없으면 새로 생성
+            System.out.println("insert call");
+            System.out.println("insert req = " + req);
+            System.out.println("insert files = " + files);
+            result = service.createHistory(req, files, prjNo);
+        }
+
         if (result > 0) {
             return ResponseEntity.ok(req);
         } else {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("Failed to create history record.");
+                    .body("Failed to create or update history record.");
         }
     }
 
+
+    @GetMapping("/projects/risks/history/{historyNo}")
+    public ResponseEntity<?> getHistoryByNo(@PathVariable("historyNo") Long historyNo){
+        System.out.println("historyNo = " + historyNo);
+
+        RiskHistoryDto history = service.getHistoryByNo(historyNo);
+        if(history.getFileMasterNo() != null){
+            Long fileMasterNo = history.getFileMasterNo();
+            history.setHistoryFilesJson(generateFilesJson(commonService.getFileList(fileMasterNo)));
+        }
+
+        return ResponseEntity.ok(history);
+    }
+
+    @PutMapping("/projects/risks/history")
+    public void updateHistory(RiskHistoryDto req,RiskFileRequestDto files, HttpSession session,
+                              @AuthenticationPrincipal PrincipalDetail principalDetail){
+        System.out.println("req = " + req);
+        System.out.println("files = " + files);
+    }
+
+
     @GetMapping("/projects/risks/history")
     public ResponseEntity<?> getHistories(@RequestParam("riskNo") Long riskNo){
+
         List<RiskHistoryDto> histories = service.getHistories(riskNo);
+
+        for (RiskHistoryDto history : histories) {
+            if(history.getFileMasterNo() != null){
+                Long fileMasterNo = history.getFileMasterNo();
+                history.setHistoryFilesJson(generateFilesJson(commonService.getFileList(fileMasterNo)));
+            }
+        }
+
         return ResponseEntity.ok(histories);
     }
 
