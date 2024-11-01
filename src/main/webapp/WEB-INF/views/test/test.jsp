@@ -8,6 +8,7 @@
 <link rel="stylesheet" type="text/css" href="../../../resources/test/css/test.css">
 
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0"></script>
 
@@ -18,6 +19,10 @@
                 테스트 정보</label>
             <div class="button-area">
                 <div class="d-flex justify-content-end me-5">
+                    <button type="submit" class="excel-btn export-excel">
+                        &nbsp;&nbsp;&nbsp;&nbsp;엑셀받기&nbsp;&nbsp;&nbsp;&nbsp;
+                    </button>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                     <button type="submit" class="save-btn">
                         &nbsp;&nbsp;&nbsp;&nbsp;저장&nbsp;&nbsp;&nbsp;&nbsp;
                     </button>
@@ -116,7 +121,6 @@
                 </div>
                 <div class="testCase-section">
                     <table id="test-case-area">
-
                     </table>
                 </div>
             </section>

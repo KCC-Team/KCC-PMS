@@ -49,6 +49,7 @@ $(function() {
     Chart.register(ChartDataLabels);
     generateCharts();
     fetchOptions();
+    autoResize();
 
     $(".test-date").datepicker({
         dateFormat: "yy-mm-dd"
@@ -70,6 +71,15 @@ $(function() {
     $('#PMS012').change(function() {
         changeTestType($(this));
     });
+
+    $(document).on('click', '#addRow', function() {
+        if ($('#PMS012').val() === 'PMS01201') {
+            $('#test-table-body').append(generateUnitTestcase());
+            // 새로운 행이 추가되면 순번을 업데이트합니다.
+            updateTestCaseIndices();
+        }
+    });
+
 });
 
 function fetchMenuData() {
@@ -184,26 +194,64 @@ function changeTestType($this) {
                     <th rowspan="2">예상결과</th>
                     <th rowspan="2" style="width: 130px">케이스 작성일자</th>
                     <th rowspan="2" style="width: 130px">시험자</th>
-                    <th colspan="2">테스트 결과</th>
+                    <th colspan="3">테스트 결과</th>
                 </tr>
                 <tr>
                     <th style="width: 130px">시험 일자</th>
                     <th style="width: 130px">결과</th>
+                    <th style="width: 130px">발생한 결함</th>
                 </tr>
             </thead>
+            <tbody id="test-table-body">
         `;
         html += generateUnitTestcase();
+        html += `
+        </tbody>
+        <tfoot>
+            <tr>
+                <td colspan="11">
+                    <button id="addRow" style="width: 100%;">테스트 케이스 추가</button>
+                </td>
+            </tr>
+        </tfoot>
+        `;
     } else if (selectedOption === 'PMS01202') {
         html = `
-            <label class="ms-4 fw-bold fs-2 text-black">
-                   통합 테스트 등록</label>
-           <hr>
+            <thead>
+                <tr>
+                    <th class="text-nowrap" rowspan="2">순번</th>
+                    <th rowspan="2">업무처리 내용</th>
+                    <th rowspan="2">테스트</th>
+                    <th rowspan="2">관련 프로그램</th>
+                    <th rowspan="2">테스트 데이터</th>
+                    <th rowspan="2">예상결과</th>
+                    <th colspan="4">테스트 결과</th>
+                </tr>
+                <tr>
+                    <th style="width: 130px">시험자</th>
+                    <th style="width: 130px">시험 일자</th>
+                    <th style="width: 130px">결과</th>
+                    <th style="width: 130px">발생한 결함</th>
+                </tr>
+            </thead>
+            <tbody id="test-table-body">
         `;
-        html += generateIntegrationTest();
+        html += generateIntegerationTest();
+        html += `
+        </tbody>
+        <tfoot>
+            <tr>
+                <td colspan="11">
+                    <button id="addRow" style="width: 100%;">테스트 케이스 추가</button>
+                </td>
+            </tr>
+        </tfoot>
+        `;
     }
 
     $('#test-case-area').html(html);
     $('#test-case-area').show(50);
+    initializeSortable();
     // $('#dynamic-content').html(html);
     // $(document).on('click', '.tc-btn', function() {
     //     if (selectedOption === 'PMS01201') {
@@ -385,24 +433,104 @@ window.addEventListener('message', function (event) {
     }
 });
 
+function autoResize() {
+    document.addEventListener('input', function(event) {
+        if (event.target.matches('.auto-resize')) {
+            resizeTextarea(event.target);
+        }
+    });
+
+    function resizeTextarea(textarea) {
+        textarea.style.height = 'auto';
+        textarea.style.height = textarea.scrollHeight + 'px';
+
+        let tr = textarea.closest('tr');
+        if (tr) {
+            tr.style.height = textarea.scrollHeight + 'px';
+        }
+    }
+}
+
 function generateUnitTestcase() {
     testCaseIdx++;
     return `
-        <tr>
-            <td id="test_${testCaseIdx}">${testCaseIdx}</td>
-            <td><input type="text" class="form-control" name="precondition"></td>
-            <td><input type="text" class="form-control" name="testCaseDescription"></td>
-            <td><input type="text" class="form-control" name="testProcedure"></td>
-            <td><input type="text" class="form-control" name="expectedResult"></td>
+        <tr id="test_${testCaseIdx}_tr">
+            <td><span class="drag-handle" style="cursor: move;">${testCaseIdx}</span></td>
+            <td><textarea type="text" class="form-control auto-resize" name="precondition" maxlength="500"></textarea></td>
+            <td><textarea type="text" class="form-control auto-resize" name="testCaseDescription" maxlength="500"></textarea></td>
+            <td><textarea type="text" class="form-control auto-resize" name="testProcedure" maxlength="500"></textarea></td>
+            <td><textarea type="text" class="form-control auto-resize" name="expectedResult" maxlength="500"></textarea></td>
             <td><input type="text" class="form-control test-date" name="writtenDate" placeholder="yyyy-mm-dd"></td>
             <td><input type="text" id="mem_no_${testCaseIdx}" class="form-control text-center" name="writer" onClick="openTeamPopUp('${testCaseIdx}')"></td>
             <td><input type="text" class="form-control test-date" name="testDate" placeholder="yyyy-mm-dd"></td>
             <td>
                 <select>
-                    <option value="0">PASS</option>
-                    <option value="1">결함 발생</option>
+                    <option selected disabled>결과 선택</option>
+                    <option value="pass">PASS</option>
+                    <option value="fail">결함 발생</option>
                 </select>
             </td>
+            <td></td>
         </tr>
     `;
+}
+
+function generateIntegerationTest() {
+    testCaseIdx++;
+    return `
+        <tr id="test_${testCaseIdx}_tr">
+            <td><span class="drag-handle" style="cursor: move;">${testCaseIdx}</span></td>
+            <td><textarea type="text" class="form-control auto-resize" name="workContent" maxlength="500"></textarea></td>
+            <td><textarea type="text" class="form-control auto-resize" name="test" maxlength="500"></textarea></td>
+            <td><textarea type="text" class="form-control auto-resize" name="feature" maxlength="500"></textarea></td>
+            <td><textarea type="text" class="form-control auto-resize" name="testData" maxlength="500"></textarea></td>
+            <td><textarea type="text" class="form-control auto-resize" name="expectedResult" maxlength="500"></textarea></td>
+            <td><input type="text" id="mem_no_${testCaseIdx}" class="form-control text-center" name="writer" onClick="openTeamPopUp('${testCaseIdx}')"></td>
+            <td><input type="text" class="form-control test-date" name="testDate" placeholder="yyyy-mm-dd"></td>
+            <td>
+                <select>
+                    <option selected disabled>결과 선택</option>
+                    <option value="pass">PASS</option>
+                    <option value="fail">결함 발생</option>
+                </select>
+            </td>
+            <td></td>
+        </tr>
+    `;
+}
+
+function initializeSortable() {
+    let tbody = document.getElementById('test-table-body');
+    let sortable = Sortable.create(tbody, {
+        handle: '.drag-handle',
+        animation: 150,
+        forceFallback: true,
+        fallbackOnBody: true,
+        fallbackTolerance: 5,
+        onEnd: function (evt) {
+            updateTestCaseIndices();
+        },
+    });
+}
+
+function updateTestCaseIndices() {
+    const rows = document.querySelectorAll('#test-table-body tr');
+    rows.forEach((row, index) => {
+        // 순번 셀 업데이트
+        const seqCell = row.querySelector('td:first-child .drag-handle');
+        if (seqCell) {
+            seqCell.textContent = index + 1;
+        }
+        // 행의 ID 업데이트
+        row.id = `test_${index + 1}_tr`;
+
+        // 기타 필요한 ID나 name 속성 업데이트
+        const writerInput = row.querySelector('input[name="writer"]');
+        if (writerInput) {
+            writerInput.id = `mem_no_${index + 1}`;
+            writerInput.setAttribute('onClick', `openTeamPopUp('${index + 1}')`);
+        }
+    });
+    // 전역 변수 업데이트
+    testCaseIdx = rows.length;
 }

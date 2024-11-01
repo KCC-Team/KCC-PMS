@@ -3,6 +3,12 @@ label {
 }
 
 table {
+    border: 1px solid #919191;
+    table-layout: auto;
+}
+
+td, th {
+    padding: 5px;
     border: 1px solid #ccc;
 }
 
@@ -84,6 +90,7 @@ td textarea {
     height: 45px;
     padding: 10px;
     resize: none;
+    overflow: hidden;
 }
 
 .type {
@@ -253,7 +260,9 @@ td textarea {
 
 .testCase-section {
     width: 93.8%;
+    height: 430px;
     margin-left: 41px;
+    overflow-y: auto;
     border: 1px solid #ccc;
 }
 
@@ -282,4 +291,12 @@ td textarea {
     padding-bottom: 5px;
     float: left;
     color: #000;
+}
+
+#addRow {
+    background-color: #EBEEF3;
+}
+
+#addRow:hover {
+    background-color: #adadad;
 }
