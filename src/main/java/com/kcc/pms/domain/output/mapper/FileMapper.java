@@ -14,6 +14,7 @@ public interface FileMapper {
     List<String> findFilesDetails(Long fileMasterNumber);
     int deleteFileDetails(String deleteName, Long fileMasterNumber);
     List<FileResponseDto> getFileDetailsRes(Long fileMasterNumber);
+    void deleteFileMaster(Long fileMasterNumber);
     Long findFileMasterNumber(Long outputNumber);
     String findFileDetailTitle(Long filesDetailNumber);
     int deleteFileDetail(String deleteName, Long fileDetailNumber);

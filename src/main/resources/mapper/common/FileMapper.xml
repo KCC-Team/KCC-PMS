@@ -18,7 +18,7 @@
                 #{fileSize, jdbcType=VARCHAR}, #{fileMasterNumber, jdbcType=NUMERIC}, #{registerId, jdbcType=VARCHAR}, sysdate)
     </insert>
 
-    <select id="findFilesDetails" parameterType="long" resultType="list">
+    <select id="findFilesDetails" parameterType="long" resultType="string">
         SELECT file_path AS filePath
         FROM filedetail
         WHERE fl_ms_no = #{fileMasterNumber}
