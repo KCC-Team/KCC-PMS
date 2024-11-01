@@ -467,7 +467,22 @@ $('#addHistoryBtn').click(function (e) {
     });
 });
 
-
+function deleteHistory(historyNo) {
+    if (confirm("정말로 이 조치 이력을 삭제하시겠습니까?")) {
+        $.ajax({
+            url: '/projects/risks/history/' + historyNo,
+            type: 'DELETE',
+            success: function(response) {
+                alert(response);
+                getHistories();
+            },
+            error: function(xhr, status, error) {
+                console.error("삭제 중 오류가 발생했습니다:", error);
+                alert("조치 이력 삭제에 실패했습니다. 다시 시도해주세요.");
+            }
+        });
+    }
+}
 
 function getHistories(){
     $.ajax({
@@ -483,18 +498,26 @@ function getHistories(){
                 const formattedDate = item.recordDate.substring(0, 10);
                 const filesHtml = generateFileLinks(item.historyFilesJson, item.historyNo);
 
+
+                let editDeleteButtons = '';
+                if (item.memberNo == loginMemberNo) {
+                    editDeleteButtons = `
+                        <button class="edit-history-btn" data-history-no="${item.historyNo}">수정</button>
+                        <button type="button" class="delete-history-btn" data-history-no="${item.historyNo}">삭제</button>
+                    `;
+                }
+
                 const historyItemHtml = `
                     <div class="history-item">
                         <div class="history-header">
                             <div class="history-name">${item.memberName}</div>
                             <div class="history-date-wrapper">
-                                <button class="edit-history-btn" data-history-no="${item.historyNo}">수정</button>
-                                <button class="delete-history-btn" data-history-no="${item.historyNo}">삭제</button>
+                                ${editDeleteButtons}
                                 <div class="history-date">${formattedDate}</div>
                             </div>
                         </div>
                         <div class="history-content">
-                            ${item.recordContent}
+                            <p>${item.recordContent}</p>
                         </div>
                         <div class="history-files">
                             ${filesHtml}
@@ -502,30 +525,34 @@ function getHistories(){
                     </div>
                 `;
                 $('.history-items').append(historyItemHtml);
+
+                // 삭제 버튼 클릭 이벤트 리스너 추가
+                $('.delete-history-btn').on('click', function() {
+                    const historyNo = $(this).data('history-no');
+                    deleteHistory(historyNo);
+                });
+
             });
 
-            // 삭제 버튼 클릭 이벤트 리스너 추가
-            $('.delete-history-btn').on('click', function() {
-                const historyNo = $(this).data('history-no');
-                deleteHistory(historyNo);
-            });
         }
     });
 }
 
 
 
-// 파일 링크를 생성하는 함수
 function generateFileLinks(filesJson) {
     const files = JSON.parse(filesJson || '[]');
-    return files.map(file => {
+    let imageFilesHtml = '';
+    let documentFilesHtml = '';
+
+    files.forEach(file => {
         const fileExtension = file.filePath.split('.').pop().toLowerCase();
         const isImage = ['jpg', 'jpeg', 'png', 'gif', 'jfif'].includes(fileExtension);
         const fileSizeKB = (file.fileSize / 1024).toFixed(2); // KB 단위로 변환
 
         if (isImage) {
-            return `
-                <div class="file-item">
+            imageFilesHtml += `
+                <div class="file-item image-file">
                     <a href="${file.filePath}" target="_blank">
                         <img src="${file.filePath}" class="thumbnail" alt="${file.fileName}">
                     </a>
@@ -536,18 +563,21 @@ function generateFileLinks(filesJson) {
                 </div>
             `;
         } else {
-            return `
-                <div class="file-item">
+            documentFilesHtml += `
+                <div class="file-item document-file">
                     <a href="${file.filePath}" target="_blank">
                         <i class="fas fa-file"></i> ${file.fileName}
                     </a>
-                    <div class="file-info">
-                        <div class="file-size">${fileSizeKB} KB</div>
-                    </div>
+                    <div class="file-size">${fileSizeKB} KB</div>
                 </div>
             `;
         }
-    }).join('');
+    });
+
+    return `
+        <div class="image-files-container">${imageFilesHtml}</div>
+        <div class="document-files-container">${documentFilesHtml}</div>
+    `;
 }
 
 

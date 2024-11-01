@@ -249,4 +249,7 @@
         WHERE history_no = #{historyNo}
     </update>
 
+    <delete id="deleteByNo">
+        DELETE FROM history where history_no = #{historyNo}
+    </delete>
 </mapper>

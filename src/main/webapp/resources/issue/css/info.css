@@ -628,6 +628,7 @@ input:disabled, select:disabled, textarea:disabled {
 .file-area {
     margin-top: 10px;
     height: 300px;
+    max-width: 815px;
 }
 
 .file-find-title {
@@ -681,8 +682,7 @@ input:disabled, select:disabled, textarea:disabled {
 
 .history-files {
     display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
+    flex-direction: column;
 }
 
 .file-item {
@@ -715,3 +715,53 @@ input:disabled, select:disabled, textarea:disabled {
     font-size: 0.8em;
     color: #777;
 }
+
+.history-content{
+    word-break: break-word;
+    margin: 0;
+    padding: 5px;
+    box-sizing: border-box;
+}
+
+
+
+
+
+.image-files-container {
+    display: flex;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    margin-bottom: 10px;
+}
+
+.document-files-container {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.file-item.image-file {
+    margin-right: 10px;
+}
+
+.file-item.document-file {
+    width: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: flex;
+}
+
+.file-item.document-file .file-size {
+    margin-left: 5px;
+    flex-shrink: 0;
+}
+
+.file-item.document-file a {
+    display: inline-block;
+    max-width: calc(100% - 50px);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
