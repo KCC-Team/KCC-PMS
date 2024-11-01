@@ -1,7 +1,4 @@
 let deletedFiles = [];
-const imageExtensions = [
-    'jpg', 'jpeg', 'png', 'gif', 'bmp', 'tiff', 'svg', 'webp',
-];
 
 document.addEventListener('DOMContentLoaded', function() {
     if (Dropzone.instances.length > 0) {

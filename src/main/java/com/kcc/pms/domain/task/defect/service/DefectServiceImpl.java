@@ -60,11 +60,11 @@ public class DefectServiceImpl implements DefectService {
                 int isPassed = defectMapper.updateFileMasterNumbers(no, null, Number);
             }
         } else {
-            Long[] Numbers = generateFiles(prgNo, MemberName, files);
-            if (Numbers[0] == null || Numbers[1] == null) {
+            Long[] filesMasterNos = generateFiles(prgNo, MemberName, files);
+            if (filesMasterNos[0] == null && filesMasterNos[1] == null) {
                 return;
             }
-            int isPassed = defectMapper.updateFileMasterNumbers(no, Numbers[0], Numbers[1]);
+            int isPassed = defectMapper.updateFileMasterNumbers(no, filesMasterNos[0], filesMasterNos[1]);
             if (isPassed != 1) {
                 throw new RuntimeException("Defect 수정 중 오류가 발생했습니다.");
             }

@@ -54,7 +54,7 @@ select {
 .button-area {
     position: fixed;
     top: 90px;
-    right: 120px;
+    right: 60px;
     display: flex;
     justify-content: flex-end;
     padding: 10px;
