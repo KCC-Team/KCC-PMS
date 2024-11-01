@@ -104,6 +104,10 @@ document.addEventListener('DOMContentLoaded', function() {
         } else {
             insertData(dropzone1, dropzone2, $form);
         }
+        if (window.opener && !window.opener.closed) {
+            let event = new Event('defectSaved');
+            window.opener.dispatchEvent(event);
+        }
     });
 
     $('.del-btn').on('click', function(e) {
@@ -266,7 +270,7 @@ function insertData(dropzone_dis, dropzone_work, $form) {
         processData: false,
         success: function(response) {
             // 성공 로직
-            window.location.href = response;
+            window.location.href = response + "?toastMsg=defectSaved";
         },
         error: function(response) {
             console.error(response);
@@ -317,7 +321,7 @@ function updateData(dropzone_dis, dropzone_work, $form, defectNumber) {
                 });
             }
             deleteFiles = [];
-            window.location.href = response + "?toastMsg=defectDeleted";
+            window.location.href = response + "?toastMsg=defectSaved";
         },
         error: function(response) {
             console.error(response);
