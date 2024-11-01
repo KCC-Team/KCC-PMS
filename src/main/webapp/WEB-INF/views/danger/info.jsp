@@ -152,16 +152,6 @@
                                     </div>
                                 </div>
                             </div>
-
-                            <div class="file-zone_2 mt-3" style="width: 99%">
-                                <div class="file-section mt-3">
-                                    <div class="info-item d-flex flex-column align-items-start">
-                                        <div><label class="file-find-title">위험 조치 첨부파일</label></div>
-                                        <div id="risk-insert-file-dropzone_2" class="dropzone"></div>
-                                        <jsp:include page="../output/file/file-task.jsp" />
-                                    </div>
-                                </div>
-                            </div>
                         </div>
 
                     </div> <!-- left_section END -->
