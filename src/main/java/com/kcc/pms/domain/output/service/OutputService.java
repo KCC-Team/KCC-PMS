@@ -9,12 +9,12 @@ import java.util.List;
 
 public interface OutputService {
     List<FileStructResponseDto> findList(Long projectNo, String option);
-    void insertOutput(Long projectNo, String memberName, String title, List<FileStructResponseDto> res, List<MultipartFile> files);
+    void insertOutput(Long projectNo, String memberName, String title, String note, List<FileStructResponseDto> res, List<MultipartFile> files);
     void insertOutputFiles(Long projectNo, String memberName, Long outputNo, List<MultipartFile> files);
     Long updateOutput(Long projectNo, List<FileStructResponseDto> res, String option, Long fileMasterNo);
-    void updateOutputInfo(String title, Long outputNo);
+    void updateOutputInfo(String title, String note, Long outputNo);
     void deleteOutput(Long outputNo);
-    OutputResponseDto findOutput(Long projectNo, Long outputNo);
+    OutputResponseDto findOutput(Long outputNo);
     List<DeleteOutputResponseDto> findDeleteOutputs(Long outputNo);
     void deleteOutputFiles(String memberName, List<Long> deleteOutputs);
 }

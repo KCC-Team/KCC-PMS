@@ -31,9 +31,9 @@ public class OutputServiceImpl implements OutputService {
 
     @Transactional
     @Override
-    public void insertOutput(Long projectNo, String memberName, String title, List<FileStructResponseDto> res, List<MultipartFile> files) {
+    public void insertOutput(Long projectNo, String memberName, String title, String note, List<FileStructResponseDto> res, List<MultipartFile> files) {
         Long outputNo = updateOutput(projectNo, res, null, commonService.fileUpload(files, memberName, projectNo, null));
-        outputMapper.updateOutputInfo(title, outputNo);
+        outputMapper.updateOutputInfo(title, note, outputNo);
     }
 
     @Override
@@ -80,8 +80,8 @@ public class OutputServiceImpl implements OutputService {
     }
 
     @Override
-    public void updateOutputInfo(String title, Long outputNo) {
-        outputMapper.updateOutputInfo(title, outputNo);
+    public void updateOutputInfo(String title, String note, Long outputNo) {
+        outputMapper.updateOutputInfo(title, note, outputNo);
     }
 
     @Override
@@ -90,9 +90,8 @@ public class OutputServiceImpl implements OutputService {
     }
 
     @Override
-    public OutputResponseDto findOutput(Long projectNo, Long outputNo) {
-        OutputResponseDto outputNotFound = outputMapper.findOutput(projectNo, outputNo).orElseThrow(() -> new RuntimeException("Output not found"));
-        return outputNotFound;
+    public OutputResponseDto findOutput(Long outputNo) {
+        return outputMapper.findOutput( outputNo).orElseThrow(() -> new RuntimeException("Output not found"));
     }
 
     @Override
