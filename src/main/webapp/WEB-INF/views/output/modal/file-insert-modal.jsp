@@ -9,6 +9,10 @@
         background-color: #F6F6F6;
     }
 
+    .note-area textarea, .txt-area {
+        resize: none !important;
+    }
+
     .modal-dialog-in {
         max-width: 800px !important;
         margin: auto;
@@ -120,7 +124,7 @@
     }
 
     .modal-body-in .file-zone .file-section {
-        height: 100%;
+        height: 398px;
         border: 1px solid #C5C5C5;
         padding: 10px;
         overflow-y: auto;
@@ -145,11 +149,11 @@
                     <section class="info-section">
                         <div class="d-flex justify-content-between">
                             <section class="info-item p-2 me-3">
+                                <div class="me-5">
+                                    <div><label class="text-nowrap">제목&nbsp;&nbsp;&nbsp;<span class="es-star">*</span></label></div>
+                                    <span><textarea name="title" class="txt-area" style="width: 320px"></textarea></span>
+                                </div>
                                 <div class="info-item d-flex flex-column align-items-start">
-                                    <div class="d-flex justify-content-start">
-                                        <div><label class="text-nowrap">제목&nbsp;&nbsp;&nbsp;<span class="es-star">*</span></label></div>
-                                        <span><textarea name="title" class="txt-area" style="width: 270px"></textarea></span>
-                                    </div>
                                     <div>
                                         <br>
                                         <div><label>파일 위치&nbsp;&nbsp;&nbsp;<label class="es-star">*</label></label></div>
@@ -161,7 +165,11 @@
                                 </div>
                             </section>
                             <section class="file-zone w-100 p-2">
-                                <div class="file-section" style="height: 506px">
+                                <div class="note-area">
+                                    <div><label class="text-nowrap">비고</label></div>
+                                    <span><textarea name="note" class="txt-area" style="width: 400px; height: 95px"></textarea></span>
+                                </div>
+                                <div class="file-section">
                                     <div class="info-item d-flex flex-column align-items-start">
                                         <div class="mb-2"><label>파일 선택</label></div>
                                         <div id="insert-file-dropzone" class="dropzone"></div>
@@ -253,7 +261,6 @@
             isSaved = true;
         });
 
-        // 이후 다른 필드 초기화 처리 로직도 추가
         $('#insertModal').on('hidden.bs.modal', function() {
             if (!isSaved) {
                 selectedOptions = [];
@@ -299,8 +306,7 @@
     function insertData(dropzone, $form) {
 
         if (!selectedNode) {
-            console.log('노드를 선택해주세요.');
-            alert('노드를 선택해주세요.');
+            toast.error('파일 위치를 선택해주세요.');
             return;
         }
 
@@ -348,9 +354,8 @@
                         file.status = Dropzone.SUCCESS;
                         dropzone.emit("complete", file);
                     });
-                    alert('산출물이 성공적으로 저장되었습니다.');
                 }
-                window.location.href = '/projects/outputs';
+                window.location.href = '/projects/outputs?no=${selectedNodeId}&toastMsg=산출물 파일이 성공적으로 저장되었습니다.';
             },
             error: function(response) {
                 console.error(response);

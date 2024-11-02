@@ -21,6 +21,10 @@ $(function() {
                     'check_callback': true
                 },
                 'plugins': ["types", "dnd", "wholerow", "search", "contextmenu"],
+                'search': {
+                    'show_only_matches': true,
+                    'show_only_matches_children': true
+                },
                 'types': {
                     "default": {
                         "icon": "fa fa-folder text-warning"
@@ -31,6 +35,9 @@ $(function() {
                 }
             });
             id = findMaxId(window.treeData[0]);
+            $('.jstree-files').jstree(true).settings.dnd.is_draggable = function () {
+                return false;
+            };
         },
         error: function () {
             toast.push({
