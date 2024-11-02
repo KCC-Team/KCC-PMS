@@ -34,12 +34,12 @@
                     </div>
                     <br>
                     <div class="d-flex justify-content-start">
-                        <div class="fw-bold me-3"><label style="font-size: 17px;">폴더명</label></div>
-                        <div class="me-3">
-                            <span><input id="input-area-folder" class="txt-area" type="text" /></span>
+                        <div class="fw-bold me-3 text-nowrap"><label style="font-size: 17px;">폴더명</label></div>
+                        <div class="me-3 w-100">
+                            <span><input id="input-area-folder" class="txt-area w-100 p-1" type="text" /></span>
                         </div>
                         <div>
-                            <button type="button" class="custom-button" id="add-folder-btn">&nbsp;&nbsp;&nbsp;추가&nbsp;&nbsp;&nbsp;</button>
+                            <button type="button" class="custom-button text-nowrap" id="add-folder-btn">&nbsp;&nbsp;&nbsp;추가&nbsp;&nbsp;&nbsp;</button>
                         </div>
                     </div>
                 </section>
@@ -55,7 +55,6 @@
 <script>
     $('#save-folder').on('click', function() {
         let treeData = $('.jstree-folder-in').jstree(true).get_json('#', { flat: false });
-        console.log(treeData);
         let updatedTreeData = transformTreeData(treeData);
         $.ajax({
             url: '/projects/outputs/api/update?option=y',
