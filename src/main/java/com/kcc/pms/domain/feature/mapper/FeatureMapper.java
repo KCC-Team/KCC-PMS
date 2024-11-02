@@ -25,4 +25,7 @@ public interface FeatureMapper {
     int countFeatures(@Param("systemNo") Long systemNo,
                       @Param("featClassCd") String featClassCd,
                       @Param("prjNo") Long prjNo, @Param("cri") CriteriaY cri);
+    List<FeatureMemberPrgResponseDto> getMemberProgress(Long prjNo);
+    MemberFeaturesResponseDto getMemberFeatures(@Param("memberNo") Long memberNo, @Param("prjNo") Long prjNo);
+    List<MemberFeatGraphResponseDto> getMemberFeatureGraph(@Param("prjNo") Long prjNo, @Param("memberNo") Long memberNo);
 }

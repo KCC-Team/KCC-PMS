@@ -1,5 +1,10 @@
 var firstGrid;
-
+var memberGrid;
+let memberFullData = [];
+let featureGrid; //멤버 기능 목록
+let cachedMemberNo = null;
+let cachedMemberName = null;
+let chartInstances = []; // 차트 인스턴스를 저장할 배열
 function openFeaturePopup(featureNo) {
     let url;
     if(featureNo != null){
@@ -14,6 +19,21 @@ function openFeaturePopup(featureNo) {
 
 document.addEventListener("DOMContentLoaded", function() {
     document.getElementById('toggle-btn').click();
+
+    setTimeout(function() {
+        // 그리드 초기화 또는 데이터 로드 함수 호출
+        initGrid().then(() => {
+            getProjectFeatureProgressSummary();
+        });
+
+        initMemberGrid().then(() => {
+            getMemberProgress();
+        });
+
+        initDelayGrid();
+
+        getParentSystems(1, 3);
+    }, 300);
 });
 
 
@@ -30,6 +50,11 @@ $(document).ready(function (){
             setSystemPath(event.data.systemNo);
             fetchGridData(1);
             getParentSystems(1,3);
+            getMemberProgress();
+        } else if (event.data.status === 'update'){
+            getParentSystems(1,3);
+            getMemberProgress();
+            loadMemberFeatures(cachedMemberNo, cachedMemberName);
         }
     }, false);
 
@@ -52,15 +77,7 @@ $(document).ready(function (){
     $("#system-select span:first").text("시스템 선택");
 
 
-    initGrid().then(() => {
-        getProjectFeatureProgressSummary();
-    });
 
-    initMemberGrid();
-
-    initDelayGrid();
-
-    getParentSystems(1,3);
 
     setPageInfo(4);
 });
@@ -129,16 +146,13 @@ function initGrid(){
         firstGrid.setConfig({
             target: $('[data-ax5grid="first-grid"]'),
             columns: [
-                {key: "featureId", label: "기능ID", align: "center", width: 70, formatter: function() {
+                {key: "featureTitle", label: "기능명", width: 100, align: "center", formatter: function (){
                         var featureNo = this.item.featureNo; // featureNo을 이용
                         var title = this.value;
                         console.log("기능NO: " + featureNo);
                         return '<a href="#" onclick="openFeaturePopup(' + featureNo + ')" class="danger-title" style="color: #0044cc; font-size: 13px; font-weight: bold; text-decoration: none;">' + title + '</a>';
                     }},
-                {key: "featureTitle", label: "기능명", width: 100, align: "center", formatter: function (){
-                        return '<span style="font-size: 13px;">' + this.value + '</span>';
-                    }},
-                {key: "status", label: "상태", width: 70, align: "center", formatter: function (){
+                {key: "status", label: "상태", width: 100, align: "center", formatter: function (){
                         var status = this.value.trim();
                         var statusClass = 'status-label ';
 
@@ -161,13 +175,13 @@ function initGrid(){
                 {key: "memberName", label: "작업자", width: 70, align: "center" , formatter: function (){
                         return '<span style="font-size: 13px;">' + (this.value ? this.value : '-') + '</span>';
                     }},
-                {key: "system", label: "시스템/업무", width: 82, align: "center", formatter: function (){
+                {key: "system", label: "시스템/업무", width: 150, align: "center", formatter: function (){
                         return '<span style="font-size: 13px;">' + (this.value ? this.value : '-') + '</span>';
                     }},
-                {key: "progress", label: "진척도", width: 70, align: "center", formatter: function (){
+                {key: "progress", label: "진척도", width: 50, align: "center", formatter: function (){
                         return '<span style="font-size: 13px;">' + this.value + '</span>';
                     }},
-                {key: "remainingDays", label: "남은일수", width: 70, align: "center", formatter: function (){
+                {key: "remainingDays", label: "남은일수", width: 60, align: "center", formatter: function (){
                         return '<span style="font-size: 13px;">' + this.value + '</span>';
                     }}
             ],
@@ -246,14 +260,10 @@ function initDelayGrid(){
     delayGrid.setConfig({
         target: $('[data-ax5grid="delay-grid"]'),
         columns: [
-            {key: "id", label: "기능ID", align: "center", width: 70, formatter: function() {
-                    var title = this.value;
-                    return '<a href="/projects/issueInfo?title=' + encodeURIComponent(title) + '" class="danger-title" style="color: #0044cc; font-size: 13px; font-weight: bold; text-decoration: none;">' + title + '</a>';
-                }},
             {key: "name", label: "기능명", width: 100, align: "center", formatter: function (){
                     return '<span style="font-size: 13px;">' + this.value + '</span>';
                 }},
-            {key: "status", label: "상태", width: 70, align: "center", formatter: function (){
+            {key: "status", label: "상태", width: 100, align: "center", formatter: function (){
                     var status = this.value;
                     var statusClass = 'status-label ';  // 기본 클래스
 
@@ -271,7 +281,7 @@ function initDelayGrid(){
             {key: "priority", label: "작업자", width: 70, align: "center" , formatter: function (){
                     return '<span style="font-size: 13px;">' + this.value + '</span>';
                 }},
-            {key: "register", label: "시스템/업무", width: 83, align: "center", formatter: function (){
+            {key: "register", label: "시스템/업무", width: 120, align: "center", formatter: function (){
                     return '<span style="font-size: 13px;">' + this.value + '</span>';
                 }},
             {key: "due_date", label: "진척도", width: 68, align: "center", formatter: function (){
@@ -284,60 +294,359 @@ function initDelayGrid(){
     });
 
     var delayData = [
-        {id: "1501", name: "인력관련", priority: "보통", status: "발생전", register: "A시스템", due_date: "70%", completion_date: "2024-06-12", delaydays:3},
-        {id: "1501", name: "인력관련", priority: "보통", status: "발생전", register: "이한희", due_date: "70%", completion_date: "2024-06-12", delaydays:3},
-        {id: "1501", name: "인력관련", priority: "긴급", status: "발생전", register: "김연호", due_date: "70%", completion_date: "2024-06-12", delaydays:3},
-        {id: "1501", name: "일정관련", priority: "즉시", status: "진행", register: "김연호", due_date: "70%", completion_date: "2024-06-12", delaydays:3},
-        {id: "1501", name: "인력관련", priority: "보통", status: "발생전", register: "A시스템", due_date: "70%", completion_date: "2024-06-12", delaydays:3},
-        {id: "1501", name: "인력관련", priority: "보통", status: "발생전", register: "이한희", due_date: "70%", completion_date: "2024-06-12", delaydays:3},
-        {id: "1501", name: "인력관련", priority: "긴급", status: "발생전", register: "김연호", due_date: "70%", completion_date: "2024-06-12", delaydays:3},
-        {id: "1501", name: "일정관련", priority: "즉시", status: "진행", register: "김연호", due_date: "70%", completion_date: "2024-06-12", delaydays:3},
+        {name: "인력관련", priority: "보통", status: "발생전", register: "A시스템", due_date: "70%", completion_date: "2024-06-12", delaydays:3},
+        {name: "인력관련", priority: "보통", status: "발생전", register: "이한희", due_date: "70%", completion_date: "2024-06-12", delaydays:3},
+        {name: "인력관련", priority: "긴급", status: "발생전", register: "김연호", due_date: "70%", completion_date: "2024-06-12", delaydays:3},
+        {name: "일정관련", priority: "즉시", status: "진행", register: "김연호", due_date: "70%", completion_date: "2024-06-12", delaydays:3},
+        {name: "인력관련", priority: "보통", status: "발생전", register: "A시스템", due_date: "70%", completion_date: "2024-06-12", delaydays:3},
+        {name: "인력관련", priority: "보통", status: "발생전", register: "이한희", due_date: "70%", completion_date: "2024-06-12", delaydays:3},
+        {name: "인력관련", priority: "긴급", status: "발생전", register: "김연호", due_date: "70%", completion_date: "2024-06-12", delaydays:3},
+        {name: "일정관련", priority: "즉시", status: "진행", register: "김연호", due_date: "70%", completion_date: "2024-06-12", delaydays:3},
     ]
 
     delayGrid.setData(delayData);
 }
 
 function initMemberGrid(){
-    var memberGrid = new ax5.ui.grid();
+    return new Promise((resolve) => {
+        memberGrid = new ax5.ui.grid();
 
-    memberGrid.setConfig({
-        target: $('[data-ax5grid="member-grid"]'),
-        columns: [
-            {key: "memberName", label: "작업자", align: "center", width: 120, formatter: function() {
-                    var title = this.value;
-                    return '<a href="/projects/issueInfo?title=' + encodeURIComponent(title) + '" class="danger-title" style="color: #0044cc; font-size: 13px; font-weight: bold; text-decoration: none;">' + title + '</a>';
-                }},
-            {key: "total", label: "전체건", width: 70, align: "center", formatter: function (){
-                    return '<span style="font-size: 13px;">' + this.value + '</span>';
-                }},
-            {key: "continue", label: "진행건", width: 70, align: "center"},
-            {key: "delay", label: "지연건", width: 70, align: "center", formatter: function (){
-                    return '<span style="font-size: 13px; color: red;">' + this.value + '</span>';
-                }},
-            {key: "team", label: "소속팀", width: 128, align: "center", formatter: function (){
-                    return '<span style="font-size: 13px;">' + this.value + '</span>';
-                }},
-            {key: "progress", label: "진척도", width: 70, align: "center", formatter: function (){
-                    return '<span style="font-size: 13px;">' + this.value + '</span>';
-                }}
-        ]
+        memberGrid.setConfig({
+            target: $('[data-ax5grid="member-grid"]'),
+            columns: [
+                {
+                    key: "memberName", label: "작업자", align: "center", width: 100, formatter: function () {
+                        var title = this.value;
+                        var memberNo = this.item.memberNo;
+                        return '<a href="#" onclick="openMemberModal(' + memberNo + ', \'' + title + '\')" class="danger-title" style="color: #0044cc; font-size: 13px; font-weight: bold; text-decoration: none;">' + title + '</a>';
+                    }
+                },
+                {
+                    key: "totalFeatureCount", label: "전체건", width: 60, align: "center", formatter: function () {
+                        return '<span style="font-size: 13px;">' + this.value + '</span>';
+                    }
+                },
+                {
+                    key: "completedCount", label: "완료건", width: 60, align: "center", formatter: function () {
+                        return '<span style="font-size: 13px;">' + this.value + '</span>';
+                    }
+                },
+                {key: "inProgressCount", label: "진행건", width: 60, align: "center"},
+                {
+                    key: "delayedCount", label: "지연건", width: 60, align: "center", formatter: function () {
+                        return '<span style="font-size: 13px; color: red;">' + this.value + '</span>';
+                    }
+                },
+                {
+                    key: "teamName", label: "소속팀", width: 120, align: "center", formatter: function () {
+                        return '<span style="font-size: 13px;">' + this.value + '</span>';
+                    }
+                },
+                {
+                    key: "avgProgress", label: "진척도", width: 70, align: "center", formatter: function () {
+                        return '<span style="font-size: 13px;">' + this.value + '</span>';
+                    }
+                }
+            ]
+        });
+        resolve();
+    });
+}
+
+
+function openMemberModal(memberNo, memberName) {
+    cachedMemberNo = memberNo;
+    cachedMemberName = memberName;
+
+    $('#modalMemberName').text(memberName + ' 기능 목록');
+    $('#memberFeatureModal').show();
+
+    if (!featureGrid) {
+        featureGrid = new ax5.ui.grid();
+        featureGrid.setConfig({
+            target: $('[data-ax5grid="feature-grid"]'),
+            columns: [
+                {
+                    key: "featTitle",
+                    label: "기능명",
+                    width: 135,
+                    align: "center",
+                    formatter: function () {
+                        var featureNo = this.item.featNo;
+                        var title = this.value;
+                        return '<a href="#" onclick="openFeaturePopup(' + featureNo + ')" class="danger-title" style="color: #0044cc; font-size: 13px; font-weight: bold; text-decoration: none;">' + title + '</a>';
+                    }
+                },
+                { key: "system", label: "시스템/업무", width: 160, align: "center" },
+                {
+                    key: "status", label: "상태", width: 120, align: "center",
+                    formatter: function () {
+                        var status = this.value.trim();
+                        var statusClass = 'status-label ';
+
+                        if (status === '신규') statusClass += 'status-new';
+                        else if (status === '개발중') statusClass += 'status-in-progress';
+                        else if (status === '고객확인') statusClass += 'status-client-check';
+                        else if (status === '개발완료') statusClass += 'status-complete';
+                        else if (status === '단위테스트완료') statusClass += 'status-unit-test-complete';
+                        else if (status === 'PL확인') statusClass += 'status-pl-check';
+
+                        return '<span class="' + statusClass + '" style="font-size: 13px;">' + status + '</span>';
+                    }
+                },
+                { key: "preStartDate", label: "예정 시작일", width: 100, align: "center" },
+                { key: "preEndDate", label: "예정 종료일", width: 100, align: "center" },
+                { key: "startDate", label: "시작일", width: 100, align: "center" },
+                { key: "endDate", label: "종료일", width: 100, align: "center" },
+                {
+                    key: "priority",
+                    label: "우선순위",
+                    width: 80,
+                    align: "center",
+                    formatter: function () {
+                        var priority = this.value.trim();
+                        var color = "";
+                        switch (priority) {
+                            case '즉시': color = '#ff0000'; break; // 빨강
+                            case '긴급': color = '#ff4500'; break; // 주황
+                            case '높음': color = '#ffa500'; break; // 노랑
+                            case '보통': color = '#00bfff'; break; // 파랑
+                            case '낮음': color = '#808080'; break; // 회색
+                        }
+                        return '<span style="color:' + color + '; font-size: 13px;">' + priority + '</span>';
+                    }
+                },
+                {
+                    key: "difficulty",
+                    label: "난이도",
+                    width: 80,
+                    align: "center",
+                    formatter: function () {
+                        var difficulty = this.value.trim();
+                        var color = "";
+                        switch (difficulty) {
+                            case '매우높음': color = '#8b0000'; break; // 진한 빨강
+                            case '높음': color = '#ff4500'; break; // 주황
+                            case '보통': color = '#ffa500'; break; // 노랑
+                            case '낮음': color = '#00bfff'; break; // 파랑
+                            case '매우낮음': color = '#808080'; break; // 회색
+                        }
+                        return '<span style="color:' + color + '; font-size: 13px;">' + difficulty + '</span>';
+                    }
+                },
+                { key: "className", label: "기능 분류", width: 100, align: "center" },
+                { key: "progress", label: "진척도", width: 80, align: "center", formatter: function() { return this.value + "%"; } },
+            ]
+        });
+    }
+
+    loadMemberFeatures(memberNo, memberName);
+}
+
+
+function loadMemberFeatures(memberNo, memberName) {
+    $.ajax({
+        url: '/projects/features/member/' + memberNo,
+        type: 'GET',
+        success: function(response) {
+            console.log(response);
+            const overallProgress = response.overallProgress || 0;
+            $('.prg-val').text(overallProgress + '%');
+            $('#memberFeatBar').attr('value', overallProgress);
+
+            // 기능 목록 데이터를 `features` 배열에서 가져옴
+            const formattedData = response.features.map(item => ({
+                ...item,
+                preStartDate: item.preStartDate ? formatDate(item.preStartDate) : '-',
+                preEndDate: item.preEndDate ? formatDate(item.preEndDate) : '-',
+                startDate: item.startDate ? formatDate(item.startDate) : '-',
+                endDate: item.endDate ? formatDate(item.endDate) : '-'
+            }));
+
+            featureGrid.setData(formattedData);
+        },
+        error: function(xhr, status, error) {
+            console.error('작업자 기능 목록 로드 오류:', error);
+        }
     });
 
-    var memberData = [
-        {memberName: "홍길동", total: 10, continue: 5, delay: 2, team: "팀1", progress: "50%"},
-        {memberName: "이순신", total: 8, continue: 3, delay: 1, team: "팀2", progress: "37.5%"},
-        {memberName: "장보고", total: 15, continue: 10, delay: 3, team: "팀1", progress: "66%"},
-        {memberName: "유관순", total: 12, continue: 12, delay: 0, team: "팀3", progress: "100%"},
-        {memberName: "강감찬", total: 20, continue: 15, delay: 5, team: "팀2", progress: "75%"},
-        {memberName: "홍길동", total: 10, continue: 5, delay: 2, team: "팀1", progress: "50%"},
-        {memberName: "이순신", total: 8, continue: 3, delay: 1, team: "팀2", progress: "37.5%"},
-        {memberName: "장보고", total: 15, continue: 10, delay: 3, team: "팀1", progress: "66%"},
-        {memberName: "유관순", total: 12, continue: 12, delay: 0, team: "팀3", progress: "100%"},
-        {memberName: "강감찬", total: 20, continue: 15, delay: 5, team: "팀2", progress: "75%"}
-    ]
-
-    memberGrid.setData(memberData);
+    // 그래프 데이터 가져오기
+    $.ajax({
+        url: '/projects/features/member/' + memberNo + '/graph',
+        type: 'GET',
+        success: function(graphData) {
+            console.log("그래프 데이터:", graphData);
+            renderGraphs(graphData, memberName);  // 그래프 렌더링 함수 호출
+        },
+        error: function(xhr, status, error) {
+            console.error('작업자 그래프 데이터 로드 오류:', error);
+        }
+    });
 }
+
+function renderGraphs(graphData, memberName) {
+    // 기존 차트 인스턴스 제거
+    chartInstances.forEach(chart => chart.destroy());
+    chartInstances = []; // 배열 초기화
+
+    graphData.forEach(data => {
+        const chartId = data.category + 'Chart';
+        const canvas = document.getElementById(chartId);
+
+        // 기존 차트 제거 및 초기화
+        if (Chart.getChart(chartId)) {
+            Chart.getChart(chartId).destroy();
+        }
+
+
+        // 캔버스 크기 스타일 제거
+        canvas.removeAttribute('style');
+
+        const labels = data.graph.map(item => item.label.trim());
+        const memberCounts = data.graph.map(item => item.memberCount);
+        const avgCounts = data.graph.map(item => item.avgCount);
+
+        // 각 차트에 맞는 제목 설정
+        let chartTitle = '';
+        switch (data.category) {
+            case 'difficulty':
+                chartTitle = '난이도별 기능 수';
+                break;
+            case 'status':
+                chartTitle = '상태별 기능 수';
+                break;
+            case 'priority':
+                chartTitle = '우선순위별 기능 수';
+                break;
+            case 'classification':
+                chartTitle = '분류별 기능 수';
+                break;
+            default:
+                chartTitle = '기능 데이터';
+        }
+
+        const chart = new Chart(canvas, {
+            type: 'bar',
+            data: {
+                labels: labels,
+                datasets: [
+                    {
+                        label: memberName,
+                        data: memberCounts,
+                        backgroundColor: 'rgba(75, 192, 192, 0.6)',
+                    },
+                    {
+                        label: '평균',
+                        data: avgCounts,
+                        backgroundColor: 'rgba(153, 102, 255, 0.6)',
+                    }
+                ]
+            },
+            options: {
+                responsive: true, // 반응형으로 설정
+                maintainAspectRatio: true, // 비율 유지
+                aspectRatio: 5,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        max: 6,
+                        ticks: {
+                            font: {
+                                size: 12 // 고정된 글자 크기 설정
+                            }
+                        }
+                    },
+                    x: {
+                        ticks: {
+                            font: {
+                                size: 12 // 고정된 글자 크기 설정
+                            }
+                        }
+                    }
+                },
+                plugins: {
+                    legend: {
+                        labels: {
+                            font: {
+                                size: 12 // 범례 텍스트 크기 고정
+                            }
+                        }
+                    },
+                    title: {
+                        display: true,
+                        text: chartTitle, // 차트 제목 설정
+                        font: {
+                            size: 14
+                        }
+                    }
+                }
+            }
+        });
+
+        // 생성한 차트 인스턴스를 배열에 저장
+        chartInstances.push(chart);
+    });
+}
+
+
+
+
+
+function closeModal() {
+    $('#memberFeatureModal').hide();
+
+    // 저장된 모든 차트 인스턴스 제거
+    chartInstances.forEach(chart => chart.destroy());
+    chartInstances = []; // 배열 초기화
+
+    // 캔버스와 스타일 초기화
+    document.querySelectorAll('.chart-container canvas').forEach(canvas => {
+        const ctx = canvas.getContext('2d');
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        canvas.removeAttribute('style'); // 크기 스타일 초기화
+    });
+
+    // 모달의 다른 내용 초기화
+    $('.prg-val').text('0%');
+    $('#memberFeatBar').attr('value', 0);
+}
+
+
+function formatDate(dateString) {
+    const date = new Date(dateString);
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+}
+
+function getMemberProgress(){
+    $.ajax({
+        url: '/projects/features/members',
+        type: 'GET',
+        success: function (response){
+            console.log("memberProgress = ", response);
+            memberFullData = response;
+            memberGrid.setData(response);
+        }
+    })
+}
+
+function filterGridData() {
+    var searchWord = $('#memberSearchBar').val().toLowerCase();
+    var filteredData = memberFullData.filter(function (item) {
+        return item.memberName.toLowerCase().includes(searchWord) || item.teamName.toLowerCase().includes(searchWord);
+    });
+
+    memberGrid.setData(filteredData);
+}
+
+
+$('#memberSearch').on('click', function (e) {
+    e.preventDefault();
+    filterGridData();
+});
+
 
 
 function fetchMenuData() {
@@ -453,38 +762,46 @@ $('#featureSearch').click(function (e){
     fetchGridData(1);
 })
 
-function getParentSystems(pageNumber, pageSize){
+function getParentSystems(pageNumber, pageSize) {
     const systemContainer = $("#system-container");
     systemContainer.empty(); // 새로운 페이지 로드 시 기존 데이터를 비워줌
 
     $.ajax({
         url: '/systems/parents?page=' + pageNumber + '&size=' + pageSize,
         type: 'GET',
-        success: function (response){
+        success: async function (response) {
             console.log("부모 시스템 page : " + pageNumber + " : ", response);
-            response.forEach(system => {
-                fetchSystemProgress(system.systemNo, system.systemTitle);
-            })
-        },
-        error: function (xhr, status, error){
-            console.error('Error fetching parent systems:', error);
-        }
-    })
-}
 
-function fetchSystemProgress(parentSystemNo, parentSystemTitle){
-    var featSystemClassCd = "";
-    $.ajax({
-        url: '/projects/features/progress?systemNo=' + parentSystemNo + '&featClassCd=' + featSystemClassCd,
-        type: 'GET',
-        success: function (response) {
-            console.log("부모시스템 조회", response);
-            updateSystemProgressUI(parentSystemTitle, response);
+            const fetchPromises = response.map(system => {
+                return fetchSystemProgress(system.systemNo, system.systemTitle);
+            });
+
+            const systemsProgressData = await Promise.all(fetchPromises);
+            systemsProgressData.forEach(({ title, data }) => {
+                updateSystemProgressUI(title, data);
+            });
         },
         error: function (xhr, status, error) {
-            console.error('Error:', error);
+            console.error('Error fetching parent systems:', error);
         }
-    })
+    });
+}
+
+function fetchSystemProgress(parentSystemNo, parentSystemTitle) {
+    return new Promise((resolve, reject) => {
+        $.ajax({
+            url: '/projects/features/progress?systemNo=' + parentSystemNo + '&featClassCd=',
+            type: 'GET',
+            success: function (response) {
+                console.log("부모시스템 조회", response);
+                resolve({ title: parentSystemTitle, data: response });
+            },
+            error: function (xhr, status, error) {
+                console.error('Error:', error);
+                reject(error);
+            }
+        });
+    });
 }
 
 function updateSystemProgressUI(systemTitle, data) {

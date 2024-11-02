@@ -77,4 +77,19 @@ public class FeatureServiceImpl implements FeatureService{
         return mapper.countFeatures(systemNo, featClassCd, prjNo, cri);
     }
 
+    @Override
+    public List<FeatureMemberPrgResponseDto> getMemberProgress(Long prjNo) {
+        return mapper.getMemberProgress(prjNo);
+    }
+
+    @Override
+    public MemberFeaturesResponseDto getMemberFeatures(Long memberNo, Long prjNo) {
+        return mapper.getMemberFeatures(memberNo, prjNo);
+    }
+
+    @Override
+    public List<MemberFeatGraphResponseDto> getMemberFeatureGraph(Long prjNo, Long memberNo) {
+        return mapper.getMemberFeatureGraph(prjNo, memberNo);
+    }
+
 }

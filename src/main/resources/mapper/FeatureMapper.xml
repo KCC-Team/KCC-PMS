@@ -263,4 +263,191 @@
             AND LOWER(m.mem_nm) LIKE LOWER('%' || #{cri.keyword} || '%')
         </if>
     </select>
+
+    <select id="getMemberProgress" resultType="com.kcc.pms.domain.feature.model.dto.FeatureMemberPrgResponseDto">
+         <![CDATA[
+        SELECT
+            m.mem_no AS memberNo,
+            m.mem_nm AS memberName,
+            t.tm_nm AS teamName,
+            COUNT(f.feat_no) AS totalFeatureCount,
+            COUNT(CASE
+                    WHEN f.pre_st_dt <= SYSDATE
+                        AND (f.end_dt IS NULL OR f.prg < 100)
+                        AND f.pre_end_dt >= SYSDATE
+                    THEN 1 END) AS inProgressCount,
+            COUNT(CASE
+                    WHEN f.pre_end_dt <= SYSDATE
+                        AND (f.end_dt IS NULL OR f.prg < 100)
+                    THEN 1 END) AS delayedCount,
+            COUNT(CASE
+                    WHEN f.prg = 100
+                        AND f.end_dt IS NOT NULL
+                    THEN 1 END) AS completedCount,
+            ROUND(AVG(f.prg), 2) AS avgProgress
+        FROM
+            feature f
+            JOIN member m ON f.mem_no = m.mem_no
+            LEFT JOIN system s ON f.sys_no = s.sys_no
+            JOIN team t ON f.tm_no = t.tm_no
+        WHERE
+            f.prj_no = #{prjNo}
+        GROUP BY
+            m.mem_no, m.mem_nm, t.tm_nm
+--         ORDER BY
+--             avgProgress ASC, delayedCount DESC
+        ]]>
+    </select>
+
+
+
+
+    <resultMap id="memberFeature" type="com.kcc.pms.domain.feature.model.dto.MemberFeaturesResponseDto">
+        <id column="overallProgress" property="overallProgress"/>
+        <collection property="features" resultMap="features"/>
+    </resultMap>
+
+
+    <resultMap id="features" type="com.kcc.pms.domain.feature.model.dto.MemberFeatureDto">
+        <result column="featNo" property="featNo"/>
+        <result column="featTitle" property="featTitle"/>
+        <result column="system" property="system"/>
+        <result column="status" property="status"/>
+        <result column="progress" property="progress"/>
+        <result column="preEndDate" property="preEndDate"/>
+        <result column="preStartDate" property="preStartDate"/>
+        <result column="startDate" property="startDate"/>
+        <result column="endDate" property="endDate"/>
+        <result column="priority" property="priority"/>
+        <result column="difficulty" property="difficulty"/>
+        <result column="className" property="className"/>
+    </resultMap>
+
+
+    <select id="getMemberFeatures" resultMap="memberFeature">
+        SELECT
+            f.FEAT_NO as featNo,
+            f.FEAT_TITLE as featTitle,
+            SUBSTR((SELECT SYS_CONNECT_BY_PATH(s2.sys_ttl, ' > ')
+                    FROM system s2
+                    WHERE s2.sys_no = s.sys_no
+                    START WITH s2.par_sys_no IS NULL
+                    CONNECT BY PRIOR s2.sys_no = s2.par_sys_no), 3) AS system,
+            status.cd_dtl_nm AS status,
+            f.PRG AS progress,
+            f.PRE_ST_DT AS preStartDate,
+            f.PRE_END_DT AS preEndDate,
+            f.ST_DT AS startDate,
+            f.END_DT AS endDate,
+            pri.cd_dtl_nm AS priority,
+            diff.cd_dtl_nm AS difficulty,
+            class.cd_dtl_nm AS className,
+            (SELECT ROUND(SUM(f2.PRG) / COUNT(*), 2)
+             FROM feature f2
+             WHERE f2.MEM_NO = f.MEM_NO AND f2.prj_no = f.prj_no) AS overallProgress
+        FROM
+            feature f
+                JOIN codedetail status ON f.stat_cd = status.cd_dtl_no
+                JOIN codedetail pri ON f.pri_cd = pri.cd_dtl_no
+                JOIN codedetail diff ON f.diff_cd = diff.cd_dtl_no
+                JOIN codedetail class ON f.class_cd = class.cd_dtl_no
+                LEFT JOIN system s ON f.sys_no = s.sys_no
+        WHERE
+            f.MEM_NO = #{memberNo} and f.prj_no = #{prjNo}
+        ORDER BY f.pre_end_dt DESC
+    </select>
+
+
+    <resultMap id="memberFeatGraph" type="com.kcc.pms.domain.feature.model.dto.MemberFeatGraphResponseDto">
+        <id column="category" property="category"/>
+        <collection property="graph" resultMap="graph"/>
+    </resultMap>
+
+    <resultMap id="graph" type="com.kcc.pms.domain.feature.model.dto.GraphParams">
+        <result column="label" property="label"/>
+        <result column="member_count" property="memberCount"/>
+        <result column="avg_count" property="avgCount"/>
+    </resultMap>
+
+    <select id="getMemberFeatureGraph" resultMap="memberFeatGraph">
+        SELECT
+            'difficulty' AS category,
+            difficulty.cd_dtl_nm AS label,
+            COUNT(CASE WHEN f.MEM_NO = #{memberNo} THEN f.FEAT_NO END) AS member_count,
+            COUNT(CASE WHEN f.MEM_NO != #{memberNo} THEN f.FEAT_NO END) /
+            (SELECT COUNT(DISTINCT MEM_NO || '-' || TM_NO) - 1
+             FROM feature
+             WHERE prj_no =  #{prjNo}) AS avg_count
+        FROM
+            codedetail difficulty
+                LEFT JOIN
+            feature f ON f.diff_cd = difficulty.cd_dtl_no
+                AND f.prj_no =  #{prjNo}
+        WHERE
+            difficulty.common_cd_no = 'PMS011'
+        GROUP BY
+            difficulty.cd_dtl_nm
+
+        UNION ALL
+
+        SELECT
+            'status' AS category,
+            status.cd_dtl_nm AS label,
+            COUNT(CASE WHEN f.MEM_NO = #{memberNo} THEN f.FEAT_NO END) AS member_count,
+            COUNT(CASE WHEN f.MEM_NO != #{memberNo} THEN f.FEAT_NO END) /
+            (SELECT COUNT(DISTINCT MEM_NO || '-' || TM_NO) - 1
+             FROM feature
+             WHERE prj_no =  #{prjNo}) AS avg_count
+        FROM
+            codedetail status
+                LEFT JOIN
+            feature f ON f.stat_cd = status.cd_dtl_no
+                AND f.prj_no =  #{prjNo}
+        WHERE
+            status.common_cd_no = 'PMS009'
+        GROUP BY
+            status.cd_dtl_nm
+
+        UNION ALL
+
+        SELECT
+            'priority' AS category,
+            pri.cd_dtl_nm AS label,
+            COUNT(CASE WHEN f.MEM_NO = #{memberNo} THEN f.FEAT_NO END) AS member_count,
+            COUNT(CASE WHEN f.MEM_NO != #{memberNo} THEN f.FEAT_NO END) /
+            (SELECT COUNT(DISTINCT MEM_NO || '-' || TM_NO) - 1
+             FROM feature
+             WHERE prj_no =  #{prjNo}) AS avg_count
+        FROM
+            codedetail pri
+                LEFT JOIN
+            feature f ON f.pri_cd = pri.cd_dtl_no
+                AND f.prj_no =  #{prjNo}
+        WHERE
+            pri.common_cd_no = 'PMS006'
+        GROUP BY
+            pri.cd_dtl_nm
+
+        UNION ALL
+
+        SELECT
+            'classification' AS category,
+            class.cd_dtl_nm AS label,
+            COUNT(CASE WHEN f.MEM_NO = #{memberNo} THEN f.FEAT_NO END) AS member_count,
+            COUNT(CASE WHEN f.MEM_NO != #{memberNo} THEN f.FEAT_NO END) /
+            (SELECT COUNT(DISTINCT MEM_NO || '-' || TM_NO) - 1
+             FROM feature
+             WHERE prj_no =  #{prjNo}) AS avg_count
+        FROM
+            codedetail class
+                LEFT JOIN
+            feature f ON f.class_cd = class.cd_dtl_no
+                AND f.prj_no = #{prjNo}
+        WHERE
+            class.common_cd_no = 'PMS010'
+        GROUP BY
+            class.cd_dtl_nm
+    </select>
+
+
 </mapper>
