@@ -55,6 +55,7 @@
 <script>
     $('#save-folder').on('click', function() {
         let treeData = $('.jstree-folder-in').jstree(true).get_json('#', { flat: false });
+        console.log(treeData);
         let updatedTreeData = transformTreeData(treeData);
         $.ajax({
             url: '/projects/outputs/api/update?option=y',
@@ -74,11 +75,10 @@
     function transformTreeData(treeNodes, parentId = null) {
         refineTreeIds(treeNodes);
         return treeNodes.map(node => {
-            const nodeId = Number(node.id.split('.').pop());
-            const children = node.children ? transformTreeData(node.children, nodeId) : [];
+            const children = node.children ? transformTreeData(node.children) : [];
 
             return {
-                id: nodeId,
+                id: node.id,
                 text: node.text,
                 type: node.type,
                 parentId: parentId,

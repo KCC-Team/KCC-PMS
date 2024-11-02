@@ -2,7 +2,6 @@ package com.kcc.pms.domain.output.service;
 
 import com.kcc.pms.domain.output.domain.dto.DeleteOutputResponseDto;
 import com.kcc.pms.domain.output.domain.dto.FileStructResponseDto;
-import com.kcc.pms.domain.output.domain.dto.OutputFile;
 import com.kcc.pms.domain.output.domain.dto.OutputResponseDto;
 import org.springframework.web.multipart.MultipartFile;
 

@@ -39,8 +39,7 @@ public class OutputController {
     @GetMapping("/{id}")
     @ResponseBody
     public ResponseEntity<OutputResponseDto> findOutput(HttpSession session, @PathVariable("id") Long id) {
-//        Long prjNo = (Long) session.getAttribute("prjNo");
-        Long prjNo = 1L;
+        Long prjNo = (Long) session.getAttribute("prjNo");
         return ResponseEntity.ok().body(outputService.findOutput(prjNo, id));
     }
 
@@ -48,8 +47,7 @@ public class OutputController {
     @ResponseBody
     public ResponseEntity<List<FileStructResponseDto>> listApi(HttpSession session,
                    @RequestParam(value = "option", defaultValue = "n") String option) {
-//        Long prjNo = (Long) session.getAttribute("prjNo");
-        Long prjNo = 1L;
+        Long prjNo = (Long) session.getAttribute("prjNo");
         return ResponseEntity.ok().body(outputService.findList(prjNo, option));
     }
 
@@ -60,8 +58,7 @@ public class OutputController {
                             String title,
                             @RequestPart("res") List<FileStructResponseDto> res,
                             @RequestParam("files") List<MultipartFile> files) {
-        //        Long prjNo = (Long) session.getAttribute("prjNo");
-        Long prjNo = 1L;
+        Long prjNo = (Long) session.getAttribute("prjNo");
         outputService.insertOutput(prjNo, principalDetail.getMember().getMemberName(), title, res, files);
         return ResponseEntity.ok().build();
     }
@@ -73,8 +70,7 @@ public class OutputController {
                                     HttpSession session,
                                     @RequestParam("outputNo") Long outputNo,
                                     @RequestPart("files") List<MultipartFile> files) {
-        //        Long prjNo = (Long) session.getAttribute("prjNo");
-        Long prjNo = 1L;
+        Long prjNo = (Long) session.getAttribute("prjNo");
         outputService.insertOutputFiles(prjNo, principalDetail.getMember().getMemberName(), outputNo, files);
         return ResponseEntity.ok().build();
     }
@@ -93,8 +89,7 @@ public class OutputController {
     public ResponseEntity<String> updateOutputFolders(HttpSession session,
                           @RequestParam(value = "option", defaultValue = "n") String option,
                           @RequestBody List<FileStructResponseDto> res) {
-        //        Long prjNo = (Long) session.getAttribute("prjNo");
-        Long prjNo = 1L;
+        Long prjNo = (Long) session.getAttribute("prjNo");
         outputService.updateOutput(prjNo, res, option, null);
         return ResponseEntity.ok().body("success");
     }
