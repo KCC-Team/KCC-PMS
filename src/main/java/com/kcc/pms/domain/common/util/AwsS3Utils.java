@@ -28,7 +28,7 @@ public class AwsS3Utils {
         String ext = multipartFile.getOriginalFilename().substring(multipartFile.getOriginalFilename().lastIndexOf(".") + 1);
 
         amazonS3.putObject(properties.getS3().getBucket() + "/kcc_pms", fileName + "." + ext, multipartFile.getInputStream(), metadata);
-        return properties.getS3().getFakeUrl()  + fileName + "." + ext;
+        return properties.getS3().getUrl()  + fileName + "." + ext;
     }
 
     public void deleteImage(String filePath) {
@@ -45,35 +45,14 @@ public class AwsS3Utils {
         }
     }
 
-    public S3ObjectInputStream downloadFile(String filePath) throws MalformedURLException, UnsupportedEncodingException {
-        URL url = new URL(filePath);
-        String path = url.getPath();
-        String key = path;
+    public S3ObjectInputStream downloadFile(String filePath) {
         String bucketName = properties.getS3().getBucket();
+        String objectKey = filePath.substring(filePath.indexOf("/", 8) + 1); // "8"은 "https://" 이후 첫 '/' 위치를 건너뛰기 위함입니다.
 
-        if (path.startsWith("/" + bucketName + "/")) {
-            key = path.substring(bucketName.length() + 2);
-        } else if (path.startsWith("/")) {
-            key = path.substring(1);
-        }
+        GetObjectRequest getObjectRequest = new GetObjectRequest(bucketName, objectKey);
+        S3Object s3Object = amazonS3.getObject(getObjectRequest);
 
-        S3Object s3Object = amazonS3.getObject(new GetObjectRequest(bucketName, key));
         return s3Object.getObjectContent();
     }
 
-    public String generatePresignedUrl(String s3Key) {
-        // 유효 기간 설정 (예: 1시간)
-        Date expiration = new Date();
-        long expTimeMillis = expiration.getTime();
-        expTimeMillis += 1000 * 60 * 60; // 1시간 후 만료
-        expiration.setTime(expTimeMillis);
-
-        GeneratePresignedUrlRequest generatePresignedUrlRequest =
-                new GeneratePresignedUrlRequest(properties.getS3().getBucket(), s3Key)
-                        .withMethod(HttpMethod.GET)
-                        .withExpiration(expiration);
-
-        URL url = amazonS3.generatePresignedUrl(generatePresignedUrlRequest);
-        return url.toString();
-    }
 }

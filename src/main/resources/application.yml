@@ -22,7 +22,6 @@ cloud:
   aws:
     s3:
       bucket: kcc-bucket
-      fakeUrl: /files-kccpms/
       url: ${cloud.aws.url}
     credentials:
       access-key: ${cloud.aws.accessKey}

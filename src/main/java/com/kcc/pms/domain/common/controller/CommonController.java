@@ -85,29 +85,4 @@ public class CommonController {
             return ResponseEntity.badRequest().build();
         }
     }
-
-    @GetMapping("/files-kccpms/{projectNo}/{fileName:.+}")
-    public ResponseEntity<Void> getImage(
-            @PathVariable("projectNo") String userId,
-            @PathVariable("fileName") String fileName) {
-        try {
-            if (!isValidFileName(fileName)) {
-                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-            }
-
-            String path = properties.getS3().getUrl() + userId + "/" + fileName;
-
-            HttpHeaders headers = new HttpHeaders();
-            headers.setLocation(URI.create(path));
-            return new ResponseEntity<>(headers, HttpStatus.FOUND);
-
-        } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-    }
-
-    private boolean isValidFileName(String fileName) {
-        return !fileName.contains("..") && !fileName.contains("/");
-    }
-
 }
