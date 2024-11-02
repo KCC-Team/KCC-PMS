@@ -1,14 +1,23 @@
+let modalTreeData;
+let id;
+let addedFolders = [];
+let toast = new ax5.ui.toast({
+    containerPosition: "top-right",
+});
+
 $(function() {
+    setToast();
+
     $.ajax({
         url: '/projects/outputs/api/list',
         type: 'GET',
-        success: function(data) {
+        success: function (data) {
             window.treeData = data;
             let jsTreeFolderData = convertToJsTreeData(treeData);
             window.jsTreeFolderInstance = $('.jstree-files').jstree({
                 'core': {
                     'data': jsTreeFolderData,
-                    "themes" : { "stripes" : true },
+                    "themes": {"stripes": true},
                     'check_callback': true
                 },
                 'plugins': ["types", "dnd", "wholerow", "search", "contextmenu"],
@@ -21,22 +30,27 @@ $(function() {
                     },
                 }
             });
+            id = findMaxId(window.treeData[0]);
         },
-        error: function() {
-            alert('트리 데이터를 가져오는데 실패했습니다.');
+        error: function () {
+            toast.push({
+                theme: 'error',
+                msg: '트리 데이터를 가져오는데 실패했습니다.',
+                closeIcon: '<i class="fa fa-times"></i>'
+            });
         }
     });
 
     $.ajax({
         url: '/projects/outputs/api/list?option=y',
         type: 'GET',
-        success: function(data) {
+        success: function (data) {
             window.treeFolderData = data;
             let jsTreeData = convertToJsTreeData(window.treeFolderData);
             window.jsTreeInstance = $('.jstree-folder').jstree({
                 'core': {
                     'data': jsTreeData,
-                    "themes" : { "stripes" : true },
+                    "themes": {"stripes": true},
                     'check_callback': true
                 },
                 'plugins': ["types", "dnd", "wholerow", "search"],
@@ -50,139 +64,182 @@ $(function() {
                 }
             });
 
-            $(function() {
-                // 초기 상태에서 드래그 앤 드롭 비활성화
-                $('.jstree-files').jstree(true).settings.dnd.is_draggable = function () {
-                    return false;
-                };
-                function initializeJsTree(data) {
-                    $('.jstree-folder-in').jstree({
-                        'core': {
-                            'data': convertToJsTreeData(data),
-                            "themes" : { "stripes" : true },
-                            'check_callback': true,
-                        },
-                        'plugins': ["types", "dnd", "wholerow", "search"],
-                        'types': {
-                            "default": {
-                                "icon": "fa fa-folder text-warning"
-                            },
-                        }
+            // 모달 내에서 사용하는 트리 데이터 초기화
+            modalTreeData = JSON.parse(JSON.stringify(window.treeFolderData));
+            initializeJsTree(modalTreeData);
+
+            $('.jstree-folder-in').jstree(true).settings.dnd.is_draggable = function () {
+                return false;
+            };
+
+            // 노드 선택 이벤트
+            let selectedFolder;
+            $('.jstree-folder-in').on("select_node.jstree", function (e, data) {
+                selectedFolder = data.node;
+            });
+
+            // 노드 추가 버튼 클릭 이벤트
+            $('#add-folder-btn').on('click', function (e) {
+                e.preventDefault();
+
+                let folderName = $('#input-area-folder').val().trim();
+                if (folderName === '') {
+                    toast.push({
+                        theme: 'warning',
+                        msg: '폴더 이름을 입력해주세요.',
+                        closeIcon: '<i class="fa fa-times"></i>'
                     });
-                    $('.jstree-folder-in').jstree('refresh');
+                    return;
                 }
 
-                // 초기화
-                initializeJsTree(window.treeFolderData);
-                let selectedNode = null;
-
-                // 노드 선택 이벤트
-                $('.jstree-folder-in').on("select_node.jstree", function (e, data) {
-                    selectedNode = data.node;
-                });
-
-                // 노드 추가 버튼 클릭 이벤트
-                $('#add-folder-btn').on('click', function(e) {
-                    e.preventDefault();
-
-                    let folderName = $('#input-area-folder').val().trim();
-                    if (folderName === '') {
-                        console.log('폴더명을 입력해주세요.');
-                        alert('폴더명을 입력해주세요.');
-                        return;
-                    }
-
-                    if (!selectedNode) {
-                        console.log('노드를 선택해주세요.');
-                        alert('노드를 선택해주세요.');
-                        return;
-                    }
-
-                    // 선택된 노드를 부모로 설정
-                    let parentNodeId = selectedNode.id;
-
-                    // 새 노드 ID 생성 (고유 ID 생성 방식 필요)
-
-                    let newNode = {
-                        id: findMaxId(window.treeData[0]) + 1,
-                        text: folderName,
-                        type: 'y'
-                    };
-
-                    // jsTree에 새 노드 추가
-                    $('.jstree-folder-in').jstree('create_node', parentNodeId, newNode, "last", function(new_node) {
-                        $('.jstree-folder-in').jstree('deselect_all', true);
-                        $('.jstree-folder-in').jstree('select_node', new_node);
-                        $('.jstree-folder-in').jstree('open_node', parentNodeId);
+                if (!selectedFolder) {
+                    toast.push({
+                        theme: 'warning',
+                        msg: '폴더를 추가할 위치를 선택해주세요.',
+                        closeIcon: '<i class="fa fa-times"></i>'
                     });
+                    return;
+                }
 
-                    // treeData 업데이트
-                    function addNodeToTreeData(data, parentId, newNode) {
-                        for (let node of data) {
-                            if (node.id === parentId) {
-                                if (!node.children) {
-                                    node.children = [];
-                                }
-                                node.children.push(newNode);
-                                return true;
-                            }
-                            if (node.children && node.children.length > 0) {
-                                if (addNodeToTreeData(node.children, parentId, newNode)) {
-                                    return true;
-                                }
-                            }
-                        }
-                        return false;
-                    }
+                let parentNodeId = $('.jstree-folder-in').jstree('get_selected')[0];
+                id++;
+                console.log(id);
+                let newNode = {
+                    id: id,
+                    text: folderName,
+                    type: 'y',
+                    newNode: true
+                };
+                addedFolders.push(newNode.id);
 
-                    addNodeToTreeData(window.treeData, parentNodeId, newNode);
-                    $('#input-area-folder').val('');
+                // jsTree에 새 노드 추가
+                $('.jstree-folder-in').jstree('create_node', parentNodeId, newNode, "last", function (new_node) {
+                    $('.jstree-folder-in').jstree('deselect_all', true);
+                    $('.jstree-folder-in').jstree('select_node', new_node);
+                    $('.jstree-folder-in').jstree('open_node', parentNodeId);
                 });
 
-                $('#folderModal').on('hidden.bs.modal', function () {
-                    $('#input-area-folder').val('');
-                    $('#folder').prop('checked', true);
-                    selectedNode = null;
-                    window.treeData = JSON.parse(JSON.stringify(data));
-                    initializeJsTree(window.treeFolderData);
-                });
+                $('#input-area-folder').val('');
+            });
+
+            // 모달 닫힘 이벤트
+            $('#folderModal').on('hidden.bs.modal', function () {
+                $('#input-area-folder').val('');
+                $('#folder').prop('checked', true);
+
+                // 모달 내 데이터 초기화
+                modalTreeData = JSON.parse(JSON.stringify(window.treeFolderData));
+                initializeJsTree(modalTreeData);
+
+                // addedFolders 초기화
+                addedFolders = [];
             });
         },
-        error: function() {
-            alert('트리 데이터를 가져오는데 실패했습니다.');
+        error: function () {
+            toast.push({
+                theme: 'error',
+                msg: '트리 데이터를 가져오는데 실패했습니다.',
+                closeIcon: '<i class="fa fa-times"></i>'
+            });
         }
     });
 
-    function convertToJsTreeData(nodes, parentId) {
-        let jsTreeData = [];
-        nodes.forEach(function(node) {
-            let jsTreeNode = {
-                id: node.id,
-                parent: parentId || '#',
-                text: node.text,
-                type: node.type,
-                state: {
-                    opened: true
-                }
-            };
-            jsTreeData.push(jsTreeNode);
-            if (node.children && node.children.length > 0) {
-                jsTreeData = jsTreeData.concat(convertToJsTreeData(node.children, node.id));
-            }
-        });
-        return jsTreeData;
-    }
-
-    function findMaxId(node) {
-        let maxId = parseInt(node.id);
-        if (node.children) {
-            node.children.forEach(child => {
-                const childMaxId = findMaxId(child);
-                if (childMaxId > maxId) {
-                    maxId = childMaxId;
-                }
+    // 삭제된 노드와 하위 노드의 총 개수를 계산하는 함수
+    function getTotalNodeCount(node) {
+        let count = 1;
+        if (node.children && node.children.length > 0) {
+            node.children.forEach(function(childId) {
+                let childNode = $('.jstree-folder-in').jstree('get_node', childId);
+                count += getTotalNodeCount(childNode);
             });
         }
-        return maxId;
+        return count;
+    }
+
+// 삭제된 노드와 하위 노드의 모든 ID를 가져오는 함수
+    function getAllNodeIds(node) {
+        let ids = [parseInt(node.id)];
+        if (node.children && node.children.length > 0) {
+            node.children.forEach(function(childId) {
+                let childNode = $('.jstree-folder-in').jstree('get_node', childId);
+                ids = ids.concat(getAllNodeIds(childNode));
+            });
+        }
+        return ids;
     }
 });
+
+function convertToJsTreeData(nodes, parentId) {
+    let jsTreeData = [];
+    nodes.forEach(function(node) {
+        let jsTreeNode = {
+            id: node.id.toString(),
+            parent: parentId || '#',
+            text: node.text,
+            type: node.type,
+            state: {
+                opened: true
+            }
+        };
+        jsTreeData.push(jsTreeNode);
+        if (node.children && node.children.length > 0) {
+            jsTreeData = jsTreeData.concat(convertToJsTreeData(node.children, node.id));
+        }
+    });
+    return jsTreeData;
+}
+
+function initializeJsTree(treeData) {
+    $('.jstree-folder-in').jstree({
+        'core': {
+            'data': convertToJsTreeData(treeData),
+            "themes": {"stripes": true},
+            'check_callback': true,
+        },
+        'plugins': ["types", "dnd", "wholerow", "search"],
+        'types': {
+            "default": {
+                "icon": "fa fa-folder text-warning"
+            },
+        }
+    });
+    $('.jstree-folder-in').jstree('refresh');
+}
+
+function setToast() {
+    toast.setConfig({
+        containerPosition: "top-right",
+        displayTime: 3000,
+        animateTime: 500,
+        toastWidth: 300
+    });
+}
+
+function reassignIds() {
+    // ID 재할당
+    addedFolders.forEach((folder, index) => {
+        let oldId = folder.id;
+        folder.id = (index + 1).toString();
+
+        // jsTree에서 노드 ID 업데이트
+        let node = $('.jstree-folder-in').jstree('get_node', oldId);
+        if (node) {
+            node.id = folder.id;
+            $('.jstree-folder-in').jstree('set_id', node, folder.id);
+        }
+    });
+    id = Math.max(...addedFolders);
+}
+
+function findMaxId(node) {
+    let maxId = parseInt(node.id);
+    if (node.children) {
+        node.children.forEach(child => {
+            const childMaxId = findMaxId(child);
+            if (childMaxId > maxId) {
+                maxId = childMaxId;
+            }
+        });
+    }
+    return maxId;
+}

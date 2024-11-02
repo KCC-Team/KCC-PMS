@@ -1,10 +1,8 @@
 package com.kcc.pms.domain.output.service;
 
 import com.kcc.pms.domain.common.service.CommonService;
-import com.kcc.pms.domain.member.model.vo.MemberVO;
 import com.kcc.pms.domain.output.domain.dto.DeleteOutputResponseDto;
 import com.kcc.pms.domain.output.domain.dto.FileStructResponseDto;
-import com.kcc.pms.domain.output.domain.dto.OutputFile;
 import com.kcc.pms.domain.output.domain.dto.OutputResponseDto;
 import com.kcc.pms.domain.output.mapper.OutputMapper;
 import lombok.RequiredArgsConstructor;
@@ -12,7 +10,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -52,15 +53,6 @@ public class OutputServiceImpl implements OutputService {
 
         Map<Long, FileStructResponseDto> modifiedMap = flattenTree.stream()
                 .collect(Collectors.toMap(FileStructResponseDto::getId, Function.identity()));
-
-        // 삭제 대상 노드 ID 세트 생성
-/*
-        Set<Long> idsToRemove = new HashSet<>(currentMap.keySet());
-        idsToRemove.removeAll(modifiedMap.keySet());
-
-        // 노드 삭제 처리
-        idsToRemove.forEach(outputMapper::deleteOutput);
-*/
 
         // 노드 추가 및 수정 처리
         for (FileStructResponseDto modifiedNode : flattenTree) {
