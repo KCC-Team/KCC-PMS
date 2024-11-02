@@ -179,7 +179,7 @@ function initGrid(){
                         return '<span style="font-size: 13px;">' + (this.value ? this.value : '-') + '</span>';
                     }},
                 {key: "progress", label: "진척도", width: 50, align: "center", formatter: function (){
-                        return '<span style="font-size: 13px;">' + this.value + '</span>';
+                        return '<span style="font-size: 13px;">' + this.value + "%" + '</span>';
                     }},
                 {key: "remainingDays", label: "남은일수", width: 60, align: "center", formatter: function (){
                         return '<span style="font-size: 13px;">' + this.value + '</span>';
@@ -344,7 +344,7 @@ function initMemberGrid(){
                 },
                 {
                     key: "avgProgress", label: "진척도", width: 70, align: "center", formatter: function () {
-                        return '<span style="font-size: 13px;">' + this.value + '</span>';
+                        return '<span style="font-size: 13px;">' + this.value + "%" +'</span>';
                     }
                 }
             ]
@@ -451,7 +451,7 @@ function loadMemberFeatures(memberNo, memberName) {
         success: function(response) {
             console.log(response);
             const overallProgress = response.overallProgress || 0;
-            $('.prg-val').text(overallProgress + '%');
+            $('#memberPrgVal').text(overallProgress + '%');
             $('#memberFeatBar').attr('value', overallProgress);
 
             // 기능 목록 데이터를 `features` 배열에서 가져옴
@@ -607,7 +607,7 @@ function closeModal() {
     });
 
     // 모달의 다른 내용 초기화
-    $('.prg-val').text('0%');
+    $('#memberPrgVal').text('0%');
     $('#memberFeatBar').attr('value', 0);
 }
 

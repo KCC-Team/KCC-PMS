@@ -143,7 +143,7 @@
 
                     <div class="member-prg-bar-container">
                         <progress id="memberFeatBar" class="member-prg-bar" value="" max="100"></progress>
-                        <span class="prg-val"></span>
+                        <span id="memberPrgVal" class="prg-val"></span>
                     </div>
 
                     <div class="chart-container">
