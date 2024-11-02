@@ -27,11 +27,13 @@
     }
 
     String authCode = (String)session.getAttribute("authCode");
+    Long memberNo = (Long) session.getAttribute("memberNo");
 %>
 
 <script type="text/javascript">
     let prjNo = '<%= prjNoInt != null ? prjNoInt.toString() : 1 %>';
     let authCode = '<%= authCode %>';
+    let loginMemberNo = '<%= memberNo %>';
 </script>
 
 <link rel="stylesheet" href="../../../resources/common/css/header.css">

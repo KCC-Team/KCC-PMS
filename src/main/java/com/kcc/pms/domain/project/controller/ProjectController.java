@@ -64,6 +64,7 @@ public class ProjectController {
             session.setAttribute("prjNo", prjNo);
             session.setAttribute("prjTitle", prjTitle);
             session.setAttribute("authCode", authCode);
+            session.setAttribute("memberNo", memNo);
         }
 
         return "/project/dashboard";

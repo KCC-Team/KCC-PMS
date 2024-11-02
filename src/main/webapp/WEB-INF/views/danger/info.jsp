@@ -9,7 +9,11 @@
         titleName = "위험 등록";
     }
 %>
-
+<link
+        href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css"
+        rel="stylesheet"
+/>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <link rel="stylesheet" href="../../../resources/issue/css/info.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.9.3/min/dropzone.min.js"></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.9.3/min/dropzone.min.css" />
@@ -148,16 +152,6 @@
                                     <div class="info-item d-flex flex-column align-items-start">
                                         <div><label class="file-find-title">위험 발견 첨부파일</label></div>
                                         <div id="risk-insert-file-dropzone_1" class="dropzone"></div>
-                                        <jsp:include page="../output/file/file-task.jsp" />
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="file-zone_2 mt-3" style="width: 99%">
-                                <div class="file-section mt-3">
-                                    <div class="info-item d-flex flex-column align-items-start">
-                                        <div><label class="file-find-title">위험 조치 첨부파일</label></div>
-                                        <div id="risk-insert-file-dropzone_2" class="dropzone"></div>
                                         <jsp:include page="../output/file/file-task.jsp" />
                                     </div>
                                 </div>

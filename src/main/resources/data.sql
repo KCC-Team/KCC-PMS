@@ -315,7 +315,8 @@ CREATE TABLE History (
     record_dt DATE NULL,
     record_cont VARCHAR(500) NOT NULL,
     risk_no NUMBER NULL,
-    mem_no NUMBER NOT NULL
+    mem_no NUMBER NOT NULL,
+    fl_ms_no NUMBER
 );
 
 CREATE TABLE Request (
@@ -439,6 +440,7 @@ ALTER TABLE Risk ADD CONSTRAINT fk_risk_fl_ms_fd_no_006 FOREIGN KEY (fl_ms_fd_no
 ALTER TABLE History ADD CONSTRAINT pk_history_no_001 PRIMARY KEY (history_no);
 ALTER TABLE History ADD CONSTRAINT fk_history_risk_no_002 FOREIGN KEY (risk_no) REFERENCES Risk (risk_no);
 ALTER TABLE History ADD CONSTRAINT fk_history_mem_no_003 FOREIGN KEY (mem_no) REFERENCES Member (mem_no);
+ALTER TABLE History ADD CONSTRAINT fk_history_filemaster FOREIGN KEY (fl_ms_no) REFERENCES FileMaster(fl_ms_no) ON DELETE CASCADE;
 
 ALTER TABLE Request ADD CONSTRAINT pk_req_no_001 PRIMARY KEY (req_no);
 ALTER TABLE Request ADD CONSTRAINT fk_req_prj_no_002 FOREIGN KEY (prj_no) REFERENCES Project (prj_no);

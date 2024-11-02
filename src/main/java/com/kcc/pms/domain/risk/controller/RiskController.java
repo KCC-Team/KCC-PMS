@@ -198,6 +198,22 @@ public class RiskController {
         return ResponseEntity.ok(history);
     }
 
+
+    @DeleteMapping("/projects/risks/history/{historyNo}")
+    public ResponseEntity<?> deleteHistory(@PathVariable("historyNo") Long historyNo) {
+        System.out.println("RiskController.deleteHistory");
+        System.out.println("historyNo = " + historyNo);
+        try {
+            service.deleteHistory(historyNo);
+            return ResponseEntity.ok().body("조치 이력이 성공적으로 삭제되었습니다.");
+
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body("조치 이력 삭제에 실패했습니다.");
+        }
+    }
+
+
+
     @PutMapping("/projects/risks/history")
     public void updateHistory(RiskHistoryDto req,RiskFileRequestDto files, HttpSession session,
                               @AuthenticationPrincipal PrincipalDetail principalDetail){

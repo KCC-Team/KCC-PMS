@@ -27,4 +27,5 @@ public interface RiskMapper {
     List<RiskHistoryDto> getHistories(Long riskNo);
     RiskHistoryDto getHistoryByNo(Long historyNo);
     int updateHistory(RiskHistoryDto req);
+    int deleteByNo(Long historyNo);
 }
