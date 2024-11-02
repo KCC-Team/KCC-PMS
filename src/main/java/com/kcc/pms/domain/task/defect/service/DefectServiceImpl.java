@@ -34,9 +34,16 @@ public class DefectServiceImpl implements DefectService {
     @Override
     public Long saveDefect(Long projectNumber, String memberName, DefectDto defect, DefectFileRequestDto files) {
         Long[] numbers = generateFiles(projectNumber, memberName, files);
-        int isPassed = defectMapper.saveDefect(projectNumber, defect, numbers[0], numbers[1]);
-        if (isPassed != 1) {
-            throw new RuntimeException("Defect 저장 중 오류가 발생했습니다.");
+        if (numbers[0] == null && numbers[1] == null) {
+            int isPassed = defectMapper.saveDefect(projectNumber, defect, null, null);
+            if (isPassed != 1) {
+                throw new RuntimeException("Defect 저장 중 오류가 발생했습니다.");
+            }
+        } else {
+            int isPassed = defectMapper.saveDefect(projectNumber, defect, numbers[0], numbers[1]);
+            if (isPassed != 1) {
+                throw new RuntimeException("Defect 저장 중 오류가 발생했습니다.");
+            }
         }
 
         return defect.getDefectNumber();
@@ -61,12 +68,11 @@ public class DefectServiceImpl implements DefectService {
             }
         } else {
             Long[] filesMasterNos = generateFiles(prgNo, MemberName, files);
-            if (filesMasterNos[0] == null && filesMasterNos[1] == null) {
-                return;
-            }
-            int isPassed = defectMapper.updateFileMasterNumbers(no, filesMasterNos[0], filesMasterNos[1]);
-            if (isPassed != 1) {
-                throw new RuntimeException("Defect 수정 중 오류가 발생했습니다.");
+            if (!(filesMasterNos[0] == null && filesMasterNos[1] == null)) {
+                int isPassed = defectMapper.updateFileMasterNumbers(no, filesMasterNos[0], filesMasterNos[1]);
+                if (isPassed != 1) {
+                    throw new RuntimeException("Defect 수정 중 오류가 발생했습니다.");
+                }
             }
         }
 
