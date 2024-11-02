@@ -19,6 +19,11 @@ $(function () {
         });
     });
 
+    window.addEventListener('defectSaved', function (e) {
+        console.log('defectSaved 이벤트 발생');
+        window.location.reload();
+    });
+
     ax5.ui.grid.tmpl.page_status = function(){
         return '<span>{{{progress}}} {{fromRowIndex}} - {{toRowIndex}} of {{dataRowCount}} {{#dataRealRowCount}}  현재페이지 {{.}}{{/dataRealRowCount}} {{#totalElements}}  전체갯수 {{.}}{{/totalElements}}</span>';
     };
