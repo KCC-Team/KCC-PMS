@@ -10,7 +10,7 @@ $(document.body).ready(function () {
 
 
     let typeValue = urlParams.get('type');
-    if(typeValue === 'feature' || typeValue === 'defect1' || typeValue === 'defect2' || typeof parseInt(typeValue) === 'number'){
+    if(typeValue === 'feature' || typeValue === 'defect1' || typeValue === 'defect2'){
         $('#grid-parent3').hide();
         $('#grid-parent').css('height', '250px');
         $('.member-add-button').on('click', function() {
@@ -25,7 +25,7 @@ $(document.body).ready(function () {
             }
 
             if (window.opener) {
-                if (typeValue === 'defect1' || typeValue === 'defect2' || typeof parseInt(typeValue) === 'number') {
+                if (typeValue === 'defect1' || typeValue === 'defect2') {
                     window.opener.postMessage({ type: typeValue, member: selectedMember }, "*");
                 } else {
                     window.opener.postMessage({ type: 'featureMember', member: selectedMember }, "*");

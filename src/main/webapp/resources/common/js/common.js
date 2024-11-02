@@ -80,8 +80,8 @@ $(document).on('click', '.li-project', function() {
 function openTeamPopUp(type){
     let height;
 
-    if (type === 'feature') {
-        height = 550;
+    if (type === 'feature' || type === 'defect1' || type === 'defect2') {
+        height = 480;
     } else {
         height = 700;
     }
