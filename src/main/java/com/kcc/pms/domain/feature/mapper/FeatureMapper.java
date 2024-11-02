@@ -28,4 +28,5 @@ public interface FeatureMapper {
     List<FeatureMemberPrgResponseDto> getMemberProgress(Long prjNo);
     MemberFeaturesResponseDto getMemberFeatures(@Param("memberNo") Long memberNo, @Param("prjNo") Long prjNo);
     List<MemberFeatGraphResponseDto> getMemberFeatureGraph(@Param("prjNo") Long prjNo, @Param("memberNo") Long memberNo);
+    List<FeatureSummaryResponseDto> getDelayList(@Param("prjNo") Long prjNo);
 }

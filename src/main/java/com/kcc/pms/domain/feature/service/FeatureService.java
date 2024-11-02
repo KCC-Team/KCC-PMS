@@ -19,4 +19,5 @@ public interface FeatureService {
     List<FeatureMemberPrgResponseDto> getMemberProgress(Long prjNo);
     MemberFeaturesResponseDto getMemberFeatures(Long memberNo, Long prjNo);
     List<MemberFeatGraphResponseDto> getMemberFeatureGraph(@Param("prjNo") Long prjNo, @Param("memberNo") Long memberNo);
+    List<FeatureSummaryResponseDto> getDelayList(@Param("prjNo") Long prjNo);
 }

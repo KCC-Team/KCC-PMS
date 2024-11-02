@@ -5,6 +5,7 @@ let featureGrid; //멤버 기능 목록
 let cachedMemberNo = null;
 let cachedMemberName = null;
 let chartInstances = []; // 차트 인스턴스를 저장할 배열
+var delayGrid;
 function openFeaturePopup(featureNo) {
     let url;
     if(featureNo != null){
@@ -30,7 +31,10 @@ document.addEventListener("DOMContentLoaded", function() {
             getMemberProgress();
         });
 
-        initDelayGrid();
+        initDelayGrid().then(() => {
+            getDelayList();
+        });
+
 
         getParentSystems(1, 3);
     }, 300);
@@ -55,6 +59,7 @@ $(document).ready(function (){
             getParentSystems(1,3);
             getMemberProgress();
             loadMemberFeatures(cachedMemberNo, cachedMemberName);
+            getDelayList();
         }
     }, false);
 
@@ -152,7 +157,7 @@ function initGrid(){
                         console.log("기능NO: " + featureNo);
                         return '<a href="#" onclick="openFeaturePopup(' + featureNo + ')" class="danger-title" style="color: #0044cc; font-size: 13px; font-weight: bold; text-decoration: none;">' + title + '</a>';
                     }},
-                {key: "status", label: "상태", width: 100, align: "center", formatter: function (){
+                {key: "status", label: "상태", width: 103, align: "center", formatter: function (){
                         var status = this.value.trim();
                         var statusClass = 'status-label ';
 
@@ -255,56 +260,68 @@ function updatePagination(items, pageInfo) {
 
 
 function initDelayGrid(){
-    var delayGrid = new ax5.ui.grid();
+    return new Promise((resolve) => {
+        delayGrid = new ax5.ui.grid();
 
-    delayGrid.setConfig({
-        target: $('[data-ax5grid="delay-grid"]'),
-        columns: [
-            {key: "name", label: "기능명", width: 100, align: "center", formatter: function (){
-                    return '<span style="font-size: 13px;">' + this.value + '</span>';
-                }},
-            {key: "status", label: "상태", width: 100, align: "center", formatter: function (){
-                    var status = this.value;
-                    var statusClass = 'status-label ';  // 기본 클래스
+        delayGrid.setConfig({
+            target: $('[data-ax5grid="delay-grid"]'),
+            columns: [
+                {key: "featureTitle", label: "기능명", width: 100, align: "center", formatter: function (){
+                        var featureNo = this.item.featureNo; // featureNo을 이용
+                        var title = this.value;
+                        console.log("기능NO: " + featureNo);
+                        return '<a href="#" onclick="openFeaturePopup(' + featureNo + ')" class="danger-title" style="color: #0044cc; font-size: 13px; font-weight: bold; text-decoration: none;">' + title + '</a>';
+                    }},
+                {key: "status", label: "상태", width: 103, align: "center", formatter: function (){
+                        var status = this.value.trim();
+                        var statusClass = 'status-label ';
 
-                    if (status === '진행') {
-                        console.log('즉시찾음');
-                        statusClass += 'status-in-progress';  // 위험일 경우
-                    } else if (status === '발생전') {
-                        statusClass += 'status-before';  // 진행 중일 경우
-                    } else if (status === '완료') {
-                        statusClass += 'status-completed';  // 완료일 경우
-                    }
+                        if (status === '신규') {
+                            statusClass += 'status-new';
+                        } else if (status === '개발중') {
+                            statusClass += 'status-in-progress';
+                        } else if (status === '고객확인') {
+                            statusClass += 'status-client-check';
+                        } else if (status === '개발완료'){
+                            statusClass += 'status-complete';
+                        } else if (status === '단위테스트완료'){
+                            statusClass += 'status-unit-test-complete';
+                        } else if (status === 'PL확인') {
+                            statusClass += 'status-pl-check';
+                        }
 
-                    return '<span class="' + statusClass + '" style="font-size: 13px;">' + status + '</span>';
-                }},
-            {key: "priority", label: "작업자", width: 70, align: "center" , formatter: function (){
-                    return '<span style="font-size: 13px;">' + this.value + '</span>';
-                }},
-            {key: "register", label: "시스템/업무", width: 120, align: "center", formatter: function (){
-                    return '<span style="font-size: 13px;">' + this.value + '</span>';
-                }},
-            {key: "due_date", label: "진척도", width: 68, align: "center", formatter: function (){
-                    return '<span style="font-size: 13px;">' + this.value + '</span>';
-                }},
-            {key: "delaydays", label: "지연일수", width: 70, align: "center", formatter: function (){
-                    return '<span style="font-size: 13px; color: red;">' + this.value + '</span>';
-                }}
-        ]
+                        return '<span class="' + statusClass + '" style="font-size: 13px;">' + status + '</span>';
+                    }},
+                {key: "memberName", label: "작업자", width: 67, align: "center" , formatter: function (){
+                        return '<span style="font-size: 13px;">' + (this.value ? this.value : '-') + '</span>';
+                    }},
+                {key: "system", label: "시스템/업무", width: 150, align: "center", formatter: function (){
+                        return '<span style="font-size: 13px;">' + (this.value ? this.value : '-') + '</span>';
+                    }},
+                {key: "progress", label: "진척도", width: 50, align: "center", formatter: function (){
+                        return '<span style="font-size: 13px;">' + this.value + "%" + '</span>';
+                    }},
+                {key: "remainingDays", label: "지연일수", width: 60, align: "center", formatter: function (){
+                        return '<span style="font-size: 13px; color:red">' + this.value + '</span>';
+                    }}
+            ]
+        });
+        resolve();
     });
+}
 
-    var delayData = [
-        {name: "인력관련", priority: "보통", status: "발생전", register: "A시스템", due_date: "70%", completion_date: "2024-06-12", delaydays:3},
-        {name: "인력관련", priority: "보통", status: "발생전", register: "이한희", due_date: "70%", completion_date: "2024-06-12", delaydays:3},
-        {name: "인력관련", priority: "긴급", status: "발생전", register: "김연호", due_date: "70%", completion_date: "2024-06-12", delaydays:3},
-        {name: "일정관련", priority: "즉시", status: "진행", register: "김연호", due_date: "70%", completion_date: "2024-06-12", delaydays:3},
-        {name: "인력관련", priority: "보통", status: "발생전", register: "A시스템", due_date: "70%", completion_date: "2024-06-12", delaydays:3},
-        {name: "인력관련", priority: "보통", status: "발생전", register: "이한희", due_date: "70%", completion_date: "2024-06-12", delaydays:3},
-        {name: "인력관련", priority: "긴급", status: "발생전", register: "김연호", due_date: "70%", completion_date: "2024-06-12", delaydays:3},
-        {name: "일정관련", priority: "즉시", status: "진행", register: "김연호", due_date: "70%", completion_date: "2024-06-12", delaydays:3},
-    ]
-
-    delayGrid.setData(delayData);
+function getDelayList(){
+    $.ajax({
+        url: '/projects/features/list/delay',
+        type: 'GET',
+        success: function (response){
+            console.log("delay list = ", response);
+            delayGrid.setData(response);
+        },
+        error: function(xhr, status, error) {
+            console.error(error);
+        }
+    })
 }
 
 function initMemberGrid(){

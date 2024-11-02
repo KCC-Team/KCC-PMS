@@ -92,4 +92,9 @@ public class FeatureServiceImpl implements FeatureService{
         return mapper.getMemberFeatureGraph(prjNo, memberNo);
     }
 
+    @Override
+    public List<FeatureSummaryResponseDto> getDelayList(Long prjNo) {
+        return mapper.getDelayList(prjNo);
+    }
+
 }

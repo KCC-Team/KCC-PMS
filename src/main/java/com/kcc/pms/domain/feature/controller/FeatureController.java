@@ -99,6 +99,14 @@ public class FeatureController {
         return ResponseEntity.ok(response);
     }
 
+    @GetMapping("/list/delay")
+    @ResponseBody
+    public ResponseEntity<?> getDelayList(HttpSession session){
+        Long prjNo = (Long) session.getAttribute("prjNo");
+        List<FeatureSummaryResponseDto> delayList = service.getDelayList(prjNo);
+        return ResponseEntity.ok(delayList);
+    }
+
     @GetMapping("/totalProgress")
     @ResponseBody
     public ResponseEntity<FeatureProgressResponseDto> getProjectFeatureProgressSummary(HttpSession session) {
