@@ -119,7 +119,7 @@ $(document).ready(function() {
         window.open(
             "/projects/addTeamMember?type=wbs",
             "인원등록",
-            "width=1000, height=570, resizable=yes"
+            "width=1000, height=700, resizable=yes"
         );
     });
 
