@@ -204,7 +204,7 @@ CREATE TABLE FileMaster (
 
 CREATE TABLE FileDetail (
     fl_no number NOT NULL,
-    original_ttl VARCHAR2(100) NOT NULL,
+    original_ttl VARCHAR2(200) NOT NULL,
     file_path VARCHAR2(500) NOT NULL,
     fl_type VARCHAR2(80) NOT NULL,
     fl_size NUMBER NOT NULL,
