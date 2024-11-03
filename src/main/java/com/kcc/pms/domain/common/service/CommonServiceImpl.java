@@ -119,7 +119,7 @@ public class CommonServiceImpl implements CommonService {
     }
 
     @Override
-    public byte[] downloadFile(String filePath) throws IOException {
+    public byte[]  downloadFile(String filePath) throws IOException {
         S3ObjectInputStream s3ObjectInputStream = awsS3Utils.downloadFile(filePath);
         byte[] bytes = IOUtils.toByteArray(s3ObjectInputStream);
         s3ObjectInputStream.close();
@@ -140,12 +140,10 @@ public class CommonServiceImpl implements CommonService {
             sqlSession.commit();
         } catch (Exception e) {
             sqlSession.rollback();
+            log.error("파일 업로드 중 오류가 발생했습니다.", e);
             throw new RuntimeException("파일 업로드 중 오류가 발생했습니다.");
         } finally {
             sqlSession.close();
         }
-    }
-
-    private void bulkSaveFiles(Map<String, Object> file) {
     }
 }

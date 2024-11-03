@@ -21,6 +21,10 @@ $(function() {
                     'check_callback': true
                 },
                 'plugins': ["types", "dnd", "wholerow", "search", "contextmenu"],
+                'search': {
+                    'show_only_matches': true,
+                    'show_only_matches_children': true
+                },
                 'types': {
                     "default": {
                         "icon": "fa fa-folder text-warning"
@@ -31,10 +35,13 @@ $(function() {
                 }
             });
             id = findMaxId(window.treeData[0]);
+            $('.jstree-files').jstree(true).settings.dnd.is_draggable = function () {
+                return false;
+            };
         },
         error: function () {
             toast.push({
-                theme: 'error',
+                theme: 'warning',
                 msg: '트리 데이터를 가져오는데 실패했습니다.',
                 closeIcon: '<i class="fa fa-times"></i>'
             });
@@ -137,7 +144,7 @@ $(function() {
         },
         error: function () {
             toast.push({
-                theme: 'error',
+                theme: 'danger',
                 msg: '트리 데이터를 가져오는데 실패했습니다.',
                 closeIcon: '<i class="fa fa-times"></i>'
             });
@@ -211,7 +218,9 @@ function setToast() {
         containerPosition: "top-right",
         displayTime: 3000,
         animateTime: 500,
-        toastWidth: 300
+        toastWidth: 300,
+        icon: '<i class="fa fa-bell"></i>',
+        closeIcon: '<i class="fa fa-times"></i>'
     });
 }
 

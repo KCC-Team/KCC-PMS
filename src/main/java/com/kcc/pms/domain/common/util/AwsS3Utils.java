@@ -1,6 +1,5 @@
 package com.kcc.pms.domain.common.util;
 
-import com.amazonaws.HttpMethod;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.*;
 import com.kcc.pms.domain.common.config.EnvVariableProperties;
@@ -9,10 +8,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.Date;
 import java.util.List;
 
 @Component
@@ -45,35 +40,16 @@ public class AwsS3Utils {
         }
     }
 
-    public S3ObjectInputStream downloadFile(String filePath) throws MalformedURLException, UnsupportedEncodingException {
-        URL url = new URL(filePath);
-        String path = url.getPath();
-        String key = path;
+    public S3ObjectInputStream downloadFile(String filePath) {
         String bucketName = properties.getS3().getBucket();
+        String objectKey = filePath.substring(filePath.indexOf("/", 8) + 1);
 
-        if (path.startsWith("/" + bucketName + "/")) {
-            key = path.substring(bucketName.length() + 2);
-        } else if (path.startsWith("/")) {
-            key = path.substring(1);
+        if (objectKey.startsWith("1/")) {
+            objectKey = "kcc_pms/" + objectKey;
         }
+        GetObjectRequest getObjectRequest = new GetObjectRequest(bucketName, objectKey);
+        S3Object s3Object = amazonS3.getObject(getObjectRequest);
 
-        S3Object s3Object = amazonS3.getObject(new GetObjectRequest(bucketName, key));
         return s3Object.getObjectContent();
-    }
-
-    public String generatePresignedUrl(String s3Key) {
-        // 유효 기간 설정 (예: 1시간)
-        Date expiration = new Date();
-        long expTimeMillis = expiration.getTime();
-        expTimeMillis += 1000 * 60 * 60; // 1시간 후 만료
-        expiration.setTime(expTimeMillis);
-
-        GeneratePresignedUrlRequest generatePresignedUrlRequest =
-                new GeneratePresignedUrlRequest(properties.getS3().getBucket(), s3Key)
-                        .withMethod(HttpMethod.GET)
-                        .withExpiration(expiration);
-
-        URL url = amazonS3.generatePresignedUrl(generatePresignedUrlRequest);
-        return url.toString();
     }
 }

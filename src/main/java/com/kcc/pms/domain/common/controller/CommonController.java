@@ -39,7 +39,6 @@ public class CommonController {
         return projectService.getCommonProjectList(login_id);
     }
 
-
     @GetMapping("/commonProjectInfo")
     public String getCommonProject(@RequestParam Long prjNo, @RequestParam String prjTitle,
                                    HttpSession session, HttpServletRequest request,
@@ -109,5 +108,4 @@ public class CommonController {
     private boolean isValidFileName(String fileName) {
         return !fileName.contains("..") && !fileName.contains("/");
     }
-
 }

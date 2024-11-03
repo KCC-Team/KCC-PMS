@@ -11,6 +11,25 @@
     width: 45%;
 }
 
+.output-btn-area{
+    position: fixed;
+    display: flex;
+    justify-content: center;
+    left: 75%;
+}
+
+#outputCont {
+    padding: 5px;
+    margin: 5px;
+    resize: none;
+}
+
+.output-task-area {
+    position: fixed;
+    display: flex;
+    left: 50%;
+}
+
 .btn-link {
     color: #575454;
     text-decoration: none;
@@ -35,6 +54,7 @@
 
 .first-component {
     width: 40%;
+    height: 665.5px;
     margin-right: 12px;
     background-color: #fff;
     border: 1px solid #C5C5C5;
@@ -47,6 +67,19 @@
     font-size: 15px;
 }
 
+.file-opt-area, .output-task-area {
+    display: none;
+}
+
+.txt-area {
+    padding: 10px;
+}
+
+.jstree-section {
+    overflow-y: auto;
+    height: 585px;
+}
+
 .second-component {
     width: 60%;
     margin-right: 12px;
@@ -55,6 +88,7 @@
     transition: opacity 0.5s, transform 0.5s;
     opacity: 1;
     transform: translateY(0);
+    display: none;
 }
 
 #outputTask {

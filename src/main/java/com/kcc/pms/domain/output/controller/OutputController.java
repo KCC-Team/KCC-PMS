@@ -38,9 +38,9 @@ public class OutputController {
 
     @GetMapping("/{id}")
     @ResponseBody
-    public ResponseEntity<OutputResponseDto> findOutput(HttpSession session, @PathVariable("id") Long id) {
-        Long prjNo = (Long) session.getAttribute("prjNo");
-        return ResponseEntity.ok().body(outputService.findOutput(prjNo, id));
+    public ResponseEntity<OutputResponseDto> findOutput(@PathVariable("id") Long id) {
+        OutputResponseDto output = outputService.findOutput(id);
+        return ResponseEntity.ok().body(output);
     }
 
     @GetMapping("/api/list")
@@ -53,14 +53,14 @@ public class OutputController {
 
     @PostMapping("/api/save")
     @ResponseBody
-    public ResponseEntity<Void> saveOutputFolders(HttpSession session,
+    public ResponseEntity<Long> saveOutputFolders(HttpSession session,
                             @AuthenticationPrincipal PrincipalDetail principalDetail,
                             String title,
+                            String note,
                             @RequestPart("res") List<FileStructResponseDto> res,
                             @RequestParam("files") List<MultipartFile> files) {
         Long prjNo = (Long) session.getAttribute("prjNo");
-        outputService.insertOutput(prjNo, principalDetail.getMember().getMemberName(), title, res, files);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok().body(outputService.insertOutput(prjNo, principalDetail.getMember().getMemberName(), title, note, res, files));
     }
 
     @PostMapping("/api/fileinsert")
@@ -79,8 +79,9 @@ public class OutputController {
     @ResponseBody
     public ResponseEntity<Void> updateOutputInfo(HttpSession session,
                               @RequestParam("title") String title,
+                              @RequestParam("note") String note,
                               @RequestParam("outputNo") Long outputNo) {
-        outputService.updateOutputInfo(title, outputNo);
+        outputService.updateOutputInfo(title, note, outputNo);
         return ResponseEntity.ok().build();
     }
 
@@ -130,7 +131,7 @@ public class OutputController {
 
             for (OutputDownloadRequestDto output : files) {
                 try {
-                    byte[] fileData = commonService.downloadFile(output.getFilePath()); // S3에서 파일을 다운로드
+                    byte[] fileData = commonService.downloadFile(output.getFilePath());
                     ZipArchiveEntry zipEntry = new ZipArchiveEntry(output.getFileTitle());
                     zos.putArchiveEntry(zipEntry);
                     zos.write(fileData);
