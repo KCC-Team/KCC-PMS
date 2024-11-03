@@ -40,22 +40,6 @@ public class AwsS3Utils {
         }
     }
 
-//    public S3ObjectInputStream downloadFile(String filePath) throws MalformedURLException, UnsupportedEncodingException {
-//        URL url = new URL(filePath);
-//        String path = url.getPath();
-//        String key = path;
-//        String bucketName = properties.getS3().getBucket();
-//
-//        if (path.startsWith("/" + bucketName + "/")) {
-//            key = path.substring(bucketName.length() + 2);
-//        } else if (path.startsWith("/")) {
-//            key = path.substring(1);
-//        }
-//
-//        S3Object s3Object = amazonS3.getObject(new GetObjectRequest(bucketName, key));
-//        return s3Object.getObjectContent();
-//    }
-
     public S3ObjectInputStream downloadFile(String filePath) {
         String bucketName = properties.getS3().getBucket();
         String objectKey = filePath.substring(filePath.indexOf("/", 8) + 1); // "8"은 "https://" 이후 첫 '/' 위치를 건너뛰기 위함입니다.
