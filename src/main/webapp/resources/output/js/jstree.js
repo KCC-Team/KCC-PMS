@@ -41,7 +41,7 @@ $(function() {
         },
         error: function () {
             toast.push({
-                theme: 'error',
+                theme: 'warning',
                 msg: '트리 데이터를 가져오는데 실패했습니다.',
                 closeIcon: '<i class="fa fa-times"></i>'
             });
@@ -144,7 +144,7 @@ $(function() {
         },
         error: function () {
             toast.push({
-                theme: 'error',
+                theme: 'danger',
                 msg: '트리 데이터를 가져오는데 실패했습니다.',
                 closeIcon: '<i class="fa fa-times"></i>'
             });
@@ -219,6 +219,8 @@ function setToast() {
         displayTime: 3000,
         animateTime: 500,
         toastWidth: 300,
+        icon: '<i class="fa fa-bell"></i>',
+        closeIcon: '<i class="fa fa-times"></i>'
     });
 }
 

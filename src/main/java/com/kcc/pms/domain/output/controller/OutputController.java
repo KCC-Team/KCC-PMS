@@ -53,15 +53,14 @@ public class OutputController {
 
     @PostMapping("/api/save")
     @ResponseBody
-    public ResponseEntity<Void> saveOutputFolders(HttpSession session,
+    public ResponseEntity<Long> saveOutputFolders(HttpSession session,
                             @AuthenticationPrincipal PrincipalDetail principalDetail,
                             String title,
                             String note,
                             @RequestPart("res") List<FileStructResponseDto> res,
                             @RequestParam("files") List<MultipartFile> files) {
         Long prjNo = (Long) session.getAttribute("prjNo");
-        outputService.insertOutput(prjNo, principalDetail.getMember().getMemberName(), title, note, res, files);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok().body(outputService.insertOutput(prjNo, principalDetail.getMember().getMemberName(), title, note, res, files));
     }
 
     @PostMapping("/api/fileinsert")

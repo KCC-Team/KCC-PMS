@@ -181,7 +181,7 @@
                     </section>
                 </div>
                 <div class="modal-footer d-flex justify-content-center">
-                    <button type="button" id="output-save" class="save-button" data-bs-dismiss="modal">&nbsp;&nbsp;저장하기&nbsp;&nbsp;</button>&nbsp;&nbsp;
+                    <button type="button" id="output-save" class="save-button">&nbsp;&nbsp;저장하기&nbsp;&nbsp;</button>&nbsp;&nbsp;
                     <button type="button" class="cancel-button" data-bs-dismiss="modal">&nbsp;&nbsp;닫기&nbsp;&nbsp;</button>
                 </div>
             </div>
@@ -192,6 +192,8 @@
 <script>
     let selectedNode = null;
     let myDropzone;
+    let mask = new ax5.ui.mask();
+
     $(function () {
         Dropzone.autoDiscover = false;
         const $selectElement = $('#task-select');
@@ -265,6 +267,9 @@
             if (!isSaved) {
                 selectedOptions = [];
                 $selectBox.empty();
+
+                $('.txt-area').val('');
+                $('.note-area').val('');
             }
         });
     });
@@ -279,7 +284,8 @@
             myDropzone = initDropzone('#insert-file-dropzone', '.file-zone', previewTemplate);
         }
 
-        $('#output-save').on('click', function() {
+        $('#output-save').on('click', function(e) {
+            e.preventDefault();
             insertData(myDropzone, $('#outputForm')[0]);
         });
     });
@@ -300,48 +306,64 @@
                 '.xml,.json,.psd,.ai,' +
                 '.mp4,.mov,.avi,.mp3,.wav',
             dictInvalidFileType: '허용되지 않는 파일 형식입니다.',
+            maxFilesize: 20,
+            dictFileTooBig: '파일 크기가 너무 큽니다. 최대 파일 크기는 {{maxFilesize}}MB입니다.',
         });
     }
 
     function insertData(dropzone, $form) {
-
         if (!selectedNode) {
-            toast.error('파일 위치를 선택해주세요.');
+            toast.push({
+                theme: 'warning',
+                msg: '파일 위치를 선택해주세요.'
+            });
             return;
         }
 
-        // 선택된 노드를 부모로 설정
+        let files = dropzone.files;
+        let formData = new FormData($form);
+
+        if (files.length > 0) {
+            for (let i = 0; i < files.length; i++) {
+                let file = files[i];
+                if (file.size > 20 * 1024 * 1024) {
+                    toast.push({
+                        theme: 'warning',
+                        msg: '최대 파일 크기는 20MB입니다.'
+                    });
+                    return;
+                } else if (file.name && file.name.length > 50) {
+                    toast.push({
+                        theme: 'warning',
+                        msg: '최대 파일 이름 길이는 50자입니다.'
+                    });
+                    return;
+                }
+                formData.append('files', file);
+            }
+        }
+
+        // 파일 검증 통과 후에 노드 추가
         let parentNodeId = selectedNode.id;
-
-        // 새 노드 ID 생성 (고유 ID 생성 방식 필요)
-
         let newNode = {
             id: findMaxId(window.treeData[0]) + 1,
             text: $form.title.value,
             type: 'n'
         };
 
-        // jsTree에 새 노드 추가
         $('.jstree-folder').jstree('create_node', parentNodeId, newNode, "last", function(new_node) {
             $('.jstree-folder').jstree('deselect_all', true);
             $('.jstree-folder').jstree('select_node', new_node);
             $('.jstree-folder').jstree('open_node', parentNodeId);
         });
 
-        let files = dropzone.files;
-
-        let formData = new FormData($form);
-        if (files.length > 0) {
-            files.forEach(file => {
-                formData.append('files', file);
-            });
-        }
-
         let treeData = $('.jstree-folder').jstree(true).get_json('#', { flat: false });
         let updatedTreeData = transformTreeData(treeData);
 
         formData.append('res', new Blob([JSON.stringify(updatedTreeData)], { type: "application/json" }));
         formData.append('res', JSON.stringify(updatedTreeData));
+
+        mask.open();
         $.ajax({
             url: '/projects/outputs/api/save',
             type: 'post',
@@ -355,7 +377,12 @@
                         dropzone.emit("complete", file);
                     });
                 }
-                window.location.href = '/projects/outputs?no=${selectedNodeId}&toastMsg=산출물 파일이 성공적으로 저장되었습니다.';
+                $('#insertModal').modal('hide');
+                $('.txt-area').val('');
+                $('.note-area').val('');
+
+                mask.close();
+                window.location.href = '/projects/outputs?no=' + response + '&toastMsg=산출물 파일이 성공적으로 저장되었습니다.';
             },
             error: function(response) {
                 console.error(response);

@@ -31,9 +31,10 @@ public class OutputServiceImpl implements OutputService {
 
     @Transactional
     @Override
-    public void insertOutput(Long projectNo, String memberName, String title, String note, List<FileStructResponseDto> res, List<MultipartFile> files) {
+    public Long insertOutput(Long projectNo, String memberName, String title, String note, List<FileStructResponseDto> res, List<MultipartFile> files) {
         Long outputNo = updateOutput(projectNo, res, null, commonService.fileUpload(files, memberName, projectNo, null));
         outputMapper.updateOutputInfo(title, note, outputNo);
+        return outputNo;
     }
 
     @Override
@@ -50,10 +51,6 @@ public class OutputServiceImpl implements OutputService {
         List<FileStructResponseDto> currentList = outputMapper.findList(projectNo, option);
         Map<Long, FileStructResponseDto> currentMap = currentList.stream()
                 .collect(Collectors.toMap(FileStructResponseDto::getId, Function.identity()));
-
-        Map<Long, FileStructResponseDto> modifiedMap = flattenTree.stream()
-                .collect(Collectors.toMap(FileStructResponseDto::getId, Function.identity()));
-
         // 노드 추가 및 수정 처리
         for (FileStructResponseDto modifiedNode : flattenTree) {
             if (modifiedNode.getParentId() == null) {

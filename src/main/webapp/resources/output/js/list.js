@@ -17,7 +17,7 @@ $(function () {
 
         if (parentNode.type === 'n') {
             toast.push({
-                theme: 'error',
+                theme: 'warning',
                 msg: '파일은 다른 파일 아래로 이동할 수 없습니다.'
             });
             data.instance.refresh();
@@ -105,7 +105,7 @@ $(function () {
                 },
                 error: function(xhr, status, error) {
                     toast.push({
-                        theme: 'error',
+                        theme: 'danger',
                         msg: '순서 저장 중 오류가 발생했습니다.'
                     });
                 }
@@ -267,7 +267,7 @@ $(function () {
             });
         } else {
             toast.push({
-                theme: 'error',
+                theme: 'warning',
                 msg: '삭제할 파일을 선택해주세요.'
             });
             return;
@@ -288,7 +288,7 @@ $(function () {
             error: function (jqXHR, textStatus, errorThrown) {
                 console.error('삭제 요청 중 오류 발생:', textStatus, errorThrown);
                 toast.push({
-                    theme: 'error',
+                    theme: 'danger',
                     msg: '파일 삭제 중 오류가 발생했습니다.'
                 });
             }
@@ -323,7 +323,7 @@ $(function () {
             },
             error: function (xhr, status, error) {
                 toast.push({
-                    theme: 'error',
+                    theme: 'danger',
                     msg: '산출물 저장 중 오류가 발생했습니다.'
                 });
             }
@@ -342,7 +342,7 @@ $(function () {
               },
               error: function (xhr, status, error) {
                 toast.push({
-                    theme: 'error',
+                    theme: 'danger',
                     msg: '산출물 삭제 중 오류가 발생했습니다.'
                 });
               }
