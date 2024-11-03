@@ -226,14 +226,15 @@ $(function () {
         let $button = $(e.target);
         let $row = $button.closest('tr');
 
-        let filePath = $row.find('input[type="hidden"]')[0].value;
-        let fileTitle = $row.find('input[type="hidden"]')[1].value;
+        let filePath = $row.find('input[type="hidden"]')[1].value;
+        let fileTitle = $row.find('input[type="hidden"]')[2 ].value;
 
         let file = {
             filePath: filePath,
             fileTitle: fileTitle
         }
 
+        console.log(file);
         fetch('/projects/outputs/api/download', {
             method: 'post',
             headers: {
@@ -242,6 +243,7 @@ $(function () {
             body: JSON.stringify(file)
         })
             .then(response => {
+                console.log(response);
                 const fileName = response.headers.get('Content-Disposition').match(/filename\*?="?(?:UTF-8''?)?([^";]+)"?;?/)[1];
                 return response.blob().then(blob => ({ blob, fileName }));
             })
@@ -414,6 +416,7 @@ function loadVersionHistory(historyElement) {
                     <img data-dz-thumbnail src='../../../../resources/output/images/file-icon.png' style="width: 30px;"/>
                 </td>
                 <td style="text-align: left;">
+                    <input type="hidden" value="${version.fileNo}">
                     <input type="hidden" value="${version.filePath}">
                     <input type="hidden" value="${version.fileTitle}">
                     ${version.fileTitle}

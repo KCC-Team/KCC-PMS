@@ -119,7 +119,7 @@ public class CommonServiceImpl implements CommonService {
     }
 
     @Override
-    public byte[] downloadFile(String filePath) throws IOException {
+    public byte[]  downloadFile(String filePath) throws IOException {
         S3ObjectInputStream s3ObjectInputStream = awsS3Utils.downloadFile(filePath);
         byte[] bytes = IOUtils.toByteArray(s3ObjectInputStream);
         s3ObjectInputStream.close();

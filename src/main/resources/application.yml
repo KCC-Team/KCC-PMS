@@ -22,6 +22,7 @@ cloud:
   aws:
     s3:
       bucket: kcc-bucket
+      fakeUrl: /files-kccpms/
       url: ${cloud.aws.url}
     credentials:
       access-key: ${cloud.aws.accessKey}
@@ -55,9 +56,12 @@ spring:
 #      mode: always
 #      continue-on-error: false
 
+
 API-SERVER:
   url: http://localhost:8085
-
+logging:
+  level:
+    root: debug
 ---
 spring:
   config:

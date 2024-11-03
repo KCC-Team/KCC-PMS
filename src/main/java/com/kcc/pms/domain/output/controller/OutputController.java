@@ -132,7 +132,7 @@ public class OutputController {
 
             for (OutputDownloadRequestDto output : files) {
                 try {
-                    byte[] fileData = commonService.downloadFile(output.getFilePath()); // S3에서 파일을 다운로드
+                    byte[] fileData = commonService.downloadFile(output.getFilePath());
                     ZipArchiveEntry zipEntry = new ZipArchiveEntry(output.getFileTitle());
                     zos.putArchiveEntry(zipEntry);
                     zos.write(fileData);
