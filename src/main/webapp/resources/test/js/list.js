@@ -117,11 +117,12 @@ function reloadDataTest(testGrid, work, test, status, search, page) {
         method: "GET",
         url: "/projects/tests/api/list?work=" + work + "&testType=" + test + "&status=" + status + "&search=" + search + "&page=" + page,
         success: function (res) {
+            console.log(res);
             testGrid.setData({
                 list: res.testList,
                 page: {
                     currentPage: currentPage-1,
-                    pageSize: 10,
+                    pageSize: 15,
                     totalElements: res.totalElements,
                     totalPages: res.totalPage
                 }

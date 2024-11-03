@@ -19,6 +19,12 @@
         </association>
     </resultMap>
 
+    <resultMap id="TestPageResponseDto" type="TestPageResponseDto">
+        <result property="totalPage" column="totalPage"/>
+        <result property="totalElements" column="totalElements"/>
+        <collection property="testList" resultMap="testDto"/>
+    </resultMap>
+
     <resultMap id="TestDetailResultMap" type="TestDetailRequestDto">
         <id property="testDetailId" column="testDtlId"/>
         <result property="testData" column="testData"/>
@@ -61,7 +67,7 @@
         ORDER BY common_cd_no, order_no
     </select>
 
-    <select id="findAllByOptions" parameterType="map" resultMap="testDto">
+    <select id="findAllByOptions" parameterType="map" resultMap="TestPageResponseDto">
         SELECT *
         FROM (
         SELECT sub.*, ROWNUM rn
@@ -76,7 +82,8 @@
         TO_CHAR(t.test_end_dt, 'YYYY-MM-DD') AS testEndDate,
         COUNT(DISTINCT td.test_dtl_no) AS detailCount,
         COUNT(d.df_no) AS defectCount,
-        TRIM(cd_stat.cd_dtl_nm) AS testStatus
+        TRIM(cd_stat.cd_dtl_nm) AS testStatus,
+        count(*) over() totalElements
         FROM testmaster t
         LEFT JOIN testdetail td ON t.test_no = td.test_no
         LEFT JOIN codedetail cd_type ON t.type_cd = cd_type.cd_dtl_no
@@ -108,49 +115,94 @@
         WHERE rn > (#{page} - 1) * #{limit}
     </select>
 
+    <select id="getNextTestDetailNo" resultType="long">
+        SELECT SEQ_TESTDETAIL.nextval FROM DUAL
+    </select>
+
     <insert id="saveTest" parameterType="map">
-        <selectKey keyProperty="testNo" resultType="int" order="BEFORE">
+        <selectKey keyProperty="testReq.testNumber" resultType="long" order="BEFORE">
             SELECT SEQ_TESTMASTER.nextval FROM DUAL
         </selectKey>
 
         INSERT INTO testmaster
         (test_no, test_id, test_title, test_cont, stat_cd, type_cd,
-        test_st_dt, test_end_dt, prj_no, sys_work_no, reg_id, reg_dt, use_yn)
+         test_st_dt, test_end_dt, prj_no, sys_work_no, reg_id, reg_dt, use_yn)
         VALUES
-        (#{testNumber, jdbcType=INTEGER}, #{testId, jdbcType=VARCHAR}, #{testTitle, jdbcType=VARCHAR},
-        #{testContent, jdbcType=VARCHAR}, #{testStatus, jdbcType=CHAR},
-        #{testType, jdbcType=CHAR}, #{testStartDate, jdbcType=DATE}, #{testEndDate, jdbcType=DATE},
-        #{projectNumber, jdbcType=INTEGER}, #{workType, jdbcType=INTEGER},
-        'admin',
-        sysdate, 'Y')
+            (#{testReq.testNumber}, #{testReq.testId}, #{testReq.testTitle},
+             #{testReq.testContent}, #{testReq.testStatus},
+             #{testReq.testType}, #{testReq.testStartDate, jdbcType=DATE}, #{testReq.testEndDate, jdbcType=DATE},
+             #{projectNo}, #{testReq.workSystemNo, jdbcType=NUMERIC},
+             #{memberNo},
+             sysdate, 'Y')
     </insert>
 
-    <insert id="saveUnitTestDetails" parameterType="map">
+    <insert id="saveUnitTestDetails" parameterType="TestDetailRequestDto">
+        <selectKey keyProperty="testDetailNumber" resultType="long" order="BEFORE">
+            SELECT SEQ_TESTDETAIL.nextval FROM DUAL
+        </selectKey>
+
+        INSERT INTO testdetail (
+            test_dtl_no,
+            test_dtl_id,
+            pre_cond,
+            test_detail_cont,
+            test_data,
+            estimated_rlt,
+            mem_no,
+            test_no
+        )
+        VALUES (
+            #{testDetailNumber},
+            #{testDetailId},
+            #{preCondition},
+            #{testDetailContent},
+            #{testProcedure},
+            #{estimatedResult},
+            #{memberNo},
+            #{testNumber}
+        )
+    </insert>
+
+
+    <insert id="saveIntegrationTestDetails" parameterType="map">
+        <selectKey keyProperty="testDetailNumber" resultType="long" order="BEFORE">
+            SELECT SEQ_TESTDETAIL.nextval FROM DUAL
+        </selectKey>
+
         INSERT INTO testdetail
         (
             test_dtl_no,
             test_dtl_id,
             wrk_proc_cont,
+            feature,
             test_data,
             estimated_rlt,
-            test_detail_cont,
-            progress_cont,
-            pre_cond,
-            note,
             test_no
         )
         VALUES
             (
-                SEQ_TESTDETAIL.nextval,
-                #{testDetailId, jdbcType=VARCHAR},
-                #{workProcessContent, jdbcType=VARCHAR},
-                #{testData, jdbcType=VARCHAR},
-                #{estimatedResult, jdbcType=VARCHAR},
-                #{testDetailContent, jdbcType=VARCHAR},
-                #{progressContent, jdbcType=VARCHAR},
-                #{preCondition, jdbcType=VARCHAR},
-                #{note, jdbcType=VARCHAR},
-                #{testNumber, jdbcType=INTEGER}
+                #{testDetail.testDetailNumber},
+                #{testDetail.testDetailId},
+                #{testDetail.workContent},
+                #{testDetail.feature},
+                #{testDetail.testData},
+                #{testDetail.expectedResult},
+                #{testDetail.testNumber}
+            )
+    </insert>
+
+    <insert id="saveTestContent" parameterType="map">
+        INSERT INTO test_content
+        (
+            test_dtl_no,
+            test_id,
+            test_cont
+        )
+        VALUES
+            (
+                #{test.testDetailNumber},
+                #{test.testId},
+                #{test.testContent}
             )
     </insert>
 
@@ -187,28 +239,10 @@
         order by td.test_dtl_no
     </select>
 
-    <select id="getTestTotalCount" resultType="int">
-        SELECT count(*)
-        FROM testmaster t
-        LEFT JOIN testdetail td ON t.test_no = td.test_no
-        LEFT JOIN codedetail cd_type ON t.type_cd = cd_type.cd_dtl_no
-        LEFT JOIN codedetail cd_stat ON t.stat_cd = cd_stat.cd_dtl_no
-        LEFT JOIN defect d ON td.test_dtl_no = d.test_dtl_no
-        LEFT JOIN system sys_work ON sys_work.sys_no = t.sys_work_no
-        WHERE t.prj_no = #{projectNumber}
-        AND t.use_yn = 'Y'
-        <if test="workNumber != 0">
-            AND t.sys_work_no = #{workNumber, jdbcType=INTEGER}
-        </if>
-        <if test="testType != 'all'">
-            AND t.type_cd = #{testType, jdbcType=CHAR}
-        </if>
-        <if test="search != null">
-            AND (t.test_title LIKE '%' || #{search} || '%' OR t.test_id LIKE '%' || #{search} || '%')
-        </if>
-        <if test="status != 'all'">
-            AND t.stat_cd = #{status, jdbcType=CHAR}
-        </if>
+    <select id="getFeatures" resultType="FeatureSimpleResponseDto">
+        SELECT feat_no AS featureNo, feat_title AS featureName
+        FROM feature
+        WHERE prj_no = #{projectNumber}
     </select>
 
     <update id="deleteTest" parameterType="long">

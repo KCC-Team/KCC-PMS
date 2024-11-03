@@ -1,18 +1,19 @@
 package com.kcc.pms.domain.test.controller;
 
+import com.kcc.pms.auth.PrincipalDetail;
 import com.kcc.pms.domain.common.model.dto.CommonCodeOptions;
+import com.kcc.pms.domain.feature.model.dto.FeatureSimpleResponseDto;
 import com.kcc.pms.domain.test.domain.dto.TestPageResponseDto;
-import com.kcc.pms.domain.test.domain.dto.TestRequestDto;
+import com.kcc.pms.domain.test.domain.dto.TestMasterRequestDto;
 import com.kcc.pms.domain.test.service.TestService;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Map;
 
 @Controller
 @RequestMapping("/projects/tests")
@@ -51,9 +52,11 @@ public class TestController {
 
     @PostMapping("/test")
     @ResponseBody
-    public ResponseEntity<Void> insertTest(@RequestBody TestRequestDto testReq) {
-        testService.saveTest(testReq);
-        return ResponseEntity.ok().build();
+    public ResponseEntity<Long> insertTest(
+            @AuthenticationPrincipal PrincipalDetail principal,
+            HttpSession session, @RequestBody TestMasterRequestDto testReq) {
+        Long prjNo = (Long) session.getAttribute("prjNo");
+        return ResponseEntity.ok().body(testService.saveTest(principal.getMember().getMemNo(), prjNo, testReq));
     }
 
     @GetMapping("/{id}")
@@ -63,7 +66,7 @@ public class TestController {
 
     @GetMapping("/api/{id}")
     @ResponseBody
-    public ResponseEntity<TestRequestDto> findById(@PathVariable Long id) {
+    public ResponseEntity<TestMasterRequestDto> findById(@PathVariable Long id) {
         return ResponseEntity.ok().body(testService.getTestDetail(id));
     }
 
@@ -71,5 +74,12 @@ public class TestController {
     public ResponseEntity<Void> deleteTest(@PathVariable Long id) {
         testService.deleteTest(id);
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/features")
+    @ResponseBody
+    public ResponseEntity<List<FeatureSimpleResponseDto>> getFeatures(HttpSession session) {
+        Long prjNo = (Long) session.getAttribute("prjNo");
+        return ResponseEntity.ok().body(testService.getFeatures(prjNo));
     }
 }

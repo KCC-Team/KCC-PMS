@@ -3,38 +3,35 @@ package com.kcc.pms.domain.test.domain.dto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.io.Serializable;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static lombok.AccessLevel.PROTECTED;
 
 @Getter
+@Setter
 @NoArgsConstructor(access = PROTECTED)
 @AllArgsConstructor
 public class TestDetailRequestDto implements Serializable {
-    private String featNumber;
-    private String workProcessContent;  // 업무 처리 내용
+    private Long testDetailNumber;
+    private Long testNumber;           // 테스트 번호
     private String testDetailId;        // 테스트 케이스 ID
+    private String preCondition;        // 사전 조건
+    private String testDetailContent;   // 테스트 케이스 내용
+    private String testProcedure;       // 수행절차
+    private String workContent;         // 업무 처리 내용
+    private List<TestDto> tests;        // 통합 테스트용
+    private List<String> featNumber;
     private String testData;            // 테스트 데이터
     private String estimatedResult;     // 예상 결과
-    private String testDetailContent;   // 테스트 케이스 내용
-    private String progressContent;     // 수행절차
-    private String preCondition;        // 사전 조건
-    private String note;
-
-    public Map<String, Object> toUnitMap() {
-        Map<String, Object> map = new HashMap<>();
-        map.put("featNumber", featNumber);
-        map.put("workProcessContent", workProcessContent);
-        map.put("testDetailId", testDetailId);
-        map.put("testData", testData);
-        map.put("estimatedRlt", estimatedResult);
-        map.put("testDetailContent", testDetailContent);
-        map.put("progressContent", progressContent);
-        map.put("preCondition", preCondition);
-        map.put("note", note);
-        return map;
-    }
+    private String writtenDate;         // 작성일
+    private String writerNo;            // 작성자 번호
+    private String writerName;          // 작성자 이름
+    private String testDate;            // 테스트 일자
+    private String result;              // 결과
+    private List<Long> defectNos;       // 결함 번호
 }

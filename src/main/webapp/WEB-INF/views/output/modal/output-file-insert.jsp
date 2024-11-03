@@ -207,7 +207,8 @@
                         file.status = Dropzone.SUCCESS;
                         dropzone.emit("complete", file);
                     });
-                    alert('산출물 파일이 성공적으로 저장되었습니다.');
+                    $('.file_name').val('');
+                    $('.txt-area').val('');
                     window.location.href = '/projects/outputs?no=' + $('#outputNo').val();
                 } else {
                     window.location.href = response;

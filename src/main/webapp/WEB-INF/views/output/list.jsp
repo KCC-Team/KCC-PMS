@@ -65,7 +65,7 @@
                             </div>
                             <div>
                                 <h5 class="text-black">&nbsp;&nbsp;&nbsp;비고</h5>
-                                <textarea id="outputNote" name="outputNote" class="ms-3 txt-area" rows="4" cols="50"></textarea>
+                                <textarea id="outputNote" name="outputNote" class="ms-3" rows="4" cols="50"></textarea>
                             </div>
                             <br>
                             <div class="file-opt-area">

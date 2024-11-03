@@ -1,11 +1,8 @@
 package com.kcc.pms.domain.test.service;
 
 import com.kcc.pms.domain.common.model.dto.CommonCodeOptions;
-import com.kcc.pms.domain.task.defect.domain.dto.DefectPageResponseDto;
-import com.kcc.pms.domain.test.domain.dto.TestDetailRequestDto;
-import com.kcc.pms.domain.test.domain.dto.TestPageResponseDto;
-import com.kcc.pms.domain.test.domain.dto.TestRequestDto;
-import com.kcc.pms.domain.test.domain.dto.TestDto;
+import com.kcc.pms.domain.feature.model.dto.FeatureSimpleResponseDto;
+import com.kcc.pms.domain.test.domain.dto.*;
 import com.kcc.pms.domain.test.mapper.TestMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -15,7 +12,6 @@ import org.apache.ibatis.session.SqlSessionFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -36,57 +32,49 @@ public class TestServiceImpl implements TestService {
 
     @Override
     public TestPageResponseDto getTestList(Long projectNumber, Long workNumber, String testType, String status, String search, int page) {
-
-        List<TestDto> tests = testMapper.findAllByOptions(projectNumber, workNumber, testType, status, search, page, LIMIT);
-        int testTotalCount = testMapper.getTestTotalCount(projectNumber, workNumber, testType, search, status);
-        int totalPage = (int) Math.ceil((double) testTotalCount / LIMIT);
-
-        return new TestPageResponseDto(tests, totalPage, testTotalCount);
+        TestPageResponseDto tests = testMapper.findAllByOptions(projectNumber, workNumber, testType, status, search, page, LIMIT);
+        tests.setTotalPage((int) Math.ceil((double) tests.getTotalElements() / LIMIT));
+        return tests;
     }
 
     @Transactional
     @Override
-    public void saveTest(TestRequestDto testReq) {
-        SqlSession session = sqlSessionFactory.openSession(ExecutorType.BATCH, false);
-        try {
-            TestMapper mapper = session.getMapper(TestMapper.class);
+    public Long saveTest(Long memberNo, Long projectNo, TestMasterRequestDto testReq) {
+        testMapper.saveTest(memberNo, projectNo, testReq);
 
-            // 테스트 정보 저장 (테스트 헤더 정보)
-            Map<String, Object> testReqMapWithoutTestCase = testReq.toMapWithoutTestCase();
-            testReqMapWithoutTestCase.put("projectNumber", 1);
-
-            int isPass = mapper.saveTest(testReqMapWithoutTestCase);
-            if (isPass == 0) {
-                throw new RuntimeException("테스트 등록에 실패했습니다.");
+        for (TestDetailRequestDto testDetail : testReq.getTestCaseList()) {
+            if ("PMS01201".equals(testReq.getTestType())) {
+                saveUnitTestCase(testReq.getTestNumber(), testDetail);
+            } else if ("PMS01202".equals(testReq.getTestType())) {
+                saveIntegrationTestCase(testReq.getTestNumber(), testDetail);
             }
+        }
 
-            // 테스트 케이스 리스트를 반복하면서 배치 처리
-            for (TestDetailRequestDto detail : testReq.getTestCaseList()) {
-                Map<String, Object> map = detail.toUnitMap();
-                map.put("testNumber", testReqMapWithoutTestCase.get("testNumber"));
+        return testReq.getTestNumber();
+    }
 
-                // 개별 테스트 케이스 삽입
-                mapper.saveUnitTestDetails(map);
-            }
+    private void saveUnitTestCase(Long testNo, TestDetailRequestDto testCase) {
+        testCase.setTestNumber(testNo);
+        testMapper.saveUnitTestDetails(testCase);
+    }
 
-            session.flushStatements(); // 배치 실행
-            session.commit();
-        } catch(Exception e) {
-            session.rollback();
-            throw e;
-        } finally {
-            session.close();
+    private void saveIntegrationTestCase(Long testNo, TestDetailRequestDto testCase) {
+        testCase.setTestNumber(testNo);
+        testMapper.saveIntegrationTestDetails(testCase);
+
+        for (TestDto test : testCase.getTests()) {
+            testMapper.saveTestContent(test);
         }
     }
 
     @Override
-    public TestRequestDto getTestDetail(Long testNo) {
+    public TestMasterRequestDto getTestDetail(Long testNo) {
         return testMapper.getUnitTest(testNo);
     }
 
     @Transactional
     @Override
-    public void updateTest(TestRequestDto testReq) {
+    public void updateTest(TestMasterRequestDto testReq) {
 
     }
 
@@ -94,5 +82,10 @@ public class TestServiceImpl implements TestService {
     @Override
     public void deleteTest(Long testNo) {
         testMapper.deleteTest(testNo);
+    }
+
+    @Override
+    public List<FeatureSimpleResponseDto> getFeatures(Long projectNo) {
+        return testMapper.getFeatures(projectNo);
     }
 }

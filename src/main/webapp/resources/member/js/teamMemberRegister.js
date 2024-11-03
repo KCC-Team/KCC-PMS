@@ -1,7 +1,7 @@
 $(document).ready(function() {
     var urlParams = new URLSearchParams(window.location.search);
     let typeValue = urlParams.get('type');
-    if(typeValue === 'feature' || typeValue === 'defect1' || typeValue === 'defect2' || typeValue.includes('test_')){
+    if(typeValue === 'feature' || typeValue === 'defect1' || typeValue === 'defect2' || typeValue.includes('test_') || typeValue === 'test_unit_'){
         $('#jstree-container').css('height', '367px'); // jstree-container 높이 조절
         $('#memberList').css('height', '367px'); // memberList 높이 조절
     }
@@ -58,7 +58,7 @@ $(document).ready(function() {
         });
 
         $('#memberList').children().show();
-        if(typeValue === 'feature' || typeValue === 'defect1' || typeValue === 'defect2' || typeValue.includes('test_')){
+        if(typeValue === 'feature' || typeValue === 'defect1' || typeValue === 'defect2' || typeValue.includes('test_') || typeValue === 'test_unit_'){
             $('#addedContainer').hide();
         }
     });
@@ -81,8 +81,6 @@ $(document).ready(function() {
             }
         }, 0);
     });
-
-
 
     $('#memberList').children().hide();
 });

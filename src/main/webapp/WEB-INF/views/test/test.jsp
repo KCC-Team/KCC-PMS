@@ -13,7 +13,7 @@
 <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0"></script>
 
 <main class="content" id="content">
-    <div class="main_content" style="width: 97%; height: 87%">
+    <div class="main_content" style="width: 97%; height: 90%">
         <div class="div-section">
             <label class="div-info">
                 테스트 정보</label>
@@ -23,7 +23,7 @@
                         &nbsp;&nbsp;&nbsp;&nbsp;엑셀받기&nbsp;&nbsp;&nbsp;&nbsp;
                     </button>
                     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                    <button type="submit" class="save-btn">
+                    <button type="submit" class="save-btn-test">
                         &nbsp;&nbsp;&nbsp;&nbsp;저장&nbsp;&nbsp;&nbsp;&nbsp;
                     </button>
                     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
@@ -41,13 +41,13 @@
                         <tr>
                             <td class="td-title">테스트 명&nbsp;&nbsp;&nbsp;<span class="es-star">*</span></td>
                             <td colspan="3">
-                                <input type="text" name="testTitle" value="${testReq.testTitle}" required style="width: 100%;">
+                                <input type="text" id="testTitle" name="testTitle" value="${testReq.testTitle}" required style="width: 100%;">
                             </td>
                         </tr>
                         <tr>
                             <td class="td-title">테스트 ID&nbsp;&nbsp;&nbsp;<span class="es-star">*</span></td>
                             <td>
-                                <input id="test_id" type="text" name="testId" value="${testReq.testId}" required style="width: 100%;">
+                                <input type="text" id="testId" name="testId" value="${testReq.testId}" required style="width: 100%;">
                             </td>
                             <td class="td-title">테스트 구분&nbsp;&nbsp;&nbsp;<span class="es-star">*</span></td>
                             <td>
@@ -77,17 +77,17 @@
                         <tr>
                             <td class="td-title text-nowrap">테스트 시작일&nbsp;&nbsp;&nbsp;<span class="es-star">*</span></td>
                             <td>
-                                <input type="text" name="testStartDate" value="${fn:substring(scheduleDate,0,10) }" class="test-date" placeholder="yyyy-mm-dd" style="width: 100%;">
+                                <input type="text" id="testStartDate" name="testStartDate" value="${fn:substring(scheduleDate,0,10) }" class="test-date" placeholder="yyyy-mm-dd" style="width: 100%;">
                             </td>
                             <td class="td-title">테스트 종료일</td>
                             <td>
-                                <input type="text" name="testEndDate" value="${fn:substring(scheduleDate,0,10) }" class="test-date" placeholder="yyyy-mm-dd" style="width: 100%;">
+                                <input type="text" id="testEndDate" name="testEndDate" value="${fn:substring(scheduleDate,0,10) }" class="test-date" placeholder="yyyy-mm-dd" style="width: 100%;">
                             </td>
                         </tr>
                         <tr>
                             <td class="td-title">테스트 설명&nbsp;&nbsp;&nbsp;<span class="es-star">*</span></td>
                             <td colspan="3">
-                                <textarea id="test-txt" name="testCont" required style="width: 100%;">${testReq.testContent}</textarea>
+                                <textarea id="testContent" name="testContent" required style="width: 100%;">${testReq.testContent}</textarea>
                             </td>
                         </tr>
                     </table>
@@ -113,12 +113,23 @@
         </section>
         <section>
             <section>
-                <div class="feature-area">
-                    <label class="text-nowrap">기능 ID 선택&nbsp;&nbsp;&nbsp;</label>
-                    <select id="PMS014" class="feature-select" name="taskSelect">
-                        <option value="" selected disabled>기능 선택</option>
-                    </select>
+                <div class="d-flex justify-content-left">
+                    <div class="feature-area">
+                        <div class="feature-select-area d-flex justify-content-left">
+                            <label class="text-nowrap">테스트케이스ID&nbsp;&nbsp;&nbsp;</label>
+                            <input type="text" id="testDetailId" name="testDetailId" value="${testReq.testDetailId}" style="width: 200px">
+                            &nbsp;&nbsp;&nbsp;<label class="text-nowrap">기능 ID 선택&nbsp;&nbsp;&nbsp;</label>
+                            <select id="feature" class="feature-select" name="taskSelect">
+                                <option value="" selected disabled>기능 선택</option>
+                            </select>
+                        </div>
+
+                    </div>
+                    <div class="excel-area">
+                        <button type="button">&nbsp;&nbsp;&nbsp;테스트케이스 엑셀 업로드&nbsp;&nbsp;&nbsp;</button>
+                    </div>
                 </div>
+
                 <div class="testCase-section">
                     <table id="test-case-area">
                     </table>

@@ -17,6 +17,49 @@ label {
     z-index: 1000;
 }
 
+.div-section {
+    display: flex;
+    padding-top: 15px;
+    align-items: center;
+}
+
+.button-area {
+    position: fixed;
+    top: 90px;
+    right: 120px;
+    display: flex;
+    justify-content: flex-end;
+    padding: 10px;
+}
+
+.test-area {
+    width: 1450px;
+    margin-left: 38px;
+}
+
+
+.div-info {
+    font-size: 20px;
+    font-weight: bold;
+    border-bottom: 1px solid #989898;
+    width: 91.5%;
+    margin: 4px 0px 20px 40px;
+    padding-bottom: 5px;
+    float: left;
+    color: #000;
+}
+
+.filter-section {
+    width: 1365px;
+    background-color: white;
+    padding: 10px;
+    border-radius: 10px;
+    border: 1px #ddd solid;
+    display: flex;
+    align-items: center;
+    margin: 2px 45px 30px 37px;
+}
+
 .menu-item {
     padding: 10px;
     cursor: pointer;
