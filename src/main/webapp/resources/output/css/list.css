@@ -75,6 +75,11 @@
     padding: 10px;
 }
 
+.jstree-section {
+    overflow-y: auto;
+    height: 585px;
+}
+
 .second-component {
     width: 60%;
     margin-right: 12px;
