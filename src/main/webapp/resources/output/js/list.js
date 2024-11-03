@@ -101,11 +101,7 @@ $(function () {
                 contentType: 'application/json',
                 data: JSON.stringify(updatedTreeData),
                 success: function(response) {
-                    toast.push({
-                        theme: 'success',
-                        msg: '순서가 성공적으로 저장되었습니다.'
-                    });
-                    window.location.href = '/projects/outputs';
+                    window.location.href = '/projects/outputs?toastMsg=파일 순서가 성공적으로 저장되었습니다.';
                 },
                 error: function(xhr, status, error) {
                     toast.push({
@@ -264,7 +260,6 @@ $(function () {
         e.preventDefault();
 
         let files = grid.getList("selected");
-
         let fileIds = [];
         if (files.length > 0) {
             files.forEach(function (file) {
@@ -277,7 +272,6 @@ $(function () {
             });
             return;
         }
-        console.log(fileIds);
 
         $.ajax({
             url: '/projects/outputs/api/deletefile',
@@ -325,11 +319,13 @@ $(function () {
                 outputNo: selectedNodeId
             },
             success: function (response) {
-                alert('산출물 정보가 저장 되었습니다.');
                 window.location.href = `/projects/outputs?no=` + $('#outputNo').val() + `&toastMsg=산출물이 성공적으로 저장되었습니다.`;
             },
             error: function (xhr, status, error) {
-                alert('산출물 등록 중 에러가 발생했습니다.');
+                toast.push({
+                    theme: 'error',
+                    msg: '산출물 저장 중 오류가 발생했습니다.'
+                });
             }
         })
     });
@@ -342,11 +338,13 @@ $(function () {
                 outputNo: selectedNodeId
               },
               success: function (response) {
-                alert('산출물이 성공적으로 삭제 되었습니다.');
-                window.location.href = '/projects/outputs';
+                window.location.href = '/projects/outputs?toastMsg=산출물이 성공적으로 삭제되었습니다.';
               },
               error: function (xhr, status, error) {
-                alert('산출물 삭제 중 에러가 발생했습니다.');
+                toast.push({
+                    theme: 'error',
+                    msg: '산출물 삭제 중 오류가 발생했습니다.'
+                });
               }
        });
     });
@@ -461,6 +459,8 @@ function initDropzone(selector, preDiv, previewTemplate) {
             '.xml,.json,.psd,.ai,' +
             '.mp4,.mov,.avi,.mp3,.wav',
         dictInvalidFileType: '허용되지 않는 파일 형식입니다.',
+        maxFilesize: 20,
+        dictFileTooBig: '파일 크기가 너무 큽니다. 최대 파일 크기는 {{maxFilesize}}MB입니다.',
     });
 }
 

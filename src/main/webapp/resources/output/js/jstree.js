@@ -218,7 +218,7 @@ function setToast() {
         containerPosition: "top-right",
         displayTime: 3000,
         animateTime: 500,
-        toastWidth: 300
+        toastWidth: 300,
     });
 }
 

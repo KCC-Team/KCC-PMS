@@ -140,12 +140,10 @@ public class CommonServiceImpl implements CommonService {
             sqlSession.commit();
         } catch (Exception e) {
             sqlSession.rollback();
+            log.error("파일 업로드 중 오류가 발생했습니다.", e);
             throw new RuntimeException("파일 업로드 중 오류가 발생했습니다.");
         } finally {
             sqlSession.close();
         }
-    }
-
-    private void bulkSaveFiles(Map<String, Object> file) {
     }
 }
