@@ -99,6 +99,14 @@ public class FeatureController {
         return ResponseEntity.ok(response);
     }
 
+    @GetMapping("/list/delay")
+    @ResponseBody
+    public ResponseEntity<?> getDelayList(HttpSession session){
+        Long prjNo = (Long) session.getAttribute("prjNo");
+        List<FeatureSummaryResponseDto> delayList = service.getDelayList(prjNo);
+        return ResponseEntity.ok(delayList);
+    }
+
     @GetMapping("/totalProgress")
     @ResponseBody
     public ResponseEntity<FeatureProgressResponseDto> getProjectFeatureProgressSummary(HttpSession session) {
@@ -124,6 +132,33 @@ public class FeatureController {
             return ResponseEntity.notFound().build();
         }
 
+    }
+
+    @GetMapping("/members")
+    @ResponseBody
+    public ResponseEntity<List<FeatureMemberPrgResponseDto>> getMemberProgress(HttpSession session){
+        Long prjNo = (Long) session.getAttribute("prjNo");
+        List<FeatureMemberPrgResponseDto> memberProgress = service.getMemberProgress(prjNo);
+        return ResponseEntity.ok(memberProgress);
+    }
+
+    @GetMapping("/member/{memberNo}")
+    @ResponseBody
+    public ResponseEntity<?> getMemberFeatures(@PathVariable("memberNo") Long memberNo, HttpSession session){
+        System.out.println("memberNo = " + memberNo);
+        Long prjNo = (Long) session.getAttribute("prjNo");
+        MemberFeaturesResponseDto memberFeatures = service.getMemberFeatures(memberNo, prjNo);
+        return ResponseEntity.ok(memberFeatures);
+    }
+
+    @GetMapping("/member/{memberNo}/graph")
+    @ResponseBody
+    public ResponseEntity<?> getMemberFeatureGraph(@PathVariable("memberNo") Long memberNo, HttpSession session){
+        System.out.println("FeatureController.getMemberFeatureGraph");
+        System.out.println("memberNo = " + memberNo);
+        Long prjNo = (Long) session.getAttribute("prjNo");
+        List<MemberFeatGraphResponseDto> memberFeatureGraph = service.getMemberFeatureGraph(prjNo, memberNo);
+        return ResponseEntity.ok(memberFeatureGraph);
     }
 
     @PutMapping()
