@@ -24,4 +24,5 @@ public class RiskDto {
     private Long prjNo;
     private String discoverFilesJson;
     private String workFilesJson;
+    private String issueRiskType;
 }

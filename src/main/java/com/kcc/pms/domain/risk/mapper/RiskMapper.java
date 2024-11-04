@@ -15,7 +15,7 @@ import java.util.Optional;
 
 @Mapper
 public interface RiskMapper {
-    List<CommonCodeOptions> getRiskCommonCode();
+    List<CommonCodeOptions> getRiskCommonCode(String typeCode);
     int saveRisk(RiskDto req,
                  @Param(value = "fileMasterFoundNumber") Long fileMasterFoundNumber,
                  @Param(value = "fileMasterWorkNumber") Long fileMasterWorkNumber);
@@ -29,5 +29,5 @@ public interface RiskMapper {
     RiskHistoryDto getHistoryByNo(Long historyNo);
     int updateHistory(RiskHistoryDto req);
     int deleteByNo(Long historyNo);
-    List<ExcelRiskDto> getRiskWithHistoriesAndFiles(Long prjNo);
+    List<ExcelRiskDto> getRiskWithHistoriesAndFiles(Long prjNo, String typeCode);
 }

@@ -23,6 +23,7 @@ public class ExcelRiskDto implements Serializable {
     private String riskPlan;
     private Date dueDt;
     private Date complDt;
+    private Date registDt;
     private String sysTtl;
     private String memNm;
     private List<ExcelHistoryDto> histories;

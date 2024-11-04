@@ -323,7 +323,7 @@ function fetchMenuData() {
 
 function fetchOptions() {
     $.ajax({
-        url: '/api/risk/options',
+        url: '/api/risk/options?typeCode=PMS00302',
         method: 'GET',
         success: function(data) {
             console.log(data)
