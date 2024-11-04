@@ -3,6 +3,7 @@ package com.kcc.pms.domain.risk.service;
 import com.kcc.pms.domain.common.model.dto.CommonCodeOptions;
 import com.kcc.pms.domain.common.model.vo.FileMasterNumbers;
 import com.kcc.pms.domain.risk.model.dto.*;
+import com.kcc.pms.domain.risk.model.excel.ExcelRiskDto;
 
 import java.util.List;
 import java.util.Optional;
@@ -21,4 +22,5 @@ public interface RiskService {
     int updateHistory(RiskHistoryDto req,
                       RiskFileRequestDto files, Long prjNo);
     int deleteHistory(Long historyNo);
+    List<ExcelRiskDto> getRiskWithHistoriesAndFiles(Long prjNo);
 }

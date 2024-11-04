@@ -8,16 +8,21 @@ import com.kcc.pms.domain.common.model.dto.CommonCodeOptions;
 import com.kcc.pms.domain.common.model.dto.FileResponseDto;
 import com.kcc.pms.domain.common.model.vo.FileMasterNumbers;
 import com.kcc.pms.domain.common.service.CommonService;
+import com.kcc.pms.domain.common.util.ExcelGenerator;
 import com.kcc.pms.domain.risk.model.dto.*;
+import com.kcc.pms.domain.risk.model.excel.ExcelRiskDto;
 import com.kcc.pms.domain.risk.service.RiskService;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.util.*;
 
 @Controller
@@ -27,6 +32,7 @@ public class RiskController {
     private final RiskService service;
     private final CommonService commonService;
     private final ObjectMapper objectMapper;
+    private final ExcelGenerator excelGenerator;
 
     @GetMapping("/api/risk/options")
     @ResponseBody
@@ -236,6 +242,24 @@ public class RiskController {
 
         return ResponseEntity.ok(histories);
     }
+
+    @GetMapping("/projects/risks/excel")
+    public ResponseEntity<byte[]>  riskExcelExport(HttpSession session) throws IOException {
+        Long prjNo = (Long) session.getAttribute("prjNo");
+
+        List<ExcelRiskDto> riskWithHistoriesAndFiles = service.getRiskWithHistoriesAndFiles(prjNo);
+
+        byte[] excelData = excelGenerator.generateRiskExcel(riskWithHistoriesAndFiles);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentDispositionFormData("attachment", "RiskManagement.xlsx");
+        headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
+
+        return ResponseEntity.ok()
+                .headers(headers)
+                .body(excelData);
+    }
+
 
     private String generateFilesJson(List<FileResponseDto> files) {
         try {
