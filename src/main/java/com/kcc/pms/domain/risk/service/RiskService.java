@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface RiskService {
-    List<CommonCodeOptions> getRiskCommonCode();
+    List<CommonCodeOptions> getRiskCommonCode(String typeCode);
     Long saveRisk(RiskDto req, RiskFileRequestDto files, String memberName);
     Optional<FileMasterNumbers> getFileMasterNumbers(Long no);
     RiskDto getRiskByNo(Long riskNo);
@@ -22,5 +22,5 @@ public interface RiskService {
     int updateHistory(RiskHistoryDto req,
                       RiskFileRequestDto files, Long prjNo);
     int deleteHistory(Long historyNo);
-    List<ExcelRiskDto> getRiskWithHistoriesAndFiles(Long prjNo);
+    List<ExcelRiskDto> getRiskWithHistoriesAndFiles(Long prjNo, String typeCode);
 }
