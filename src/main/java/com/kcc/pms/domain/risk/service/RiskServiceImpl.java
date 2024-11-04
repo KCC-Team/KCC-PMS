@@ -5,6 +5,7 @@ import com.kcc.pms.domain.common.model.vo.FileMasterNumbers;
 import com.kcc.pms.domain.common.service.CommonService;
 import com.kcc.pms.domain.risk.mapper.RiskMapper;
 import com.kcc.pms.domain.risk.model.dto.*;
+import com.kcc.pms.domain.risk.model.excel.ExcelRiskDto;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -139,6 +140,11 @@ public class RiskServiceImpl implements RiskService {
         }
 
         return mapper.deleteByNo(historyNo);
+    }
+
+    @Override
+    public List<ExcelRiskDto> getRiskWithHistoriesAndFiles(Long prjNo) {
+        return mapper.getRiskWithHistoriesAndFiles(prjNo);
     }
 
 

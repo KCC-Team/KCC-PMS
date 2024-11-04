@@ -252,4 +252,111 @@
     <delete id="deleteByNo">
         DELETE FROM history where history_no = #{historyNo}
     </delete>
+
+
+
+
+    <resultMap id="FileDetailMap" type="com.kcc.pms.domain.risk.model.excel.ExcelFileDetailDto">
+        <id property="flNo" column="FIND_FL_NO"/>
+        <result property="originalTtl" column="FIND_FILE_NAME"/>
+        <result property="filePath" column="FIND_FILE_PATH"/>
+        <result property="flType" column="FIND_FILE_TYPE"/>
+        <result property="flSize" column="FIND_FILE_SIZE"/>
+    </resultMap>
+
+
+    <resultMap id="HistoryFileDetailMap" type="com.kcc.pms.domain.risk.model.excel.ExcelFileDetailDto">
+        <id property="flNo" column="HISTORY_FL_NO"/>
+        <result property="originalTtl" column="HISTORY_FILE_NAME"/>
+        <result property="filePath" column="HISTORY_FILE_PATH"/>
+        <result property="flType" column="HISTORY_FILE_TYPE"/>
+        <result property="flSize" column="HISTORY_FILE_SIZE"/>
+    </resultMap>
+
+
+    <resultMap id="HistoryMap" type="com.kcc.pms.domain.risk.model.excel.ExcelHistoryDto">
+        <id property="historyNo" column="HISTORY_NO"/>
+        <result property="recordDt" column="RECORD_DT"/>
+        <result property="recordCont" column="RECORD_CONT"/>
+        <result property="memNm" column="HM_MEM_NM"/>
+
+
+        <collection property="historyFiles" ofType="com.kcc.pms.domain.risk.model.excel.ExcelFileDetailDto" resultMap="HistoryFileDetailMap"/>
+    </resultMap>
+
+
+    <resultMap id="RiskMap" type="com.kcc.pms.domain.risk.model.excel.ExcelRiskDto">
+        <id property="riskNo" column="RISK_NO"/>
+        <result property="riskId" column="RISK_ID"/>
+        <result property="rskTtl" column="RSK_TTL"/>
+        <result property="typeCd" column="TYPE_CD_DTL_NM"/>
+        <result property="classCd" column="CLASS_CD_DTL_NM"/>
+        <result property="statCd" column="STAT_CD_DTL_NM"/>
+        <result property="priCd" column="PRI_CD_DTL_NM"/>
+        <result property="riskCont" column="RISK_CONT"/>
+        <result property="riskPlan" column="RISK_PLAN"/>
+        <result property="dueDt" column="DUE_DT"/>
+        <result property="complDt" column="COMPL_DT"/>
+        <result property="sysTtl" column="system"/>
+        <result property="memNm" column="FM_MEM_NM"/>
+
+        <collection property="findFiles" ofType="com.kcc.pms.domain.risk.model.excel.ExcelFileDetailDto" resultMap="FileDetailMap"/>
+        <collection property="histories" ofType="com.kcc.pms.domain.risk.model.excel.ExcelHistoryDto" resultMap="HistoryMap"/>
+    </resultMap>
+
+
+    <select id="getRiskWithHistoriesAndFiles"  resultMap="RiskMap">
+        SELECT
+            R.RISK_NO,
+            R.RISK_ID,
+            R.RSK_TTL,
+            TYPE.CD_DTL_NM AS TYPE_CD_DTL_NM,
+            CLASS.CD_DTL_NM AS CLASS_CD_DTL_NM,
+            STAT.CD_DTL_NM AS STAT_CD_DTL_NM,
+            PRI.CD_DTL_NM AS PRI_CD_DTL_NM,
+            R.RISK_CONT,
+            R.RISK_PLAN,
+            R.DUE_DT,
+            R.COMPL_DT,
+            SUBSTR((SELECT SYS_CONNECT_BY_PATH(s2.sys_ttl, ' > ')
+                    FROM system s2
+                    WHERE s2.sys_no = s.sys_no
+                    START WITH s2.par_sys_no IS NULL
+                    CONNECT BY PRIOR s2.sys_no = s2.par_sys_no), 3) AS system,
+            FM.MEM_NM AS FM_MEM_NM,
+
+            H.HISTORY_NO,
+            H.RECORD_DT,
+            H.RECORD_CONT,
+            HM.MEM_NM AS HM_MEM_NM,
+
+            FD.FL_NO AS FIND_FL_NO,
+            FD.ORIGINAL_TTL AS FIND_FILE_NAME,
+            FD.FILE_PATH AS FIND_FILE_PATH,
+            FD.FL_TYPE AS FIND_FILE_TYPE,
+            FD.FL_SIZE AS FIND_FILE_SIZE,
+
+            HFD.FL_NO AS HISTORY_FL_NO,
+            HFD.ORIGINAL_TTL AS HISTORY_FILE_NAME,
+            HFD.FILE_PATH AS HISTORY_FILE_PATH,
+            HFD.FL_TYPE AS HISTORY_FILE_TYPE,
+            HFD.FL_SIZE AS HISTORY_FILE_SIZE
+
+        FROM
+            RISK R
+            LEFT JOIN HISTORY H ON R.RISK_NO = H.RISK_NO
+            LEFT JOIN CODEDETAIL TYPE ON R.TYPE_CD = TYPE.CD_DTL_NO
+            LEFT JOIN CODEDETAIL CLASS ON R.CLASS_CD = CLASS.CD_DTL_NO
+            LEFT JOIN CODEDETAIL STAT ON R.STAT_CD = STAT.CD_DTL_NO
+            LEFT JOIN CODEDETAIL PRI ON R.PRI_CD = PRI.CD_DTL_NO
+            LEFT JOIN MEMBER FM ON R.MEM_NO = FM.MEM_NO
+            LEFT JOIN MEMBER HM ON H.MEM_NO = HM.MEM_NO
+            LEFT JOIN SYSTEM S ON R.SYS_NO = S.SYS_NO
+            LEFT JOIN FILEDETAIL FD ON R.FL_MS_FD_NO = FD.FL_MS_NO AND FD.DEL_ID IS NULL AND FD.DEL_DT IS NULL
+            LEFT JOIN FILEDETAIL HFD ON H.FL_MS_NO = HFD.FL_MS_NO AND HFD.DEL_ID IS NULL AND HFD.DEL_DT IS NULL
+
+        WHERE
+            R.PRJ_NO = #{prjNo}
+        ORDER BY NVL(s.par_sys_no, s.sys_no), CASE WHEN s.par_sys_no IS NULL THEN 0 ELSE 1 END, s.sys_no
+    </select>
 </mapper>

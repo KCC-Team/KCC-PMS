@@ -252,3 +252,25 @@ function createMenuHTML(menuData, parentElement, path) {
         parentElement.append(listItem);
     });
 }
+
+$('.danger-export-excel').click(function (e) {
+    e.preventDefault();
+    $.ajax({
+        url: '/projects/risks/excel',
+        type: 'GET',
+        xhrFields: {
+            responseType: 'blob' // 바이너리 데이터를 받을 수 있도록 설정
+        },
+        success: function (response) {
+            const blob = new Blob([response], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+            const link = document.createElement('a');
+            link.href = window.URL.createObjectURL(blob);
+            link.download = 'RiskManagement.xlsx'; // 다운로드될 파일명
+            link.click();
+            window.URL.revokeObjectURL(link.href);
+        },
+        error: function (xhr, status, error) {
+            console.error('엑셀 파일 다운로드에 실패했습니다.', error);
+        }
+    });
+});
