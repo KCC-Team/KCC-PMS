@@ -21,8 +21,8 @@ public class RiskServiceImpl implements RiskService {
     private final CommonService commonService;
 
     @Override
-    public List<CommonCodeOptions> getRiskCommonCode() {
-        return mapper.getRiskCommonCode();
+    public List<CommonCodeOptions> getRiskCommonCode(String typeCode) {
+        return mapper.getRiskCommonCode(typeCode);
     }
 
     @Override
@@ -132,8 +132,8 @@ public class RiskServiceImpl implements RiskService {
 
     @Override
     public int deleteHistory(Long historyNo) {
-         RiskHistoryDto history = Optional.ofNullable(mapper.getHistoryByNo(historyNo))
-                 .orElseThrow(() -> new RuntimeException("해당 조치 이력을 찾을 수 없습니다."));
+        RiskHistoryDto history = Optional.ofNullable(mapper.getHistoryByNo(historyNo))
+                .orElseThrow(() -> new RuntimeException("해당 조치 이력을 찾을 수 없습니다."));
 
         if (history.getFileMasterNo() != null) {
             commonService.deleteFile(history.getFileMasterNo());
@@ -143,8 +143,8 @@ public class RiskServiceImpl implements RiskService {
     }
 
     @Override
-    public List<ExcelRiskDto> getRiskWithHistoriesAndFiles(Long prjNo) {
-        return mapper.getRiskWithHistoriesAndFiles(prjNo);
+    public List<ExcelRiskDto> getRiskWithHistoriesAndFiles(Long prjNo, String typeCode) {
+        return mapper.getRiskWithHistoriesAndFiles(prjNo, typeCode);
     }
 
 
@@ -153,7 +153,7 @@ public class RiskServiceImpl implements RiskService {
         params.put("prjNo", cri.getPrjNo());
         params.put("startRow", cri.getStartRow());
         params.put("endRow", cri.getEndRow());
-
+        params.put("typeCode", cri.getTypeCode());
         params.put("systemNo", cri.getFilters().get("systemNo"));
         params.put("selectedClassNo", cri.getFilters().get("selectedClassNo"));
         params.put("selectedStatusNo", cri.getFilters().get("selectedStatusNo"));

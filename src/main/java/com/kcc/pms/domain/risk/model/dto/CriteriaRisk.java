@@ -15,6 +15,7 @@ public class CriteriaRisk {
     private int endRow;
     private String keyword;
     private Long prjNo;
+    private String typeCode;
     private Map<String, String> filters = new HashMap<>();
 
     public CriteriaRisk() {

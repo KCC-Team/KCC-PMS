@@ -2,8 +2,20 @@ let deletedFiles = []
 let discoverFiles;
 let workFiles;
 let dropzone1;
-let dropzone2;
+let riskNo;
+let historyDropzone;
 document.addEventListener('DOMContentLoaded', function() {
+    const statusSelect = document.getElementById('PMS004');
+    const completionDateField = document.getElementById('completeDate');
+
+    statusSelect.addEventListener('change', function() {
+        if (statusSelect.value === 'PMS00403') {
+            completionDateField.value = getCurrentDate();
+        } else {
+            completionDateField.value = '';
+        }
+    });
+
     if (Dropzone.instances.length > 0) {
         Dropzone.instances.forEach(function(dz) {
             dz.destroy();
@@ -13,7 +25,13 @@ document.addEventListener('DOMContentLoaded', function() {
     const previewTemplate = `
         <div class="dz-preview dz-file-preview">
             <a target="_blank" class="dz-image-link">
-                <img data-dz-thumbnail style="width: 65px; height: 65px"/>
+                <img
+                    data-dz-thumbnail
+                    style="width: 120px; height: 120px"
+                    src="#"
+                    class="dz-image-file"
+                    onerror="this.onerror=null; this.src='../../../../resources/output/images/file-icon.png';"
+                />
             </a>
             <div class="dz-details">
                 <div class="dz-filename"><span data-dz-name style="width: 100px"></span></div>
@@ -26,8 +44,8 @@ document.addEventListener('DOMContentLoaded', function() {
     `;
 
     dropzone1 = initDropzone('#risk-insert-file-dropzone_1', '.file-zone_1', previewTemplate, "/projects/risks/risk");
-    dropzone2 = initDropzone('#risk-insert-file-dropzone_2', '.file-zone_2', previewTemplate, "/projects/risks/risk");
 
+    historyDropzone = initDropzone("#history-insert-file-dropzone", '.file-zone_3', previewTemplate, "/projects/risks/risk");
 
     dropzone1.on("removedfile", function(file) {
         if (file.isExisting) {
@@ -35,9 +53,13 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
-    dropzone2.on("removedfile", function(file) {
-        if (file.isExisting) {
-            deletedFiles.push(file.id);
+
+
+    historyDropzone.on("removedfile", function(file) {
+        if (file.isExisting && file.id) {
+            if (!deletedFiles.includes(file.id)) {
+                deletedFiles.push(file.id);
+            }
         }
     });
 
@@ -58,7 +80,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     const urlParams = new URLSearchParams(window.location.search);
     const type = urlParams.get('type');
-    const riskNo = urlParams.get('no');
+    riskNo = urlParams.get('no');
     console.log("riskNo = " + riskNo);
     if (type === 'register') {
         console.log("registerMember = ", registerMember);
@@ -93,7 +115,7 @@ document.addEventListener('DOMContentLoaded', function() {
             requestMethod = "PUT";
         }
         console.log("form Data", $form);
-        insertData(dropzone1, dropzone2, $form, requestUrl, requestMethod);
+        insertData(dropzone1, $form, requestUrl, requestMethod);
     });
 
     $('.del-btn').on('click', function(e) {
@@ -120,17 +142,25 @@ document.addEventListener('DOMContentLoaded', function() {
         window.close();
     });
 
+    $('.dz-image-file').on('click', function(e) {
+        if (e.target.src.includes('file-icon.png')) {
+            $.ajax({
+                url: '/fileDownload?=filePath=' + e.target.src,
+                method: 'GET',
+            });
+        }
+    });
+
+    getHistories();
 });
 
 
 
-function insertData(dropzone_dis, dropzone_work, $form, requestUrl, requestMethod) {
+function insertData(dropzone_dis, $form, requestUrl, requestMethod) {
     let formData;
     let dis_files;
-    let work_files
     if(requestMethod === 'POST'){
         dis_files = dropzone_dis.files;
-        work_files = dropzone_work.files;
 
         formData = new FormData($form);
         if (dis_files.length > 0) {
@@ -138,14 +168,10 @@ function insertData(dropzone_dis, dropzone_work, $form, requestUrl, requestMetho
                 formData.append('disFiles', file);
             });
         }
-        if (work_files.length > 0) {
-            work_files.forEach(file => {
-                formData.append('workFiles', file);
-            });
-        }
+
     } else if(requestMethod === 'PUT'){
         dis_files = dropzone_dis.files;
-        work_files = dropzone_work.files;
+
 
         formData = new FormData($form);
         if (dis_files.length > 0) {
@@ -155,13 +181,7 @@ function insertData(dropzone_dis, dropzone_work, $form, requestUrl, requestMetho
                 }
             });
         }
-        if (work_files.length > 0) {
-            work_files.forEach(file => {
-                if (!file.isExisting) {
-                    formData.append('workFiles', file);
-                }
-            });
-        }
+
         if (deletedFiles.length > 0) {
             deletedFiles.forEach(file => {
                 formData.append('deleteFiles', file);
@@ -182,14 +202,10 @@ function insertData(dropzone_dis, dropzone_work, $form, requestUrl, requestMetho
                     dropzone_dis.emit("complete", file);
                 });
             }
-            if (work_files.length > 0) {
-                work_files.forEach(file => {
-                    file.status = Dropzone.SUCCESS;
-                    dropzone_work.emit("complete", file);
-                });
-            }
+
             console.log("redirect url");
             console.log(response);
+            deletedFiles = [];
             window.location.href = response;
         },
         error: function(response) {
@@ -207,7 +223,6 @@ function getRiskInfo(riskNo){
         success: function (response){
             console.log("riskInfo = ", response);
             discoverFiles = JSON.parse(response.discoverFilesJson || '[]');
-            workFiles = JSON.parse(response.workFilesJson || '[]');
             push();
             updateForm(response);
         },
@@ -219,33 +234,6 @@ function getRiskInfo(riskNo){
 }
 
 function push(){
-
-    workFiles.forEach(function(file) {
-        let mockFile = {
-            id: file.fileNumber,
-            name: file.fileName,
-            size: file.fileSize,
-            url: file.filePath,
-            isExisting: true
-        };
-
-        dropzone2.emit("addedfile", mockFile);
-        dropzone2.emit("thumbnail", mockFile, file.filePath);
-        dropzone2.emit("complete", mockFile);
-
-        let previewElement = mockFile.previewElement;
-        if (previewElement) {
-            previewElement.classList.add("existing-file");
-
-            let removeButton = previewElement.querySelector("[data-dz-remove]");
-            let imageLink = previewElement.querySelector(".dz-image-link");
-            if (imageLink) {
-                imageLink.href = file.filePath;
-            }
-        }
-        dropzone2.files.push(mockFile);
-    });
-
 
     discoverFiles.forEach(function(file) {
         let mockFile = {
@@ -287,8 +275,12 @@ function updateForm(data){
     $('#PMS006').val(data.priorCode);
     $('#riskContent').val(data.riskContent);
     $('#riskPlan').val(data.riskPlan);
-    $('#dueDate').val(data.dueDate);
-    $('#completeDate').val(data.completeDate);
+    if(data.dueDate != null){
+        $('#dueDate').val(formatDate(data.dueDate));
+    }
+    if(data.completeDate != null){
+        $('#completeDate').val(formatDate(data.completeDate));
+    }
     $('#PMS004').val(data.statusCode);
     $('#memberNo').val(data.memberNo);
     $('#memberName').val(data.memberName);
@@ -331,7 +323,7 @@ function fetchMenuData() {
 
 function fetchOptions() {
     $.ajax({
-        url: '/api/risk/options',
+        url: '/api/risk/options?typeCode=PMS00301',
         method: 'GET',
         success: function(data) {
             console.log(data)
@@ -408,4 +400,253 @@ function createMenuHTML(menuData, parentElement, path) {
 
         parentElement.append(listItem);
     });
+}
+
+
+$('#addHistoryBtn').click(function (e) {
+    e.preventDefault();
+    const recordDate = $('#record_dt').val();
+    const recordContent = $('#record_cont').val();
+    const historyNo = $('#historyNo').val();
+
+    console.log(recordDate);
+    console.log(recordContent);
+
+    if (!recordDate) {
+        alert("조치일자는 필수 입력 항목입니다.");
+        $('#record_dt').focus();
+        return;
+    }
+
+    let formData = new FormData();
+    formData.append('recordDate', recordDate);
+    formData.append('recordContent', recordContent);
+    formData.append('riskNo', riskNo);
+
+    // `historyNo`가 존재하면 수정으로 처리
+    if (historyNo) {
+        formData.append('historyNo', historyNo);
+    }
+
+    // Dropzone의 파일 첨부 처리: 새로 추가된 파일만 전송
+    historyDropzone.files.forEach(file => {
+        if (!file.isExisting) {  // 새로 추가된 파일만 전송
+            formData.append('historyFiles', file);
+        }
+    });
+
+    if (deletedFiles.length > 0) {
+        deletedFiles.forEach(file => {
+            formData.append('deleteFiles', file);
+        });
+    }
+
+    // FormData의 내용을 확인 (디버깅용)
+    for (let pair of formData.entries()) {
+        console.log(pair[0] + ', ' + pair[1]);
+    }
+
+    $.ajax({
+        url: '/projects/risks/history',
+        type: 'POST',
+        data: formData,
+        contentType: false,
+        processData: false,
+        success: function (response) {
+            historyDropzone.removeAllFiles(true);
+            $('#historyModal').modal('hide');
+            $('#historyForm')[0].reset();
+            $('#historyNo').val('');
+            deletedFiles = []
+            getHistories();
+        },
+        error: function (xhr, status, error) {
+            console.error("Error:", error);
+            alert("요청 처리 중 문제가 발생했습니다. 다시 시도해주세요.");
+        }
+    });
+});
+
+function deleteHistory(historyNo) {
+    if (confirm("정말로 이 조치 이력을 삭제하시겠습니까?")) {
+        $.ajax({
+            url: '/projects/risks/history/' + historyNo,
+            type: 'DELETE',
+            success: function(response) {
+                alert(response);
+                getHistories();
+            },
+            error: function(xhr, status, error) {
+                console.error("삭제 중 오류가 발생했습니다:", error);
+                alert("조치 이력 삭제에 실패했습니다. 다시 시도해주세요.");
+            }
+        });
+    }
+}
+
+function getHistories(){
+    $.ajax({
+        url: '/projects/risks/history?riskNo=' + riskNo,
+        type: 'GET',
+        success: function(his) {
+            console.log("his=", his);
+            $('.history-section').empty();
+            $('.history-section').append('<div class="history-title">조치이력</div>');
+            $('.history-section').append('<div class="history-items"></div>'); // 이력 목록 컨테이너 추가
+
+            his.forEach(item => {
+                const formattedDate = item.recordDate.substring(0, 10);
+                const filesHtml = generateFileLinks(item.historyFilesJson, item.historyNo);
+
+
+                let editDeleteButtons = '';
+                if (item.memberNo == loginMemberNo) {
+                    editDeleteButtons = `
+                        <button class="edit-history-btn" data-history-no="${item.historyNo}">수정</button>
+                        <button type="button" class="delete-history-btn" data-history-no="${item.historyNo}">삭제</button>
+                    `;
+                }
+
+                const historyItemHtml = `
+                    <div class="history-item">
+                        <div class="history-header">
+                            <div class="history-name">${item.memberName}</div>
+                            <div class="history-date-wrapper">
+                                ${editDeleteButtons}
+                                <div class="history-date">${formattedDate}</div>
+                            </div>
+                        </div>
+                        <div class="history-content">
+                            <p>${item.recordContent}</p>
+                        </div>
+                        <div class="history-files">
+                            ${filesHtml}
+                        </div>
+                    </div>
+                `;
+                $('.history-items').append(historyItemHtml);
+
+                // 삭제 버튼 클릭 이벤트 리스너 추가
+                $('.delete-history-btn').on('click', function() {
+                    const historyNo = $(this).data('history-no');
+                    deleteHistory(historyNo);
+                });
+
+            });
+
+        }
+    });
+}
+
+
+
+function generateFileLinks(filesJson) {
+    const files = JSON.parse(filesJson || '[]');
+    let imageFilesHtml = '';
+    let documentFilesHtml = '';
+
+    files.forEach(file => {
+        const fileExtension = file.filePath.split('.').pop().toLowerCase();
+        const isImage = ['jpg', 'jpeg', 'png', 'gif', 'jfif'].includes(fileExtension);
+        const fileSizeKB = (file.fileSize / 1024).toFixed(2); // KB 단위로 변환
+
+        if (isImage) {
+            imageFilesHtml += `
+                <div class="file-item image-file">
+                    <a href="${file.filePath}" target="_blank">
+                        <img src="${file.filePath}" class="thumbnail" alt="${file.fileName}">
+                    </a>
+                    <div class="file-info">
+                        <div class="file-name">${file.fileName}</div>
+                        <div class="file-size">${fileSizeKB} KB</div>
+                    </div>
+                </div>
+            `;
+        } else {
+            documentFilesHtml += `
+                <div class="file-item document-file">
+                    <a href="${file.filePath}" target="_blank">
+                        <i class="fas fa-file"></i> ${file.fileName}
+                    </a>
+                    <div class="file-size">${fileSizeKB} KB</div>
+                </div>
+            `;
+        }
+    });
+
+    return `
+        <div class="image-files-container">${imageFilesHtml}</div>
+        <div class="document-files-container">${documentFilesHtml}</div>
+    `;
+}
+
+
+$(document).on('click', '.edit-history-btn', function(e) {
+    e.preventDefault();
+    const historyNo = $(this).data('history-no');
+    console.log("historyNo = " + historyNo);
+    openEditHistoryModal(historyNo);
+});
+
+function openEditHistoryModal(historyNo) {
+    $.ajax({
+        url: '/projects/risks/history/' + historyNo,
+        type: 'GET',
+        success: function(response) {
+            console.log(response);
+            $('#record_dt').val(formatDate(response.recordDate));
+            $('#record_cont').val(response.recordContent);
+
+            // 중복 방지를 위해 기존 파일을 모두 제거하고 초기화
+            historyDropzone.removeAllFiles(true);
+            historyDropzone.files = [];  // files 배열을 초기화하여 중복 방지
+
+            const historyFiles = JSON.parse(response.historyFilesJson || '[]');
+
+            historyFiles.forEach(file => {
+                let mockFile = {
+                    id: file.fileNumber,
+                    name: file.fileName,
+                    size: file.fileSize,
+                    url: file.filePath,
+                    isExisting: true
+                };
+                historyDropzone.emit("addedfile", mockFile);
+                historyDropzone.emit("thumbnail", mockFile, file.filePath);
+                historyDropzone.emit("complete", mockFile);
+                historyDropzone.files.push(mockFile); // Dropzone의 files 배열에 추가
+            });
+
+            // 수정 시 사용할 historyNo 설정
+            $('#historyNo').val(historyNo);
+
+            $('#historyModal').modal('show'); // 모달 열기
+        }
+    });
+}
+
+
+function formatDate(dateString) {
+    const date = new Date(dateString);
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+}
+
+// 모달이 닫힐 때 dropzone 초기화
+$('#historyModal').on('hidden.bs.modal', function () {
+    historyDropzone.removeAllFiles(true);  // 기존 파일 제거
+    historyDropzone.files = [];  // Dropzone 파일 배열 초기화
+    $('#historyForm')[0].reset();  // 폼 초기화
+    $('#historyNo').val('');  // historyNo 초기화
+});
+
+// 현재 날짜를 yyyy-MM-dd 형식으로 반환하는 함수
+function getCurrentDate() {
+    const today = new Date();
+    const year = today.getFullYear();
+    const month = String(today.getMonth() + 1).padStart(2, '0');
+    const day = String(today.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
 }

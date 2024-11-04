@@ -20,7 +20,16 @@
         SELECT common_cd_no, cd_dtl_no, cd_dtl_nm, order_no
         FROM codedetail
         WHERE (COMMON_CD_NO IN ('PMS005', 'PMS006'))
-           OR (COMMON_CD_NO = 'PMS004' AND FIELD_2 = 'Y') AND use_yn = 'Y'
+        OR (
+        COMMON_CD_NO = 'PMS004'
+        AND use_yn = 'Y'
+        <if test="typeCode == 'PMS00302'">
+            AND FIELD_2 = 'Y'
+        </if>
+        <if test="typeCode == 'PMS00301'">
+            AND FIELD_3 = 'Y'
+        </if>
+        )
         ORDER BY COMMON_CD_NO, ORDER_NO
     </select>
 
@@ -31,14 +40,14 @@
 
         INSERT INTO RISK
         (risk_no, risk_id, rsk_ttl, type_cd, class_cd, stat_cd, pri_cd, risk_cont, risk_plan, due_dt, compl_dt,
-        prj_no, sys_no, mem_no, fl_ms_act_no, fl_ms_fd_no)
+        prj_no, sys_no, mem_no, fl_ms_act_no, fl_ms_fd_no, regist_dt)
         VALUES
         (
         #{req.riskNumber}, #{req.riskId, jdbcType=VARCHAR}, #{req.riskTitle, jdbcType=VARCHAR},
-        'PMS00302', #{req.classCode, jdbcType=VARCHAR}, #{req.statusCode, jdbcType=VARCHAR}, #{req.priorCode, jdbcType=VARCHAR},
-         #{req.riskContent, jdbcType=VARCHAR}, #{req.riskPlan, jdbcType=VARCHAR}, #{req.dueDate, jdbcType=DATE},
-          #{req.completeDate, jdbcType=DATE}, #{req.prjNo}, #{req.systemNo, jdbcType=NUMERIC}, #{req.memberNo, jdbcType=NUMERIC},
-        #{fileMasterWorkNumber, jdbcType=NUMERIC}, #{fileMasterFoundNumber, jdbcType=NUMERIC}
+        #{req.issueRiskType, jdbcType=VARCHAR}, #{req.classCode, jdbcType=VARCHAR}, #{req.statusCode, jdbcType=VARCHAR}, #{req.priorCode, jdbcType=VARCHAR},
+        #{req.riskContent, jdbcType=VARCHAR}, #{req.riskPlan, jdbcType=VARCHAR}, #{req.dueDate, jdbcType=DATE},
+        #{req.completeDate, jdbcType=DATE}, #{req.prjNo}, #{req.systemNo, jdbcType=NUMERIC}, #{req.memberNo, jdbcType=NUMERIC},
+        #{fileMasterWorkNumber, jdbcType=NUMERIC}, #{fileMasterFoundNumber, jdbcType=NUMERIC}, SYSDATE
         )
     </insert>
 
@@ -70,8 +79,7 @@
             risk r,
             member m
         WHERE
-            r.type_cd = 'PMS00302'
-          AND r.mem_no = m.mem_no
+            r.mem_no = m.mem_no
           AND r.risk_no = #{riskNo}
     </select>
 
@@ -122,7 +130,7 @@
         JOIN codedetail stat ON r.stat_cd = stat.cd_dtl_no
         JOIN codedetail pri ON r.pri_cd = pri.cd_dtl_no
         WHERE
-        r.prj_no = #{prjNo, jdbcType=NUMERIC}
+        r.prj_no = #{prjNo, jdbcType=NUMERIC} AND r.type_cd = #{typeCode}
 
         <if test="systemNo != null and systemNo !=''">
             AND (s.sys_no = #{systemNo, jdbcType=NUMERIC}
@@ -161,7 +169,7 @@
         JOIN codedetail stat ON r.stat_cd = stat.cd_dtl_no
         JOIN codedetail pri ON r.pri_cd = pri.cd_dtl_no
         WHERE
-        r.prj_no = #{prjNo, jdbcType=NUMERIC}
+        r.prj_no = #{prjNo, jdbcType=NUMERIC} AND r.type_cd = #{typeCode}
 
         <if test="systemNo != null and systemNo !=''">
             AND (s.sys_no = #{systemNo, jdbcType=NUMERIC}
@@ -297,6 +305,7 @@
         <result property="riskPlan" column="RISK_PLAN"/>
         <result property="dueDt" column="DUE_DT"/>
         <result property="complDt" column="COMPL_DT"/>
+        <result property="registDt" column="REGIST_DT"/>
         <result property="sysTtl" column="system"/>
         <result property="memNm" column="FM_MEM_NM"/>
 
@@ -316,6 +325,7 @@
             PRI.CD_DTL_NM AS PRI_CD_DTL_NM,
             R.RISK_CONT,
             R.RISK_PLAN,
+            R.REGIST_DT,
             R.DUE_DT,
             R.COMPL_DT,
             SUBSTR((SELECT SYS_CONNECT_BY_PATH(s2.sys_ttl, ' > ')
@@ -344,19 +354,19 @@
 
         FROM
             RISK R
-            LEFT JOIN HISTORY H ON R.RISK_NO = H.RISK_NO
-            LEFT JOIN CODEDETAIL TYPE ON R.TYPE_CD = TYPE.CD_DTL_NO
-            LEFT JOIN CODEDETAIL CLASS ON R.CLASS_CD = CLASS.CD_DTL_NO
-            LEFT JOIN CODEDETAIL STAT ON R.STAT_CD = STAT.CD_DTL_NO
-            LEFT JOIN CODEDETAIL PRI ON R.PRI_CD = PRI.CD_DTL_NO
-            LEFT JOIN MEMBER FM ON R.MEM_NO = FM.MEM_NO
-            LEFT JOIN MEMBER HM ON H.MEM_NO = HM.MEM_NO
-            LEFT JOIN SYSTEM S ON R.SYS_NO = S.SYS_NO
-            LEFT JOIN FILEDETAIL FD ON R.FL_MS_FD_NO = FD.FL_MS_NO AND FD.DEL_ID IS NULL AND FD.DEL_DT IS NULL
-            LEFT JOIN FILEDETAIL HFD ON H.FL_MS_NO = HFD.FL_MS_NO AND HFD.DEL_ID IS NULL AND HFD.DEL_DT IS NULL
+                LEFT JOIN HISTORY H ON R.RISK_NO = H.RISK_NO
+                LEFT JOIN CODEDETAIL TYPE ON R.TYPE_CD = TYPE.CD_DTL_NO
+                LEFT JOIN CODEDETAIL CLASS ON R.CLASS_CD = CLASS.CD_DTL_NO
+                LEFT JOIN CODEDETAIL STAT ON R.STAT_CD = STAT.CD_DTL_NO
+                LEFT JOIN CODEDETAIL PRI ON R.PRI_CD = PRI.CD_DTL_NO
+                LEFT JOIN MEMBER FM ON R.MEM_NO = FM.MEM_NO
+                LEFT JOIN MEMBER HM ON H.MEM_NO = HM.MEM_NO
+                LEFT JOIN SYSTEM S ON R.SYS_NO = S.SYS_NO
+                LEFT JOIN FILEDETAIL FD ON R.FL_MS_FD_NO = FD.FL_MS_NO AND FD.DEL_ID IS NULL AND FD.DEL_DT IS NULL
+                LEFT JOIN FILEDETAIL HFD ON H.FL_MS_NO = HFD.FL_MS_NO AND HFD.DEL_ID IS NULL AND HFD.DEL_DT IS NULL
 
         WHERE
-            R.PRJ_NO = #{prjNo}
+            R.PRJ_NO = #{prjNo} AND R.TYPE_CD = #{typeCode}
         ORDER BY NVL(s.par_sys_no, s.sys_no), CASE WHEN s.par_sys_no IS NULL THEN 0 ELSE 1 END, s.sys_no
     </select>
 </mapper>
