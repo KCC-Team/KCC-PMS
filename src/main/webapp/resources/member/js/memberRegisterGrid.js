@@ -88,7 +88,7 @@ $(document.body).ready(function () {
                 console.log(member.preEndDate);
                 console.log(member.startDate);
                 console.log(member.endDate);
-                console.log(member.connectTeams);
+                console.log(member.connectTeam);
                 addedMembers.push({
                     id: member.id,
                     name: member.memberName,
@@ -100,7 +100,9 @@ $(document.body).ready(function () {
                     st_dt: member.startDate ? member.startDate : "",
                     end_dt: member.endDate ? member.endDate : "",
                     techGrade: member.tech,
-                    connectTeams: member.connectTeams
+                    connectTeam: member.connectTeam,
+                    teamNo: member.teamNo,
+                    parentNo: member.parentNo
                 });
 
             }
@@ -124,7 +126,11 @@ $(document.body).ready(function () {
     initGrid();
     reg_loadProjectMember();
 
-    //$('#add-member-by-prjmem').hide();
+    setTimeout(function() {
+        $('#add-member-by-prjmem').hide();
+    },300);
+
+
 
     checkProject();
 });
@@ -209,9 +215,9 @@ function initGrid() {
         showRowSelector: true,
         target: $('[data-ax5grid="groupmemGrid"]'),
         columns: [
-            {key: "memberName", label: "성명", align: "center"},
+            {key: "memberName", width:70, label: "성명", align: "center"},
             {key: "position", label: "직위", align: "center" },
-            {key: "email", width: 220, label: "이메일", align: "center"},
+            {key: "email", width: 230, label: "이메일", align: "center"},
             {key: "participate_yn", width: 70, label: "참여여부",align: "center"},
             {key: "tech", width: 70, label: "기술등급",align: "center"}
         ],
@@ -232,15 +238,8 @@ function initGrid() {
             {key: "position", width: 80, label: "직위", align: "center"},
             {key: "tech", width: 80, label: "기술등급", align: "center"},
             {key: "teamName", width: 110, label: "소속팀", align: "center", formatter: function() {
-                    // connectedTeams을 탐색하면서 소속된 팀들 모두 가져옴
-                    if (this.item.connectTeams && this.item.connectTeams.length > 0) {
-                        // 소속팀이 하나뿐이고 parentNo이 null인 경우
-                        if (this.item.connectTeams.length === 1 && this.item.connectTeams[0].parentNo === null) {
-                            return '-'; // 소속팀이 없음을 표시
-                        }
-                        return this.item.connectTeams.map(function(team) {
-                            return team.teamName;
-                        }).join(', '); // 팀 이름을 ', '로 구분하여 표시
+                    if (this.item.parentNo != null) {
+                        return this.item.teamName;
                     } else {
                         return '-';
                     }
@@ -250,7 +249,13 @@ function initGrid() {
                     config: {
                         content: {
                             config: {
-                                mode: "year", selectMode: "day"
+                                mode: "year",
+                                selectMode: "day",
+                                // 기본 포커스 날짜 설정
+                                defaultDate: function() {
+                                    // 값이 2999-12-31이면 현재 날짜로 기본 포커스 설정
+                                    return this.value.substring(0, 10)  === '2999-12-31' ? new Date() : this.value;
+                                }
                             }
                         }
                     },
@@ -265,7 +270,13 @@ function initGrid() {
                     config: {
                         content: {
                             config: {
-                                mode: "year", selectMode: "day"
+                                mode: "year",
+                                selectMode: "day",
+                                // 기본 포커스 날짜 설정
+                                defaultDate: function() {
+                                    // 값이 2999-12-31이면 현재 날짜로 기본 포커스 설정
+                                    return this.value.substring(0, 10)  === '2999-12-31' ? new Date() : this.value;
+                                }
                             }
                         }
                     },
@@ -280,7 +291,13 @@ function initGrid() {
                     config: {
                         content: {
                             config: {
-                                mode: "year", selectMode: "day"
+                                mode: "year",
+                                selectMode: "day",
+                                // 기본 포커스 날짜 설정
+                                defaultDate: function() {
+                                    // 값이 2999-12-31이면 현재 날짜로 기본 포커스 설정
+                                    return this.value.substring(0, 10)  === '2999-12-31' ? new Date() : this.value;
+                                }
                             }
                         }
                     },
@@ -295,7 +312,13 @@ function initGrid() {
                     config: {
                         content: {
                             config: {
-                                mode: "year", selectMode: "day"
+                                mode: "year",
+                                selectMode: "day",
+                                // 기본 포커스 날짜 설정
+                                defaultDate: function() {
+                                    // 값이 2999-12-31이면 현재 날짜로 기본 포커스 설정
+                                    return this.value.substring(0, 10)  === '2999-12-31' ? new Date() : this.value;
+                                }
                             }
                         }
                     },
@@ -413,7 +436,7 @@ function initGrid() {
                         }
 
                 },
-                {key: "techGrade", width: 70, label: "기술등급", align: "center"}
+                {key: "techGrade", width: 85, label: "기술등급", align: "center"}
             ],
             page: {
                 display: false
@@ -435,6 +458,7 @@ async function registerMember() {
     console.log("register call addedMembers" + addedMembers);
     loadAuthCommonCode().then(async function(commonCodeOptions) {
         addedMembers.map(function(member) {
+            console.log(addedMembers);
             console.log(JSON.stringify(member));
             var authCode = member.auth;
             var selectedOption = commonCodeOptions.find(function(option) {
@@ -451,12 +475,18 @@ async function registerMember() {
                 pre_end_dt: member.preEndDate ? member.preEndDate : null,
                 st_dt: member.startDate ? member.startDate : null,
                 end_dt: member.endDate ? member.endDate : null,
-                connectFirstTeamNo: member.connectTeams ? member.connectTeams[0].teamNo : null
+                connectFirstTeamNo: member.teamNo ? member.teamNo : null
             };
 
-            if (member.connectTeams && member.connectTeams.length === 1 && member.connectTeams[0].parentNo === null) {
+            console.log("!!!!");
+            console.log(member);
+            if (member.parentNo === null) {
                 unassignedMembers.push(memberData);
-            } else {
+            } else if (member.teamNo == null){
+                assignedMembers.push(memberData);
+                console.log("AAAAAAAAAAAAAAAAAAAA");
+            }
+            else {
                 assignedMembers.push(memberData);
             }
         });
@@ -465,6 +495,8 @@ async function registerMember() {
             let assignedMembersPromise = Promise.resolve();  // 기본값으로 비어있는 Promise 생성
 
             if (assignedMembers.length > 0) {
+                alert("assignedMembers");
+                alert(assignedMembers);
                 assignedMembersPromise = $.ajax({
                     url: '/team/' + teamNo + '/members?prjNo=' + prjNo,
                     type: 'POST',
@@ -480,6 +512,8 @@ async function registerMember() {
             let unassignedMembersPromise = Promise.resolve();  // 기본값으로 비어있는 Promise 생성
 
             if (unassignedMembers.length > 0) {
+                alert("unassignedMembers")
+                alert(unassignedMembers);
                 // 모든 비배정 팀원의 팀 배정 요청을 저장할 배열
                 const requests = unassignedMembers.map(memberData => {
                     console.log("update" + memberData.id);

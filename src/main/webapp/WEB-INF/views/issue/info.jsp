@@ -14,6 +14,8 @@
         rel="stylesheet"
 />
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+<link rel="stylesheet" href="https://code.jquery.com/ui/1.13.2/themes/smoothness/jquery-ui.css">
 <link rel="stylesheet" href="../../../resources/issue/css/info.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.9.3/min/dropzone.min.js"></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.9.3/min/dropzone.min.css" />
@@ -52,7 +54,7 @@
 
                         <table class="overview-table">
                             <tr>
-                                <td class="text-align-left">
+                                <td class="td-row">
                                     <label for="riskTitle">제목 <span class="required-icon">*</span></label>
                                 </td>
                                 <td colspan="5">
@@ -60,31 +62,31 @@
                                 </td>
                             </tr>
                             <tr>
-                                <td class="text-align-left">
+                                <td class="td-row">
                                     <label for="riskId">이슈 ID <span class="required-icon">*</span></label>
                                 </td>
-                                <td class="td-row">
+                                <td class="td-row-active">
                                     <input type="text" id="riskId" name="riskId" value="" required>
                                 </td>
-                                <td class="text-align-left">
+                                <td class="td-row">
                                     <label>이슈분류 <span class="required-icon">*</span></label>
                                 </td>
-                                <td class="td-row">
+                                <td class="td-row-active">
                                     <select id="PMS005" name="classCode" required>
                                         <option value="">선택하세요.</option>
                                     </select>
                                 </td>
-                                <td class="text-align-left">
+                                <td class="td-row">
                                     <label>우선순위 <span class="required-icon">*</span></label>
                                 </td>
-                                <td class="td-row">
+                                <td class="td-row-active">
                                     <select id="PMS006" name="priorCode" required>
                                         <option value="">선택하세요.</option>
                                     </select>
                                 </td>
                             </tr>
                             <tr>
-                                <td class="text-align-left">
+                                <td class="td-row">
                                     <label>시스템/업무</label>
                                 </td>
                                 <td colspan="3">
@@ -97,7 +99,7 @@
                                         <ul class="mymenu" id="system-menu"></ul>
                                     </div>
                                 </td>
-                                <td class="text-align-left">
+                                <td class="td-row">
                                     <label>이슈상태 <span class="required-icon">*</span></label>
                                 </td>
                                 <td>
@@ -107,7 +109,7 @@
                                 </td>
                             </tr>
                             <tr>
-                                <td class="text-align-left">
+                                <td class="td-row">
                                     <label for="riskContent">이슈내용 <span class="required-icon">*</span></label>
                                 </td>
                                 <td colspan="5">
@@ -116,19 +118,19 @@
                             </tr>
 
                             <tr>
-                                <td class="text-align-left">
+                                <td class="td-row">
                                     <label for="dueDate">조치희망일 <span class="required-icon">*</span></label>
                                 </td>
                                 <td>
-                                    <input type="date" id="dueDate" name="dueDate" value="" required>
+                                    <input type="text" id="dueDate" name="dueDate" placeholder="yyyy-mm-dd" required>
                                 </td>
-                                <td class="text-align-left">
+                                <td class="td-row">
                                     <label for="completeDate">조치완료일</label>
                                 </td>
                                 <td>
-                                    <input type="date" id="completeDate" name="completeDate" value="">
+                                    <input type="text" id="completeDate" name="completeDate" placeholder="yyyy-mm-dd">
                                 </td>
-                                <td class="text-align-left">
+                                <td class="td-row">
                                     <label for="memberNo">발견자 <span class="required-icon">*</span></label>
                                 </td>
                                 <td>
@@ -203,7 +205,7 @@
 
                                 <div>
                                     <label for="record_dt">조치일자</label>
-                                    <input type="date" id="record_dt" name="record_dt" class="form-control" required>
+                                    <input type="text" id="record_dt" name="record_dt" class="form-control" placeholder="yyyy-mm-dd" required>
                                 </div>
                                 <label for="record_cont" class="form-label">조치내용</label>
                                 <textarea id="record_cont" name="record_cont" class="form-control" rows="4" placeholder="조치 내용을 입력하세요"></textarea>

@@ -2,6 +2,7 @@ package com.kcc.pms.domain.team.service;
 
 import com.kcc.pms.domain.member.mapper.MemberMapper;
 import com.kcc.pms.domain.member.model.dto.MemberResponseDto;
+import com.kcc.pms.domain.member.model.dto.MemberResponseTCDto;
 import com.kcc.pms.domain.team.mapper.TeamMapper;
 import com.kcc.pms.domain.team.model.dto.*;
 import com.kcc.pms.domain.team.model.vo.Team;
@@ -117,9 +118,9 @@ public class TeamServiceImpl implements TeamService{
 
     @Override
     public List<TeamMemberResponseDto> getTeamMembers(Long teamNo) {
-        List<MemberResponseDto> teamMember = memberMapper.getTeamMember(teamNo);
+        List<MemberResponseTCDto> teamMember = memberMapper.getTeamMember(teamNo);
         List<TeamMemberResponseDto> responseTeamMember = new ArrayList<>();
-        for (MemberResponseDto m : teamMember) {
+        for (MemberResponseTCDto m : teamMember) {
             TeamMemberResponseDto rm = new TeamMemberResponseDto();
             rm.setId(m.getId());
             rm.setMemberName(m.getMemberName());
