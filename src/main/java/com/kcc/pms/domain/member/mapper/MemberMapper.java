@@ -13,7 +13,7 @@ public interface MemberMapper {
     List<GroupResponseDto> getGroupList();
     List<GroupMembersResponseDto> getGroupMemberList(Long groupNo);
     List<MemberResponseDto> getProjectMemberList(Long projectNo);
-    List<MemberResponseTCDto> getTeamMember(@Param("teamNo") Long teamNo);
+    List<MemberResponseDto> getTeamMember(@Param("teamNo") Long teamNo);
     MemberResponseTCDto getMemberDetail(@Param("projectNo") Long projectNo, @Param("memberNo") Long memberNo);
     Integer memberAssignTeam(@Param("memberNo") Long memberNo, @Param("teamNo") Long teamNo, @Param("beforeTeamNo") Integer beforeTeamNo);
     Integer updateTaskMember(@Param("memberNo") Long memberNo, @Param("teamNo") Long teamNo, @Param("beforeTeamNo") Integer beforeTeamNo);

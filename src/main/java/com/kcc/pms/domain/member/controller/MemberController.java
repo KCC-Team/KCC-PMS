@@ -51,7 +51,7 @@ public class MemberController {
 
     @GetMapping("/{projectNo}/members/team/{teamNo}")
     @ResponseBody
-    public List<MemberResponseTCDto> teamMembers(@PathVariable("projectNo") Long projectNo, @PathVariable("teamNo") Long teamNo) {
+    public List<MemberResponseDto> teamMembers(@PathVariable("projectNo") Long projectNo, @PathVariable("teamNo") Long teamNo) {
         return memberService.getTeamMember(teamNo);
     }
 

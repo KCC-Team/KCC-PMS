@@ -118,9 +118,9 @@ public class TeamServiceImpl implements TeamService{
 
     @Override
     public List<TeamMemberResponseDto> getTeamMembers(Long teamNo) {
-        List<MemberResponseTCDto> teamMember = memberMapper.getTeamMember(teamNo);
+        List<MemberResponseDto> teamMember = memberMapper.getTeamMember(teamNo);
         List<TeamMemberResponseDto> responseTeamMember = new ArrayList<>();
-        for (MemberResponseTCDto m : teamMember) {
+        for (MemberResponseDto m : teamMember) {
             TeamMemberResponseDto rm = new TeamMemberResponseDto();
             rm.setId(m.getId());
             rm.setMemberName(m.getMemberName());

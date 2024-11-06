@@ -38,7 +38,7 @@ public class MemberServiceImpl implements MemberService{
     }
 
     @Override
-    public List<MemberResponseTCDto> getTeamMember(Long teamNo) {
+    public List<MemberResponseDto> getTeamMember(Long teamNo) {
         return mapper.getTeamMember(teamNo);
     }
 
