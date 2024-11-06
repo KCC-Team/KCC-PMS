@@ -77,7 +77,7 @@
             </div>
         </div>
 
-        <div style="position: relative;height:270px;" id="grid-parent3">
+        <div style="position: relative;height:200px;" id="grid-parent3">
             <div id="y-added-grid" data-ax5grid="added-grid" data-ax5grid-config="{}" style="height: 100%;"></div>
         </div>
     </div>
@@ -112,7 +112,7 @@
             </div>
         </div>
 
-        <div style="position: relative;height:270px;" id="grid-parent2">
+        <div style="position: relative;height:200px;" id="grid-parent2">
             <!--<div class="y-added-grid"  data-ax5grid="added-grid" data-ax5grid-config="{}" style="height: 100%;"></div>-->
         </div>
     </div>

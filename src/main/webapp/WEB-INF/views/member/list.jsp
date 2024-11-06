@@ -13,7 +13,11 @@
 <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
 <link rel="stylesheet" href="../../../resources/member/css/list.css">
 <link rel="stylesheet" href="../../../resources/common/css/ax5gridMin.css">
-
+<link
+        href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css"
+        rel="stylesheet"
+/>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 <main class="content" id="content">
     <div class="main_content">
@@ -58,7 +62,7 @@
                         <div class="team-title">전체 투입 인력 목록</div>
                         <div class="btn-group">
                             <button class="">삭제</button>
-                            <button class="member-edit-button">편집</button>
+                            <button id="projectMemberUpdateBtn" class="member-edit-button">저장</button>
                             <button class="" onclick="openGroupPopup()">인력등록</button>
                         </div>
                     </div>
@@ -168,14 +172,14 @@
                     <div class="team-overview-title">
                         <div class="team-title">팀원 목록</div>
                         <div class="btn-group">
-                            <button class="">참여시작</button>
-                            <button class="">참여종료</button>
+                            <button id="startProject" class="">참여시작</button>
+                            <button id="endProject" class="">참여종료</button>
                             <button class="">해제</button>
-                            <button class="member-edit-button">편집</button>
+                            <button id="teamMemberUpdateBtn" class="member-edit-button">저장</button>
                             <button class="" onclick="openGroupPopup()">인력등록</button>
                         </div>
                     </div>
-                    <div style="position: relative;height:270px;" id="grid-parent">
+                    <div style="position: relative;height:200px;" id="grid-parent">
                         <div data-ax5grid="teamMemberGrid" data-ax5grid-config="{}" style="height: 100%;"></div>
                     </div>
                 </div>
@@ -183,10 +187,7 @@
                 <div class="member-detail">
                     <div class="team-overview-title">
                         <div class="team-title">인력 상세</div>
-                        <div class="btn-group">
-                            <button class="">수정</button>
-                            <button class="">해제</button>
-                        </div>
+
                     </div>
                     <table class="detail-table">
                         <tr>

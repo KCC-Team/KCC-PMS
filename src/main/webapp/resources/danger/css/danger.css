@@ -205,3 +205,11 @@ h5 {
 .system-select-button:focus {
     outline: none;
 }
+
+.search_form {
+    width: 100%;
+}
+
+.search-area {
+   float: right;
+}
