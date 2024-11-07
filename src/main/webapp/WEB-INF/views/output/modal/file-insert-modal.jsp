@@ -268,8 +268,8 @@
                 selectedOptions = [];
                 $selectBox.empty();
 
+                $('.file_name').val('');
                 $('.txt-area').val('');
-                $('.note-area').val('');
             }
         });
     });
@@ -378,8 +378,8 @@
                     });
                 }
                 $('#insertModal').modal('hide');
+                $('.file_name').val('');
                 $('.txt-area').val('');
-                $('.note-area').val('');
 
                 mask.close();
                 window.location.href = '/projects/outputs?no=' + response + '&toastMsg=산출물 파일이 성공적으로 저장되었습니다.';

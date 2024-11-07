@@ -5,10 +5,18 @@
 <link rel="stylesheet" type="text/css" href="../../../resources/test/css/list.css">
 
 <main class="content" id="content">
-    <div class="main_content" style="height: 85%">
+    <div class="main_content" style="height: 90%">
         <div class="div-section">
             <label class="div-info">
                 테스트 관리</label>
+            <div class="button-area">
+                <div class="action-buttons d-flex justify-content-end">
+                    <a class="d-flex align-items-center text-nowrap">
+                        <button class="add-item add-test">
+                            <i class="fas fa-plus"></i>&nbsp;&nbsp;테스트 등록</button>
+                    </a>
+                </div>
+            </div>
         </div>
         <div class="test">
             <section>
@@ -40,31 +48,27 @@
                                 </select>
                             </label>
                         </div>
-                        <input type="text" class="form-control" id="searchTest" placeholder="테스트를 검색하세요." style="height: 40px; width: 215px;">&nbsp;&nbsp;
-                        &nbsp;&nbsp;
-                        <button id="test-search-btn" class="custom-button d-flex align-items-center me-3 text-nowrap">&nbsp;&nbsp;&nbsp;&nbsp;검색&nbsp;&nbsp;&nbsp;&nbsp;</button>
-                        <div class="action-buttons d-flex justify-content-end">
-                            <a class="d-flex align-items-center text-nowrap">
-                                <button class="add-item add-test">
-                                    <i class="fas fa-plus"></i>&nbsp;&nbsp;테스트 등록</button>
-                            </a>
+                        <div class="ms-auto d-flex justify-content-end">
+                            <input type="text" class="form-control" id="searchTest" placeholder="테스트를 검색하세요." style="height: 40px; width: 215px;">&nbsp;&nbsp;
+                            &nbsp;&nbsp;
+                            <button id="test-search-btn" class="custom-button d-flex align-items-center me-3 text-nowrap">&nbsp;&nbsp;&nbsp;&nbsp;검색&nbsp;&nbsp;&nbsp;&nbsp;</button>
                         </div>
+
                     </div>
                 </div>
             </section>
             <section>
-                <div class="d-flex justify-content-center">
+                <div class="test-area d-flex justify-content-left">
                     <div style="width: 94%;">
                         <div style="position: relative;height:100%;" id="test-grid-parent">
                             <div class="list_table" data-ax5grid="first-grid"  data-ax5grid-config="{
-                                sortable: true,
                                 header: {
-                                    columnHeight: 50,
+                                    columnHeight: 34,
                                 },
                                 body: {
-                                    columnHeight: 48
+                                    columnHeight: 34
                                 }
-                                }" style="height: 562px;">
+                                }" style="height: 576.2px;">
                             </div>
                         </div>
                     </div>

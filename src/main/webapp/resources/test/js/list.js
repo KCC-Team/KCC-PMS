@@ -10,7 +10,7 @@ $(function () {
     testGrid.setConfig({
         target: $('[data-ax5grid="first-grid"]'),
         page: {
-            navigationItemCount: 10,
+            navigationItemCount: 15,
             height: 30,
             display: true,
             firstIcon: '<i class="fa fa-step-backward" aria-hidden="true"></i>',
@@ -25,7 +25,7 @@ $(function () {
         columns: [
             {key: "testItem", label: "테스트 ID", align: "center", width: 200, formatter: function() {
                     let item = this.value;
-                    return '<a href="/projects/tests/' + encodeURIComponent(item.testNo) + '" class="defect-title" style="color: #2383f8; font-size: 13px; font-weight: bold; text-decoration: none;">' + item.testId + '</a>';
+                    return '<a href="/projects/tests/' + encodeURIComponent(item.testNumber) + '" class="defect-title" style="color: #2383f8; font-size: 13px; font-weight: bold; text-decoration: none;">' + item.testId + '</a>';
                 }},
             {key: "testType", label: "구분", width: 90, align: "center", formatter: function (){
                     return '<span style="font-size: 13px;">' + this.value + '</span>';
@@ -52,13 +52,13 @@ $(function () {
                     return '<span class="' + statusClass + '" style="font-size: 12px;">' + this.value + '</span>';
                 }},
             {key: "workTitle", label: "업무 구분", width: 117, align: "center", formatter: function (){
-                    return '<span style="font-size: 13px;">' + this.value + '</span>';
+                    return '<span style="font-size: 13px;">' + (this.value ? this.value : '-') + '</span>';
                 }},
             {key: "testStartDate", label: "시작일자", width: 100, align: "center", formatter: function (){
                     return '<span style="font-size: 13px;">' + this.value + '</span>';
                 }},
             {key: "testEndDate", label: "종료일자", width: 100, align: "center", formatter: function (){
-                    return '<span style="font-size: 13px;">' + this.value + '</span>';
+                    return '<span style="font-size: 13px;">' + (this.value ? this.value : '-') + '</span>';
                 }},
             {key: "detailCount", label: "테스트 케이스", width: 100, align: "center", formatter: function (){
                     return '<span style="font-size: 13px;">' + this.value + '</span>';
@@ -69,8 +69,8 @@ $(function () {
         ],
     });
 
-    reloadDataTest(testGrid, 0, "all", "all", "", 1);
 
+    reloadDataTest(testGrid, 0, "all", "all", "", 1);
     fetchMenuData().then(function(menuData) {
         createMenu(menuData);
     });
@@ -81,6 +81,13 @@ $(function () {
 
     const urlParams = new URLSearchParams(window.location.search);
     const page = urlParams.get('page') || '1';
+    const toastMsg = urlParams.get('toastMsg');
+    if (toastMsg) {
+        toast.push({
+            theme: 'success',
+            msg: toastMsg
+        });
+    }
 
     $('.test-status').change(function() {
         reloadDataTest(testGrid, $('#systemNo').val(), $('.test-opt').val(), $('.test-status').val(), $('#searchTest').val(), currentPage);
@@ -121,7 +128,7 @@ function reloadDataTest(testGrid, work, test, status, search, page) {
                 list: res.testList,
                 page: {
                     currentPage: currentPage-1,
-                    pageSize: 10,
+                    pageSize: 15,
                     totalElements: res.totalElements,
                     totalPages: res.totalPage
                 }

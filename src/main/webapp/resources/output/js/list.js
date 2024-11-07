@@ -2,6 +2,9 @@
 let selectedNodeId = null;
 
 $(function () {
+    $('.file_name').val('');
+    $('.txt-area').val('');
+
     const urlParams = new URLSearchParams(window.location.search);
     const toastMsg = urlParams.get('toastMsg');
     if (toastMsg) {
@@ -514,7 +517,7 @@ function getNode(id, type) {
                 // 그리드 데이터 설정을 요소가 표시된 후로 이동
                 $('#detail-cnt').text(response.files.length);
                 $('.input-area').val(response.title);
-                $('.txt-area').val(response.note);
+                $('#outputNote').val(response.note);
                 $('#outputNo').val(response.optNo);
 
                 $('#outputTask').empty();

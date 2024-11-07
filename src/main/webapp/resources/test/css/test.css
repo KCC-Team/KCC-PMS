@@ -5,6 +5,7 @@ label {
 table {
     border: 1px solid #919191;
     table-layout: auto;
+    color: #666 !important;
 }
 
 td, th {
@@ -15,7 +16,7 @@ td, th {
 th {
     padding: 2px;
     text-align: center;
-    background-color: #EBEEF3;
+    background-color: #EBEEF3 !important;
 }
 
 td {
@@ -223,6 +224,11 @@ td textarea {
     width: 780px;
 }
 
+.tc-info {
+    resize: none;
+    overflow-y: auto;
+}
+
 .test-rlt-title {
     display: flex;
     justify-content: center;
@@ -231,7 +237,7 @@ td textarea {
     color: #3b3b3b;
     padding: 5px;
     margin-bottom: 2px;
-    background-color: #f0f0f0;
+    background-color: #edf0f5;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
@@ -245,10 +251,77 @@ td textarea {
 .feature-area {
     display: flex;
     align-items: center;
-    width: 20%;
+    width: 40%;
     height: 30px;
     padding-left: 50px;
     padding-bottom: 20px;
+}
+
+#feature {
+    overflow-y: auto;
+}
+
+.excel-btn {
+    background-color: #4caf50;
+    color: #fff;
+}
+
+.save-btn-test {
+    background-color: #1F80DA;
+    color: white;
+    margin-left: 10px;
+}
+
+.delete-btn-test {
+    background-color: red;
+    color: white;
+}
+
+.feature-select-area {
+    display: flex;
+    width: 100%;
+    align-items: center;
+}
+
+.clear-btn {
+    font-size: 16px;
+    color: #f12929;
+    margin-left: 5px;
+    cursor: pointer;
+}
+
+.clear-btn:hover {
+    color: #c02020;
+}
+
+.delete-work-task-btn {
+    background: none;
+    border: none;
+    color: red;
+    margin-left: 2px;
+    font-size: 15px;
+    cursor: pointer;
+}
+
+.excel-area {
+    position: absolute;
+    display: flex;
+    justify-content: end;
+    align-items: center;
+    right: 80px;
+    height: 23px;
+    padding-left: 50px;
+    padding-bottom: 20px;
+}
+
+.excel-area button {
+    background-color: #4caf50;
+    color: #fff
+}
+
+.excel-area button:hover {
+    background-color: #227326;
+    color: #fff
 }
 
 .chart-container {
@@ -258,21 +331,86 @@ td textarea {
     position: relative;
 }
 
+.unit-delete-row-btn, .itg-delete-row-btn {
+    color: red;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.unit-delete-row-btn:hover, .itg-delete-row-btn:hover {
+    color: darkred;
+}
+
+.selected-features {
+    margin-top: 5px;
+    white-space: nowrap;
+    overflow-x: auto;
+}
+
+.custom-context-menu {
+    position: absolute;
+    z-index: 1000;
+    background-color: #ffffff;
+    border: 1px solid #cfcfcf;
+    border-radius: 5px;
+    box-shadow: 2px 2px 5px rgba(0,0,0,0.2);
+}
+
+.context-menu-option {
+    padding: 8px 12px;
+    cursor: pointer;
+}
+
+.context-menu-option:hover {
+    background-color: #e9ecef;
+}
+
+.feature-label {
+    display: inline-block;
+    color: #333;
+    padding-left: 2px;
+    margin-right: 5px;
+    margin-bottom: 5px;
+    border-radius: 3px;
+    position: relative;
+}
+
+.remove-feature-btn {
+    background: none;
+    border: none;
+    font-weight: bold;
+    margin-left: 5px;
+    cursor: pointer;
+    color: #ff0000;
+}
+
+.defect-badge {
+    display: inline-block;
+    padding: 5px 10px;
+    background-color: #ff0000;
+    color: #fff;
+    text-decoration: none;
+    border-radius: 12px;
+    margin: 2px;
+    font-size: 14px;
+}
+
+.defect-badge:hover {
+    background-color: #b01414;
+}
+
 .testCase-section {
-    width: 93.8%;
-    height: 430px;
+    width: 1344.63px;
+    height: 380px;
     margin-left: 41px;
     overflow-y: auto;
     border: 1px solid #ccc;
+    background-color: #d7d7d7;
 }
 
-.button-area {
-    position: fixed;
-    top: 90px;
-    right: 20px;
-    display: flex;
-    justify-content: flex-end;
-    padding: 10px;
+#test-case-area {
+    width: 100%;
+    height: 100%;
 }
 
 .div-section {
@@ -283,6 +421,7 @@ td textarea {
 }
 
 .div-info {
+    position: absolute;
     font-size: 20px;
     font-weight: bold;
     border-bottom: 1px solid #989898;
@@ -293,10 +432,51 @@ td textarea {
     color: #000;
 }
 
+.button-area {
+    position: absolute;
+    top: 0px;
+    right: 10px;
+    display: flex;
+    justify-content: flex-end;
+    padding: 10px;
+}
+
 #addRow {
     background-color: #EBEEF3;
 }
 
 #addRow:hover {
+    background-color: #adadad;
+}
+
+.nav-tabs .nav-item .nav-link#add-tab-button:hover {
+    background-color: #0d6efd !important;
+    color: #fff;
+}
+
+.auto-resize {
+    height: auto;
+}
+
+.addTest {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 30px;
+    background-color: #EBEEF3;
+}
+
+
+#addTest {
+    width: 100%;
+    height: 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #EBEEF3;
+}
+
+#addTest:hover {
     background-color: #adadad;
 }

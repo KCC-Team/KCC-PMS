@@ -251,18 +251,18 @@ CREATE TABLE TestMaster (
 
 CREATE TABLE TestDetail (
     test_dtl_no   number NOT NULL,
-    test_dtl_id   VARCHAR2(20) NOT NULL,
+    test_dtl_id   VARCHAR2(30) NULL,
     wrk_proc_cont VARCHAR2(1000) NULL,  -- 업무처리내용
     test_data VARCHAR2(1000) NULL,      -- 테스트데이터
     estimated_rlt VARCHAR2(1000)   NULL,   -- 예상결과
     test_detail_cont VARCHAR2(1000) NULL,      -- 테스트상세내용
     progress_cont VARCHAR2(1000) NULL,       -- 수행절차
     pre_cond VARCHAR2(1000)   NULL,           -- 사전조건
-    note VARCHAR2(1000)   NULL,               -- 비고
     test_st_dt DATE   NULL,                       -- 테스트진행일자
     test_result_cd CHAR(8) NULL,                -- 테스트결과코드
     mem_no NUMBER NULL,                         -- 테스트 담당자
     par_test_dtl_no NUMBER NULL,
+    created_dt DATE NOT NULL,                       -- 생성일자
     test_no   NUMBER NOT NULL                 -- 테스트번호
 );
 
@@ -280,6 +280,7 @@ CREATE TABLE Defect (
     df_work_cont VARCHAR2(500) NULL,        -- 결함조치내용
     fl_ms_fd_no NUMBER NULL,                -- 결함발견첨부파일번호
     fl_ms_work_no NUMBER NULL,              -- 결함조치첨부파일번호
+    test_no NUMBER NULL,                    -- 테스트번호
     test_dtl_no NUMBER NULL,                -- 테스트상세번호
     mem_fd_no NUMBER NOT NULL,              -- 결함발견자번호
     mem_work_no NUMBER NULL,                -- 결함조치자번호
@@ -417,6 +418,7 @@ ALTER TABLE Defect ADD CONSTRAINT fk_df_work_no_003 FOREIGN KEY (work_no) REFERE
 ALTER TABLE Defect ADD CONSTRAINT fk_df_test_dtl_no_004 FOREIGN KEY (test_dtl_no) REFERENCES TestDetail (test_dtl_no);
 ALTER TABLE Defect ADD CONSTRAINT fk_df_fl_ms_fd_no_005 FOREIGN KEY (fl_ms_fd_no) REFERENCES Member (mem_no);
 ALTER TABLE Defect ADD CONSTRAINT fk_df_fl_ms_work_no_006 FOREIGN KEY (fl_ms_work_no) REFERENCES Member (mem_no);
+ALTER TABLE Defect ADD CONSTRAINT fk_df_test_no_007 FOREIGN KEY (test_no) REFERENCES TestMaster (test_no);
 
 ALTER TABLE FeatureTest ADD CONSTRAINT pk_ft_feat_test_no_001 PRIMARY KEY (feat_no, test_dtl_no);
 ALTER TABLE FeatureTest ADD CONSTRAINT fk_ft_feat_no_002 FOREIGN KEY (feat_no) REFERENCES Feature (feat_no);
@@ -1167,13 +1169,12 @@ VALUES (
            'PMS01201', 1, '2021-01-01', '2021-01-01', 9, 'user1', '2021-01-01', 'Y'
        );
 
-INSERT INTO TestDetail (test_dtl_no, test_dtl_id, wrk_proc_cont, test_data, estimated_rlt, test_detail_cont, test_st_dt, test_result_cd, progress_cont, pre_cond, note, mem_no, par_test_dtl_no, test_no)
-VALUES (seq_testdetail.nextval, 'TD001', '테스트상세1', '테스트상세1 내용', '테스트상세1 예상결과', '테스트상세1 내용', '2021-01-01', 'PMS01401', '테스트상세1 진행내용', '테스트상세1 사전조건', '테스트상세1 비고', 1, NULL, 1);
-INSERT INTO TestDetail (test_dtl_no, test_dtl_id, wrk_proc_cont, test_data, estimated_rlt, test_detail_cont, test_st_dt, test_result_cd, progress_cont, pre_cond, note, mem_no, par_test_dtl_no, test_no)
-VALUES (seq_testdetail.nextval, 'TD002', '테스트상세2', '테스트상세2 내용', '테스트상세2 예상결과', '테스트상세2 내용', '2021-01-01', 'PMS01401', '테스트상세2 진행내용', '테스트상세2 사전조건', '테스트상세2 비고', 1, NULL, 1);
-INSERT INTO TestDetail (test_dtl_no, test_dtl_id, wrk_proc_cont, test_data, estimated_rlt, test_detail_cont, test_st_dt, test_result_cd, progress_cont, pre_cond, note, mem_no, par_test_dtl_no, test_no)
-VALUES (seq_testdetail.nextval, 'TD003', '테스트상세3', '테스트상세3 내용', '테스트상세3 예상결과', '테스트상세3 내용', '2021-01-01', 'PMS01401', '테스트상세3 진행내용', '테스트상세3 사전조건', '테스트상세3 비고', 1, NULL, 3);
-
+INSERT INTO TestDetail (test_dtl_no, test_dtl_id, wrk_proc_cont, test_data, estimated_rlt, test_detail_cont, test_st_dt, test_result_cd, progress_cont, pre_cond, mem_no, par_test_dtl_no, test_no, created_dt)
+VALUES (seq_testdetail.nextval, 'TD001', '테스트상세1', '테스트상세1 내용', '테스트상세1 예상결과', '테스트상세1 내용', '2021-01-01', 'PMS01401', '테스트상세1 진행내용', '테스트상세1 사전조건', 1, NULL, 1, sysdate);
+INSERT INTO TestDetail (test_dtl_no, test_dtl_id, wrk_proc_cont, test_data, estimated_rlt, test_detail_cont, test_st_dt, test_result_cd, progress_cont, pre_cond, mem_no, par_test_dtl_no, test_no, created_dt)
+VALUES (seq_testdetail.nextval, 'TD002', '테스트상세2', '테스트상세2 내용', '테스트상세2 예상결과', '테스트상세2 내용', '2021-01-01', 'PMS01401', '테스트상세2 진행내용', '테스트상세2 사전조건', 1, NULL, 1, sysdate);
+INSERT INTO TestDetail (test_dtl_no, test_dtl_id, wrk_proc_cont, test_data, estimated_rlt, test_detail_cont, test_st_dt, test_result_cd, progress_cont, pre_cond, mem_no, par_test_dtl_no, test_no, created_dt)
+VALUES (seq_testdetail.nextval, 'TD003', '테스트상세3', '테스트상세3 내용', '테스트상세3 예상결과', '테스트상세3 내용', '2021-01-01', 'PMS01401', '테스트상세3 진행내용', '테스트상세3 사전조건', 1, NULL, 3, sysdate);
 
 INSERT INTO FeatureTest (feat_no, test_dtl_no) VALUES (1, 1);
 INSERT INTO FeatureTest (feat_no, test_dtl_no) VALUES (2, 1);

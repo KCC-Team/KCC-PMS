@@ -41,7 +41,7 @@ $(function() {
         },
         error: function () {
             toast.push({
-                theme: 'warning',
+                theme: 'danger',
                 msg: '트리 데이터를 가져오는데 실패했습니다.',
                 closeIcon: '<i class="fa fa-times"></i>'
             });
@@ -110,7 +110,6 @@ $(function() {
 
                 let parentNodeId = $('.jstree-folder-in').jstree('get_selected')[0];
                 id++;
-                console.log(id);
                 let newNode = {
                     id: id,
                     text: folderName,

@@ -10,7 +10,7 @@ $(document.body).ready(function () {
 
 
     let typeValue = urlParams.get('type');
-    if(typeValue === 'feature' || typeValue === 'defect1' || typeValue === 'defect2' || typeValue.includes('test_')){
+    if(typeValue === 'feature' || typeValue === 'defect1' || typeValue === 'defect2' || typeValue.includes('test_') || typeValue === 'test_unit_'){
         $('#grid-parent3').hide();
         $('#grid-parent').css('height', '250px');
         $('.member-add-button').on('click', function() {
