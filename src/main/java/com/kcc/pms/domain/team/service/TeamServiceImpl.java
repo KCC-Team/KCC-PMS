@@ -108,7 +108,7 @@ public class TeamServiceImpl implements TeamService{
 
     @Transactional(rollbackFor = Exception.class)
     @Override
-    public int addMemberTeam(Long teamNo, Long prjNo, List<MemberAddRequestDto> addMembers) throws SQLException {
+    public int addMemberTeam(Long teamNo, Long prjNo, List<MemberAddRequestDto> addMembers) {
         int result = 0;
         addMembers.forEach(MemberAddRequestDto::formatDates);
 
@@ -123,10 +123,8 @@ public class TeamServiceImpl implements TeamService{
            }
         }
 
-        result += memberService.memberAssignTeam(teamNo, updateMembers);
-
         result += mapper.addMembersTeam(teamNo, prjNo, newMembers);
-
+        result += memberService.memberAssignTeam(teamNo, updateMembers);
 
         return result;
     }
