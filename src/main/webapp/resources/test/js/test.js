@@ -1297,6 +1297,7 @@ function collectTestData(lastSegment) {
 
         rows.each(function(index, row) {
             let testCase = {
+                testDetailNumber: $(row).find('input[name="testDetailNumber"]').val(),
                 testDetailId: testDetailId,
                 preCondition: $(row).find('textarea[name="precondition"]').val(),
                 testDetailContent: $(row).find('textarea[name="testDetailContent"]').val(),

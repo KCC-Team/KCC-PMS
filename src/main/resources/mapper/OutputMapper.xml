@@ -5,7 +5,7 @@
 
 <mapper namespace="com.kcc.pms.domain.output.mapper.OutputMapper">
     <resultMap id="TaskOutput" type="TaskOutput">
-        <id property="taskNo" column="tsk_no"/>
+        <result property="taskNo" column="tsk_no"/>
         <result property="taskTitle" column="tsk_ttl"/>
     </resultMap>
 
@@ -25,8 +25,8 @@
         <id property="optNo" column="opt_no"/>
         <result property="title" column="title"/>
         <result property="note" column="note"/>
-        <collection property="tasks" ofType="TaskOutput" resultMap="TaskOutput" column="opt_no"/>
-        <collection property="files" ofType="OutputFile" resultMap="OutputFile" column="opt_no"/>
+        <collection property="tasks" ofType="TaskOutput" resultMap="TaskOutput"/>
+        <collection property="files" ofType="OutputFile" resultMap="OutputFile"/>
     </resultMap>
 
 
