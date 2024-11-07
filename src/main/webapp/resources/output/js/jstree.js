@@ -110,7 +110,6 @@ $(function() {
 
                 let parentNodeId = $('.jstree-folder-in').jstree('get_selected')[0];
                 id++;
-                console.log(id);
                 let newNode = {
                     id: id,
                     text: folderName,
