@@ -41,8 +41,15 @@ public class DefectController {
 	}
 
 	@GetMapping("/defect")
-	public String showInsertForm(Model model) {
-		model.addAttribute("req", new DefectDto());
+	public String showInsertForm(Model model,
+								 @RequestParam(value = "test", required = false) Long testNO,
+								 @RequestParam(value = "testDetailNo", required = false) Long testDetailNo,
+								 @RequestParam(value = "testDetailId", required = false) String testDetailId) {
+		DefectDto defectDto = new DefectDto();
+		defectDto.setTestNo(testNO);
+		defectDto.setTestDetailNo(testDetailNo);
+		defectDto.setTestDetailId(testDetailId);
+		model.addAttribute("req", defectDto);
 		return "defect/defect";
 	}
 
@@ -50,8 +57,7 @@ public class DefectController {
 	@ResponseBody
 	public ResponseEntity<String> insert(HttpSession session, DefectDto req, DefectFileRequestDto files,
 			@AuthenticationPrincipal PrincipalDetail principalDetail) {
-//        Long projectNo = (Long) session.getAttribute("prgNo");
-		Long projectNo = 1L;
+        Long projectNo = (Long) session.getAttribute("prjNo");
 		Long defectNumber = defectService.saveDefect(projectNo, principalDetail.getMember().getMemberName(), req,
 				files);
 		String redirectUrl = "/projects/defects/" + defectNumber;

@@ -51,12 +51,22 @@ $(document).ready(function (){
             success: function (response) {
                 console.log(response);
                 alert("저장이 완료되었습니다.");
-                window.opener.postMessage({
-                    status: 'register',
-                    message: 'Feature saved successfully',
-                    systemNo: formDataObject.systemNo,
-                    featClassCd: formDataObject.classCode
-                }, '*');
+                if(requestMethod === 'POST'){
+                    window.opener.postMessage({
+                        status: 'register',
+                        message: 'Feature saved successfully',
+                        systemNo: formDataObject.systemNo,
+                        featClassCd: formDataObject.classCode
+                    }, '*');
+                } else {
+                    window.opener.postMessage({
+                        status: 'update',
+                        message: 'Feature update successfully',
+                        systemNo: formDataObject.systemNo,
+                        featClassCd: formDataObject.classCode,
+                        memberNo: formDataObject.memberNo
+                    }, '*');
+                }
 
                 window.close();
             },

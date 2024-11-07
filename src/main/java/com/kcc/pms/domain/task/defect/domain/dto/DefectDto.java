@@ -10,8 +10,9 @@ public class DefectDto {
     private Long defectNumber;
     private String defectTitle;
     private String defectId;
-    private Long testNumber;
-    private String testId;
+    private Long testNo;
+    private Long testDetailNo;
+    private String testDetailId;
     private Long systemNumber;
     private String defectContent;
     private Long foundMemberNo;

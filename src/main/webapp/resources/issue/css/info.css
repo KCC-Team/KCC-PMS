@@ -1,19 +1,25 @@
-/*.main_content {*/
-/*    height: 90% !important;*/
-/*}*/
-
 .project-content {
     display: flex;
+    justify-content: space-between;
     padding-top: 15px;
+    align-items: center;
+    width: 97%;
+    margin-left: 20px;
+    margin-bottom: 16px;
+    border-bottom: 1px solid #989898;
 }
 
 .project-info {
-    width: 97%;
-    margin: 4px 0px 20px 20px;
     font-size: 20px;
     font-weight: bold;
     color: black;
-    border-bottom: 1px solid #989898;
+    padding-bottom: 5px;
+    width: 68.6%;
+}
+
+.btn-actions {
+    width: auto;
+    margin-left: auto;
     padding-bottom: 5px;
 }
 
@@ -23,6 +29,8 @@
 
 .btn-back {
     font-size:14px;
+    text-decoration: none;
+    color: black;
 }
 
 .project-form {
@@ -41,14 +49,14 @@ label {
     margin-bottom: 5px;
     margin-right: 5px;
     font-weight: bold;
-    font-size: 14px;
-    width: auto;
+    font-size: 13px;
+    padding-top: 5px;
 }
 
 input[type="date"],
 select {
-    width: 200px;
-    padding: 8px;
+    width: 100%;
+    padding: 5px;
     margin-top: 5px;
     border: 1px solid #ccc;
     border-radius: 4px;
@@ -56,27 +64,36 @@ select {
 }
 
 input[type="text"] {
-    width: 48%;
-    padding: 8px;
-    margin-top: 5px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    font-size: 14px;
-}
-
-#risk_ttl, #risk_id {
-    width: 300px;
-    padding: 8px;
-    margin-top: 5px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    font-size: 14px;
-}
-
-#rick_cont,#risk_plan {
     width: 100%;
-    height: 70px;
-    padding: 8px;
+    padding: 5px;
+    margin-top: 5px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+#riskTitle{
+    width: 100%;
+    padding: 5px;
+    margin-top: 5px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+.td-row {
+    width: 13%;
+    background-color: #EDF0F5;
+}
+
+.td-row-active {
+    width: 18%;
+}
+
+#riskContent, #riskPlan {
+    width: 100%;
+    height: 100px;
+    padding: 5px;
     margin-top: 5px;
     border: 1px solid #ccc;
     border-radius: 4px;
@@ -87,19 +104,10 @@ input[type="text"] {
     margin-left: 15px;
 }
 
-input[type="date"] {
-    width: 200px;
-    padding: 8px;
-    margin-top: 5px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    font-size: 14px;
-}
-
 
 #file_no {
     width: 335px;
-    padding: 8px;
+    padding: 5px;
     margin-top: 5px;
     border: 1px solid #ccc;
     border-radius: 4px;
@@ -229,7 +237,6 @@ input:disabled, select:disabled, textarea:disabled {
     font-size: 16px;
     margin-bottom: 10px;
     display: block;
-    margin-top: 10px;
 }
 
 .file-grid {
@@ -310,8 +317,7 @@ input:disabled, select:disabled, textarea:disabled {
 }
 
 .history-section {
-    width: 95%;
-    margin: 100px auto 20px 30px;
+    width: 100%;
 }
 
 .history-title {
@@ -354,21 +360,11 @@ input:disabled, select:disabled, textarea:disabled {
 }
 
 
-
-.overview-table, .members-table, .detail-table {
-    width: 50%;
-}
-
-.overview-table td {
-    height: 60px;
-    font-size: 15px;
-}
-
 .overview-table td, .members-table th, .members-table td, .detail-table td, .team-table td {
     border-bottom: 1px solid #ccc;
     border-left: 1px solid #ccc;
     border-right: 1px solid #ccc;
-    padding: 9px;
+    padding: 5px;
 }
 
 .text-align-right {
@@ -379,18 +375,14 @@ input:disabled, select:disabled, textarea:disabled {
 
 .text-align-left {
     text-align: left;
-    background-color: #EDF0F5;
+
     font-weight: bold;
-    width: 250px;
+    width: 110px !important;
+    padding-top: 5px;
 }
 
 .members-table a {
     text-decoration: none;
-}
-
-.text-align-left {
-    text-align: left;
-    background-color: #EDF0F5;
 }
 
 #mem_no {
@@ -403,76 +395,79 @@ input:disabled, select:disabled, textarea:disabled {
 }
 
 
-.file-zone_1 .select-box, .file-zone_2 .select-box {
+.file-zone_1 .select-box, .file-zone_2 .select-box, .file-zone_3 .select-box {
     margin-left: 20px;
     width: 250px;
     height: 150px;
     padding: 10px;
 }
 
-.file-zone_1 .dropzone, .file-zone_2 .dropzone {
+.file-zone_1 .dropzone, .file-zone_2 .dropzone, .file-zone_3 .dropzone {
     border-radius: 5px;
-    width: 100%;
+    width: 99%;
     min-height: 30px;
-    padding: 10px;
+    padding: 8px;
 }
 
 .dropzone {
-    height: 50px;
+    height: 38px;
 }
 
 .dropzone div {
     margin: 0 !important;
 }
 
-.file-zone_1 .dropzone-preview .dz-preview, .file-zone_2 .dropzone-preview .dz-preview {
-    width: 70px;
-    margin: 5px;
+.file-zone_1 .dropzone-preview .dz-preview, .file-zone_2 .dropzone-preview .dz-preview, .file-zone_3 .dropzone-preview .dz-preview {
+    width: 140px;
+    margin-right: 5px;
+    margin-top: 12px;
 }
 
 .dropzone-preview {
     display: flex;
     flex-wrap: nowrap;
-    overflow-x: auto;
+    overflow-x: auto !important;
     overflow-y: hidden;
     max-width: 100%;
 }
 
-.file-zone_1 .dropzone-preview .dz-preview .dz-filename, .file-zone_2 .dropzone-preview .dz-preview .dz-filename {
+.file-zone_1 .dropzone-preview .dz-preview .dz-filename, .file-zone_2 .dropzone-preview .dz-preview .dz-filename, .file-zone_3 .dropzone-preview .dz-preview .dz-filename {
     font-size: 12px;
 }
 
 .file-zone_1 .dropzone-preview .dz-preview .dz-size,
 .file-zone_1 .dropzone-preview .dz-preview .dz-error-message,
 .file-zone_2 .dropzone-preview .dz-preview .dz-size,
-.file-zone_2 .dropzone-preview .dz-preview .dz-error-message
+.file-zone_2 .dropzone-preview .dz-preview .dz-error-message,
+.file-zone_3 .dropzone-preview .dz-preview .dz-size,
+.file-zone_3 .dropzone-preview .dz-preview .dz-error-message
 {
     font-size: 10px;
 }
 
-.file-zone_1 .dropzone-preview li.dz-preview, .file-zone_2 .dropzone-preview li.dz-preview {
+.file-zone_1 .dropzone-preview li.dz-preview, .file-zone_2 .dropzone-preview li.dz-preview, .file-zone_3 .dropzone-preview li.dz-preview {
     width: 100%;
     margin: 5px 0;
 }
 
 
 
-.file-zone_1 .dropzone-preview .dz-preview .dz-image, .file-zone_2 .dropzone-preview .dz-preview .dz-image {
+.file-zone_1 .dropzone-preview .dz-preview .dz-image, .file-zone_2 .dropzone-preview .dz-preview .dz-image, .file-zone_3 .dropzone-preview .dz-preview .dz-image {
     flex: 0 0 auto;
     margin-right: 15px;
 }
 
-.file-zone_1 .dz-image img, .file-zone_2 .dz-image img {
+.file-zone_1 .dz-image img, .file-zone_2 .dz-image img, .file-zone_3 .dz-image img {
     width: 25px !important;
     height: 25px;
 }
 
-.file-zone_1 .dropzone-preview .dz-preview .dz-details, .file-zone_2 .dropzone-preview .dz-preview .dz-details {
+.file-zone_1 .dropzone-preview .dz-preview .dz-details, .file-zone_2 .dropzone-preview .dz-preview .dz-details, .file-zone_3 .dropzone-preview .dz-preview .dz-details {
     flex: 1 1 auto;
     overflow: hidden;
 }
 
-.file-zone_1 .dropzone-preview .dz-preview .dz-remove, .file-zone_2 .dropzone-preview .dz-preview .dz-remove {
+.file-zone_1 .dropzone-preview .dz-preview .dz-remove, .file-zone_2 .dropzone-preview .dz-preview .dz-remove, .file-zone_3 .dropzone-preview .dz-preview .dz-remove {
     flex: 0 0 auto;
     margin-left: 15px;
 }
@@ -480,14 +475,16 @@ input:disabled, select:disabled, textarea:disabled {
 .file-zone_1 .dropzone-preview .dz-preview .dz-filename,
 .file-zone_1 .dropzone-preview .dz-preview .dz-size,
 .file-zone_2 .dropzone-preview .dz-preview .dz-filename,
-.file-zone_2 .dropzone-preview .dz-preview .dz-size {
+.file-zone_2 .dropzone-preview .dz-preview .dz-size,
+.file-zone_3 .dropzone-preview .dz-preview .dz-filename,
+.file-zone_3 .dropzone-preview .dz-preview .dz-size{
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
 }
 
-.file-zone_1 .file-section, .file-zone_2 .file-section {
-    height: 272px;
+.file-zone_1 .file-section, .file-zone_2 .file-section, .file-zone_3 .file-section {
+    height: 278px;
     border: 1px solid #C5C5C5;
     padding: 10px;
     overflow-y: auto;
@@ -556,6 +553,7 @@ input:disabled, select:disabled, textarea:disabled {
 .system-select-wrapper {
     display: inline-block;
     position: relative;
+    width: 100%;
 }
 
 .system-select-label {
@@ -569,7 +567,7 @@ input:disabled, select:disabled, textarea:disabled {
     cursor: pointer;
     border: 1px solid #ccc;
     background-color: #fff;
-    width: 200px;
+    width: 100%;
     height: 38px;
     border-radius: 4px;
     text-align: left;
@@ -604,10 +602,20 @@ input:disabled, select:disabled, textarea:disabled {
 }
 
 .overview-table {
-    flex: 0.91;
     overflow-x: auto;
     border-top: 1px solid #ccc;
     margin-right: 10px;
+    height: 150px;
+}
+
+.overview-table td {
+    height: 30px;
+    font-size: 15px;
+    padding-top: 5px;
+}
+
+.left-section {
+    flex: 1.0;
 }
 
 .right-section {
@@ -616,9 +624,150 @@ input:disabled, select:disabled, textarea:disabled {
 
 .mt-3 {
     margin-top: 0px !important;
+    height: auto;
 }
-
 
 #riskContent, #riskPlan {
     width: 100%;
 }
+
+.file-area {
+    margin-top: 10px;
+    height: 300px;
+    max-width: 815px;
+}
+
+.file-find-title {
+    padding-top: 0px !important;
+}
+
+#record_cont {
+    margin-bottom: 15px;
+}
+
+.thumbnail {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    margin-right: 10px;
+}
+
+.history-date-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+}
+
+.edit-history-btn, .delete-history-btn {
+    font-size: 12px;
+    padding: 3px 6px;
+    margin-right: 8px;
+    cursor: pointer;
+}
+
+.history-date {
+    margin-left: 8px; 
+}
+
+.dz-preview {
+    margin-right: 10px;
+}
+
+
+
+.history-title {
+    font-size: 1.2em;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.history-items {
+    max-height: 685px; /* 원하는 높이로 설정 */
+    overflow-y: auto;
+}
+
+.history-files {
+    display: flex;
+    flex-direction: column;
+}
+
+.file-item {
+    text-align: center;
+    width: 120px;
+}
+
+.thumbnail {
+    width: 100px;
+    height: 100px;
+    display: block;
+    margin: 0 auto;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+.file-info {
+    margin-top: 5px;
+}
+
+.file-name {
+    font-size: 0.9em;
+    color: #333;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.file-size {
+    font-size: 0.8em;
+    color: #777;
+}
+
+.history-content{
+    word-break: break-word;
+    margin: 0;
+    padding: 5px;
+    box-sizing: border-box;
+}
+
+
+
+
+
+.image-files-container {
+    display: flex;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    margin-bottom: 10px;
+}
+
+.document-files-container {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.file-item.image-file {
+    margin-right: 10px;
+}
+
+.file-item.document-file {
+    width: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: flex;
+}
+
+.file-item.document-file .file-size {
+    margin-left: 5px;
+    flex-shrink: 0;
+}
+
+.file-item.document-file a {
+    display: inline-block;
+    max-width: calc(100% - 50px);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+

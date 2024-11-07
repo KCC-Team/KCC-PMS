@@ -34,12 +34,12 @@
                     </div>
                     <br>
                     <div class="d-flex justify-content-start">
-                        <div class="fw-bold me-3"><label style="font-size: 17px;">폴더명</label></div>
-                        <div class="me-3">
-                            <span><input id="input-area-folder" class="txt-area" type="text" /></span>
+                        <div class="fw-bold me-3 text-nowrap"><label style="font-size: 17px;">폴더명</label></div>
+                        <div class="me-3 w-100">
+                            <span><input id="input-area-folder" class="txt-area w-100 p-1" type="text" /></span>
                         </div>
                         <div>
-                            <button type="button" class="custom-button" id="add-folder-btn">&nbsp;&nbsp;&nbsp;추가&nbsp;&nbsp;&nbsp;</button>
+                            <button type="button" class="custom-button text-nowrap" id="add-folder-btn">&nbsp;&nbsp;&nbsp;추가&nbsp;&nbsp;&nbsp;</button>
                         </div>
                     </div>
                 </section>
@@ -74,11 +74,10 @@
     function transformTreeData(treeNodes, parentId = null) {
         refineTreeIds(treeNodes);
         return treeNodes.map(node => {
-            const nodeId = Number(node.id.split('.').pop());
-            const children = node.children ? transformTreeData(node.children, nodeId) : [];
+            const children = node.children ? transformTreeData(node.children) : [];
 
             return {
-                id: nodeId,
+                id: node.id,
                 text: node.text,
                 type: node.type,
                 parentId: parentId,

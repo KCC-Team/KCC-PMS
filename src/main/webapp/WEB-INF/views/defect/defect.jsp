@@ -17,8 +17,15 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
 
+    <link rel="stylesheet" type="text/css" href="https://cdn.rawgit.com/ax5ui/ax5ui-toast/master/dist/ax5toast.css" />
+    <script type="text/javascript" src="https://cdn.rawgit.com/ax5ui/ax5core/master/dist/ax5core.min.js"></script>
+    <script type="text/javascript" src="https://cdn.rawgit.com/ax5ui/ax5ui-toast/master/dist/ax5toast.min.js"></script>
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.9.3/min/dropzone.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.9.3/min/dropzone.min.css" />
+
+    <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet"/>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <link rel="stylesheet" href="../../../resources/defect/css/defect.css">
     <script src="../../../resources/defect/js/defect.js"></script>
@@ -65,7 +72,7 @@
             <input type="hidden" name="defectNumber" value="${req.defectNumber}" >
             <input type="hidden" id="fd_mem_no" name="foundMemberNo" value="${req.foundMemberNo}">
             <input type="hidden" id="work_mem_no" name="workMemberNo" value="${req.workMemberNo}">
-            <div class="d-flex justify-content-left">
+            <div class="d-flex justify-content-left" style="height: 688px">
                 <div class="me-3" style="width: 550px !important;">
                     <table class="defect-table w-100">
                         <tr>
@@ -89,25 +96,33 @@
                             <td>
                                 <input type="text" name="defectId" value="${req.defectId}" required >
                             </td>
-                            <td class="td-title">테스트 ID</td>
-                            <td>
-                                <a href="#">${req.testId}</a>
-                                <input type="hidden" name="testNumber" value="${req.testNumber}" >
-                            </td>
-                        </tr>
-                        <tr>
                             <td class="td-title">결함 구분&nbsp;&nbsp;&nbsp;<span class="es-star">*</span></td>
                             <td>
                                 <select id="PMS008" name="typeSelect" class="type" required >
                                     <option value="" selected disabled>결함 분류 선택</option>
                                 </select>
                             </td>
-                            <td class="td-title">기능 ID</td>
-                            <td>
-                                <a href="#">${req.testId}</a>
-                                <input type="hidden" name="testNumber" value="${req.testNumber}" >
-                            </td>
                         </tr>
+                        <c:if test="${req.testDetailNo != null}">
+                            <tr>
+                                <td class="td-title">테스트 케이스 ID</td>
+                                <td>
+                                    <input type="hidden" name="testNo" value="${req.testNo}" />
+                                    <input type="hidden" name="testDetailNo" value="${req.testDetailNo}" />
+                                    <input type="hidden" name="testDetailId" value="${req.testDetailId}" />
+                                    <a id="test" href="/projects/tests/${req.testNo}" target="_blank">
+                                        <c:choose>
+                                            <c:when test="${req.testDetailId != null}">
+                                                <c:out value="${req.testDetailId}" />
+                                            </c:when>
+                                            <c:otherwise>
+                                                <c:out value="-" />
+                                            </c:otherwise>
+                                        </c:choose>
+                                    </a>
+                                </td>
+                            </tr>
+                        </c:if>
                         <tr>
                             <td colspan="4" class="td-title">결함 내용&nbsp;&nbsp;&nbsp;<span class="es-star">*</span></td>
                         </tr>
@@ -133,8 +148,8 @@
                         <tr>
                             <td class="td-title">발견자&nbsp;&nbsp;&nbsp;<span class="es-star">*</span></td>
                             <td class="d-flex justify-content-center align-items-center">
-                                <input type="text" id="fd_mem_nm" name="foundMemberName" value="${req.foundMemberName}" readonly style="width: 90px">&nbsp;&nbsp;
-                                <button type="button" class="btn-select-user" onclick="openTeamPopUp('defect1')">선택</button>
+                                <input type="text" id="fd_mem_nm" name="foundMemberName" value="${req.foundMemberName}" readonly style="width: 120px">&nbsp;&nbsp;
+                                <button type="button" class="btn-select-user text-nowrap" onclick="openTeamPopUp('defect1')">선택</button>
                             </td>
                             <td class="td-title">발견일자&nbsp;&nbsp;&nbsp;<span class="es-star">*</span></td>
                             <td>
@@ -152,8 +167,8 @@
                         <tr>
                             <td class="td-title">조치자</td>
                             <td class="d-flex justify-content-center align-items-center">
-                                <input type="text" id="work_mem_nm" name="workMemberName" value="${req.workMemberName}" readonly style="width: 90px">&nbsp;&nbsp;
-                                <button type="button" class="btn-select-user" onclick="openTeamPopUp('defect2')">선택</button>
+                                <input type="text" id="work_mem_nm" name="workMemberName" value="${req.workMemberName}" readonly style="width: 120px">&nbsp;&nbsp;
+                                <button type="button" class="btn-select-user text-nowrap" onclick="openTeamPopUp('defect2')">선택</button>
                             </td>
                             <td class="td-title">조치일자</td>
                             <td>
@@ -170,8 +185,8 @@
                         </tr>
                     </table>
                 </div>
-                <section class="d-flex flex-column ps-3 pe-3" style="border: 1px solid #ccc;">
-                    <div class="mt-3 file-zone_1" style="width: 500px">
+                <section class="ps-3 pe-3" style="border: 1px solid #ccc;">
+                    <div class="mt-3 file-zone_1" style="width: 500px; height: 300px">
                         <div class="file-section">
                             <div class="info-item d-flex flex-column align-items-start">
                                 <div class="mb-2"><label>결함 발견 첨부파일</label></div>
@@ -180,8 +195,9 @@
                             </div>
                         </div>
                     </div>
-                    <div class="file-zone_2 mt-3" style="width: 500px">
-                        <div class="file-section mt-3">
+                    <br>
+                    <div class="file-zone_2" style="width: 500px; height: 380px">
+                        <div class="file-section">
                             <div class="info-item d-flex flex-column align-items-start">
                                 <div class="mb-2"><label>결함 조치 첨부파일</label></div>
                                 <div id="df-insert-file-dropzone_2" class="dropzone"></div>
@@ -202,6 +218,7 @@
 
 <script src="../../../resources/common/js/common.js"></script>
 <script type="text/javascript">
+    let testDetailNo = '<c:out value="${req.testDetailNo}" escapeXml="false" />';
     let discoverFilesJson = '<c:out value="${discoverFilesJson}" escapeXml="false" />';
     let workFilesJson = '<c:out value="${workFilesJson}" escapeXml="false" />';
     let typeSelect = '<c:out value="${req.typeSelect}" escapeXml="false" />';

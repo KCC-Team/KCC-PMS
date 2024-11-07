@@ -182,10 +182,11 @@
     });
 
     function insertFiles(dropzone, $form) {
+        console.log($form);
         let files = dropzone.files;
 
         let formData = new FormData();
-        formData.append('outputNo', window.selectNode.id);
+        formData.append('outputNo', $('#outputNo').val());
 
         if (files.length > 0) {
             files.forEach(file => {
@@ -206,8 +207,9 @@
                         file.status = Dropzone.SUCCESS;
                         dropzone.emit("complete", file);
                     });
-                    alert('산출물 파일이 성공적으로 저장되었습니다.');
-                    window.location.href = '/projects/outputs';
+                    $('.file_name').val('');
+                    $('.txt-area').val('');
+                    window.location.href = '/projects/outputs?no=' + $('#outputNo').val();
                 } else {
                     window.location.href = response;
                 }

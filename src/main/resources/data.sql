@@ -204,7 +204,7 @@ CREATE TABLE FileMaster (
 
 CREATE TABLE FileDetail (
     fl_no number NOT NULL,
-    original_ttl VARCHAR2(100) NOT NULL,
+    original_ttl VARCHAR2(200) NOT NULL,
     file_path VARCHAR2(500) NOT NULL,
     fl_type VARCHAR2(80) NOT NULL,
     fl_size NUMBER NOT NULL,
@@ -218,6 +218,7 @@ CREATE TABLE FileDetail (
 CREATE TABLE Output (
     opt_no number NOT NULL,
     opt_ttl VARCHAR2(50) NOT NULL,
+    note VARCHAR2(1000) null,
     prj_no NUMBER NOT NULL,
     high_folder_no NUMBER NULL,
     fld_yn VARCHAR2(1) NOT NULL,
@@ -250,18 +251,18 @@ CREATE TABLE TestMaster (
 
 CREATE TABLE TestDetail (
     test_dtl_no   number NOT NULL,
-    test_dtl_id   VARCHAR2(20) NOT NULL,
+    test_dtl_id   VARCHAR2(30) NULL,
     wrk_proc_cont VARCHAR2(1000) NULL,  -- 업무처리내용
     test_data VARCHAR2(1000) NULL,      -- 테스트데이터
     estimated_rlt VARCHAR2(1000)   NULL,   -- 예상결과
     test_detail_cont VARCHAR2(1000) NULL,      -- 테스트상세내용
     progress_cont VARCHAR2(1000) NULL,       -- 수행절차
     pre_cond VARCHAR2(1000)   NULL,           -- 사전조건
-    note VARCHAR2(1000)   NULL,               -- 비고
     test_st_dt DATE   NULL,                       -- 테스트진행일자
     test_result_cd CHAR(8) NULL,                -- 테스트결과코드
     mem_no NUMBER NULL,                         -- 테스트 담당자
     par_test_dtl_no NUMBER NULL,
+    created_dt DATE NOT NULL,                       -- 생성일자
     test_no   NUMBER NOT NULL                 -- 테스트번호
 );
 
@@ -279,6 +280,7 @@ CREATE TABLE Defect (
     df_work_cont VARCHAR2(500) NULL,        -- 결함조치내용
     fl_ms_fd_no NUMBER NULL,                -- 결함발견첨부파일번호
     fl_ms_work_no NUMBER NULL,              -- 결함조치첨부파일번호
+    test_no NUMBER NULL,                    -- 테스트번호
     test_dtl_no NUMBER NULL,                -- 테스트상세번호
     mem_fd_no NUMBER NOT NULL,              -- 결함발견자번호
     mem_work_no NUMBER NULL,                -- 결함조치자번호
@@ -301,6 +303,7 @@ CREATE TABLE Risk (
     pri_cd CHAR(8) NOT NULL,
     risk_cont VARCHAR2(1000) NOT NULL,
     risk_plan VARCHAR2(1000) NULL,
+    regist_dt DATE NULL,
     due_dt DATE NULL,
     compl_dt DATE NULL,
     prj_no NUMBER NOT NULL,
@@ -315,7 +318,8 @@ CREATE TABLE History (
     record_dt DATE NULL,
     record_cont VARCHAR(500) NOT NULL,
     risk_no NUMBER NULL,
-    mem_no NUMBER NOT NULL
+    mem_no NUMBER NOT NULL,
+    fl_ms_no NUMBER
 );
 
 CREATE TABLE Request (
@@ -404,16 +408,10 @@ ALTER TABLE TestMaster ADD CONSTRAINT fk_tm_prj_no_tm_002 FOREIGN KEY (prj_no) R
 ALTER TABLE TestMaster ADD CONSTRAINT fk_tm_sys_work_no_004 FOREIGN KEY (sys_work_no) REFERENCES System (sys_no);
 
 ALTER TABLE TestDetail ADD CONSTRAINT pk_td_test_dtl_no_001 PRIMARY KEY (test_dtl_no);
-ALTER TABLE TestDetail ADD CONSTRAINT fk_td_test_no_002 FOREIGN KEY (test_no) REFERENCES TestMaster (test_no);
+ALTER TABLE TestDetail ADD CONSTRAINT fk_td_test_no_002 FOREIGN KEY (test_no) REFERENCES TestMaster (test_no) ON DELETE CASCADE;
 ALTER TABLE TestDetail ADD CONSTRAINT fk_td_test_mem_no_003 FOREIGN KEY (mem_no) REFERENCES Member (mem_no);
 ALTER TABLE TestDetail ADD CONSTRAINT fk_td_test_par_test_dtl_no_004 FOREIGN KEY (par_test_dtl_no) REFERENCES TestDetail (test_dtl_no);
 
-ALTER TABLE Defect ADD CONSTRAINT pk_df_no_001 PRIMARY KEY (df_no);
-ALTER TABLE Defect ADD CONSTRAINT fk_df_prj_no_002 FOREIGN KEY (prj_no) REFERENCES Project (prj_no);
-ALTER TABLE Defect ADD CONSTRAINT fk_df_work_no_003 FOREIGN KEY (work_no) REFERENCES System (sys_no);
-ALTER TABLE Defect ADD CONSTRAINT fk_df_test_dtl_no_004 FOREIGN KEY (test_dtl_no) REFERENCES TestDetail (test_dtl_no);
-ALTER TABLE Defect ADD CONSTRAINT fk_df_fl_ms_fd_no_005 FOREIGN KEY (fl_ms_fd_no) REFERENCES Member (mem_no);
-ALTER TABLE Defect ADD CONSTRAINT fk_df_fl_ms_work_no_006 FOREIGN KEY (fl_ms_work_no) REFERENCES Member (mem_no);
 
 ALTER TABLE FeatureTest ADD CONSTRAINT pk_ft_feat_test_no_001 PRIMARY KEY (feat_no, test_dtl_no);
 ALTER TABLE FeatureTest ADD CONSTRAINT fk_ft_feat_no_002 FOREIGN KEY (feat_no) REFERENCES Feature (feat_no);
@@ -421,8 +419,18 @@ ALTER TABLE FeatureTest ADD CONSTRAINT fk_ft_feat_test_dtl_no_003 FOREIGN KEY (t
 
 ALTER TABLE FileMaster ADD CONSTRAINT pk_fl_ms_no_001 PRIMARY KEY (fl_ms_no);
 
+ALTER TABLE Defect ADD CONSTRAINT pk_df_no_001 PRIMARY KEY (df_no);
+ALTER TABLE Defect ADD CONSTRAINT fk_df_prj_no_002 FOREIGN KEY (prj_no) REFERENCES Project (prj_no);
+ALTER TABLE Defect ADD CONSTRAINT fk_df_work_no_003 FOREIGN KEY (work_no) REFERENCES System (sys_no);
+ALTER TABLE Defect ADD CONSTRAINT fk_df_test_dtl_no_004 FOREIGN KEY (test_dtl_no) REFERENCES TestDetail (test_dtl_no);
+ALTER TABLE Defect ADD CONSTRAINT fk_df_fl_ms_fd_no_005 FOREIGN KEY (fl_ms_fd_no) REFERENCES FileMaster (fl_ms_no);
+ALTER TABLE Defect ADD CONSTRAINT fk_df_fl_ms_work_no_006 FOREIGN KEY (fl_ms_work_no) REFERENCES FileMaster (fl_ms_no);
+ALTER TABLE Defect ADD CONSTRAINT fk_df_mem_001 FOREIGN KEY (mem_fd_no) REFERENCES Member (mem_no);
+ALTER TABLE Defect ADD CONSTRAINT fk_df_mem_002 FOREIGN KEY (mem_work_no) REFERENCES Member (mem_no);
+ALTER TABLE Defect ADD CONSTRAINT fk_df_test_no_007 FOREIGN KEY (test_no) REFERENCES TestMaster (test_no);
+
 ALTER TABLE FileDetail ADD CONSTRAINT pk_fl_no_001 PRIMARY KEY (fl_no);
-ALTER TABLE FileDetail ADD CONSTRAINT fk_fl_ms_no_002 FOREIGN KEY (fl_ms_no) REFERENCES FileMaster (fl_ms_no);
+ALTER TABLE FileDetail ADD CONSTRAINT fk_fl_ms_no_002 FOREIGN KEY (fl_ms_no) REFERENCES FileMaster (fl_ms_no) ON DELETE CASCADE;
 
 ALTER TABLE Output ADD CONSTRAINT pk_opt_no_001 PRIMARY KEY (opt_no);
 ALTER TABLE Output ADD CONSTRAINT fk_opt_high_folder_no_002 FOREIGN KEY (high_folder_no) REFERENCES Output (opt_no);
@@ -439,6 +447,7 @@ ALTER TABLE Risk ADD CONSTRAINT fk_risk_fl_ms_fd_no_006 FOREIGN KEY (fl_ms_fd_no
 ALTER TABLE History ADD CONSTRAINT pk_history_no_001 PRIMARY KEY (history_no);
 ALTER TABLE History ADD CONSTRAINT fk_history_risk_no_002 FOREIGN KEY (risk_no) REFERENCES Risk (risk_no);
 ALTER TABLE History ADD CONSTRAINT fk_history_mem_no_003 FOREIGN KEY (mem_no) REFERENCES Member (mem_no);
+ALTER TABLE History ADD CONSTRAINT fk_history_filemaster FOREIGN KEY (fl_ms_no) REFERENCES FileMaster(fl_ms_no) ON DELETE CASCADE;
 
 ALTER TABLE Request ADD CONSTRAINT pk_req_no_001 PRIMARY KEY (req_no);
 ALTER TABLE Request ADD CONSTRAINT fk_req_prj_no_002 FOREIGN KEY (prj_no) REFERENCES Project (prj_no);
@@ -718,39 +727,6 @@ INSERT INTO projectMember (mem_no, tm_no, prj_no, prj_auth_cd, pre_start_dt, pre
 VALUES (1, 1, 1, 'PMS00203', '2021-01-01', '2021-01-01', '2021-01-01', '2021-01-01', 'Y', 'user1', '2021-01-01', NULL, NULL);
 
 INSERT INTO projectMember (mem_no, tm_no, prj_no, prj_auth_cd, pre_start_dt, pre_end_dt, start_dt, end_dt, use_yn, reg_id, reg_dt, mod_id, mod_dt)
-VALUES (1, 1, 2, 'PMS00203', '2021-01-01', '2021-01-01', '2021-01-01', '2021-01-01', 'Y', 'user1', '2021-01-01', NULL, NULL);
-
-INSERT INTO projectMember (mem_no, tm_no, prj_no, prj_auth_cd, pre_start_dt, pre_end_dt, start_dt, end_dt, use_yn, reg_id, reg_dt, mod_id, mod_dt)
-VALUES (1, 1, 3, 'PMS00203', '2021-01-01', '2021-01-01', '2021-01-01', '2021-01-01', 'Y', 'user1', '2021-01-01', NULL, NULL);
-
-INSERT INTO projectMember (mem_no, tm_no, prj_no, prj_auth_cd, pre_start_dt, pre_end_dt, start_dt, end_dt, use_yn, reg_id, reg_dt, mod_id, mod_dt)
-VALUES (1, 1, 4, 'PMS00203', '2021-01-01', '2021-01-01', '2021-01-01', '2021-01-01', 'Y', 'user1', '2021-01-01', NULL, NULL);
-
-INSERT INTO projectMember (mem_no, tm_no, prj_no, prj_auth_cd, pre_start_dt, pre_end_dt, start_dt, end_dt, use_yn, reg_id, reg_dt, mod_id, mod_dt)
-VALUES (1, 1, 5, 'PMS00203', '2021-01-01', '2021-01-01', '2021-01-01', '2021-01-01', 'Y', 'user1', '2021-01-01', NULL, NULL);
-
-INSERT INTO projectMember (mem_no, tm_no, prj_no, prj_auth_cd, pre_start_dt, pre_end_dt, start_dt, end_dt, use_yn, reg_id, reg_dt, mod_id, mod_dt)
-VALUES (1, 1, 6, 'PMS00203', '2021-01-01', '2021-01-01', '2021-01-01', '2021-01-01', 'Y', 'user1', '2021-01-01', NULL, NULL);
-
-INSERT INTO projectMember (mem_no, tm_no, prj_no, prj_auth_cd, pre_start_dt, pre_end_dt, start_dt, end_dt, use_yn, reg_id, reg_dt, mod_id, mod_dt)
-VALUES (1, 1, 7, 'PMS00203', '2021-01-01', '2021-01-01', '2021-01-01', '2021-01-01', 'Y', 'user1', '2021-01-01', NULL, NULL);
-
-INSERT INTO projectMember (mem_no, tm_no, prj_no, prj_auth_cd, pre_start_dt, pre_end_dt, start_dt, end_dt, use_yn, reg_id, reg_dt, mod_id, mod_dt)
-VALUES (1, 1, 8, 'PMS00203', '2021-01-01', '2021-01-01', '2021-01-01', '2021-01-01', 'Y', 'user1', '2021-01-01', NULL, NULL);
-
-INSERT INTO projectMember (mem_no, tm_no, prj_no, prj_auth_cd, pre_start_dt, pre_end_dt, start_dt, end_dt, use_yn, reg_id, reg_dt, mod_id, mod_dt)
-VALUES (1, 1, 9, 'PMS00203', '2021-01-01', '2021-01-01', '2021-01-01', '2021-01-01', 'Y', 'user1', '2021-01-01', NULL, NULL);
-
-INSERT INTO projectMember (mem_no, tm_no, prj_no, prj_auth_cd, pre_start_dt, pre_end_dt, start_dt, end_dt, use_yn, reg_id, reg_dt, mod_id, mod_dt)
-VALUES (1, 1, 10, 'PMS00203', '2021-01-01', '2021-01-01', '2021-01-01', '2021-01-01', 'Y', 'user1', '2021-01-01', NULL, NULL);
-
-INSERT INTO projectMember (mem_no, tm_no, prj_no, prj_auth_cd, pre_start_dt, pre_end_dt, start_dt, end_dt, use_yn, reg_id, reg_dt, mod_id, mod_dt)
-VALUES (1, 1, 11, 'PMS00203', '2021-01-01', '2021-01-01', '2021-01-01', '2021-01-01', 'Y', 'user1', '2021-01-01', NULL, NULL);
-
-INSERT INTO projectMember (mem_no, tm_no, prj_no, prj_auth_cd, pre_start_dt, pre_end_dt, start_dt, end_dt, use_yn, reg_id, reg_dt, mod_id, mod_dt)
-VALUES (1, 1, 12, 'PMS00203', '2021-01-01', '2021-01-01', '2021-01-01', '2021-01-01', 'Y', 'user1', '2021-01-01', NULL, NULL);
-
-INSERT INTO projectMember (mem_no, tm_no, prj_no, prj_auth_cd, pre_start_dt, pre_end_dt, start_dt, end_dt, use_yn, reg_id, reg_dt, mod_id, mod_dt)
 VALUES (2, 1, 1, 'PMS00203', '2021-01-01', '2021-01-01', '2021-01-01', '2021-01-01', 'Y', 'user1', '2021-01-01', NULL, NULL);
 
 INSERT INTO projectMember (mem_no, tm_no, prj_no, prj_auth_cd, pre_start_dt, pre_end_dt, start_dt, end_dt, use_yn, reg_id, reg_dt, mod_id, mod_dt)
@@ -758,39 +734,6 @@ VALUES (3, 1, 1, 'PMS00202', '2021-01-01', '2021-01-01', '2021-01-01', '2021-01-
 
 INSERT INTO projectMember (mem_no, tm_no, prj_no, prj_auth_cd, pre_start_dt, pre_end_dt, start_dt, end_dt, use_yn, reg_id, reg_dt, mod_id, mod_dt)
 VALUES (14, 1, 1, 'PMS00201', '2021-01-01', '2021-01-01', '2021-01-01', '2021-01-01', 'Y', 'pm1', '2021-01-01', NULL, NULL);
-
-INSERT INTO projectMember (mem_no, tm_no, prj_no, prj_auth_cd, pre_start_dt, pre_end_dt, start_dt, end_dt, use_yn, reg_id, reg_dt, mod_id, mod_dt)
-VALUES (14, 1, 2, 'PMS00201', '2021-01-01', '2021-01-01', '2021-01-01', '2021-01-01', 'Y', 'pm1', '2021-01-01', NULL, NULL);
-
-INSERT INTO projectMember (mem_no, tm_no, prj_no, prj_auth_cd, pre_start_dt, pre_end_dt, start_dt, end_dt, use_yn, reg_id, reg_dt, mod_id, mod_dt)
-VALUES (14, 1, 3, 'PMS00201', '2021-01-01', '2021-01-01', '2021-01-01', '2021-01-01', 'Y', 'pm1', '2021-01-01', NULL, NULL);
-
-INSERT INTO projectMember (mem_no, tm_no, prj_no, prj_auth_cd, pre_start_dt, pre_end_dt, start_dt, end_dt, use_yn, reg_id, reg_dt, mod_id, mod_dt)
-VALUES (14, 1, 4, 'PMS00201', '2021-01-01', '2021-01-01', '2021-01-01', '2021-01-01', 'Y', 'pm1', '2021-01-01', NULL, NULL);
-
-INSERT INTO projectMember (mem_no, tm_no, prj_no, prj_auth_cd, pre_start_dt, pre_end_dt, start_dt, end_dt, use_yn, reg_id, reg_dt, mod_id, mod_dt)
-VALUES (14, 1, 5, 'PMS00201', '2021-01-01', '2021-01-01', '2021-01-01', '2021-01-01', 'Y', 'pm1', '2021-01-01', NULL, NULL);
-
-INSERT INTO projectMember (mem_no, tm_no, prj_no, prj_auth_cd, pre_start_dt, pre_end_dt, start_dt, end_dt, use_yn, reg_id, reg_dt, mod_id, mod_dt)
-VALUES (14, 1, 6, 'PMS00201', '2021-01-01', '2021-01-01', '2021-01-01', '2021-01-01', 'Y', 'pm1', '2021-01-01', NULL, NULL);
-
-INSERT INTO projectMember (mem_no, tm_no, prj_no, prj_auth_cd, pre_start_dt, pre_end_dt, start_dt, end_dt, use_yn, reg_id, reg_dt, mod_id, mod_dt)
-VALUES (14, 1, 7, 'PMS00201', '2021-01-01', '2021-01-01', '2021-01-01', '2021-01-01', 'Y', 'pm1', '2021-01-01', NULL, NULL);
-
-INSERT INTO projectMember (mem_no, tm_no, prj_no, prj_auth_cd, pre_start_dt, pre_end_dt, start_dt, end_dt, use_yn, reg_id, reg_dt, mod_id, mod_dt)
-VALUES (14, 1, 8, 'PMS00201', '2021-01-01', '2021-01-01', '2021-01-01', '2021-01-01', 'Y', 'pm1', '2021-01-01', NULL, NULL);
-
-INSERT INTO projectMember (mem_no, tm_no, prj_no, prj_auth_cd, pre_start_dt, pre_end_dt, start_dt, end_dt, use_yn, reg_id, reg_dt, mod_id, mod_dt)
-VALUES (14, 1, 9, 'PMS00201', '2021-01-01', '2021-01-01', '2021-01-01', '2021-01-01', 'Y', 'pm1', '2021-01-01', NULL, NULL);
-
-INSERT INTO projectMember (mem_no, tm_no, prj_no, prj_auth_cd, pre_start_dt, pre_end_dt, start_dt, end_dt, use_yn, reg_id, reg_dt, mod_id, mod_dt)
-VALUES (14, 1, 10, 'PMS00201', '2021-01-01', '2021-01-01', '2021-01-01', '2021-01-01', 'Y', 'pm1', '2021-01-01', NULL, NULL);
-
-INSERT INTO projectMember (mem_no, tm_no, prj_no, prj_auth_cd, pre_start_dt, pre_end_dt, start_dt, end_dt, use_yn, reg_id, reg_dt, mod_id, mod_dt)
-VALUES (14, 1, 11, 'PMS00201', '2021-01-01', '2021-01-01', '2021-01-01', '2021-01-01', 'Y', 'pm1', '2021-01-01', NULL, NULL);
-
-INSERT INTO projectMember (mem_no, tm_no, prj_no, prj_auth_cd, pre_start_dt, pre_end_dt, start_dt, end_dt, use_yn, reg_id, reg_dt, mod_id, mod_dt)
-VALUES (14, 1, 12, 'PMS00201', '2021-01-01', '2021-01-01', '2021-01-01', '2021-01-01', 'Y', 'pm1', '2021-01-01', NULL, NULL);
 
 INSERT INTO System (sys_no, sys_ttl, sys_cont, use_yn, prj_no, par_sys_no, sys_yn)
 VALUES (seq_system.nextval, 'A 업무 시스템', '시스템1 내용', 'Y', 1, NULL, 'Y');
@@ -955,11 +898,11 @@ insert into taskmember
 values (2, 1, 1, 11);
 
 INSERT INTO Feature (feat_no, feat_id, feat_title, feat_cont, pre_st_dt, pre_end_dt, st_dt, end_dt, stat_cd, pri_cd, prg, diff_cd, use_yn, sys_no, mem_no, tm_no, prj_no, class_cd)
-VALUES (seq_feature.nextval, 'F001', 'RSTR110', '기능1 내용', '2021-01-01', '2021-01-01', '2021-01-01', '2021-01-01', 'PMS00901', 'PMS00603', 0, 'PMS01103', 'Y', 1, 1, 1, 1, 'PMS01005');
+VALUES (seq_feature.nextval, 'F001', 'RSTR110', '기능1 내용', '2024-10-25', '2024-10-31', '2024-10-25', '2024-10-29', 'PMS00906', 'PMS00603', 100, 'PMS01103', 'Y', 1, 1, 1, 1, 'PMS01005');
 INSERT INTO Feature (feat_no, feat_id, feat_title, feat_cont, pre_st_dt, pre_end_dt, st_dt, end_dt, stat_cd, pri_cd, prg, diff_cd, use_yn, sys_no, mem_no, tm_no, prj_no, class_cd)
-VALUES (seq_feature.nextval, 'F002', 'RSTR111', '기능2 내용', '2021-01-01', '2021-01-01', '2021-01-01', '2021-01-01', 'PMS00901', 'PMS00603', 0, 'PMS01103', 'Y', 1, 1, 1, 1, 'PMS01005');
+VALUES (seq_feature.nextval, 'F002', 'RSTR111', '기능2 내용', '2024-10-25', '2024-10-31', '2024-10-25', '2024-11-01', 'PMS00906', 'PMS00603', 100, 'PMS01103', 'Y', 1, 1, 1, 1, 'PMS01005');
 INSERT INTO Feature (feat_no, feat_id, feat_title, feat_cont, pre_st_dt, pre_end_dt, st_dt, end_dt, stat_cd, pri_cd, prg, diff_cd, use_yn, sys_no, mem_no, tm_no, prj_no, class_cd)
-VALUES (seq_feature.nextval, 'F003', 'RSTR123', '기능3 내용', '2021-01-01', '2021-01-01', '2021-01-01', '2021-01-01', 'PMS00901', 'PMS00603', 0, 'PMS01103', 'Y', 1, 1, 1, 1, 'PMS01005');
+VALUES (seq_feature.nextval, 'F003', 'RSTR123', '기능3 내용', '2024-11-01', '2024-11-10', '2024-11-02', null, 'PMS00902', 'PMS00603', 10, 'PMS01103', 'Y', 1, 1, 1, 1, 'PMS01005');
 
 INSERT INTO TestMaster (
     test_no, test_id, test_title, test_cont, stat_cd, type_cd, prj_no,
@@ -1229,13 +1172,12 @@ VALUES (
            'PMS01201', 1, '2021-01-01', '2021-01-01', 9, 'user1', '2021-01-01', 'Y'
        );
 
-INSERT INTO TestDetail (test_dtl_no, test_dtl_id, wrk_proc_cont, test_data, estimated_rlt, test_detail_cont, test_st_dt, test_result_cd, progress_cont, pre_cond, note, mem_no, par_test_dtl_no, test_no)
-VALUES (seq_testdetail.nextval, 'TD001', '테스트상세1', '테스트상세1 내용', '테스트상세1 예상결과', '테스트상세1 내용', '2021-01-01', 'PMS01401', '테스트상세1 진행내용', '테스트상세1 사전조건', '테스트상세1 비고', 1, NULL, 1);
-INSERT INTO TestDetail (test_dtl_no, test_dtl_id, wrk_proc_cont, test_data, estimated_rlt, test_detail_cont, test_st_dt, test_result_cd, progress_cont, pre_cond, note, mem_no, par_test_dtl_no, test_no)
-VALUES (seq_testdetail.nextval, 'TD002', '테스트상세2', '테스트상세2 내용', '테스트상세2 예상결과', '테스트상세2 내용', '2021-01-01', 'PMS01401', '테스트상세2 진행내용', '테스트상세2 사전조건', '테스트상세2 비고', 1, NULL, 1);
-INSERT INTO TestDetail (test_dtl_no, test_dtl_id, wrk_proc_cont, test_data, estimated_rlt, test_detail_cont, test_st_dt, test_result_cd, progress_cont, pre_cond, note, mem_no, par_test_dtl_no, test_no)
-VALUES (seq_testdetail.nextval, 'TD003', '테스트상세3', '테스트상세3 내용', '테스트상세3 예상결과', '테스트상세3 내용', '2021-01-01', 'PMS01401', '테스트상세3 진행내용', '테스트상세3 사전조건', '테스트상세3 비고', 1, NULL, 3);
-
+INSERT INTO TestDetail (test_dtl_no, test_dtl_id, wrk_proc_cont, test_data, estimated_rlt, test_detail_cont, test_st_dt, test_result_cd, progress_cont, pre_cond, mem_no, par_test_dtl_no, test_no, created_dt)
+VALUES (seq_testdetail.nextval, 'TD001', '테스트상세1', '테스트상세1 내용', '테스트상세1 예상결과', '테스트상세1 내용', '2021-01-01', 'PMS01401', '테스트상세1 진행내용', '테스트상세1 사전조건', 1, NULL, 1, sysdate);
+INSERT INTO TestDetail (test_dtl_no, test_dtl_id, wrk_proc_cont, test_data, estimated_rlt, test_detail_cont, test_st_dt, test_result_cd, progress_cont, pre_cond, mem_no, par_test_dtl_no, test_no, created_dt)
+VALUES (seq_testdetail.nextval, 'TD002', '테스트상세2', '테스트상세2 내용', '테스트상세2 예상결과', '테스트상세2 내용', '2021-01-01', 'PMS01401', '테스트상세2 진행내용', '테스트상세2 사전조건', 1, NULL, 1, sysdate);
+INSERT INTO TestDetail (test_dtl_no, test_dtl_id, wrk_proc_cont, test_data, estimated_rlt, test_detail_cont, test_st_dt, test_result_cd, progress_cont, pre_cond, mem_no, par_test_dtl_no, test_no, created_dt)
+VALUES (seq_testdetail.nextval, 'TD003', '테스트상세3', '테스트상세3 내용', '테스트상세3 예상결과', '테스트상세3 내용', '2021-01-01', 'PMS01401', '테스트상세3 진행내용', '테스트상세3 사전조건', 1, NULL, 3, sysdate);
 
 INSERT INTO FeatureTest (feat_no, test_dtl_no) VALUES (1, 1);
 INSERT INTO FeatureTest (feat_no, test_dtl_no) VALUES (2, 1);
@@ -1305,113 +1247,48 @@ VALUES (seq_defect.nextval, 'DF-0029', '텍스트 입력 문제', 'PMS00701', 'P
 INSERT INTO Defect (df_no, df_id, df_ttl, stat_cd, pri_cd, df_cont, df_fd_dt, mem_fd_no, prj_no, type_cd)
 VALUES (seq_defect.nextval, 'DF-0030', '비밀번호 변경 오류', 'PMS00702', 'PMS00605', '비밀번호 변경 시 오류 발생.', TO_DATE('2024-10-30', 'YYYY-MM-DD'), 1, 1, 'PMS00803');
 
+-- 완료된 기능들 (8월~9월에 등록, 고객 확인 상태)
 INSERT INTO FEATURE (FEAT_NO, FEAT_ID, FEAT_TITLE, FEAT_CONT, PRE_ST_DT, PRE_END_DT, ST_DT, END_DT, STAT_CD, PRI_CD, PRG, DIFF_CD, CLASS_CD, USE_YN, SYS_NO, MEM_NO, TM_NO, PRJ_NO)
-VALUES (seq_feature.nextval, 'F001', '기능1', '내용1', TO_DATE('21/01/01', 'YY/MM/DD'), TO_DATE('21/01/01', 'YY/MM/DD'), TO_DATE('21/01/01', 'YY/MM/DD'), TO_DATE('21/01/01', 'YY/MM/DD'), 'PMS00901', 'PMS00603', 100, 'PMS01103', 'PMS01001', 'Y', 1, 1, 1, 1);
-
+VALUES (seq_feature.nextval, 'F001', '기능1', '내용1', TO_DATE('24/08/01', 'YY/MM/DD'), TO_DATE('24/08/15', 'YY/MM/DD'), TO_DATE('24/08/02', 'YY/MM/DD'), TO_DATE('24/08/14', 'YY/MM/DD'), 'PMS00906', 'PMS00603', 100, 'PMS01103', 'PMS01001', 'Y', 1, 1, 1, 1);
 INSERT INTO FEATURE (FEAT_NO, FEAT_ID, FEAT_TITLE, FEAT_CONT, PRE_ST_DT, PRE_END_DT, ST_DT, END_DT, STAT_CD, PRI_CD, PRG, DIFF_CD, CLASS_CD, USE_YN, SYS_NO, MEM_NO, TM_NO, PRJ_NO)
-VALUES (seq_feature.nextval, 'F002', '기능2', '내용2', TO_DATE('21/01/01', 'YY/MM/DD'), TO_DATE('21/01/01', 'YY/MM/DD'), TO_DATE('21/01/01', 'YY/MM/DD'), TO_DATE('21/01/01', 'YY/MM/DD'), 'PMS00901', 'PMS00603', 100, 'PMS01103', 'PMS01001', 'Y', 1, 1, 1, 1);
-
+VALUES (seq_feature.nextval, 'F002', '기능2', '내용2', TO_DATE('24/08/05', 'YY/MM/DD'), TO_DATE('24/08/20', 'YY/MM/DD'), TO_DATE('24/08/06', 'YY/MM/DD'), TO_DATE('24/08/19', 'YY/MM/DD'), 'PMS00906', 'PMS00602', 100, 'PMS01102', 'PMS01002', 'Y', 2, 1, 1, 1);
 INSERT INTO FEATURE (FEAT_NO, FEAT_ID, FEAT_TITLE, FEAT_CONT, PRE_ST_DT, PRE_END_DT, ST_DT, END_DT, STAT_CD, PRI_CD, PRG, DIFF_CD, CLASS_CD, USE_YN, SYS_NO, MEM_NO, TM_NO, PRJ_NO)
-VALUES (seq_feature.nextval, 'F003', '기능3', '내용3', TO_DATE('21/01/01', 'YY/MM/DD'), TO_DATE('21/01/01', 'YY/MM/DD'), TO_DATE('21/01/01', 'YY/MM/DD'), TO_DATE('21/01/01', 'YY/MM/DD'), 'PMS00901', 'PMS00603', 100, 'PMS01103', 'PMS01001', 'Y', 1, 1, 1, 1);
-
+VALUES (seq_feature.nextval, 'F003', '기능3', '내용3', TO_DATE('24/08/10', 'YY/MM/DD'), TO_DATE('24/08/25', 'YY/MM/DD'), TO_DATE('24/08/11', 'YY/MM/DD'), TO_DATE('24/08/24', 'YY/MM/DD'), 'PMS00906', 'PMS00601', 100, 'PMS01101', 'PMS01003', 'Y', 3, 2, 1, 1);
 INSERT INTO FEATURE (FEAT_NO, FEAT_ID, FEAT_TITLE, FEAT_CONT, PRE_ST_DT, PRE_END_DT, ST_DT, END_DT, STAT_CD, PRI_CD, PRG, DIFF_CD, CLASS_CD, USE_YN, SYS_NO, MEM_NO, TM_NO, PRJ_NO)
-VALUES (seq_feature.nextval, 'ITS_001', '기능1', 'test', TO_DATE('24/10/02', 'YY/MM/DD'), TO_DATE('24/10/17', 'YY/MM/DD'), NULL, NULL, 'PMS00902', 'PMS00601', 50, 'PMS01101', 'PMS01002', 'Y', 5, 3, 1, 1);
-
+VALUES (seq_feature.nextval, 'F004', '기능4', '내용4', TO_DATE('24/08/15', 'YY/MM/DD'), TO_DATE('24/09/01', 'YY/MM/DD'), TO_DATE('24/08/16', 'YY/MM/DD'), TO_DATE('24/08/31', 'YY/MM/DD'), 'PMS00906', 'PMS00602', 100, 'PMS01102', 'PMS01004', 'Y', 4, 1, 1, 1);
 INSERT INTO FEATURE (FEAT_NO, FEAT_ID, FEAT_TITLE, FEAT_CONT, PRE_ST_DT, PRE_END_DT, ST_DT, END_DT, STAT_CD, PRI_CD, PRG, DIFF_CD, CLASS_CD, USE_YN, SYS_NO, MEM_NO, TM_NO, PRJ_NO)
-VALUES (seq_feature.nextval, 'ITS_002', '기능2', 'test', TO_DATE('24/10/02', 'YY/MM/DD'), TO_DATE('24/10/30', 'YY/MM/DD'), NULL, NULL, 'PMS00902', 'PMS00602', 50, 'PMS01101', 'PMS01002', 'Y', 5, 3, 1, 1);
+VALUES (seq_feature.nextval, 'F005', '기능5', '내용5', TO_DATE('24/08/20', 'YY/MM/DD'), TO_DATE('24/09/05', 'YY/MM/DD'), TO_DATE('24/08/21', 'YY/MM/DD'), TO_DATE('24/09/04', 'YY/MM/DD'), 'PMS00906', 'PMS00603', 100, 'PMS01103', 'PMS01005', 'Y', 5, 3, 1, 1);
 
+-- PL 확인 상태 (진척도 90, 9월에 등록)
 INSERT INTO FEATURE (FEAT_NO, FEAT_ID, FEAT_TITLE, FEAT_CONT, PRE_ST_DT, PRE_END_DT, ST_DT, END_DT, STAT_CD, PRI_CD, PRG, DIFF_CD, CLASS_CD, USE_YN, SYS_NO, MEM_NO, TM_NO, PRJ_NO)
-VALUES (seq_feature.nextval, 'ITS_003', '기능3', 'test', TO_DATE('24/10/02', 'YY/MM/DD'), TO_DATE('24/10/30', 'YY/MM/DD'), NULL, NULL, 'PMS00902', 'PMS00602', 50, 'PMS01101', 'PMS01003', 'Y', 5, 3, 1, 1);
-
-
-
+VALUES (seq_feature.nextval, 'F006', '기능6', '내용6', TO_DATE('24/09/01', 'YY/MM/DD'), TO_DATE('24/09/15', 'YY/MM/DD'), TO_DATE('24/09/02', 'YY/MM/DD'), NULL, 'PMS00905', 'PMS00601', 90, 'PMS01102', 'PMS01001', 'Y', 1, 2, 1, 1);
 INSERT INTO FEATURE (FEAT_NO, FEAT_ID, FEAT_TITLE, FEAT_CONT, PRE_ST_DT, PRE_END_DT, ST_DT, END_DT, STAT_CD, PRI_CD, PRG, DIFF_CD, CLASS_CD, USE_YN, SYS_NO, MEM_NO, TM_NO, PRJ_NO)
-VALUES (seq_feature.nextval, 'F001', '기능1', '내용1', TO_DATE('21/01/01', 'YY/MM/DD'), TO_DATE('21/01/01', 'YY/MM/DD'), TO_DATE('21/01/01', 'YY/MM/DD'), TO_DATE('21/01/01', 'YY/MM/DD'), 'PMS00901', 'PMS00603', 100, 'PMS01103', 'PMS01003', 'Y', 1, 1, 1, 1);
+VALUES (seq_feature.nextval, 'F007', '기능7', '내용7', TO_DATE('24/09/05', 'YY/MM/DD'), TO_DATE('24/09/20', 'YY/MM/DD'), TO_DATE('24/09/06', 'YY/MM/DD'), NULL, 'PMS00905', 'PMS00602', 90, 'PMS01103', 'PMS01002', 'Y', 2, 3, 1, 1);
 
+-- 단위 테스트 완료 상태 (진척도 80, 9월~10월 등록)
 INSERT INTO FEATURE (FEAT_NO, FEAT_ID, FEAT_TITLE, FEAT_CONT, PRE_ST_DT, PRE_END_DT, ST_DT, END_DT, STAT_CD, PRI_CD, PRG, DIFF_CD, CLASS_CD, USE_YN, SYS_NO, MEM_NO, TM_NO, PRJ_NO)
-VALUES (seq_feature.nextval, 'F002', '기능2', '내용2', TO_DATE('21/01/01', 'YY/MM/DD'), TO_DATE('21/01/01', 'YY/MM/DD'), TO_DATE('21/01/01', 'YY/MM/DD'), TO_DATE('21/01/01', 'YY/MM/DD'), 'PMS00901', 'PMS00603', 100, 'PMS01103', 'PMS01002', 'Y', 1, 1, 1, 1);
-
+VALUES (seq_feature.nextval, 'F008', '기능8', '내용8', TO_DATE('24/09/10', 'YY/MM/DD'), TO_DATE('24/09/25', 'YY/MM/DD'), TO_DATE('24/09/11', 'YY/MM/DD'), NULL, 'PMS00904', 'PMS00603', 80, 'PMS01101', 'PMS01003', 'Y', 3, 1, 1, 1);
 INSERT INTO FEATURE (FEAT_NO, FEAT_ID, FEAT_TITLE, FEAT_CONT, PRE_ST_DT, PRE_END_DT, ST_DT, END_DT, STAT_CD, PRI_CD, PRG, DIFF_CD, CLASS_CD, USE_YN, SYS_NO, MEM_NO, TM_NO, PRJ_NO)
-VALUES (seq_feature.nextval, 'F003', '기능3', '내용3', TO_DATE('21/01/01', 'YY/MM/DD'), TO_DATE('21/01/01', 'YY/MM/DD'), TO_DATE('21/01/01', 'YY/MM/DD'), TO_DATE('21/01/01', 'YY/MM/DD'), 'PMS00901', 'PMS00603', 100, 'PMS01103', 'PMS01002', 'Y', 1, 1, 1, 1);
+VALUES (seq_feature.nextval, 'F009', '기능9', '내용9', TO_DATE('24/10/01', 'YY/MM/DD'), TO_DATE('24/10/15', 'YY/MM/DD'), TO_DATE('24/10/02', 'YY/MM/DD'), NULL, 'PMS00904', 'PMS00602', 80, 'PMS01102', 'PMS01004', 'Y', 4, 2, 1, 1);
 
+-- 개발 완료 상태 (진척도 70, 10월 등록)
 INSERT INTO FEATURE (FEAT_NO, FEAT_ID, FEAT_TITLE, FEAT_CONT, PRE_ST_DT, PRE_END_DT, ST_DT, END_DT, STAT_CD, PRI_CD, PRG, DIFF_CD, CLASS_CD, USE_YN, SYS_NO, MEM_NO, TM_NO, PRJ_NO)
-VALUES (seq_feature.nextval, 'ITS_001', '기능1', 'test', TO_DATE('24/10/02', 'YY/MM/DD'), TO_DATE('24/10/17', 'YY/MM/DD'), NULL, NULL, 'PMS00902', 'PMS00601', 40, 'PMS01101', 'PMS01004', 'Y', 5, 3, 1, 1);
-
+VALUES (seq_feature.nextval, 'F010', '기능10', '내용10', TO_DATE('24/10/05', 'YY/MM/DD'), TO_DATE('24/10/20', 'YY/MM/DD'), TO_DATE('24/10/06', 'YY/MM/DD'), NULL, 'PMS00903', 'PMS00603', 70, 'PMS01103', 'PMS01001', 'Y', 1, 1, 1, 1);
 INSERT INTO FEATURE (FEAT_NO, FEAT_ID, FEAT_TITLE, FEAT_CONT, PRE_ST_DT, PRE_END_DT, ST_DT, END_DT, STAT_CD, PRI_CD, PRG, DIFF_CD, CLASS_CD, USE_YN, SYS_NO, MEM_NO, TM_NO, PRJ_NO)
-VALUES (seq_feature.nextval, 'ITS_002', '기능2', 'test', TO_DATE('24/10/02', 'YY/MM/DD'), TO_DATE('24/10/30', 'YY/MM/DD'), NULL, NULL, 'PMS00902', 'PMS00602', 70, 'PMS01101', 'PMS01004', 'Y', 5, 3, 1, 1);
+VALUES (seq_feature.nextval, 'F011', '기능11', '내용11', TO_DATE('24/10/07', 'YY/MM/DD'), TO_DATE('24/10/22', 'YY/MM/DD'), TO_DATE('24/10/08', 'YY/MM/DD'), NULL, 'PMS00903', 'PMS00602', 70, 'PMS01101', 'PMS01002', 'Y', 2, 3, 1, 1);
 
+-- 개발 중 상태 (진척도 10~60, 10월~11월 등록)
 INSERT INTO FEATURE (FEAT_NO, FEAT_ID, FEAT_TITLE, FEAT_CONT, PRE_ST_DT, PRE_END_DT, ST_DT, END_DT, STAT_CD, PRI_CD, PRG, DIFF_CD, CLASS_CD, USE_YN, SYS_NO, MEM_NO, TM_NO, PRJ_NO)
-VALUES (seq_feature.nextval, 'ITS_003', '기능3', 'test', TO_DATE('24/10/02', 'YY/MM/DD'), TO_DATE('24/10/30', 'YY/MM/DD'), NULL, NULL, 'PMS00902', 'PMS00602', 20, 'PMS01101', 'PMS01003', 'Y', 5, 3, 1, 1);
-
+VALUES (seq_feature.nextval, 'F012', '기능12', '내용12', TO_DATE('24/10/10', 'YY/MM/DD'), TO_DATE('24/10/30', 'YY/MM/DD'), TO_DATE('24/10/11', 'YY/MM/DD'), NULL, 'PMS00902', 'PMS00601', 40, 'PMS01103', 'PMS01003', 'Y', 3, 1, 1, 1);
 INSERT INTO FEATURE (FEAT_NO, FEAT_ID, FEAT_TITLE, FEAT_CONT, PRE_ST_DT, PRE_END_DT, ST_DT, END_DT, STAT_CD, PRI_CD, PRG, DIFF_CD, CLASS_CD, USE_YN, SYS_NO, MEM_NO, TM_NO, PRJ_NO)
-VALUES (seq_feature.nextval, 'F001', '기능1', '내용1', TO_DATE('21/01/01', 'YY/MM/DD'), TO_DATE('21/01/01', 'YY/MM/DD'), TO_DATE('21/01/01', 'YY/MM/DD'), TO_DATE('21/01/01', 'YY/MM/DD'), 'PMS00901', 'PMS00603', 100, 'PMS01103', 'PMS01003', 'Y', 1, 1, 1, 1);
+VALUES (seq_feature.nextval, 'F013', '기능13', '내용13', TO_DATE('24/10/12', 'YY/MM/DD'), TO_DATE('24/11/01', 'YY/MM/DD'), TO_DATE('24/10/13', 'YY/MM/DD'), NULL, 'PMS00902', 'PMS00603', 50, 'PMS01102', 'PMS01002', 'Y', 4, 2, 1, 1);
 
+-- 신규 상태 (진척도 0, 11월에 등록)
 INSERT INTO FEATURE (FEAT_NO, FEAT_ID, FEAT_TITLE, FEAT_CONT, PRE_ST_DT, PRE_END_DT, ST_DT, END_DT, STAT_CD, PRI_CD, PRG, DIFF_CD, CLASS_CD, USE_YN, SYS_NO, MEM_NO, TM_NO, PRJ_NO)
-VALUES (seq_feature.nextval, 'F002', '기능2', '내용2', TO_DATE('21/01/01', 'YY/MM/DD'), TO_DATE('21/01/01', 'YY/MM/DD'), TO_DATE('21/01/01', 'YY/MM/DD'), TO_DATE('21/01/01', 'YY/MM/DD'), 'PMS00901', 'PMS00603', 100, 'PMS01103', 'PMS01002', 'Y', 1, 1, 1, 1);
-
+VALUES (seq_feature.nextval, 'F014', '기능14', '내용14', TO_DATE('24/11/01', 'YY/MM/DD'), TO_DATE('24/11/15', 'YY/MM/DD'), NULL, NULL, 'PMS00901', 'PMS00601', 0, 'PMS01101', 'PMS01001', 'Y', 1, 1, 1, 1);
 INSERT INTO FEATURE (FEAT_NO, FEAT_ID, FEAT_TITLE, FEAT_CONT, PRE_ST_DT, PRE_END_DT, ST_DT, END_DT, STAT_CD, PRI_CD, PRG, DIFF_CD, CLASS_CD, USE_YN, SYS_NO, MEM_NO, TM_NO, PRJ_NO)
-VALUES (seq_feature.nextval, 'F003', '기능3', '내용3', TO_DATE('21/01/01', 'YY/MM/DD'), TO_DATE('21/01/01', 'YY/MM/DD'), TO_DATE('21/01/01', 'YY/MM/DD'), TO_DATE('21/01/01', 'YY/MM/DD'), 'PMS00901', 'PMS00603', 100, 'PMS01103', 'PMS01002', 'Y', 1, 1, 1, 1);
+VALUES (seq_feature.nextval, 'F015', '기능15', '내용15', TO_DATE('24/11/02', 'YY/MM/DD'), TO_DATE('24/11/18', 'YY/MM/DD'), NULL, NULL, 'PMS00901', 'PMS00602', 0, 'PMS01102', 'PMS01002', 'Y', 2, 2, 1, 1);
 
-INSERT INTO FEATURE (FEAT_NO, FEAT_ID, FEAT_TITLE, FEAT_CONT, PRE_ST_DT, PRE_END_DT, ST_DT, END_DT, STAT_CD, PRI_CD, PRG, DIFF_CD, CLASS_CD, USE_YN, SYS_NO, MEM_NO, TM_NO, PRJ_NO)
-VALUES (seq_feature.nextval, 'ITS_001', '기능63', 'test', TO_DATE('24/10/02', 'YY/MM/DD'), TO_DATE('24/10/17', 'YY/MM/DD'), NULL, NULL, 'PMS00902', 'PMS00601', 40, 'PMS01101', 'PMS01004', 'Y', 6, 3, 1, 1);
-
-INSERT INTO FEATURE (FEAT_NO, FEAT_ID, FEAT_TITLE, FEAT_CONT, PRE_ST_DT, PRE_END_DT, ST_DT, END_DT, STAT_CD, PRI_CD, PRG, DIFF_CD, CLASS_CD, USE_YN, SYS_NO, MEM_NO, TM_NO, PRJ_NO)
-VALUES (seq_feature.nextval, 'ITS_002', '기능62', 'test', TO_DATE('24/10/02', 'YY/MM/DD'), TO_DATE('24/10/30', 'YY/MM/DD'), NULL, NULL, 'PMS00902', 'PMS00602', 70, 'PMS01101', 'PMS01004', 'Y', 6, 3, 1, 1);
-
-INSERT INTO FEATURE (FEAT_NO, FEAT_ID, FEAT_TITLE, FEAT_CONT, PRE_ST_DT, PRE_END_DT, ST_DT, END_DT, STAT_CD, PRI_CD, PRG, DIFF_CD, CLASS_CD, USE_YN, SYS_NO, MEM_NO, TM_NO, PRJ_NO)
-VALUES (seq_feature.nextval, 'ITS_003', '기능61', 'test', TO_DATE('24/10/02', 'YY/MM/DD'), TO_DATE('24/10/30', 'YY/MM/DD'), NULL, NULL, 'PMS00902', 'PMS00602', 20, 'PMS01101', 'PMS01003', 'Y', 6, 3, 1, 1);
-
-
-INSERT INTO FEATURE (FEAT_NO, FEAT_ID, FEAT_TITLE, FEAT_CONT, PRE_ST_DT, PRE_END_DT, ST_DT, END_DT, STAT_CD, PRI_CD, PRG, DIFF_CD, CLASS_CD, USE_YN, SYS_NO, MEM_NO, TM_NO, PRJ_NO)
-VALUES (seq_feature.nextval, 'F004', '기능4', '내용4', TO_DATE('22/02/15', 'YY/MM/DD'), TO_DATE('22/03/01', 'YY/MM/DD'), NULL, NULL, 'PMS00901', 'PMS00601', 20, 'PMS01101', 'PMS01001', 'Y', 2, 1, 1, 1);
-
-INSERT INTO FEATURE (FEAT_NO, FEAT_ID, FEAT_TITLE, FEAT_CONT, PRE_ST_DT, PRE_END_DT, ST_DT, END_DT, STAT_CD, PRI_CD, PRG, DIFF_CD, CLASS_CD, USE_YN, SYS_NO, MEM_NO, TM_NO, PRJ_NO)
-VALUES (seq_feature.nextval, 'F005', '기능5', '내용5', TO_DATE('22/03/15', 'YY/MM/DD'), TO_DATE('22/04/01', 'YY/MM/DD'), NULL, NULL, 'PMS00902', 'PMS00602', 40, 'PMS01102', 'PMS01002', 'Y', 3, 2, 1, 1);
-
-INSERT INTO FEATURE (FEAT_NO, FEAT_ID, FEAT_TITLE, FEAT_CONT, PRE_ST_DT, PRE_END_DT, ST_DT, END_DT, STAT_CD, PRI_CD, PRG, DIFF_CD, CLASS_CD, USE_YN, SYS_NO, MEM_NO, TM_NO, PRJ_NO)
-VALUES (seq_feature.nextval, 'F006', '기능6', '내용6', TO_DATE('22/04/15', 'YY/MM/DD'), TO_DATE('22/05/01', 'YY/MM/DD'), NULL, NULL, 'PMS00903', 'PMS00603', 60, 'PMS01103', 'PMS01003', 'Y', 4, 3, 1, 1);
-
-INSERT INTO FEATURE (FEAT_NO, FEAT_ID, FEAT_TITLE, FEAT_CONT, PRE_ST_DT, PRE_END_DT, ST_DT, END_DT, STAT_CD, PRI_CD, PRG, DIFF_CD, CLASS_CD, USE_YN, SYS_NO, MEM_NO, TM_NO, PRJ_NO)
-VALUES (seq_feature.nextval, 'F007', '기능7', '내용7', TO_DATE('22/05/15', 'YY/MM/DD'), TO_DATE('22/06/01', 'YY/MM/DD'), NULL, NULL, 'PMS00904', 'PMS00604', 80, 'PMS01104', 'PMS01004', 'Y', 5, 2, 1, 1);
-
-INSERT INTO FEATURE (FEAT_NO, FEAT_ID, FEAT_TITLE, FEAT_CONT, PRE_ST_DT, PRE_END_DT, ST_DT, END_DT, STAT_CD, PRI_CD, PRG, DIFF_CD, CLASS_CD, USE_YN, SYS_NO, MEM_NO, TM_NO, PRJ_NO)
-VALUES (seq_feature.nextval, 'F008', '기능8', '내용8', TO_DATE('22/06/15', 'YY/MM/DD'), TO_DATE('22/07/01', 'YY/MM/DD'), NULL, NULL, 'PMS00905', 'PMS00605', 100, 'PMS01105', 'PMS01005', 'Y', 6, 1, 1, 1);
-
-INSERT INTO FEATURE (FEAT_NO, FEAT_ID, FEAT_TITLE, FEAT_CONT, PRE_ST_DT, PRE_END_DT, ST_DT, END_DT, STAT_CD, PRI_CD, PRG, DIFF_CD, CLASS_CD, USE_YN, SYS_NO, MEM_NO, TM_NO, PRJ_NO)
-VALUES (seq_feature.nextval, 'F009', '기능9', '내용9', TO_DATE('22/07/15', 'YY/MM/DD'), TO_DATE('22/08/01', 'YY/MM/DD'), NULL, NULL, 'PMS00906', 'PMS00601', 50, 'PMS01101', 'PMS01001', 'Y', 7, 1, 1, 1);
-
-INSERT INTO FEATURE (FEAT_NO, FEAT_ID, FEAT_TITLE, FEAT_CONT, PRE_ST_DT, PRE_END_DT, ST_DT, END_DT, STAT_CD, PRI_CD, PRG, DIFF_CD, CLASS_CD, USE_YN, SYS_NO, MEM_NO, TM_NO, PRJ_NO)
-VALUES (seq_feature.nextval, 'F010', '기능10', '내용10', TO_DATE('22/08/15', 'YY/MM/DD'), TO_DATE('22/09/01', 'YY/MM/DD'), NULL, NULL, 'PMS00901', 'PMS00602', 70, 'PMS01102', 'PMS01002', 'Y', 8, 2, 1, 1);
-
-INSERT INTO FEATURE (FEAT_NO, FEAT_ID, FEAT_TITLE, FEAT_CONT, PRE_ST_DT, PRE_END_DT, ST_DT, END_DT, STAT_CD, PRI_CD, PRG, DIFF_CD, CLASS_CD, USE_YN, SYS_NO, MEM_NO, TM_NO, PRJ_NO)
-VALUES (seq_feature.nextval, 'F011', '기능11', '내용11', TO_DATE('22/09/15', 'YY/MM/DD'), TO_DATE('22/10/01', 'YY/MM/DD'), NULL, NULL, 'PMS00902', 'PMS00603', 30, 'PMS01103', 'PMS01003', 'Y', 9, 3, 1, 1);
-
-INSERT INTO FEATURE (FEAT_NO, FEAT_ID, FEAT_TITLE, FEAT_CONT, PRE_ST_DT, PRE_END_DT, ST_DT, END_DT, STAT_CD, PRI_CD, PRG, DIFF_CD, CLASS_CD, USE_YN, SYS_NO, MEM_NO, TM_NO, PRJ_NO)
-VALUES (seq_feature.nextval, 'F012', '기능12', '내용12', TO_DATE('22/10/15', 'YY/MM/DD'), TO_DATE('22/11/01', 'YY/MM/DD'), NULL, NULL, 'PMS00903', 'PMS00604', 90, 'PMS01104', 'PMS01004', 'Y', 10, 2, 1, 1);
-
-INSERT INTO FEATURE (FEAT_NO, FEAT_ID, FEAT_TITLE, FEAT_CONT, PRE_ST_DT, PRE_END_DT, ST_DT, END_DT, STAT_CD, PRI_CD, PRG, DIFF_CD, CLASS_CD, USE_YN, SYS_NO, MEM_NO, TM_NO, PRJ_NO)
-VALUES (seq_feature.nextval, 'F013', '기능13', '내용13', TO_DATE('22/11/15', 'YY/MM/DD'), TO_DATE('22/12/01', 'YY/MM/DD'), NULL, NULL, 'PMS00904', 'PMS00605', 10, 'PMS01105', 'PMS01005', 'Y', 11, 3, 1, 1);
-
-INSERT INTO FEATURE (FEAT_NO, FEAT_ID, FEAT_TITLE, FEAT_CONT, PRE_ST_DT, PRE_END_DT, ST_DT, END_DT, STAT_CD, PRI_CD, PRG, DIFF_CD, CLASS_CD, USE_YN, SYS_NO, MEM_NO, TM_NO, PRJ_NO)
-VALUES (seq_feature.nextval, 'F014', '기능14', '내용14', TO_DATE('23/01/15', 'YY/MM/DD'), TO_DATE('23/02/01', 'YY/MM/DD'), NULL, NULL, 'PMS00905', 'PMS00601', 60, 'PMS01101', 'PMS01001', 'Y', 12, 1, 1, 1);
-
-INSERT INTO FEATURE (FEAT_NO, FEAT_ID, FEAT_TITLE, FEAT_CONT, PRE_ST_DT, PRE_END_DT, ST_DT, END_DT, STAT_CD, PRI_CD, PRG, DIFF_CD, CLASS_CD, USE_YN, SYS_NO, MEM_NO, TM_NO, PRJ_NO)
-VALUES (seq_feature.nextval, 'F015', '기능15', '내용15', TO_DATE('23/03/15', 'YY/MM/DD'), TO_DATE('23/04/01', 'YY/MM/DD'), NULL, NULL, 'PMS00906', 'PMS00602', 20, 'PMS01102', 'PMS01002', 'Y', 13, 2, 1, 1);
-
-INSERT INTO FEATURE (FEAT_NO, FEAT_ID, FEAT_TITLE, FEAT_CONT, PRE_ST_DT, PRE_END_DT, ST_DT, END_DT, STAT_CD, PRI_CD, PRG, DIFF_CD, CLASS_CD, USE_YN, SYS_NO, MEM_NO, TM_NO, PRJ_NO)
-VALUES (seq_feature.nextval, 'F016', '기능16', '내용16', TO_DATE('23/05/15', 'YY/MM/DD'), TO_DATE('23/06/01', 'YY/MM/DD'), NULL, NULL, 'PMS00901', 'PMS00603', 70, 'PMS01103', 'PMS01003', 'Y', 1, 3, 1, 1);
-
-INSERT INTO FEATURE (FEAT_NO, FEAT_ID, FEAT_TITLE, FEAT_CONT, PRE_ST_DT, PRE_END_DT, ST_DT, END_DT, STAT_CD, PRI_CD, PRG, DIFF_CD, CLASS_CD, USE_YN, SYS_NO, MEM_NO, TM_NO, PRJ_NO)
-VALUES (seq_feature.nextval, 'F017', '기능17', '내용17', TO_DATE('23/07/15', 'YY/MM/DD'), TO_DATE('23/08/01', 'YY/MM/DD'), NULL, NULL, 'PMS00902', 'PMS00604', 40, 'PMS01104', 'PMS01004', 'Y', 2, 1, 1, 1);
-
-INSERT INTO FEATURE (FEAT_NO, FEAT_ID, FEAT_TITLE, FEAT_CONT, PRE_ST_DT, PRE_END_DT, ST_DT, END_DT, STAT_CD, PRI_CD, PRG, DIFF_CD, CLASS_CD, USE_YN, SYS_NO, MEM_NO, TM_NO, PRJ_NO)
-VALUES (seq_feature.nextval, 'F018', '기능18', '내용18', TO_DATE('23/09/15', 'YY/MM/DD'), TO_DATE('23/10/01', 'YY/MM/DD'), NULL, NULL, 'PMS00903', 'PMS00605', 30, 'PMS01105', 'PMS01005', 'Y', 3, 2, 1, 1);
-
-INSERT INTO FEATURE (FEAT_NO, FEAT_ID, FEAT_TITLE, FEAT_CONT, PRE_ST_DT, PRE_END_DT, ST_DT, END_DT, STAT_CD, PRI_CD, PRG, DIFF_CD, CLASS_CD, USE_YN, SYS_NO, MEM_NO, TM_NO, PRJ_NO)
-VALUES (seq_feature.nextval, 'F019', '기능19', '내용19', TO_DATE('23/11/15', 'YY/MM/DD'), TO_DATE('23/12/01', 'YY/MM/DD'), NULL, NULL, 'PMS00904', 'PMS00601', 50, 'PMS01101', 'PMS01001', 'Y', 4, 3, 1, 1);
-
-INSERT INTO FEATURE (FEAT_NO, FEAT_ID, FEAT_TITLE, FEAT_CONT, PRE_ST_DT, PRE_END_DT, ST_DT, END_DT, STAT_CD, PRI_CD, PRG, DIFF_CD, CLASS_CD, USE_YN, SYS_NO, MEM_NO, TM_NO, PRJ_NO)
-VALUES (seq_feature.nextval, 'F020', '기능20', '내용20', TO_DATE('24/01/15', 'YY/MM/DD'), TO_DATE('24/02/01', 'YY/MM/DD'), NULL, NULL, 'PMS00905', 'PMS00602', 90, 'PMS01102', 'PMS01002', 'Y', 5, 2, 1, 1);
 
 -- output
 InSERT InTO Output (opt_no, opt_ttl, prj_no, high_folder_no, fld_yn, use_yn)
@@ -1630,4 +1507,147 @@ InSERT InTO Output (opt_no, opt_ttl, prj_no, high_folder_no, fld_yn, use_yn, fl_
 VALUES (seq_output.nextval, '물류 관리 시스템 데이터 모델링', 1, 3, 'n', 'y', 8);
 
 -----------------------------------------------------------------------------------------------------------------
+INSERT INTO RISK VALUES(SEQ_RISK.nextval, 'PMS_RSK_17', '적정한 업무/인력 배분', 'PMS00302', 'PMS00502', 'PMS00403', 'PMS00603', '모든 과업이 누락없이 확인되고 적정한 파트 및 인력에게 역할과 책임이 부여되지 않아 업무 사각지대가 발생위험',
+                        '1. 업무별 개발대상 목록 식별(설계단계 1,2차 확정)
+2. 개발자별 적정한 업무 분배
+3. 설계자와 개발자의 연속성 확보', '2024-11-05', '2024-11-05', null, 1, 4, 1, null, null);
+INSERT INTO RISK VALUES(SEQ_RISK.nextval, 'PMS_RSK_18', '도입 솔루션 선정 지연', 'PMS00302', 'PMS00503', 'PMS00402', 'PMS00604', '솔루션 업체와의 계약 지연으로 투입인력의 지원이 원활하지 못해 일정관리의 위험 있음.
+특히, 전사정보분석체계 시스템의 구축 범위 및 뱡향성 제시 지연으로 타 시스템과의 연계 범위 정의가 미확정 되어 초기 범위 결정의 어려움 있음',
+                        '1. 도입지연 솔루션에 대한 사전 기술검토 진행
+2. 장비도입 심의위원회 심의 및 업체 확정
+3. 인력구성 및 운영방안 수립
+
+도입시점별 분석단계이전 도입 설계에 반영, 사전영업확인', '2024-11-05', '2024-11-05', null, 1, 5, 2, null, null);
+INSERT INTO RISK VALUES(SEQ_RISK.nextval, 'PMS_RSK_01', '성능 저하', 'PMS00302', 'PMS00501', 'PMS00402', 'PMS00601',
+                        '데이터베이스의 용량이 증가함에 따라 적시에 쿼리가 처리되지 않거나, 사용자 요청이 지연됨으로써 시스템 응답 속도가 현저히 느려지는 위험이 존재. 특히, 특정 시간대에 집중적인 트래픽 발생 시 성능 저하가 심각하게 발생할 우려가 있음.', '1.성능 모니터링 도구 설치 및 주기적 점검
+2.데이터베이스 인덱스 최적화 및 쿼리 성능 개선 작업
+3.고성능 서버로의 장비 업그레이드 검토', '2024-11-05', null, null, 1, 1, 2, null, null);
+INSERT INTO RISK VALUES(SEQ_RISK.nextval, 'PMS_RSK_02', '자원 부족', 'PMS00302', 'PMS00502', 'PMS00401', 'PMS00602', '프로젝트가 진행됨에 따라 자원의 과도한 사용으로 인해 특정 작업에 필요한 인력과 장비가 부족하여 업무 공백이 발생할 가능성 존재. 중요한 작업에 자원을 배정하지 못함으로써 일정 지연과 품질 저하의 위험이 높아짐.',
+                        '1.자원 활용도 분석을 통한 자원 최적화 방안 마련
+2.추가 인력 및 장비 도입을 위한 예산 요청
+3.중요 작업 우선 배정을 위한 자원 분배 계획 수립', '2024-11-05', null, null, 1, 2, 1, null, null);
+INSERT INTO RISK VALUES(SEQ_RISK.nextval, 'PMS_RSK_03', '보안 취약점 노출', 'PMS00302', 'PMS00503', 'PMS00403', 'PMS00603', '데이터 전송 중 충분한 암호화가 이루어지지 않아 민감 정보가 외부에 노출될 위험 있음. 특히, 외부로부터의 침입 가능성이 높아 시스템 내부 데이터를 보호할 수 있는 추가 보안 조치가 시급히 요구됨.',
+                        '1.전송 데이터 암호화 방식 적용 및 보안 강화
+2.정기적인 보안 점검 및 모니터링 수행
+3.보안 정책 개선 및 전 직원 보안 교육 실시', '2024-11-05', null, null, 1, 3, 1, null, null);
+INSERT INTO RISK VALUES(SEQ_RISK.nextval, 'PMS_RSK_04', '장비 노후화', 'PMS00302', 'PMS00501', 'PMS00402', 'PMS00601', '기존 시스템에서 사용 중인 주요 장비가 노후화되어 유지보수 비용이 증가하고, 운영 안정성이 떨어짐. 장비 고장 시 즉각적인 대응이 어렵고, 운영 중단으로 이어질 가능성이 있어 장비 교체 필요성이 증가하고 있음.',
+                        '1.주요 장비 교체 계획 수립 및 예산 확보
+2.장비 상태 점검 및 고장 예방을 위한 정기 유지보수
+3.새로운 장비 도입을 위한 업체 협의 및 선정', '2024-11-05', null, null, 1, 4, 2, null, null);
+INSERT INTO RISK VALUES(SEQ_RISK.nextval, 'PMS_RSK_05', '프로젝트 일정 지연', 'PMS00302', 'PMS00502', 'PMS00403', 'PMS00602', '주요 프로젝트 과제가 계획된 일정 내 완료되지 않아 후속 작업이 지연될 가능성 존재. 특히, 타 부서와의 협업 작업에 차질이 생겨 전체 프로젝트 일정에 큰 영향을 미칠 위험이 있음.',
+                        '1.주요 일정별 마일스톤 설정 및 진척도 모니터링
+2.부서 간 커뮤니케이션 강화 및 정기 회의 진행
+3.일정 조정 및 우선순위 재조정', '2024-11-05', null, null, 1, 5, 1, null, null);
+INSERT INTO RISK VALUES(SEQ_RISK.nextval, 'PMS_RSK_06', '데이터 유출 위험', 'PMS00302', 'PMS00503', 'PMS00404', 'PMS00604', '회사 내부 데이터에 대한 접근 권한 관리가 부족하여 외부로 유출될 가능성 높음. 특히, 민감 정보에 대한 통제와 로그 기록이 미흡하여 데이터 유출 사고 발생 시 신속한 대응이 어려운 상황임.',
+                        '1.접근 권한 관리 정책 강화 및 재설정
+2.중요 데이터 암호화 및 접근 이력 모니터링
+3.외부 유출 방지를 위한 보안 시스템 강화', '2024-11-05', null, null, 1, 6, 2, null, null);
+INSERT INTO RISK VALUES(SEQ_RISK.nextval, 'PMS_RSK_07', '기술 부족', 'PMS00302', 'PMS00501', 'PMS00401', 'PMS00601', '프로젝트를 수행할 인력이 요구되는 기술 수준에 도달하지 못하여 중요한 기능 구현이 지연될 가능성 존재. 특히, 신규 기술 도입 시 필요한 기술 역량 부족으로 인해 프로젝트 진행 속도가 떨어지고, 오류 발생 위험이 증가함.',
+                        '1.프로젝트 시작 전 기술 교육 프로그램 실시
+2.외부 전문가의 컨설팅 및 지원 요청
+3.신규 기술 관련 실습 및 현장 교육 진행', '2024-11-05', null, null, 1, 1, 1, null, null);
+INSERT INTO RISK VALUES(SEQ_RISK.nextval, 'PMS_RSK_08', '네트워크 불안정', 'PMS00302', 'PMS00502', 'PMS00402', 'PMS00602', '시스템에 연결된 네트워크가 불안정하여 주요 데이터 전송 및 서비스 제공에 차질이 발생할 위험 존재. 특히, 중요한 업데이트나 사용자 요청을 처리하는 도중 네트워크 불안정으로 서비스 중단이 발생할 수 있음.',
+                        '1.네트워크 장비 업그레이드 및 유지보수 강화
+2.대체 네트워크 경로 확보 및 테스트
+3.네트워크 모니터링 시스템 도입 및 실시간 관리', '2024-11-05', null, null, 1, 2, 2, null, null);
+INSERT INTO RISK VALUES(SEQ_RISK.nextval, 'PMS_RSK_09', '저장공간 부족', 'PMS00302', 'PMS00503', 'PMS00403', 'PMS00603', '데이터의 급격한 증가로 인해 스토리지 용량이 포화 상태에 도달하여 추가 저장공간 확보가 필요함. 기존 데이터를 보존하면서 새로운 데이터를 수용하기 위한 장비 확장이 시급한 상황임.',
+                        '1.데이터 정리 및 불필요한 데이터 삭제
+2.스토리지 확장 및 신규 저장 장치 도입
+3.백업 및 데이터 압축을 통한 공간 확보', '2024-11-05', null, null, 1, 3, 1, null, null);
+INSERT INTO RISK VALUES(SEQ_RISK.nextval, 'PMS_RSK_10', '품질 저하', 'PMS00302', 'PMS00501', 'PMS00404', 'PMS00604', '테스트가 충분히 이루어지지 않아 제품의 품질이 저하될 가능성 높음. 특히, 오류와 버그가 미처 발견되지 않은 상태로 출시될 경우 사용자 불만이 증가하고, 유지보수 비용이 크게 증가할 위험 있음.',
+                        '1.추가 테스트 인력 투입 및 테스트 주기 강화
+2.QA(Quality Assurance) 프로세스 개선 및 문서화
+3.사용자 피드백 수집 및 제품 개선 지속', '2024-11-05', null, null, 1, 4, 2, null, null);
+INSERT INTO RISK VALUES(SEQ_RISK.nextval, 'PMS_RSK_11', '법적 제약', 'PMS00302', 'PMS00502', 'PMS00402', 'PMS00601', '개인정보 보호법 개정에 따라 기존 데이터 수집 및 처리 방식이 법적 제약을 받게 되어 업무 프로세스에 영향을 미칠 가능성 있음. 관련 법규 미준수 시 법적 책임과 벌금이 부과될 위험 있음.',
+                        '1.법률 변경 사항 주기적 모니터링 및 준수 방안 수립
+2.관련 법규 준수 교육 실시 및 문서화
+3.법적 자문을 통한 컴플라이언스 강화', '2024-11-05', null, null, 1, 5, 1, null, null);
+INSERT INTO RISK VALUES(SEQ_RISK.nextval, 'PMS_RSK_12', '시스템 과부하', 'PMS00302', 'PMS00503', 'PMS00401', 'PMS00602', '시스템 트래픽이 예상치를 초과하여 서버가 과부하 상태에 도달할 가능성 높음. 특히, 갑작스러운 사용자 증가 시 시스템이 버티지 못해 장애가 발생할 위험이 존재함.',
+                        '1.트래픽 모니터링을 통한 실시간 관리 강화
+2.서버 추가 및 확장 계획 수립
+3.부하 분산 시스템 도입 검토', '2024-11-05', null, null, 1, 6, 2, null, null);
+INSERT INTO RISK VALUES(SEQ_RISK.nextval, 'PMS_RSK_13', '신규 기술 도입 실패', 'PMS00302', 'PMS00501', 'PMS00403', 'PMS00603', '신규 기술 도입 과정에서 예상하지 못한 문제로 인해 성공적인 도입이 어려운 상황임. 특히, 기술 안정성이 충분히 확보되지 않아 운영 중 잦은 오류가 발생할 우려가 있음.',
+                        '1.신규 기술 파일럿 테스트 및 안정성 검증
+2.기술 전문가와 협력하여 도입 방안 마련
+3.기술 도입 실패 대비 대체 계획 수립', '2024-11-05', null, null, 1, 7, 1, null, null);
+INSERT INTO RISK VALUES(SEQ_RISK.nextval, 'PMS_RSK_14', '의사소통 문제', 'PMS00302', 'PMS00502', 'PMS00404', 'PMS00604', '팀 간의 원활하지 않은 의사소통으로 인해 업무 진행에 혼선이 발생할 가능성 있음. 특히, 중요한 정보가 제때 전달되지 않아 일정 지연과 품질 저하로 이어질 위험이 있음.',
+                        '1.정기적인 회의 일정 수립 및 공유
+2.팀 간 커뮤니케이션 도구 사용 및 가이드 제공
+3.이슈 발생 시 즉각 보고 및 처리 절차 마련', '2024-11-05', null, null, 1, 1, 2, null, null);
+INSERT INTO RISK VALUES(SEQ_RISK.nextval, 'PMS_RSK_15', '외부 협력사 이슈', 'PMS00302', 'PMS00503', 'PMS00402', 'PMS00601', '외부 협력사의 일정 지연 또는 품질 미달로 인해 프로젝트 전체 일정에 영향을 미칠 가능성 높음. 협력사와의 긴밀한 협조가 어려운 상황이며, 이에 따른 대체 방안이 필요한 상태임.',
+                        '1.협력사와의 주기적인 미팅 및 진행 상황 공유
+2.품질 문제 발생 시 대체 방안 검토 및 협의
+3.계약서에 일정 준수 및 품질 기준 명시', '2024-11-05', null, null, 1, 2, 1, null, null);
+INSERT INTO RISK VALUES(SEQ_RISK.nextval, 'PMS_RSK_16', '예산 초과', 'PMS00302', 'PMS00501', 'PMS00401', 'PMS00602', '예상치 못한 비용 발생으로 인해 예산을 초과할 가능성 존재. 특히, 장비 교체나 추가 인력 투입에 대한 비용이 부족하여 프로젝트 완성도가 떨어질 위험이 있음.',
+                        '1.예산 사용 현황 모니터링 및 불필요한 비용 절감
+2.추가 예산 확보 방안 검토 및 예산 조정
+3.장비 및 인력 도입 우선순위 설정 및 관리', '2024-11-05', null, null, 1, 3, 2, null, null);
+
+
+
+INSERT INTO RISK (RISK_NO, RISK_ID, RSK_TTL, TYPE_CD, CLASS_CD, STAT_CD, PRI_CD, RISK_CONT, DUE_DT, COMPL_DT, PRJ_NO, SYS_NO, MEM_NO, regist_dt)
+VALUES (SEQ_RISK.NEXTVAL, 'IS_PMS_001', '성능 저하 발생', 'PMS00301', 'PMS00502', 'PMS00402', 'PMS00602', '특정 시간대에 집중적인 트래픽 증가로 인해 시스템 응답 시간이 급격히 느려지며 사용자 불만이 증가하고 있음.', TO_DATE('2024-10-01', 'YYYY-MM-DD'), NULL, 1, 3, 1, '2024-11-05');
+
+INSERT INTO RISK (RISK_NO, RISK_ID, RSK_TTL, TYPE_CD, CLASS_CD, STAT_CD, PRI_CD, RISK_CONT, DUE_DT, COMPL_DT, PRJ_NO, SYS_NO, MEM_NO, regist_dt)
+VALUES (SEQ_RISK.NEXTVAL, 'IS_PMS_002', '데이터 유출 사고 발생', 'PMS00301', 'PMS00501', 'PMS00402', 'PMS00601', '내부 시스템 접근 권한 설정 오류로 인해 민감 정보가 외부에 유출되어 고객 불만과 보안 위협이 발생함.', TO_DATE('2024-09-15', 'YYYY-MM-DD'), NULL, 1, 5, 2, '2024-11-05');
+
+INSERT INTO RISK (RISK_NO, RISK_ID, RSK_TTL, TYPE_CD, CLASS_CD, STAT_CD, PRI_CD, RISK_CONT, DUE_DT, COMPL_DT, PRJ_NO, SYS_NO, MEM_NO, regist_dt)
+VALUES (SEQ_RISK.NEXTVAL, 'IS_PMS_003', '서버 다운', 'PMS00301', 'PMS00502', 'PMS00403', 'PMS00601', '서버 과부하로 인해 시스템이 중단되었고, 사용자 접근이 차단됨. 긴급 복구 작업이 필요함.', TO_DATE('2024-08-10', 'YYYY-MM-DD'), TO_DATE('2024-08-15', 'YYYY-MM-DD'), 1, 7, 3, '2024-11-05');
+
+INSERT INTO RISK (RISK_NO, RISK_ID, RSK_TTL, TYPE_CD, CLASS_CD, STAT_CD, PRI_CD, RISK_CONT, DUE_DT, COMPL_DT, PRJ_NO, SYS_NO, MEM_NO, regist_dt)
+VALUES (SEQ_RISK.NEXTVAL, 'IS_PMS_004', '데이터 손실', 'PMS00301', 'PMS00503', 'PMS00402', 'PMS00602', '백업 작업 중 오류가 발생하여 일부 데이터가 유실되었으며, 복구 작업이 시급히 요구됨.', TO_DATE('2024-09-20', 'YYYY-MM-DD'), NULL, 1, 2, 1, '2024-11-05');
+
+INSERT INTO RISK (RISK_NO, RISK_ID, RSK_TTL, TYPE_CD, CLASS_CD, STAT_CD, PRI_CD, RISK_CONT, DUE_DT, COMPL_DT, PRJ_NO, SYS_NO, MEM_NO, regist_dt)
+VALUES (SEQ_RISK.NEXTVAL, 'IS_PMS_005', '외부 침입 시도', 'PMS00301', 'PMS00501', 'PMS00402', 'PMS00601', '외부에서 비인가된 접근 시도가 탐지되었으며, 잠재적인 보안 위협으로 시스템 점검이 필요함.', TO_DATE('2024-09-01', 'YYYY-MM-DD'), NULL, 1, 4, 2, '2024-11-05');
+
+INSERT INTO RISK (RISK_NO, RISK_ID, RSK_TTL, TYPE_CD, CLASS_CD, STAT_CD, PRI_CD, RISK_CONT, DUE_DT, COMPL_DT, PRJ_NO, SYS_NO, MEM_NO, regist_dt)
+VALUES (SEQ_RISK.NEXTVAL, 'IS_PMS_006', '시스템 결함 발생', 'PMS00301', 'PMS00503', 'PMS00402', 'PMS00603', '일부 기능에서 예기치 않은 오류가 발생하여 사용자의 업무 수행에 차질이 발생하고 있음.', TO_DATE('2024-10-05', 'YYYY-MM-DD'), NULL, 1, 9, 3, '2024-11-05');
+
+INSERT INTO RISK (RISK_NO, RISK_ID, RSK_TTL, TYPE_CD, CLASS_CD, STAT_CD, PRI_CD, RISK_CONT, DUE_DT, COMPL_DT, PRJ_NO, SYS_NO, MEM_NO, regist_dt)
+VALUES (SEQ_RISK.NEXTVAL, 'IS_PMS_007', '네트워크 불안정', 'PMS00301', 'PMS00502', 'PMS00402', 'PMS00602', '지속적인 네트워크 불안정으로 인해 데이터 전송 속도가 느려지고 사용자 경험이 저하됨.', TO_DATE('2024-10-12', 'YYYY-MM-DD'), NULL, 1, 6, 1, '2024-11-05');
+
+INSERT INTO RISK (RISK_NO, RISK_ID, RSK_TTL, TYPE_CD, CLASS_CD, STAT_CD, PRI_CD, RISK_CONT, DUE_DT, COMPL_DT, PRJ_NO, SYS_NO, MEM_NO, regist_dt)
+VALUES (SEQ_RISK.NEXTVAL, 'IS_PMS_008', '사용자 인증 실패 증가', 'PMS00301', 'PMS00505', 'PMS00402', 'PMS00603', '인증 시스템 문제로 인해 다수의 사용자가 로그인을 시도하는 과정에서 인증에 실패하고 있음.', TO_DATE('2024-09-25', 'YYYY-MM-DD'), NULL, 1, 8, 2, '2024-11-05');
+
+INSERT INTO RISK (RISK_NO, RISK_ID, RSK_TTL, TYPE_CD, CLASS_CD, STAT_CD, PRI_CD, RISK_CONT, DUE_DT, COMPL_DT, PRJ_NO, SYS_NO, MEM_NO, regist_dt)
+VALUES (SEQ_RISK.NEXTVAL, 'IS_PMS_009', '자원 부족', 'PMS00301', 'PMS00504', 'PMS00402', 'PMS00601', '프로젝트 자원 사용이 급증하여 필수적인 작업에 필요한 인력과 장비가 부족함.', TO_DATE('2024-10-10', 'YYYY-MM-DD'), NULL, 1, 11, 3, '2024-11-05');
+
+INSERT INTO RISK (RISK_NO, RISK_ID, RSK_TTL, TYPE_CD, CLASS_CD, STAT_CD, PRI_CD, RISK_CONT, DUE_DT, COMPL_DT, PRJ_NO, SYS_NO, MEM_NO, regist_dt)
+VALUES (SEQ_RISK.NEXTVAL, 'IS_PMS_010', '시스템 과부하', 'PMS00301', 'PMS00502', 'PMS00403', 'PMS00602', '다수의 요청이 동시에 발생하여 시스템이 처리 한도를 초과하고 있으며, 성능 개선이 필요함.', TO_DATE('2024-10-20', 'YYYY-MM-DD'), TO_DATE('2024-10-22', 'YYYY-MM-DD'), 1, 13, 1, '2024-11-05');
+
+INSERT INTO RISK (RISK_NO, RISK_ID, RSK_TTL, TYPE_CD, CLASS_CD, STAT_CD, PRI_CD, RISK_CONT, DUE_DT, COMPL_DT, PRJ_NO, SYS_NO, MEM_NO, regist_dt)
+VALUES (SEQ_RISK.NEXTVAL, 'IS_PMS_011', '테스트 환경 오류 발생', 'PMS00301', 'PMS00503', 'PMS00402', 'PMS00601', '테스트 중에 예상하지 못한 오류가 발생하여 제품 품질에 영향을 미치고 있음.', TO_DATE('2024-09-30', 'YYYY-MM-DD'), NULL, 1, 1, 3, '2024-11-05');
+
+INSERT INTO RISK (RISK_NO, RISK_ID, RSK_TTL, TYPE_CD, CLASS_CD, STAT_CD, PRI_CD, RISK_CONT, DUE_DT, COMPL_DT, PRJ_NO, SYS_NO, MEM_NO, regist_dt)
+VALUES (SEQ_RISK.NEXTVAL, 'IS_PMS_012', '사용자 불만 증가', 'PMS00301', 'PMS00501', 'PMS00402', 'PMS00604', '최근 업데이트 이후 특정 기능이 느려져 사용자 불만이 급격히 증가함.', TO_DATE('2024-09-18', 'YYYY-MM-DD'), NULL, 1, 2, 2, '2024-11-05');
+
+INSERT INTO RISK (RISK_NO, RISK_ID, RSK_TTL, TYPE_CD, CLASS_CD, STAT_CD, PRI_CD, RISK_CONT, DUE_DT, COMPL_DT, PRJ_NO, SYS_NO, MEM_NO, regist_dt)
+VALUES (SEQ_RISK.NEXTVAL, 'IS_PMS_013', '중요 데이터 손상', 'PMS00301', 'PMS00503', 'PMS00402', 'PMS00601', '시스템 오류로 인해 일부 중요 데이터가 손상되어 복구가 필요함.', TO_DATE('2024-10-05', 'YYYY-MM-DD'), NULL, 1, 5, 1, '2024-11-05');
+
+INSERT INTO RISK (RISK_NO, RISK_ID, RSK_TTL, TYPE_CD, CLASS_CD, STAT_CD, PRI_CD, RISK_CONT, DUE_DT, COMPL_DT, PRJ_NO, SYS_NO, MEM_NO, regist_dt)
+VALUES (SEQ_RISK.NEXTVAL, 'IS_PMS_014', '이메일 서비스 장애', 'PMS00301', 'PMS00505', 'PMS00402', 'PMS00603', '메일 서버 문제로 인해 다수의 이메일 발송이 실패하여 고객과의 커뮤니케이션에 차질이 발생함.', TO_DATE('2024-10-12', 'YYYY-MM-DD'), NULL, 1, 12, 2, '2024-11-05');
+
+INSERT INTO RISK (RISK_NO, RISK_ID, RSK_TTL, TYPE_CD, CLASS_CD, STAT_CD, PRI_CD, RISK_CONT, DUE_DT, COMPL_DT, PRJ_NO, SYS_NO, MEM_NO, regist_dt)
+VALUES (SEQ_RISK.NEXTVAL, 'IS_PMS_015', '하드웨어 고장', 'PMS00301', 'PMS00504', 'PMS00403', 'PMS00602', '하드웨어 장비 고장으로 인해 서비스 제공에 지장이 발생하고 있으며, 즉각적인 교체가 요구됨.', TO_DATE('2024-09-25', 'YYYY-MM-DD'), TO_DATE('2024-09-30', 'YYYY-MM-DD'), 1, 8, 3, '2024-11-05');
+
+INSERT INTO RISK (RISK_NO, RISK_ID, RSK_TTL, TYPE_CD, CLASS_CD, STAT_CD, PRI_CD, RISK_CONT, DUE_DT, COMPL_DT, PRJ_NO, SYS_NO, MEM_NO, regist_dt)
+VALUES (SEQ_RISK.NEXTVAL, 'IS_PMS_016', '보안 업데이트 누락', 'PMS00301', 'PMS00501', 'PMS00402', 'PMS00601', '보안 패치가 제때 적용되지 않아 외부 위협에 대한 방어력이 약화됨.', TO_DATE('2024-09-15', 'YYYY-MM-DD'), NULL, 1, 10, 1, '2024-11-05');
+
+INSERT INTO RISK (RISK_NO, RISK_ID, RSK_TTL, TYPE_CD, CLASS_CD, STAT_CD, PRI_CD, RISK_CONT, DUE_DT, COMPL_DT, PRJ_NO, SYS_NO, MEM_NO, regist_dt)
+VALUES (SEQ_RISK.NEXTVAL, 'IS_PMS_017', '고객 불만 발생', 'PMS00301', 'PMS00501', 'PMS00402', 'PMS00602', '고객의 새로운 요구사항 반영이 지연되어 불만이 발생한 상황', TO_DATE('2024-10-20', 'YYYY-MM-DD'), NULL, 1, 3, 1, '2024-11-05');
+
+INSERT INTO RISK (RISK_NO, RISK_ID, RSK_TTL, TYPE_CD, CLASS_CD, STAT_CD, PRI_CD, RISK_CONT, DUE_DT, COMPL_DT, PRJ_NO, SYS_NO, MEM_NO, regist_dt)
+VALUES (SEQ_RISK.NEXTVAL, 'IS_PMS_018', '프로젝트 일정 지연', 'PMS00301', 'PMS00502', 'PMS00402', 'PMS00603', '외부 협력사의 일정 지연으로 인해 프로젝트 일정에 차질이 발생', TO_DATE('2024-10-15', 'YYYY-MM-DD'), NULL, 1, 4, 2, '2024-11-05');
+
+INSERT INTO RISK (RISK_NO, RISK_ID, RSK_TTL, TYPE_CD, CLASS_CD, STAT_CD, PRI_CD, RISK_CONT, DUE_DT, COMPL_DT, PRJ_NO, SYS_NO, MEM_NO, regist_dt)
+VALUES (SEQ_RISK.NEXTVAL, 'IS_PMS_019', '품질 기준 미달 문제 발생', 'PMS00301', 'PMS00503', 'PMS00402', 'PMS00601', '테스트 결과가 품질 기준에 미달하여 추가 조치가 필요', TO_DATE('2024-10-10', 'YYYY-MM-DD'), NULL, 1, 2, 3, '2024-11-05');
+
+INSERT INTO RISK (RISK_NO, RISK_ID, RSK_TTL, TYPE_CD, CLASS_CD, STAT_CD, PRI_CD, RISK_CONT, DUE_DT, COMPL_DT, PRJ_NO, SYS_NO, MEM_NO, regist_dt)
+VALUES (SEQ_RISK.NEXTVAL, 'IS_PMS_020', '인력 부족 문제 발생', 'PMS00301', 'PMS00504', 'PMS00402', 'PMS00602', '업무를 수행할 인력 부족으로 인해 특정 작업이 지연됨', TO_DATE('2024-11-05', 'YYYY-MM-DD'), NULL, 1, 7, 1, '2024-11-05');
+
+INSERT INTO RISK (RISK_NO, RISK_ID, RSK_TTL, TYPE_CD, CLASS_CD, STAT_CD, PRI_CD, RISK_CONT, DUE_DT, COMPL_DT, PRJ_NO, SYS_NO, MEM_NO, regist_dt)
+VALUES (SEQ_RISK.NEXTVAL, 'IS_PMS_021', '법적 규정 준수 미비', 'PMS00301', 'PMS00504', 'PMS00403', 'PMS00602', '새로운 법적 규정 준수가 이루어지지 않아 문제가 발생할 위험', TO_DATE('2024-10-30', 'YYYY-MM-DD'), TO_DATE('2024-11-10', 'YYYY-MM-DD'), 1, 10, 2, '2024-11-05');
+
+
+
 COMMIT;

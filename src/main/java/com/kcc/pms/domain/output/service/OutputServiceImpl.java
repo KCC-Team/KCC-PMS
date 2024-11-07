@@ -1,10 +1,8 @@
 package com.kcc.pms.domain.output.service;
 
 import com.kcc.pms.domain.common.service.CommonService;
-import com.kcc.pms.domain.member.model.vo.MemberVO;
 import com.kcc.pms.domain.output.domain.dto.DeleteOutputResponseDto;
 import com.kcc.pms.domain.output.domain.dto.FileStructResponseDto;
-import com.kcc.pms.domain.output.domain.dto.OutputFile;
 import com.kcc.pms.domain.output.domain.dto.OutputResponseDto;
 import com.kcc.pms.domain.output.mapper.OutputMapper;
 import lombok.RequiredArgsConstructor;
@@ -30,9 +28,10 @@ public class OutputServiceImpl implements OutputService {
 
     @Transactional
     @Override
-    public void insertOutput(Long projectNo, String memberName, String title, List<FileStructResponseDto> res, List<MultipartFile> files) {
+    public Long insertOutput(Long projectNo, String memberName, String title, String note, List<FileStructResponseDto> res, List<MultipartFile> files) {
         Long outputNo = updateOutput(projectNo, res, null, commonService.fileUpload(files, memberName, projectNo, null));
-        outputMapper.updateOutputInfo(title, outputNo);
+        outputMapper.updateOutputInfo(title, note, outputNo);
+        return outputNo;
     }
 
     @Override
@@ -49,19 +48,6 @@ public class OutputServiceImpl implements OutputService {
         List<FileStructResponseDto> currentList = outputMapper.findList(projectNo, option);
         Map<Long, FileStructResponseDto> currentMap = currentList.stream()
                 .collect(Collectors.toMap(FileStructResponseDto::getId, Function.identity()));
-
-        Map<Long, FileStructResponseDto> modifiedMap = flattenTree.stream()
-                .collect(Collectors.toMap(FileStructResponseDto::getId, Function.identity()));
-
-        // 삭제 대상 노드 ID 세트 생성
-/*
-        Set<Long> idsToRemove = new HashSet<>(currentMap.keySet());
-        idsToRemove.removeAll(modifiedMap.keySet());
-
-        // 노드 삭제 처리
-        idsToRemove.forEach(outputMapper::deleteOutput);
-*/
-
         // 노드 추가 및 수정 처리
         for (FileStructResponseDto modifiedNode : flattenTree) {
             if (modifiedNode.getParentId() == null) {
@@ -88,8 +74,8 @@ public class OutputServiceImpl implements OutputService {
     }
 
     @Override
-    public void updateOutputInfo(String title, Long outputNo) {
-        outputMapper.updateOutputInfo(title, outputNo);
+    public void updateOutputInfo(String title, String note, Long outputNo) {
+        outputMapper.updateOutputInfo(title, note, outputNo);
     }
 
     @Override
@@ -98,9 +84,9 @@ public class OutputServiceImpl implements OutputService {
     }
 
     @Override
-    public OutputResponseDto findOutput(Long projectNo, Long outputNo) {
-        OutputResponseDto outputNotFound = outputMapper.findOutput(projectNo, outputNo).orElseThrow(() -> new RuntimeException("Output not found"));
-        return outputNotFound;
+    public OutputResponseDto findOutput(Long outputNo) {
+        Optional<OutputResponseDto> output = outputMapper.findOutput(outputNo);
+        return outputMapper.findOutput( outputNo).orElseThrow(() -> new RuntimeException("Output not found"));
     }
 
     @Override

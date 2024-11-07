@@ -38,32 +38,29 @@ public class OutputController {
 
     @GetMapping("/{id}")
     @ResponseBody
-    public ResponseEntity<OutputResponseDto> findOutput(HttpSession session, @PathVariable("id") Long id) {
-//        Long prjNo = (Long) session.getAttribute("prjNo");
-        Long prjNo = 1L;
-        return ResponseEntity.ok().body(outputService.findOutput(prjNo, id));
+    public ResponseEntity<OutputResponseDto> findOutput(@PathVariable("id") Long id) {
+        OutputResponseDto output = outputService.findOutput(id);
+        return ResponseEntity.ok().body(output);
     }
 
     @GetMapping("/api/list")
     @ResponseBody
     public ResponseEntity<List<FileStructResponseDto>> listApi(HttpSession session,
                    @RequestParam(value = "option", defaultValue = "n") String option) {
-//        Long prjNo = (Long) session.getAttribute("prjNo");
-        Long prjNo = 1L;
+        Long prjNo = (Long) session.getAttribute("prjNo");
         return ResponseEntity.ok().body(outputService.findList(prjNo, option));
     }
 
     @PostMapping("/api/save")
     @ResponseBody
-    public ResponseEntity<Void> saveOutputFolders(HttpSession session,
+    public ResponseEntity<Long> saveOutputFolders(HttpSession session,
                             @AuthenticationPrincipal PrincipalDetail principalDetail,
                             String title,
+                            String note,
                             @RequestPart("res") List<FileStructResponseDto> res,
                             @RequestParam("files") List<MultipartFile> files) {
-        //        Long prjNo = (Long) session.getAttribute("prjNo");
-        Long prjNo = 1L;
-        outputService.insertOutput(prjNo, principalDetail.getMember().getMemberName(), title, res, files);
-        return ResponseEntity.ok().build();
+        Long prjNo = (Long) session.getAttribute("prjNo");
+        return ResponseEntity.ok().body(outputService.insertOutput(prjNo, principalDetail.getMember().getMemberName(), title, note, res, files));
     }
 
     @PostMapping("/api/fileinsert")
@@ -73,8 +70,7 @@ public class OutputController {
                                     HttpSession session,
                                     @RequestParam("outputNo") Long outputNo,
                                     @RequestPart("files") List<MultipartFile> files) {
-        //        Long prjNo = (Long) session.getAttribute("prjNo");
-        Long prjNo = 1L;
+        Long prjNo = (Long) session.getAttribute("prjNo");
         outputService.insertOutputFiles(prjNo, principalDetail.getMember().getMemberName(), outputNo, files);
         return ResponseEntity.ok().build();
     }
@@ -83,8 +79,9 @@ public class OutputController {
     @ResponseBody
     public ResponseEntity<Void> updateOutputInfo(HttpSession session,
                               @RequestParam("title") String title,
+                              @RequestParam("note") String note,
                               @RequestParam("outputNo") Long outputNo) {
-        outputService.updateOutputInfo(title, outputNo);
+        outputService.updateOutputInfo(title, note, outputNo);
         return ResponseEntity.ok().build();
     }
 
@@ -93,8 +90,7 @@ public class OutputController {
     public ResponseEntity<String> updateOutputFolders(HttpSession session,
                           @RequestParam(value = "option", defaultValue = "n") String option,
                           @RequestBody List<FileStructResponseDto> res) {
-        //        Long prjNo = (Long) session.getAttribute("prjNo");
-        Long prjNo = 1L;
+        Long prjNo = (Long) session.getAttribute("prjNo");
         outputService.updateOutput(prjNo, res, option, null);
         return ResponseEntity.ok().body("success");
     }
@@ -135,7 +131,7 @@ public class OutputController {
 
             for (OutputDownloadRequestDto output : files) {
                 try {
-                    byte[] fileData = commonService.downloadFile(output.getFilePath()); // S3에서 파일을 다운로드
+                    byte[] fileData = commonService.downloadFile(output.getFilePath());
                     ZipArchiveEntry zipEntry = new ZipArchiveEntry(output.getFileTitle());
                     zos.putArchiveEntry(zipEntry);
                     zos.write(fileData);

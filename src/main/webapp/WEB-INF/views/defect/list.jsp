@@ -1,6 +1,10 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 
 <%@ include file="../common.jsp" %>
+
+<link rel="stylesheet" type="text/css" href="https://cdn.rawgit.com/ax5ui/ax5ui-toast/master/dist/ax5toast.css" />
+<script type="text/javascript" src="https://cdn.rawgit.com/ax5ui/ax5ui-toast/master/dist/ax5toast.min.js"></script>
+
 <link rel="stylesheet" type="text/css" href="../../../resources/common/css/ax5grid.css">
 <link rel="stylesheet" type="text/css" href="../../../resources/defect/css/list.css">
 
@@ -9,6 +13,14 @@
         <div class="div-section">
             <label class="div-info">
                 결함 관리</label>
+            <div class="button-area">
+                <div class="action-buttons d-flex justify-content-end">
+                    <a class="d-flex align-items-center text-nowrap">
+                        <button class="add-item add-defect">
+                            <i class="fas fa-plus"></i>&nbsp;&nbsp;결함 등록</button>
+                    </a>
+                </div>
+            </div>
         </div>
         <div>
             <section>
@@ -40,33 +52,26 @@
                                 </select>
                             </label>
                         </div>
-                        <input type="text" class="form-control" id="searchDefect" placeholder="결함 검색하세요." style="height: 40px; width: 215px;">&nbsp;&nbsp;
-                        <button id="defect-search-btn" class="save-btn-df d-flex align-items-center me-3 text-nowrap">&nbsp;&nbsp;&nbsp;&nbsp;검색&nbsp;&nbsp;&nbsp;&nbsp;</button>
-                        <div class="action-buttons d-flex justify-content-end">
-                            <a class="d-flex align-items-center text-nowrap">
-                                <button class="add-item add-defect">
-                                    <i class="fas fa-plus"></i>&nbsp;&nbsp;결함 등록</button>
-                            </a>
-                            <a href="#">
-                                <button class="danger-export-excel"><i class="fa-solid fa-download"></i> 액셀받기</button>
-                            </a>
+                        <div class="ms-auto d-flex justify-content-end">
+                            <input type="text" class="form-control" id="searchDefect" placeholder="결함 검색하세요." style="height: 40px; width: 215px;">&nbsp;&nbsp;
+                            <button id="defect-search-btn" class="save-btn-df d-flex align-items-center me-3 text-nowrap">&nbsp;&nbsp;&nbsp;&nbsp;검색&nbsp;&nbsp;&nbsp;&nbsp;</button>
                         </div>
+
                     </div>
                 </div>
             </section>
             <section>
-                <div class="d-flex justify-content-center">
+                <div class="defect-area d-flex justify-content-left">
                     <div style="width: 94%;">
-                        <div style="position: relative;height:100%;" id="test-grid-parent">
+                        <div style="position: relative; height:100%;" id="test-grid-parent">
                             <div class="list_table" data-ax5grid="first-grid"  data-ax5grid-config="{
-                            sortable: true,
                             header: {
-                                columnHeight: 50,
+                                columnHeight: 34,
                             },
                             body: {
-                                columnHeight: 48
+                                columnHeight: 34
                             }
-                        }" style="height: 562.5px !important;">
+                        }" style="height: 576.2px !important;">
                             </div>
                         </div>
                     </div>

@@ -40,6 +40,9 @@
 
   .jstree-layout {
     overflow-y: auto;
+    width: 400px;
+    height: 350px;
+    border: 1px solid #656565;
   }
 
   .addedFiles {
@@ -137,7 +140,7 @@
       <input type="text" class="form-control" id="search-output" placeholder="산출물을 검색하세요.">
     </div>
     <section class="d-flex justify-content-left ms-4 p-3">
-      <section class="jstree-layout" style="width: 400px; height: 350px; border: 1px solid #656565">
+      <section class="jstree-layout">
         <jsp:include page="jstree.jsp" />
       </section>
       <section class="d-flex align-items-center">

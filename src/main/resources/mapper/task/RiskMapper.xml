@@ -20,7 +20,16 @@
         SELECT common_cd_no, cd_dtl_no, cd_dtl_nm, order_no
         FROM codedetail
         WHERE (COMMON_CD_NO IN ('PMS005', 'PMS006'))
-           OR (COMMON_CD_NO = 'PMS004' AND FIELD_2 = 'Y') AND use_yn = 'Y'
+        OR (
+        COMMON_CD_NO = 'PMS004'
+        AND use_yn = 'Y'
+        <if test="typeCode == 'PMS00302'">
+            AND FIELD_2 = 'Y'
+        </if>
+        <if test="typeCode == 'PMS00301'">
+            AND FIELD_3 = 'Y'
+        </if>
+        )
         ORDER BY COMMON_CD_NO, ORDER_NO
     </select>
 
@@ -31,14 +40,14 @@
 
         INSERT INTO RISK
         (risk_no, risk_id, rsk_ttl, type_cd, class_cd, stat_cd, pri_cd, risk_cont, risk_plan, due_dt, compl_dt,
-        prj_no, sys_no, mem_no, fl_ms_act_no, fl_ms_fd_no)
+        prj_no, sys_no, mem_no, fl_ms_act_no, fl_ms_fd_no, regist_dt)
         VALUES
         (
         #{req.riskNumber}, #{req.riskId, jdbcType=VARCHAR}, #{req.riskTitle, jdbcType=VARCHAR},
-        'PMS00302', #{req.classCode, jdbcType=VARCHAR}, #{req.statusCode, jdbcType=VARCHAR}, #{req.priorCode, jdbcType=VARCHAR},
-         #{req.riskContent, jdbcType=VARCHAR}, #{req.riskPlan, jdbcType=VARCHAR}, #{req.dueDate, jdbcType=DATE},
-          #{req.completeDate, jdbcType=DATE}, #{req.prjNo}, #{req.systemNo, jdbcType=NUMERIC}, #{req.memberNo, jdbcType=NUMERIC},
-        #{fileMasterWorkNumber, jdbcType=NUMERIC}, #{fileMasterFoundNumber, jdbcType=NUMERIC}
+        #{req.issueRiskType, jdbcType=VARCHAR}, #{req.classCode, jdbcType=VARCHAR}, #{req.statusCode, jdbcType=VARCHAR}, #{req.priorCode, jdbcType=VARCHAR},
+        #{req.riskContent, jdbcType=VARCHAR}, #{req.riskPlan, jdbcType=VARCHAR}, #{req.dueDate, jdbcType=DATE},
+        #{req.completeDate, jdbcType=DATE}, #{req.prjNo}, #{req.systemNo, jdbcType=NUMERIC}, #{req.memberNo, jdbcType=NUMERIC},
+        #{fileMasterWorkNumber, jdbcType=NUMERIC}, #{fileMasterFoundNumber, jdbcType=NUMERIC}, SYSDATE
         )
     </insert>
 
@@ -70,8 +79,7 @@
             risk r,
             member m
         WHERE
-            r.type_cd = 'PMS00302'
-          AND r.mem_no = m.mem_no
+            r.mem_no = m.mem_no
           AND r.risk_no = #{riskNo}
     </select>
 
@@ -94,4 +102,271 @@
         </set>
         WHERE RISK_NO = #{riskNumber}
     </update>
+
+    <select id="getRiskList" parameterType="java.util.Map" resultType="com.kcc.pms.domain.risk.model.dto.RiskSummaryResponseDto">
+        SELECT *
+        FROM (
+        SELECT
+        r.risk_no AS riskNo,
+        r.rsk_ttl AS riskTitle,
+        m.mem_nm AS findMember,
+        class.cd_dtl_nm AS className,
+        stat.cd_dtl_nm AS status,
+        pri.cd_dtl_nm AS priority,
+        SUBSTR((SELECT SYS_CONNECT_BY_PATH(s2.sys_ttl, ' > ')
+        FROM system s2
+        WHERE s2.sys_no = s.sys_no
+        START WITH s2.par_sys_no IS NULL
+        CONNECT BY PRIOR s2.sys_no = s2.par_sys_no), 3) AS system,
+        r.due_dt AS dueDate,
+        r.compl_dt AS completeDate,
+        ROW_NUMBER() OVER (ORDER BY NVL(s.par_sys_no, s.sys_no), CASE WHEN s.par_sys_no IS NULL THEN 0 ELSE 1 END, s.sys_no) AS rn
+        FROM
+        risk r
+        LEFT JOIN system s ON r.sys_no = s.sys_no
+        LEFT JOIN member m ON r.mem_no = m.mem_no
+        JOIN codedetail type ON r.type_cd = type.cd_dtl_no
+        JOIN codedetail class ON r.class_cd = class.cd_dtl_no
+        JOIN codedetail stat ON r.stat_cd = stat.cd_dtl_no
+        JOIN codedetail pri ON r.pri_cd = pri.cd_dtl_no
+        WHERE
+        r.prj_no = #{prjNo, jdbcType=NUMERIC} AND r.type_cd = #{typeCode}
+
+        <if test="systemNo != null and systemNo !=''">
+            AND (s.sys_no = #{systemNo, jdbcType=NUMERIC}
+            OR s.sys_no IN (
+            SELECT sys_no FROM system
+            START WITH sys_no = #{systemNo, jdbcType=NUMERIC}
+            CONNECT BY PRIOR sys_no = par_sys_no))
+        </if>
+
+        <if test="selectedClassNo != null and selectedClassNo != ''">
+            AND r.class_cd = #{selectedClassNo}
+        </if>
+
+        <if test="selectedStatusNo != null and selectedStatusNo != ''">
+            AND r.stat_cd = #{selectedStatusNo}
+        </if>
+
+        <if test="selectedPriorNo != null and selectedPriorNo != ''">
+            AND r.pri_cd = #{selectedPriorNo}
+        </if>
+
+        <if test="keyword != null and keyword != ''">
+            AND LOWER(r.rsk_ttl) LIKE LOWER('%' || #{keyword} || '%')
+        </if>
+        ) WHERE rn BETWEEN #{startRow, jdbcType=NUMERIC} AND #{endRow, jdbcType=NUMERIC}
+    </select>
+
+    <select id="countRisks" parameterType="java.util.Map" resultType="int">
+        SELECT COUNT(*) AS totalRecords
+        FROM
+        risk r
+        LEFT JOIN system s ON r.sys_no = s.sys_no
+        LEFT JOIN member m ON r.mem_no = m.mem_no
+        JOIN codedetail type ON r.type_cd = type.cd_dtl_no
+        JOIN codedetail class ON r.class_cd = class.cd_dtl_no
+        JOIN codedetail stat ON r.stat_cd = stat.cd_dtl_no
+        JOIN codedetail pri ON r.pri_cd = pri.cd_dtl_no
+        WHERE
+        r.prj_no = #{prjNo, jdbcType=NUMERIC} AND r.type_cd = #{typeCode}
+
+        <if test="systemNo != null and systemNo !=''">
+            AND (s.sys_no = #{systemNo, jdbcType=NUMERIC}
+            OR s.sys_no IN (
+            SELECT sys_no FROM system
+            START WITH sys_no = #{systemNo, jdbcType=NUMERIC}
+            CONNECT BY PRIOR sys_no = par_sys_no))
+        </if>
+
+        <if test="selectedClassNo != null and selectedClassNo != ''">
+            AND r.class_cd = #{selectedClassNo}
+        </if>
+
+        <if test="selectedStatusNo != null and selectedStatusNo != ''">
+            AND r.stat_cd = #{selectedStatusNo}
+        </if>
+
+        <if test="selectedPriorNo != null and selectedPriorNo != ''">
+            AND r.pri_cd = #{selectedPriorNo}
+        </if>
+
+        <if test="keyword != null and keyword != ''">
+            AND LOWER(r.rsk_ttl) LIKE LOWER('%' || #{keyword} || '%')
+        </if>
+    </select>
+
+
+    <insert id="createHistory" parameterType="com.kcc.pms.domain.risk.model.dto.RiskHistoryDto">
+        INSERT INTO history (
+            history_no,
+            record_dt,
+            record_cont,
+            risk_no,
+            mem_no,
+            fl_ms_no
+        ) VALUES (
+                     SEQ_HISTORY.nextval,
+                     #{recordDate, jdbcType=DATE},
+                     #{recordContent, jdbcType=VARCHAR},
+                     #{riskNo, jdbcType=NUMERIC},
+                     #{memberNo, jdbcType=NUMERIC},
+                     #{fileMasterNo, jdbcType=NUMERIC}
+                 )
+    </insert>
+
+    <select id="getHistoryByNo" resultType="com.kcc.pms.domain.risk.model.dto.RiskHistoryDto">
+        SELECT
+            h.history_no AS historyNo,
+            h.record_dt AS recordDate,
+            h.record_cont AS recordContent,
+            h.risk_no AS riskNo,
+            h.mem_no AS memberNo,
+            h.fl_ms_no AS fileMasterNo
+        FROM
+            history h
+        WHERE
+            h.history_no = #{historyNo}
+    </select>
+
+    <select id="getHistories" resultType="com.kcc.pms.domain.risk.model.dto.RiskHistoryDto">
+        SELECT
+            h.history_no AS historyNo,
+            h.record_dt AS recordDate,
+            h.record_cont AS recordContent,
+            m.mem_no AS memberNo,
+            m.mem_nm AS memberName,
+            h.risk_no AS riskNo,
+            h.fl_ms_no AS fileMasterNo
+        FROM history h
+                 JOIN member m ON h.mem_no = m.mem_no
+        WHERE h.risk_no = #{riskNo}
+        ORDER BY h.record_dt DESC
+    </select>
+
+    <update id="updateHistory" parameterType="com.kcc.pms.domain.risk.model.dto.RiskHistoryDto">
+        UPDATE history
+        <set>
+            <if test="recordDate != null">
+                record_dt = #{recordDate},
+            </if>
+            <if test="recordContent != null">
+                record_cont = #{recordContent}
+            </if>
+        </set>
+        WHERE history_no = #{historyNo}
+    </update>
+
+    <delete id="deleteByNo">
+        DELETE FROM history where history_no = #{historyNo}
+    </delete>
+
+
+
+
+    <resultMap id="FileDetailMap" type="com.kcc.pms.domain.risk.model.excel.ExcelFileDetailDto">
+        <id property="flNo" column="FIND_FL_NO"/>
+        <result property="originalTtl" column="FIND_FILE_NAME"/>
+        <result property="filePath" column="FIND_FILE_PATH"/>
+        <result property="flType" column="FIND_FILE_TYPE"/>
+        <result property="flSize" column="FIND_FILE_SIZE"/>
+    </resultMap>
+
+
+    <resultMap id="HistoryFileDetailMap" type="com.kcc.pms.domain.risk.model.excel.ExcelFileDetailDto">
+        <id property="flNo" column="HISTORY_FL_NO"/>
+        <result property="originalTtl" column="HISTORY_FILE_NAME"/>
+        <result property="filePath" column="HISTORY_FILE_PATH"/>
+        <result property="flType" column="HISTORY_FILE_TYPE"/>
+        <result property="flSize" column="HISTORY_FILE_SIZE"/>
+    </resultMap>
+
+
+    <resultMap id="HistoryMap" type="com.kcc.pms.domain.risk.model.excel.ExcelHistoryDto">
+        <id property="historyNo" column="HISTORY_NO"/>
+        <result property="recordDt" column="RECORD_DT"/>
+        <result property="recordCont" column="RECORD_CONT"/>
+        <result property="memNm" column="HM_MEM_NM"/>
+
+
+        <collection property="historyFiles" ofType="com.kcc.pms.domain.risk.model.excel.ExcelFileDetailDto" resultMap="HistoryFileDetailMap"/>
+    </resultMap>
+
+
+    <resultMap id="RiskMap" type="com.kcc.pms.domain.risk.model.excel.ExcelRiskDto">
+        <id property="riskNo" column="RISK_NO"/>
+        <result property="riskId" column="RISK_ID"/>
+        <result property="rskTtl" column="RSK_TTL"/>
+        <result property="typeCd" column="TYPE_CD_DTL_NM"/>
+        <result property="classCd" column="CLASS_CD_DTL_NM"/>
+        <result property="statCd" column="STAT_CD_DTL_NM"/>
+        <result property="priCd" column="PRI_CD_DTL_NM"/>
+        <result property="riskCont" column="RISK_CONT"/>
+        <result property="riskPlan" column="RISK_PLAN"/>
+        <result property="dueDt" column="DUE_DT"/>
+        <result property="complDt" column="COMPL_DT"/>
+        <result property="registDt" column="REGIST_DT"/>
+        <result property="sysTtl" column="system"/>
+        <result property="memNm" column="FM_MEM_NM"/>
+
+        <collection property="findFiles" ofType="com.kcc.pms.domain.risk.model.excel.ExcelFileDetailDto" resultMap="FileDetailMap"/>
+        <collection property="histories" ofType="com.kcc.pms.domain.risk.model.excel.ExcelHistoryDto" resultMap="HistoryMap"/>
+    </resultMap>
+
+
+    <select id="getRiskWithHistoriesAndFiles"  resultMap="RiskMap">
+        SELECT
+            R.RISK_NO,
+            R.RISK_ID,
+            R.RSK_TTL,
+            TYPE.CD_DTL_NM AS TYPE_CD_DTL_NM,
+            CLASS.CD_DTL_NM AS CLASS_CD_DTL_NM,
+            STAT.CD_DTL_NM AS STAT_CD_DTL_NM,
+            PRI.CD_DTL_NM AS PRI_CD_DTL_NM,
+            R.RISK_CONT,
+            R.RISK_PLAN,
+            R.REGIST_DT,
+            R.DUE_DT,
+            R.COMPL_DT,
+            SUBSTR((SELECT SYS_CONNECT_BY_PATH(s2.sys_ttl, ' > ')
+                    FROM system s2
+                    WHERE s2.sys_no = s.sys_no
+                    START WITH s2.par_sys_no IS NULL
+                    CONNECT BY PRIOR s2.sys_no = s2.par_sys_no), 3) AS system,
+            FM.MEM_NM AS FM_MEM_NM,
+
+            H.HISTORY_NO,
+            H.RECORD_DT,
+            H.RECORD_CONT,
+            HM.MEM_NM AS HM_MEM_NM,
+
+            FD.FL_NO AS FIND_FL_NO,
+            FD.ORIGINAL_TTL AS FIND_FILE_NAME,
+            FD.FILE_PATH AS FIND_FILE_PATH,
+            FD.FL_TYPE AS FIND_FILE_TYPE,
+            FD.FL_SIZE AS FIND_FILE_SIZE,
+
+            HFD.FL_NO AS HISTORY_FL_NO,
+            HFD.ORIGINAL_TTL AS HISTORY_FILE_NAME,
+            HFD.FILE_PATH AS HISTORY_FILE_PATH,
+            HFD.FL_TYPE AS HISTORY_FILE_TYPE,
+            HFD.FL_SIZE AS HISTORY_FILE_SIZE
+
+        FROM
+            RISK R
+                LEFT JOIN HISTORY H ON R.RISK_NO = H.RISK_NO
+                LEFT JOIN CODEDETAIL TYPE ON R.TYPE_CD = TYPE.CD_DTL_NO
+                LEFT JOIN CODEDETAIL CLASS ON R.CLASS_CD = CLASS.CD_DTL_NO
+                LEFT JOIN CODEDETAIL STAT ON R.STAT_CD = STAT.CD_DTL_NO
+                LEFT JOIN CODEDETAIL PRI ON R.PRI_CD = PRI.CD_DTL_NO
+                LEFT JOIN MEMBER FM ON R.MEM_NO = FM.MEM_NO
+                LEFT JOIN MEMBER HM ON H.MEM_NO = HM.MEM_NO
+                LEFT JOIN SYSTEM S ON R.SYS_NO = S.SYS_NO
+                LEFT JOIN FILEDETAIL FD ON R.FL_MS_FD_NO = FD.FL_MS_NO AND FD.DEL_ID IS NULL AND FD.DEL_DT IS NULL
+                LEFT JOIN FILEDETAIL HFD ON H.FL_MS_NO = HFD.FL_MS_NO AND HFD.DEL_ID IS NULL AND HFD.DEL_DT IS NULL
+
+        WHERE
+            R.PRJ_NO = #{prjNo} AND R.TYPE_CD = #{typeCode}
+        ORDER BY NVL(s.par_sys_no, s.sys_no), CASE WHEN s.par_sys_no IS NULL THEN 0 ELSE 1 END, s.sys_no
+    </select>
 </mapper>

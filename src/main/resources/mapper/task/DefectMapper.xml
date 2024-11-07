@@ -43,15 +43,16 @@
         </selectKey>
 
         INSERT INTO DEFECT
-        (df_no, df_id, df_ttl, stat_cd, pri_cd, type_cd, df_cont, df_fd_dt, due_dt, work_dt,
-         df_work_cont, fl_ms_fd_no, fl_ms_work_no, test_dtl_no, mem_fd_no, mem_work_no, work_no, prj_no)
+        (df_no, df_id, test_dtl_no, df_ttl, stat_cd, pri_cd, type_cd, df_cont, df_fd_dt, due_dt, work_dt,
+         df_work_cont, fl_ms_fd_no, fl_ms_work_no, mem_fd_no, mem_work_no, work_no, prj_no, test_no)
         VALUES
         (
-         #{defect.defectNumber}, #{defect.defectId, jdbcType=VARCHAR}, #{defect.defectTitle, jdbcType=VARCHAR},
+         #{defect.defectNumber}, #{defect.defectId, jdbcType=VARCHAR}, #{defect.testDetailNo, jdbcType=NUMERIC}, #{defect.defectTitle, jdbcType=VARCHAR},
          #{defect.statusSelect, jdbcType=VARCHAR}, #{defect.prioritySelect, jdbcType=VARCHAR}, #{defect.typeSelect, jdbcType=VARCHAR}, #{defect.defectContent, jdbcType=VARCHAR},
          #{defect.discoverDate, jdbcType=DATE}, #{defect.scheduleWorkDate, jdbcType=DATE}, #{defect.workDate, jdbcType=DATE},
          #{defect.workContent, jdbcType=VARCHAR}, #{fileMasterFoundNumber, jdbcType=NUMERIC}, #{fileMasterWorkNumber, jdbcType=NUMERIC},
-         #{defect.testNumber, jdbcType=NUMERIC}, #{defect.foundMemberNo, jdbcType=NUMERIC}, #{defect.workMemberNo, jdbcType=NUMERIC}, #{defect.systemNumber, jdbcType=NUMERIC}, #{projectNumber, jdbcType=NUMERIC}
+         #{defect.foundMemberNo, jdbcType=NUMERIC}, #{defect.workMemberNo, jdbcType=NUMERIC},
+         #{defect.systemNumber, jdbcType=NUMERIC}, #{projectNumber, jdbcType=NUMERIC}, #{defect.testNo, jdbcType=NUMERIC}
          )
     </insert>
 
@@ -70,7 +71,6 @@
             mem_work_no = #{defect.workMemberNo, jdbcType=NUMERIC},
             work_dt = #{defect.workDate, jdbcType=DATE},
             df_work_cont = #{defect.workContent, jdbcType=VARCHAR},
-            test_dtl_no = #{defect.testNumber, jdbcType=NUMERIC},
             work_no = #{defect.systemNumber, jdbcType=NUMERIC}
         WHERE df_no = #{defect.defectNumber}
     </update>
@@ -80,8 +80,9 @@
             df_no AS defectNumber,
             df_ttl AS defectTitle,
             df_id AS defectId,
-            td.test_dtl_no AS testNumber,
-            td.test_dtl_id AS testId,
+            defect.test_no AS testNo,
+            td.test_dtl_no AS testDetailNo,
+            td.test_dtl_id AS testDetailId,
             df_cont AS defectContent,
             df_fd_dt AS discoverDate,
             due_dt AS scheduleWorkDate,

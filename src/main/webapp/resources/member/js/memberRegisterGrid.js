@@ -88,11 +88,11 @@ $(document.body).ready(function () {
                 console.log(member.preEndDate);
                 console.log(member.startDate);
                 console.log(member.endDate);
-                console.log(member.connectTeams);
+                console.log(member.connectTeam);
                 addedMembers.push({
                     id: member.id,
                     name: member.memberName,
-                    auth: member.auth ? member.auth : "",
+                    auth: member.auth ? member.auth : "PMS00203",
                     group: member.groupName,
                     position: member.position,
                     pre_st_dt: member.preStartDate ? member.preStartDate : "",
@@ -100,7 +100,9 @@ $(document.body).ready(function () {
                     st_dt: member.startDate ? member.startDate : "",
                     end_dt: member.endDate ? member.endDate : "",
                     techGrade: member.tech,
-                    connectTeams: member.connectTeams
+                    connectTeam: member.connectTeam,
+                    teamNo: member.teamNo,
+                    parentNo: member.parentNo
                 });
 
             }
@@ -124,7 +126,11 @@ $(document.body).ready(function () {
     initGrid();
     reg_loadProjectMember();
 
-    //$('#add-member-by-prjmem').hide();
+    setTimeout(function() {
+        $('#add-member-by-prjmem').hide();
+    },300);
+
+
 
     checkProject();
 });
@@ -209,9 +215,9 @@ function initGrid() {
         showRowSelector: true,
         target: $('[data-ax5grid="groupmemGrid"]'),
         columns: [
-            {key: "memberName", label: "성명", align: "center"},
+            {key: "memberName", width:70, label: "성명", align: "center"},
             {key: "position", label: "직위", align: "center" },
-            {key: "email", width: 220, label: "이메일", align: "center"},
+            {key: "email", width: 230, label: "이메일", align: "center"},
             {key: "participate_yn", width: 70, label: "참여여부",align: "center"},
             {key: "tech", width: 70, label: "기술등급",align: "center"}
         ],
@@ -222,97 +228,54 @@ function initGrid() {
 
 
     reg_prjmemGrid = new ax5.ui.grid();
-    reg_prjmemGrid.setConfig({
-        showRowSelector: true,
-        target: $('[data-ax5grid="prjmember-grid"]'),
-        columns: [
-            {key: "memberName", label: "성명", align: "center"},
-            {key: "auth", label: "프로젝트권한", align: "center"},
-            {key: "groupName", width: 90, label: "소속", align: "center"},
-            {key: "position", width: 80, label: "직위", align: "center"},
-            {key: "tech", width: 80, label: "기술등급", align: "center"},
-            {key: "teamName", width: 110, label: "소속팀", align: "center", formatter: function() {
-                    // connectedTeams을 탐색하면서 소속된 팀들 모두 가져옴
-                    if (this.item.connectTeams && this.item.connectTeams.length > 0) {
-                        // 소속팀이 하나뿐이고 parentNo이 null인 경우
-                        if (this.item.connectTeams.length === 1 && this.item.connectTeams[0].parentNo === null) {
-                            return '-'; // 소속팀이 없음을 표시
-                        }
-                        return this.item.connectTeams.map(function(team) {
-                            return team.teamName;
-                        }).join(', '); // 팀 이름을 ', '로 구분하여 표시
-                    } else {
-                        return '-';
-                    }
-            }},
-            {key: "preStartDate", width: 100, label: "예정시작일", align: "center", editor: {
-                    type: "date",
-                    config: {
-                        content: {
-                            config: {
-                                mode: "year", selectMode: "day"
-                            }
-                        }
-                    },
-                    disabled: function () {
-                        return !isEditing;
-                    }
-                }, formatter: function() {
-                    return this.value && this.value.substring(0, 10) !== '2999-12-31' ? this.value.substring(0, 10) : '-';
-                }},
-            {key: "preEndDate", width: 100, label: "예정종료일", align: "center", editor: {
-                    type: "date",
-                    config: {
-                        content: {
-                            config: {
-                                mode: "year", selectMode: "day"
-                            }
-                        }
-                    },
-                    disabled: function () {
-                        return !isEditing;
-                    }
-                },formatter: function() {
-                    return this.value && this.value.substring(0, 10) !== '2999-12-31' ? this.value.substring(0, 10) : '-';
-                }},
-            {key: "startDate", width: 100, label: "참여시작일", align: "center", editor: {
-                    type: "date",
-                    config: {
-                        content: {
-                            config: {
-                                mode: "year", selectMode: "day"
-                            }
-                        }
-                    },
-                    disabled: function () {
-                        return !isEditing;
-                    }
-                }, formatter: function() {
-                    return this.value && this.value.substring(0, 10) !== '2999-12-31' ? this.value.substring(0, 10) : '-';
-                }},
-            {key: "endDate", width: 100, label: "참여종료일", align: "center", editor: {
-                    type: "date",
-                    config: {
-                        content: {
-                            config: {
-                                mode: "year", selectMode: "day"
-                            }
-                        }
-                    },
-                    disabled: function () {
-                        return !isEditing;
-                    }
-                }, formatter: function() {
-                    return this.value && this.value.substring(0, 10) !== '2999-12-31' ? this.value.substring(0, 10) : '-';
-                }},
-        ],
-        page: {
-            display: false
-        }
-    });
+    reg_addedGrid = new ax5.ui.grid();
 
     loadAuthCommonCode().then(function(commonCodeOptions) {
-        reg_addedGrid = new ax5.ui.grid();
+        reg_prjmemGrid.setConfig({
+            showRowSelector: true,
+            target: $('[data-ax5grid="prjmember-grid"]'),
+            columns: [
+                {key: "memberName", label: "성명", align: "center"},
+                {
+                    key: "auth",
+                    label: "프로젝트권한",
+                    width: 90,
+                    align: "center",
+                    formatter: function() {
+                        var selectedOption = commonCodeOptions.find(function(option) {
+                            return option.CD === this.value;
+                        }.bind(this));
+                        return selectedOption ? selectedOption.NM : this.value;
+                    }
+                },
+                {key: "groupName", width: 90, label: "소속", align: "center"},
+                {key: "position", width: 80, label: "직위", align: "center"},
+                {key: "tech", width: 80, label: "기술등급", align: "center"},
+                {key: "teamName", width: 110, label: "소속팀", align: "center", formatter: function() {
+                        if (this.item.parentNo != null) {
+                            return this.item.teamName;
+                        } else {
+                            return '-';
+                        }
+                    }},
+                {key: "preStartDate", width: 100, label: "예정시작일", align: "center", formatter: function() {
+                        return this.value && this.value.substring(0, 10) !== '2999-12-31' ? this.value.substring(0, 10) : '-';
+                    }},
+                {key: "preEndDate", width: 100, label: "예정종료일", align: "center", formatter: function() {
+                        return this.value && this.value.substring(0, 10) !== '2999-12-31' ? this.value.substring(0, 10) : '-';
+                    }},
+                {key: "startDate", width: 100, label: "참여시작일", align: "center", formatter: function() {
+                        return this.value && this.value.substring(0, 10) !== '2999-12-31' ? this.value.substring(0, 10) : '-';
+                    }},
+                {key: "endDate", width: 100, label: "참여종료일", align: "center", formatter: function() {
+                        return this.value && this.value.substring(0, 10) !== '2999-12-31' ? this.value.substring(0, 10) : '-';
+                    }},
+            ],
+            page: {
+                display: false
+            }
+        });
+
         reg_addedGrid.setConfig({
             showRowSelector: true,
             target: $('[data-ax5grid="added-grid"]'),
@@ -413,7 +376,7 @@ function initGrid() {
                         }
 
                 },
-                {key: "techGrade", width: 70, label: "기술등급", align: "center"}
+                {key: "techGrade", width: 85, label: "기술등급", align: "center"}
             ],
             page: {
                 display: false
@@ -429,12 +392,13 @@ async function registerMember() {
     var addedGridData = reg_addedGrid.getList();
     console.log("Registering members...");
 
-    let unassignedMembers = [];  // 어느팀에도 소속되지 않은 데이터
-    let assignedMembers = [];    // 1개의 팀이라도 소속되어 있는 데이터
-
+    // let unassignedMembers = [];  // 어느팀에도 소속되지 않은 데이터
+    // let assignedMembers = [];    // 1개의 팀이라도 소속되어 있는 데이터
+    let requestAddMembers = []
     console.log("register call addedMembers" + addedMembers);
     loadAuthCommonCode().then(async function(commonCodeOptions) {
         addedMembers.map(function(member) {
+            console.log(addedMembers);
             console.log(JSON.stringify(member));
             var authCode = member.auth;
             var selectedOption = commonCodeOptions.find(function(option) {
@@ -451,58 +415,107 @@ async function registerMember() {
                 pre_end_dt: member.preEndDate ? member.preEndDate : null,
                 st_dt: member.startDate ? member.startDate : null,
                 end_dt: member.endDate ? member.endDate : null,
-                connectFirstTeamNo: member.connectTeams ? member.connectTeams[0].teamNo : null
+                beforeTeamNo: member.teamNo ? member.teamNo : null,
+                type: ""
             };
 
-            if (member.connectTeams && member.connectTeams.length === 1 && member.connectTeams[0].parentNo === null) {
-                unassignedMembers.push(memberData);
+            //프로젝트 목록에서 추가된 인원은 무조건 1개의 팀을 가지고 있음
+            //if.그 팀의 parentNo가 null 이면 이 인원은 아직 팀이 배정이 안된 인원임 -> patch
+            //else.그 팀의 parentNo가 존재하면 이 인원은 팀이 배정된 인원이고 겸업을 하는 상황임 -> post
+            //else if.조직도에서 추가된 인원은 팀이 존재하지 않음 = teamNo이 null -> post
+            // if (member.parentNo === null) {
+            //     unassignedMembers.push(memberData);
+            // } else if (member.teamNo == null){
+            //     assignedMembers.push(memberData);
+            // }
+            // else {
+            //     assignedMembers.push(memberData);
+            // }
+
+            if (member.parentNo === null) {
+                //프로젝트에 추가되었지만 아직 팀이 배정되지 않은 인원
+                memberData.type = "update";
+            } else if (member.teamNo == null) {
+                // 팀이 없는 경우 (조직도에서 추가된 인원)
+                memberData.type = "insert";
             } else {
-                assignedMembers.push(memberData);
+                // 이미 배정된 팀이 있는 경우 (겸업 상황)
+                memberData.type = "insert";
             }
+
+            requestAddMembers.push(memberData);
         });
 
         try {
-            let assignedMembersPromise = Promise.resolve();  // 기본값으로 비어있는 Promise 생성
-
-            if (assignedMembers.length > 0) {
-                assignedMembersPromise = $.ajax({
-                    url: '/team/' + teamNo + '/members?prjNo=' + prjNo,
+            let requestAddMembersPromise = Promise.resolve();
+            if(requestAddMembers.length > 0) {
+                 $.ajax({
+                    url: '/team/' + teamNo + '/members',
                     type: 'POST',
                     contentType: 'application/json',
-                    data: JSON.stringify(assignedMembers),
+                    data: JSON.stringify(requestAddMembers),
                     success: function (response) {
                         console.log("등록된 팀원 수 : " + response);
                         console.log("팀원 등록 성공");
+                        closePopupAndUpdateParent();  // 완료 후 부모 페이지 업데이트 및 팝업 닫기
                     },
+                    error: function(xhr, status, error) {
+                        console.log(error);
+                        console.log(xhr);
+                        console.log(status);
+                        alert("실패");
+                    }
                 });
             }
 
-            let unassignedMembersPromise = Promise.resolve();  // 기본값으로 비어있는 Promise 생성
 
-            if (unassignedMembers.length > 0) {
-                // 모든 비배정 팀원의 팀 배정 요청을 저장할 배열
-                const requests = unassignedMembers.map(memberData => {
-                    console.log("update" + memberData.id);
-                    console.log("update beforeteamno" + memberData.connectFirstTeamNo);
-                    console.log("update teamNo" + teamNo);
-                    return $.ajax({
-                        url: '/projects/members/' + memberData.id + '/team/' + teamNo,
-                        type: 'PATCH',
-                        contentType: 'application/json',
-                        cache: false,
-                        data: JSON.stringify({
-                            beforeTeamNo: memberData.connectFirstTeamNo
-                        })
-                    });
-                });
 
-                unassignedMembersPromise = Promise.all(requests);
-            }
+            // let assignedMembersPromise = Promise.resolve();  // 기본값으로 비어있는 Promise 생성
+            //
+            // if (assignedMembers.length > 0) {
+            //     alert("assignedMembers");
+            //     alert(assignedMembers);
+            //     assignedMembersPromise = $.ajax({
+            //         url: '/team/' + teamNo + '/members?prjNo=' + prjNo,
+            //         type: 'POST',
+            //         contentType: 'application/json',
+            //         data: JSON.stringify(assignedMembers),
+            //         success: function (response) {
+            //             console.log("등록된 팀원 수 : " + response);
+            //             console.log("팀원 등록 성공");
+            //         },
+            //     });
+            // }
+            //
+            // let unassignedMembersPromise = Promise.resolve();  // 기본값으로 비어있는 Promise 생성
+            //
+            // if (unassignedMembers.length > 0) {
+            //     alert("unassignedMembers")
+            //     alert(unassignedMembers);
+            //     const requestData = unassignedMembers.map(memberData => ({
+            //         memberId: memberData.id,
+            //         beforeTeamNo: memberData.beforeTeamNo
+            //     }));
+            //     // 모든 비배정 팀원의 팀 배정 요청을 저장할 배열
+            //     unassignedMembersPromise = $.ajax({
+            //         url: '/projects/members/team/' + teamNo,
+            //         type: 'POST',
+            //         contentType: 'application/json',
+            //         cache: false,
+            //         data: JSON.stringify(requestData), // 전체 배열을 한 번에 전송
+            //         success: function(response) {
+            //             console.log("팀 배정 성공:", response);
+            //         },
+            //         error: function(xhr, status, error) {
+            //             console.error("팀 배정 중 오류:", xhr.responseText);
+            //         }
+            //     });
+            // }
 
             // 두 비동기 작업이 모두 완료되었을 때 closePopupAndUpdateParent 실행
-            await Promise.all([assignedMembersPromise, unassignedMembersPromise]);
-            alert('모든 작업이 성공적으로 완료되었습니다');
-            closePopupAndUpdateParent();  // 완료 후 부모 페이지 업데이트 및 팝업 닫기
+            // await Promise.all([assignedMembersPromise, unassignedMembersPromise]);
+            //await Promise.all([requestAddMembersPromise]);
+
 
         } catch (error) {
             console.error("오류 발생:", error);

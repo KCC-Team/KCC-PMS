@@ -1,6 +1,29 @@
 let currentPage = 1;
 let testGrid;
+
 $(function () {
+    let toast = new ax5.ui.toast({
+        containerPosition: "top-right",
+        onStateChanged: function(){
+            console.log(this);
+        }
+    });
+
+    window.toastDefect = toast;
+    window.addEventListener('defectDeleted', function (e) {
+        toast.push({
+            theme: 'success',
+            msg: "결함 내역 삭제가 완료되었습니다."
+        }, function () {
+            console.log(this);
+        });
+    });
+
+    window.addEventListener('defectSaved', function (e) {
+        console.log('defectSaved 이벤트 발생');
+        window.location.reload();
+    });
+
     ax5.ui.grid.tmpl.page_status = function(){
         return '<span>{{{progress}}} {{fromRowIndex}} - {{toRowIndex}} of {{dataRowCount}} {{#dataRealRowCount}}  현재페이지 {{.}}{{/dataRealRowCount}} {{#totalElements}}  전체갯수 {{.}}{{/totalElements}}</span>';
     };
@@ -27,7 +50,7 @@ $(function () {
                     return '<input type=hidden name=defect_id value=${item.defectNumber} />' +
                         '<a href="/projects/defects/' + encodeURIComponent(item.defectNumber) + '" class="defect-id" style="color: #2383f8; font-size: 13px; font-weight: bold; text-decoration: none;">' + item.defectId + '</a>';
                 }},
-            {key: "defectTitle", label: "결함명", width: 415, align: "left" , formatter: function (){
+            {key: "defectTitle", label: "결함명", width: 418, align: "left" , formatter: function (){
                     return '<span style="font-size: 12px;">' + this.value + '</span>';
                 }},
             {key: "priority", label: "우선순위", width: 100, align: "center", formatter: function (){
@@ -52,31 +75,35 @@ $(function () {
             },
             {key: "discoverName", label: "발견자", width: 101, align: "center", formatter: function (){
                     return '<span style="font-size: 12px;">' + this.value + '</span>';
-                }},
+            }},
             {key: "workName", label: "조치자", width: 101, align: "center", formatter: function (){
+                if (this.value) {
                     return '<span style="font-size: 12px;">' + this.value + '</span>';
-                }},
+                } else {
+                    return '-';
+                }
+            }},
             {key: "discoverDate", label: "발견일자", width: 130, align: "center", formatter: function (){
                     if (this.value) {
                         return '<span style="font-size: 12px;">' + this.value.substring(0, 10) + '</span>';
                     } else {
-                        return '';
+                        return '-';
                     }
-                }},
+            }},
             {key: "scheduleWorkDate", label: "조치예정일자", width: 130, align: "center", formatter: function (){
                     if (this.value) {
                         return '<span style="font-size: 12px;">' + this.value.substring(0, 10) + '</span>';
                     } else {
-                        return '';
+                        return '-';
                     }
-                }},
+            }},
             {key: "workDate", label: "조치일자", width: 130, align: "center", formatter: function (){
                     if (this.value) {
                         return '<span style="font-size: 12px;">' + this.value.substring(0, 10) + '</span>';
                     } else {
-                        return '';
+                        return '-';
                     }
-                }}
+            }}
         ],
     });
 
@@ -199,7 +226,7 @@ function reloadData(testGrid, work, type, status, search, page) {
                     list: res.defectList,
                     page: {
                         currentPage: currentPage-1,
-                        pageSize: 10,
+                        pageSize: 15,
                         totalElements: res.totalElements,
                         totalPages: res.totalPage
                     }

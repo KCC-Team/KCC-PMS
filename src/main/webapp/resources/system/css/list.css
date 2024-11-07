@@ -58,7 +58,7 @@
     border: none;
     border-radius: 5px;
     color: white;
-    background-color: #8B8B8B;
+    background-color: #5c5c5c;
     cursor: pointer;
     margin-left: auto;
 }
@@ -88,7 +88,7 @@
     font-weight: bold;
     color: black;
     padding-bottom: 5px;
-    width: 91.6%;
+    width: 81.6%;
     margin-top: 50px;
 }
 
@@ -106,23 +106,31 @@
     font-weight: bold;
     color: black;
     padding-bottom: 5px;
-    width: 91.6%;
+    width: 80.6%;
 }
 
 .btn-modify-system {
     display: flex;
     justify-content: flex-end;
-    margin-bottom: 5px;
 }
+
 
 .btn-modify-system button {
     padding: 6px 10px;
     border: none;
     border-radius: 5px;
     color: white;
-    background-color: #8B8B8B;
+    background-color: #5c5c5c;
     cursor: pointer;
     margin-right: 13px;
+}
+
+.btn-sys-save {
+    background-color: #0d6efd !important;
+    margin-top: 40px;
+}
+.btn-sys-delete {
+    margin-top: 40px;
 }
 
 .system-info-table {
@@ -243,6 +251,22 @@
     background-color: #EBEEF3;
 }
 
-.sub-info-table {
+.sub-info-table, .btn-save-work {
     display: none;
 }
+
+.btn-save-work {
+    float: right;
+    height:auto !important;
+}
+
+.btn-save-work button {
+    margin: 10px 26px 10px 1px;
+    padding: 6px 10px;
+    border: none;
+    border-radius: 5px;
+    color: white;
+    background-color: #5c5c5c;
+    cursor: pointer;
+}
+

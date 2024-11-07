@@ -12,7 +12,9 @@ import static lombok.AccessLevel.PROTECTED;
 @NoArgsConstructor(access = PROTECTED)
 @AllArgsConstructor
 public class OutputResponseDto {
+    private Long optNo;
     private String title;
+    private String note;
     private List<TaskOutput> tasks;
     private List<OutputFile> files;
 }

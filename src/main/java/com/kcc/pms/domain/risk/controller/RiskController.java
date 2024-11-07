@@ -8,22 +8,23 @@ import com.kcc.pms.domain.common.model.dto.CommonCodeOptions;
 import com.kcc.pms.domain.common.model.dto.FileResponseDto;
 import com.kcc.pms.domain.common.model.vo.FileMasterNumbers;
 import com.kcc.pms.domain.common.service.CommonService;
-import com.kcc.pms.domain.risk.model.dto.RiskDto;
-import com.kcc.pms.domain.risk.model.dto.RiskFileRequestDto;
+import com.kcc.pms.domain.common.util.ExcelGenerator;
+import com.kcc.pms.domain.common.util.IssueExcelGenerator;
+import com.kcc.pms.domain.risk.model.dto.*;
+import com.kcc.pms.domain.risk.model.excel.ExcelRiskDto;
 import com.kcc.pms.domain.risk.service.RiskService;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.io.IOException;
+import java.util.*;
 
 @Controller
 @RequiredArgsConstructor
@@ -32,12 +33,14 @@ public class RiskController {
     private final RiskService service;
     private final CommonService commonService;
     private final ObjectMapper objectMapper;
+    private final ExcelGenerator excelGenerator;
+    private final IssueExcelGenerator issueExcelGenerator;
 
     @GetMapping("/api/risk/options")
     @ResponseBody
-    public ResponseEntity<List<CommonCodeOptions>> getRiskCommonCode(){
+    public ResponseEntity<List<CommonCodeOptions>> getRiskCommonCode(@RequestParam("typeCode") String typeCode){
         try {
-            List<CommonCodeOptions> commonCodeOptions = service.getRiskCommonCode();
+            List<CommonCodeOptions> commonCodeOptions = service.getRiskCommonCode(typeCode);
             return ResponseEntity.ok(commonCodeOptions);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
@@ -45,21 +48,56 @@ public class RiskController {
         }
     }
 
+    @GetMapping("/projects/risks")
+    @ResponseBody
+    public ResponseEntity<PagedRiskResponse<RiskSummaryResponseDto>> getRiskList(HttpSession session,
+                                                                                 @RequestParam(value = "typeCode") String typeCode,
+                                                                                 @RequestParam(value = "pageNum", defaultValue = "1") int pageNum,
+                                                                                 @RequestParam(value = "amount", defaultValue = "15") int amount,
+                                                                                 @RequestParam Map<String, String> filters
+    ){
+
+        filters.remove("pageNum");
+        filters.remove("amount");
+
+        Long prjNo = (Long) session.getAttribute("prjNo");
+        CriteriaRisk cri = new CriteriaRisk(pageNum, amount);
+        cri.setFilters(filters);
+        cri.setPrjNo(prjNo);
+        cri.setTypeCode(typeCode);
+
+        List<RiskSummaryResponseDto> riskList = service.getRiskList(cri);
+
+        int total = service.countRisks(cri);
+
+        PageRiskDto pageInfo = new PageRiskDto(cri, total);
+
+        PagedRiskResponse<RiskSummaryResponseDto> response = new PagedRiskResponse<>(riskList, pageInfo);
+
+        return ResponseEntity.ok(response);
+    }
+
+
     @PostMapping("/projects/risks/risk")
     @ResponseBody
     public ResponseEntity<String> insert(HttpSession session, RiskDto req, RiskFileRequestDto files,
                                          @AuthenticationPrincipal PrincipalDetail principalDetail) {
         Long prjNo = (Long) session.getAttribute("prjNo");
-        System.out.println("prjNo = " + prjNo);
-        System.out.println("req = " + req);
-        System.out.println("files = " + files);
 
         String memberName = principalDetail.getMember().getMemberName();
 
         req.setPrjNo(prjNo);
 
         Long riskNumber = service.saveRisk(req, files, memberName);
-        String redirectUrl = "/projects/dangerInfo?no=" + riskNumber;
+
+        String issueRiskType = req.getIssueRiskType();
+        String redirectUrl;
+        if(issueRiskType.equals("PMS00302")){
+            redirectUrl = "/projects/dangerInfo?no=" + riskNumber;
+        } else {
+            redirectUrl = "/projects/issueInfo?no=" + riskNumber;
+        }
+
         return ResponseEntity.ok().body(redirectUrl);
     }
 
@@ -67,7 +105,7 @@ public class RiskController {
     @PutMapping("/projects/risks/risk")
     @ResponseBody
     public ResponseEntity<String> updateRisk(HttpSession session, RiskDto req, RiskFileRequestDto files,
-                                         @AuthenticationPrincipal PrincipalDetail principalDetail) {
+                                             @AuthenticationPrincipal PrincipalDetail principalDetail) {
         Long prjNo = (Long) session.getAttribute("prjNo");
         req.setPrjNo(prjNo);
 
@@ -76,7 +114,13 @@ public class RiskController {
         System.out.println("update files = " + files);
         service.updateRisk(req, files, memberName);
 
-        String redirectUrl = "/projects/dangerInfo?no=" + req.getRiskNumber();
+        String issueRiskType = req.getIssueRiskType();
+        String redirectUrl;
+        if(issueRiskType.equals("PMS00302")){
+            redirectUrl = "/projects/dangerInfo?no=" + req.getRiskNumber();
+        } else {
+            redirectUrl = "/projects/issueInfo?no=" + req.getRiskNumber();
+        }
 
         return ResponseEntity.ok().body(redirectUrl);
     }
@@ -106,12 +150,138 @@ public class RiskController {
         riskByNo.setWorkFilesJson(workFilesJson);
 
         return ResponseEntity.ok(riskByNo);
-//        service.getRisk(no);
+    }
+
+//    @PostMapping("/projects/risks/history")
+//    public ResponseEntity<?> createHistory(RiskHistoryDto req,RiskFileRequestDto files, HttpSession session,
+//                                           @AuthenticationPrincipal PrincipalDetail principalDetail){
+//        req.setMemberNo(principalDetail.getMember().getMemNo());
+//        req.setMemberName(principalDetail.getMember().getMemberName());
 //
-//        model.addAttribute("req", defectService.getDefect(no));
-//        model.addAttribute("discoverFilesJson", discoverFilesJson);
-//        model.addAttribute("workFilesJson", workFilesJson);
-//        return "danger/info";
+//        System.out.println("req = " + req);
+//        System.out.println("history files = " + files);
+//
+//        Long prjNo = (Long) session.getAttribute("prjNo");
+//
+//        int result = service.createHistory(req, files, prjNo);
+//        if (result > 0) {
+//            return ResponseEntity.ok(req);
+//        } else {
+//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+//                    .body("Failed to create history record.");
+//        }
+//    }
+
+
+    @PostMapping("/projects/risks/history")
+    public ResponseEntity<?> createOrUpdateHistory(
+            RiskHistoryDto req,
+            RiskFileRequestDto files,
+            HttpSession session,
+            @AuthenticationPrincipal PrincipalDetail principalDetail) {
+
+        req.setMemberNo(principalDetail.getMember().getMemNo());
+        req.setMemberName(principalDetail.getMember().getMemberName());
+        Long prjNo = (Long) session.getAttribute("prjNo");
+        req.setHistoryNo(req.getHistoryNo());
+
+        int result;
+        if (req.getHistoryNo() != null) {
+            // historyNo가 존재하면 업데이트 처리
+            System.out.println("update call");
+            System.out.println("update req = " + req);
+            System.out.println("update files = " + files);
+            result = service.updateHistory(req, files, prjNo);
+        } else {
+            // historyNo가 없으면 새로 생성
+            System.out.println("insert call");
+            System.out.println("insert req = " + req);
+            System.out.println("insert files = " + files);
+            result = service.createHistory(req, files, prjNo);
+        }
+
+        if (result > 0) {
+            return ResponseEntity.ok(req);
+        } else {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Failed to create or update history record.");
+        }
+    }
+
+
+    @GetMapping("/projects/risks/history/{historyNo}")
+    public ResponseEntity<?> getHistoryByNo(@PathVariable("historyNo") Long historyNo){
+        System.out.println("historyNo = " + historyNo);
+
+        RiskHistoryDto history = service.getHistoryByNo(historyNo);
+        if(history.getFileMasterNo() != null){
+            Long fileMasterNo = history.getFileMasterNo();
+            history.setHistoryFilesJson(generateFilesJson(commonService.getFileList(fileMasterNo)));
+        }
+
+        return ResponseEntity.ok(history);
+    }
+
+
+    @DeleteMapping("/projects/risks/history/{historyNo}")
+    public ResponseEntity<?> deleteHistory(@PathVariable("historyNo") Long historyNo) {
+        System.out.println("RiskController.deleteHistory");
+        System.out.println("historyNo = " + historyNo);
+        try {
+            service.deleteHistory(historyNo);
+            return ResponseEntity.ok().body("조치 이력이 성공적으로 삭제되었습니다.");
+
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body("조치 이력 삭제에 실패했습니다.");
+        }
+    }
+
+
+
+    @PutMapping("/projects/risks/history")
+    public void updateHistory(RiskHistoryDto req,RiskFileRequestDto files, HttpSession session,
+                              @AuthenticationPrincipal PrincipalDetail principalDetail){
+        System.out.println("req = " + req);
+        System.out.println("files = " + files);
+    }
+
+
+    @GetMapping("/projects/risks/history")
+    public ResponseEntity<?> getHistories(@RequestParam("riskNo") Long riskNo){
+
+        List<RiskHistoryDto> histories = service.getHistories(riskNo);
+
+        for (RiskHistoryDto history : histories) {
+            if(history.getFileMasterNo() != null){
+                Long fileMasterNo = history.getFileMasterNo();
+                history.setHistoryFilesJson(generateFilesJson(commonService.getFileList(fileMasterNo)));
+            }
+        }
+
+        return ResponseEntity.ok(histories);
+    }
+
+    @GetMapping("/projects/risks/excel")
+    public ResponseEntity<byte[]>  riskExcelExport(@RequestParam("typeCode") String typeCode, HttpSession session) throws IOException {
+        Long prjNo = (Long) session.getAttribute("prjNo");
+
+        List<ExcelRiskDto> riskWithHistoriesAndFiles = service.getRiskWithHistoriesAndFiles(prjNo, typeCode);
+        byte[] excelData;
+
+        if(typeCode.equals("PMS00302")){
+            excelData = excelGenerator.generateRiskExcel(riskWithHistoriesAndFiles);
+        } else {
+            excelData = issueExcelGenerator.generateRiskExcel(riskWithHistoriesAndFiles);
+        }
+
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentDispositionFormData("attachment", "RiskManagement.xlsx");
+        headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
+
+        return ResponseEntity.ok()
+                .headers(headers)
+                .body(excelData);
     }
 
 

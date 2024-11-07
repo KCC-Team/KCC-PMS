@@ -2,12 +2,27 @@
 let selectedNodeId = null;
 
 $(function () {
+    $('.file_name').val('');
+    $('.txt-area').val('');
+
+    const urlParams = new URLSearchParams(window.location.search);
+    const toastMsg = urlParams.get('toastMsg');
+    if (toastMsg) {
+        toast.push({
+            theme: 'success',
+            msg: toastMsg
+        });
+    }
+
     // 노드 이동 이벤트 핸들러
     $('.jstree-files').on('move_node.jstree', function (e, data) {
         let parentNode = data.instance.get_node(data.parent);
 
         if (parentNode.type === 'n') {
-            alert('이 노드 아래로 이동할 수 없습니다.');
+            toast.push({
+                theme: 'warning',
+                msg: '파일은 다른 파일 아래로 이동할 수 없습니다.'
+            });
             data.instance.refresh();
         } else {
             updateTreeData(data.node, data.parent);
@@ -89,11 +104,13 @@ $(function () {
                 contentType: 'application/json',
                 data: JSON.stringify(updatedTreeData),
                 success: function(response) {
-                    alert('순서가 성공적으로 저장되었습니다.');
-                    window.location.href = '/projects/outputs';
+                    window.location.href = '/projects/outputs?toastMsg=파일 순서가 성공적으로 저장되었습니다.';
                 },
                 error: function(xhr, status, error) {
-                    alert('순서 저장 중 에러가 발생했습니다.');
+                    toast.push({
+                        theme: 'danger',
+                        msg: '순서 저장 중 오류가 발생했습니다.'
+                    });
                 }
             });
         }
@@ -119,6 +136,9 @@ $(function () {
         target: $('[data-ax5grid="my-grid"]'),
         showRowSelector: true,
         multipleSelect: true,
+        header: {
+            selector: true
+        },
         columns: [
             {key: "fileItem", label: "파일명", width: 283.6, align: "left",
                 formatter: function () {
@@ -166,19 +186,12 @@ $(function () {
         ]
     });
 
-    // grid.setData(gridData);
-    // $('#detail-cnt').text(gridData.length);
-    $(document).on('click', '.btn-download', function () {
-        let fileName = $(this).data('file');
-        // 다운로드 로직 구현
-        alert(fileName + ' 다운로드 버튼 클릭됨');
-    });
-
-    $(document).on('click', '.btn-upload', function () {
-        let fileName = $(this).data('file');
-        // 업로드 로직 구현
-        alert(fileName + ' 업로드 버튼 클릭됨');
-    });
+    const urlParams = new URLSearchParams(window.location.search);
+    const no = urlParams.get('no');
+    if (no) {
+        $('.second-component').css('display', 'block');
+        getNode(no, "n");
+    }
 
     $('.file-insert-btn').on('click', function () {
         $('#insertModal').modal('show');
@@ -202,47 +215,25 @@ $(function () {
     });
 
     $('.jstree-files').on('select_node.jstree', function (e, data) {
+        $('.second-component').css('display', 'block');
         selectedNodeId = data.node.id;
         window.selectNode = data.node;
-        $('.second-component').addClass('fade-out');
-        if (data.node.type === 'n') {
-            $.ajax({
-                url: '/projects/outputs/' + data.node.id,
-                method: 'GET',
-                success: function (response) {
-                    setTimeout(() => {
-                        grid.setData(response.files);
-                        $('#detail-cnt').text(response.files.length);
-                        $('.input-area').val(response.title);
-
-                        $('#outputTask').empty();
-                        response.tasks.forEach(function(task) {
-                            let $taskLink = $('<a>').attr('href', '#').addClass('task ms-4').text(task);
-                            $('#outputTask').append($taskLink, '<br>');
-                        });
-
-                        $('.second-component').removeClass('fade-out').addClass('fade-in');
-                        setTimeout(() => {
-                            $('.second-component').removeClass('fade-in');
-                        }, 250);
-
-                    }, 250);
-                }
-            });
-        }
+        getNode(data.node.id, data.node.type);
     });
 
-    $(document).on('click', '.file-down-btn, .del-file-down-btn', function () {
-        let $row = $(this).closest('tr');
+    $(document).on('click', '.file-down-btn, .del-file-down-btn', function (e) {
+        let $button = $(e.target);
+        let $row = $button.closest('tr');
 
-        let filePath = $row.find('input[type="hidden"][name="filePath"]').val();
-        let fileTitle = $row.find('input[type="hidden"][name="fileTitle"]').val();
+        let filePath = $row.find('input[type="hidden"]')[1].value;
+        let fileTitle = $row.find('input[type="hidden"]')[2 ].value;
 
         let file = {
             filePath: filePath,
             fileTitle: fileTitle
         }
 
+        console.log(file);
         fetch('/projects/outputs/api/download', {
             method: 'post',
             headers: {
@@ -251,6 +242,7 @@ $(function () {
             body: JSON.stringify(file)
         })
             .then(response => {
+                console.log(response);
                 const fileName = response.headers.get('Content-Disposition').match(/filename\*?="?(?:UTF-8''?)?([^";]+)"?;?/)[1];
                 return response.blob().then(blob => ({ blob, fileName }));
             })
@@ -271,17 +263,18 @@ $(function () {
         e.preventDefault();
 
         let files = grid.getList("selected");
-
         let fileIds = [];
         if (files.length > 0) {
             files.forEach(function (file) {
                 fileIds.push(file.fileItem.fileNo);
             });
         } else {
-            alert("선택된 파일이 없습니다.");
+            toast.push({
+                theme: 'warning',
+                msg: '삭제할 파일을 선택해주세요.'
+            });
             return;
         }
-        console.log(fileIds);
 
         $.ajax({
             url: '/projects/outputs/api/deletefile',
@@ -289,12 +282,18 @@ $(function () {
             contentType: 'application/json',
             data: JSON.stringify({ files: fileIds }),
             success: function (response) {
-                alert('파일이 성공적으로 삭제되었습니다.');
-                window.location.href = '/projects/outputs';
+                toast.push({
+                    theme: 'success',
+                    msg: '파일이 성공적으로 삭제되었습니다.'
+                });
+                window.location.href = '/projects/outputs?no=' + $('#outputNo').val();
             },
             error: function (jqXHR, textStatus, errorThrown) {
                 console.error('삭제 요청 중 오류 발생:', textStatus, errorThrown);
-                alert('삭제 요청 중 오류가 발생했습니다.');
+                toast.push({
+                    theme: 'danger',
+                    msg: '파일 삭제 중 오류가 발생했습니다.'
+                });
             }
         });
     });
@@ -319,14 +318,17 @@ $(function () {
             method: 'patch',
             data: {
                 title: $('#outputTitle').val(),
+                note: $('#outputNote').val(),
                 outputNo: selectedNodeId
             },
             success: function (response) {
-                alert('산출물 정보가 저장 되었습니다.');
-                window.location.href = '/projects/outputs';
+                window.location.href = `/projects/outputs?no=` + $('#outputNo').val() + `&toastMsg=산출물이 성공적으로 저장되었습니다.`;
             },
             error: function (xhr, status, error) {
-                alert('산출물 등록 중 에러가 발생했습니다.');
+                toast.push({
+                    theme: 'danger',
+                    msg: '산출물 저장 중 오류가 발생했습니다.'
+                });
             }
         })
     });
@@ -339,11 +341,13 @@ $(function () {
                 outputNo: selectedNodeId
               },
               success: function (response) {
-                alert('산출물이 성공적으로 삭제 되었습니다.');
-                window.location.href = '/projects/outputs';
+                window.location.href = '/projects/outputs?toastMsg=산출물이 성공적으로 삭제되었습니다.';
               },
               error: function (xhr, status, error) {
-                alert('산출물 삭제 중 에러가 발생했습니다.');
+                toast.push({
+                    theme: 'danger',
+                    msg: '산출물 삭제 중 오류가 발생했습니다.'
+                });
               }
        });
     });
@@ -354,7 +358,6 @@ $(function () {
             filePath: file.fileItem.filePath,
             fileTitle: file.fileItem.fileTitle // 파일 타이틀을 추가
         }));
-        console.log(files);
 
         fetch('/projects/outputs/api/downloadmultiple', {
             method: 'POST',
@@ -382,7 +385,7 @@ $(function () {
 function loadVersionHistory(historyElement) {
     let versionHistory;
     $.ajax({
-        url: '/projects/outputs/api/delete?outputNo=' + selectedNodeId,
+        url: '/projects/outputs/api/delete?outputNo=' + $('#outputNo').val(),
         method: 'GET',
         success: function(response) {
             versionHistory = response;
@@ -414,6 +417,7 @@ function loadVersionHistory(historyElement) {
                     <img data-dz-thumbnail src='../../../../resources/output/images/file-icon.png' style="width: 30px;"/>
                 </td>
                 <td style="text-align: left;">
+                    <input type="hidden" value="${version.fileNo}">
                     <input type="hidden" value="${version.filePath}">
                     <input type="hidden" value="${version.fileTitle}">
                     ${version.fileTitle}
@@ -451,6 +455,15 @@ function initDropzone(selector, preDiv, previewTemplate) {
         autoProcessQueue: false,
         previewTemplate: previewTemplate,
         previewsContainer: preDiv + ' .dropzone-preview',
+        acceptedFiles:
+            '.jpg,.jpeg,.png,.gif,.bmp,.tiff,.svg,.webp,.' +
+            'doc,.docx,.xls,.xlsx,.ppt,.pptx,.pdf,.txt,.rtf,.csv,.md,' +
+            '.zip,.rar,.7z,.tar,.gz,.bz2,' +
+            '.xml,.json,.psd,.ai,' +
+            '.mp4,.mov,.avi,.mp3,.wav',
+        dictInvalidFileType: '허용되지 않는 파일 형식입니다.',
+        maxFilesize: 20,
+        dictFileTooBig: '파일 크기가 너무 큽니다. 최대 파일 크기는 {{maxFilesize}}MB입니다.',
     });
 }
 
@@ -492,4 +505,45 @@ function formatBytes(bytes, decimals = 2) {
 function formatDate(dateString) {
     const date = new Date(dateString);
     return date.toLocaleDateString('ko-KR');  // 'ko-KR'은 한국어 날짜 형식을 의미합니다.
+}
+
+function getNode(id, type) {
+    $('.second-component').addClass('fade-out');
+    $.ajax({
+        url: '/projects/outputs/' + id,
+        method: 'GET',
+        success: function (response) {
+            setTimeout(() => {
+                // 그리드 데이터 설정을 요소가 표시된 후로 이동
+                $('#detail-cnt').text(response.files.length);
+                $('.input-area').val(response.title);
+                $('#outputNote').val(response.note);
+                $('#outputNo').val(response.optNo);
+
+                $('#outputTask').empty();
+                if (type === 'y' || type === 'default') {
+                    $('.output-task-area').css('display', 'none');
+                    $('.file-opt-area').css('display', 'none');
+                } else {
+                    $('.output-task-area').css('display', 'block');
+                    $('.file-opt-area').css('display', 'block');
+                    response.tasks.forEach(function (task) {
+                        let $taskLink = $('<a>').attr('href', '#').addClass('task ms-4').text(task);
+                        $('#outputTask').append($taskLink, '<br>');
+                    });
+
+                    // 그리드가 표시된 후에 setData 호출
+                    grid.setData(response.files);
+                }
+
+                // 애니메이션 처리
+                if ($('.second-component').hasClass('fade-out')) {
+                    $('.second-component').removeClass('fade-out').addClass('fade-in');
+                    setTimeout(() => {
+                        $('.second-component').removeClass('fade-in');
+                    }, 250);
+                }
+            }, 250);
+        }
+    });
 }

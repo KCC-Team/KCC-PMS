@@ -6,7 +6,7 @@
 <link rel="stylesheet" href="../../../resources/common/css/ax5grid.css">
 <%--<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>--%>
 <script src="../../../resources/feature/js/circle-progress.min.js"></script>
-
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <!-- 콘텐츠 영역 -->
 <main class="content" id="content">
     <div class="main_content">
@@ -28,7 +28,6 @@
                         <div class="circle">
                             <strong class="circle_strong">라벨</strong>
                         </div>
-                        <%--                        <canvas id="systemProgressChart"></canvas>--%>
                     </div>
                 </div>
 
@@ -81,14 +80,12 @@
                     <select id="featStatusOption" class="feat-select-option" name="feat-option5">
                         <option value="">전체</option>
                     </select>
-                    <input id="midSearchBar" type="text" class="search-text" name="" value="">
+                    <input id="midSearchBar" type="text" class="search-text" name="" value="" placeholder="작업자명 검색...">
                     <button id="featureSearch" type="submit" class="feat-submit-btn">검색</button>
                 </form>
 
                 <div style="position: relative;height:100%; width: 98%;" id="grid-parent">
-                    <!-- 위험 목록 테이블 -->
                     <div class="list_table" data-ax5grid="first-grid"  data-ax5grid-config="{
-                        sortable: true,
                         header: {
                             columnHeight: 40
                         },
@@ -103,25 +100,15 @@
 
 
             <div class="right-section">
-
                 <div class="feat_content">
                     <div class="feat-info-title">작업자별 진척도</div>
                 </div>
-
                 <form class="feat-search-form" id="feat_user_form" action="#" method="post">
-                    <select class="feat-select-option" name="feat-option5">
-                        <option value="0">팀</option>
-                        <option value="1">팀1</option>
-                        <option value="2">팀2</option>
-                        <option value="3">팀3</option>
-                    </select>
-                    <input type="text" class="search-text" name="" value="">
-                    <input type="submit" class="feat-submit-btn" value="검색">
+                    <input id="memberSearchBar" type="text" class="search-text" name="" value="" placeholder="팀명 혹은 작업자 명 검색...">
+                    <button id="memberSearch" type="submit" class="feat-submit-btn">검색</button>
                 </form>
 
-                <!-- 작업자별 진척도 grid 구현-->
                 <div class="list_table" data-ax5grid="member-grid"  data-ax5grid-config="{
-                        sortable: true,
                         header: {
                             columnHeight: 40
                         },
@@ -138,7 +125,6 @@
                 <div id="delay">
                     <!-- 지연목록 grid 구현-->
                     <div class="list_table" data-ax5grid="delay-grid"  data-ax5grid-config="{
-                        sortable: true,
                         header: {
                             columnHeight: 40
                         },
@@ -148,14 +134,38 @@
                         }" style="height: 280px; width: 100%;">
                     </div>
                 </div>
+            </div>
+            <!-- 모달 구조 -->
+            <div id="memberFeatureModal" class="modal" style="display: none;">
+                <div class="modal-content">
+                    <span class="close-btn" onclick="closeModal()">&times;</span>
+                    <span class="modal-title" id="modalMemberName"></span>
 
+                    <div class="member-prg-bar-container">
+                        <progress id="memberFeatBar" class="member-prg-bar" value="" max="100"></progress>
+                        <span id="memberPrgVal" class="prg-val"></span>
+                    </div>
 
+                    <div class="chart-container">
+                        <canvas id="difficultyChart"></canvas>
+                        <canvas id="statusChart"></canvas>
+                        <canvas id="priorityChart"></canvas>
+                        <canvas id="classificationChart"></canvas>
+                    </div>
+
+                    <div data-ax5grid="feature-grid" data-ax5grid-config="{
+                        header: {
+                            columnHeight: 40
+                        },
+                        body: {
+                            columnHeight: 40
+                        }
+                        }" style="height: 400px; width: 100%;">
+                    </div>
+                </div>
             </div>
 
-
         </div>
-
-
     </div>
 </main>
 <script src="../../../resources/feature/js/list.js"></script>

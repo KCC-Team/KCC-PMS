@@ -15,7 +15,7 @@ public interface OutputMapper {
     int deleteOutput(Long outputNo);
     int insertOutput(@Param(value = "output") FileStructResponseDto output, Long fileMasterNo);
     int updateOutput(FileStructResponseDto output);
-    int updateOutputInfo(String title, Long outputNo);
-    Optional<OutputResponseDto> findOutput(Long prjNo, Long outputNo);
+    int updateOutputInfo(String title, String note, Long outputNo);
+    Optional<OutputResponseDto> findOutput(Long outputNo);
     List<DeleteOutputResponseDto> findDeleteOutputs(Long outputNo);
 }

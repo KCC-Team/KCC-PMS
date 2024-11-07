@@ -1,12 +1,15 @@
 package com.kcc.pms.domain.output.domain.dto;
 
+import com.kcc.pms.domain.common.model.dto.FileItem;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import static lombok.AccessLevel.PROTECTED;
 
 @Getter
+@Setter
 @NoArgsConstructor(access = PROTECTED)
 @AllArgsConstructor
 public class OutputFile {
@@ -15,13 +18,4 @@ public class OutputFile {
     private String fileSize;
     private String registedDate;
     private String registedBy;
-
-    @Getter
-    @NoArgsConstructor(access = PROTECTED)
-    @AllArgsConstructor
-    public static class FileItem {
-        private Long fileNo;
-        private String fileTitle;
-        private String filePath;
-    }
 }

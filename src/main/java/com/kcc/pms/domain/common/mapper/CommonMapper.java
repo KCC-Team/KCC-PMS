@@ -9,5 +9,4 @@ import java.util.List;
 @Mapper
 public interface CommonMapper {
     List<CommonCodeSelectListResponseDto> getCommonCodeList(String commonCodeNo);
-    int deleteFileMaster(Long fileMasterNumber);
 }

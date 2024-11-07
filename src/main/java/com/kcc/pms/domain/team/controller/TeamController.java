@@ -45,26 +45,22 @@ public class TeamController {
 
     @PostMapping("/team/{teamNo}/members")
     @ResponseBody
-    public ResponseEntity<String> addMemberTeam(@PathVariable("teamNo") Long teamNo, @RequestParam Long prjNo,
+    public ResponseEntity<String> addMemberTeam(@PathVariable("teamNo") Long teamNo, HttpSession session,
                               @RequestBody List<MemberAddRequestDto> addMembers){
-        System.out.println("addMemberTEAMcall");
-        System.out.println("teamNo = " + teamNo);
-        System.out.println("prjNo = " + prjNo);
+        Long prjNo = (Long) session.getAttribute("prjNo");
+
         for (MemberAddRequestDto addMember : addMembers) {
             System.out.println("addMember = " + addMember);
         }
         try {
-            // 서비스 호출을 통해 팀에 멤버 추가
             int insertedCount = teamService.addMemberTeam(teamNo, prjNo, addMembers);
-
             if (insertedCount > 0) {
-                // 성공적으로 삽입된 경우, 성공 메시지와 함께 상태 코드 200 반환
                 return ResponseEntity.ok("팀원 등록이 성공적으로 완료되었습니다." + insertedCount);
             } else {
-                // 삽입된 항목이 없을 경우, 상태 코드 204 반환
                 return ResponseEntity.status(HttpStatus.NO_CONTENT).body("등록된 팀원이 없습니다.");
             }
         } catch (Exception e) {
+            System.out.println("!!!!!");
             System.out.println(e.getMessage());
             // 예외 발생 시, 상태 코드 500과 함께 에러 메시지 반환
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
