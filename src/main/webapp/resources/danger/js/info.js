@@ -5,6 +5,10 @@ let dropzone1;
 let riskNo;
 let historyDropzone;
 document.addEventListener('DOMContentLoaded', function() {
+    $("#record_dt, #dueDate, #completeDate").datepicker({
+        dateFormat: "yy-mm-dd"  // 원하는 형식으로 날짜 표시
+    });
+
     const statusSelect = document.getElementById('PMS004');
     const completionDateField = document.getElementById('completeDate');
 
@@ -323,7 +327,7 @@ function fetchMenuData() {
 
 function fetchOptions() {
     $.ajax({
-        url: '/api/risk/options',
+        url: '/api/risk/options?typeCode=PMS00302',
         method: 'GET',
         success: function(data) {
             console.log(data)

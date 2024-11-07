@@ -22,7 +22,7 @@
         </div>
 
         <div class="filter-section">
-            <form action="#" method="post">
+            <form action="#" method="post" class="search_form">
                 <input type="hidden" name="systemNo" id="systemNo">
                 시스템 분류&nbsp;&nbsp;
                 <div class="system-select-wrapper">
@@ -46,10 +46,11 @@
                 <select id="PMS006" name="priorCode" required>
                     <option value="">전체분류</option>
                 </select>
-                <form action="#" method="post">
+
+                <span class="search-area">
                     <input id="riskSearchName" type="text" name="title" class="search-text" placeholder="위험명을 검색하세요">
                     <button id="riskSearchBtn" type="submit" class="search" value="">검색</button>
-                </form>
+                </span>
             </form>
         </div>
 

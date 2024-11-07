@@ -1,7 +1,7 @@
 var teamMemberGrid;
 var projectMemberGrid;
 var editMode = false;
-let isEditing = false;
+
 
 $(document).ready(function() {
 
@@ -86,20 +86,28 @@ $(document).ready(function() {
     });
 
     // 편집 버튼
-    $('.member-edit-button').on('click', function () {
-        var currentText = $(this).text();
+    // $('.member-edit-button').on('click', function () {
+    //     var currentText = $(this).text();
+    //
+    //     if (currentText === '편집') {
+    //         isEditing = true;
+    //         $(this).text('저장'); // 텍스트를 '저장'으로 변경
+    //     } else {
+    //         isEditing = false;
+    //         $(this).text('편집'); // 텍스트를 '편집'으로 변경
+    //
+    //         // 변경된 행 출력
+    //         console.log("변경된 행:", modifiedRows);
+    //
+    //         // 저장이 완료된 후 변경된 행 배열 초기화
+    //         modifiedRows = [];
+    //     }
+    //
+    //     // 그리드를 다시 렌더링해서 editor 상태를 반영
+    //     projectMemberGrid.repaint();
+    // });
 
-        if (currentText === '편집') {
-            isEditing = true;
-            $(this).text('저장'); // 텍스트를 '저장'으로 변경
-        } else {
-            isEditing = false;
-            $(this).text('편집'); // 텍스트를 '편집'으로 변경
-        }
 
-        // 그리드를 다시 렌더링해서 editor 상태를 반영
-        projectMemberGrid.repaint();
-    });
 
     initGrid().then(function() {
         // 그리드가 초기화된 후 프로젝트 멤버 목록 로드
@@ -111,20 +119,38 @@ $(document).ready(function() {
         console.log('클릭된 요소:', $(this));
     });
     $(document).on('mousedown', '.clickable-name', function(e) {
-        const clickedElement = $(this);
+        const projectMemberSelectedMembers = projectMemberGrid.getList('selected');
+        const teamMemberSelectedMembers = teamMemberGrid.getList('selected');
+        console.log(projectMemberSelectedMembers);
+        console.log(teamMemberSelectedMembers);
 
-        // 여러 팀에 소속된 멤버는 드래그 동작을 막음
-        if (clickedElement.hasClass('disabled')) {
-            e.preventDefault();  // 클릭 시 아무 동작도 하지 않도록 막음
-            alert('이 멤버는 여러 팀에 소속되어 있어 팀 변경이 불가능합니다.');
-            return;   // 이후 로직을 실행하지 않음
+
+        let teamLoadStatus = '';
+        let teamLoadNo;
+        const selectedMembers = (teamMemberSelectedMembers && teamMemberSelectedMembers.length > 0)
+            ? (teamLoadStatus = 'teamLoad',  teamLoadNo = teamMemberSelectedMembers[0].teamNo ,teamMemberSelectedMembers)  // teamLoad 설정
+            : projectMemberSelectedMembers;
+
+
+        console.log("teamLoadNo = " + teamLoadNo);
+        console.log("selectedMembers");
+        console.log(selectedMembers);
+
+        if (selectedMembers.length === 0) {
+            return; // 선택된 멤버가 없으면 종료
         }
+
+        const clickedElement = $(this);
+        console.log("mouseDOWN");
+        console.log(clickedElement);
 
         const memberName = clickedElement.text();
         const memberId = clickedElement.data('id');
         const beforeTeamNo = clickedElement.data('teamno');
 
         console.log('mousedown클릭된 요소:', $(this));
+        console.log("memberId = " + memberId);
+        console.log("beforeTeamNo" + beforeTeamNo);
 
         // 새로운 드래그 가능한 div 생성
         const dragDiv = $('<div></div>')
@@ -141,8 +167,7 @@ $(document).ready(function() {
                 opacity: 0.8
             })
             .attr('id', 'dragging-div')
-            .data('member-id', memberId)
-            .data('before-team-id', beforeTeamNo)
+            .data('selected-members', selectedMembers)
             .appendTo('body');
 
         // 마우스 이동 이벤트로 dragDiv를 움직이게 함
@@ -159,16 +184,28 @@ $(document).ready(function() {
 
             // FancyTree 노드 위에 드롭했는지 확인
             if ($target.closest('.fancytree-node').length > 0) {
-                var teamNode = $.ui.fancytree.getNode($target);
-                var teamId = teamNode.key;
-                var memberId = $('#dragging-div').data('member-id');
-                var beforeTeamNo = $('#dragging-div').data('before-team-id');
+                const teamNode = $.ui.fancytree.getNode($target);
+                const teamId = teamNode.key;
+                const selectedMembers = $('#dragging-div').data('selected-members');
+
+                // selectedMembers.forEach(member => {
+                //     const { memberId, beforeTeamNo } = member;
+                //     console.log("이동하려는 팀 : " + teamId);
+                //     console.log("이동하려는 멤버 : " + member.id);
+                //     console.log("원래 소속 팀 : " + member.teamNo);
+                //
+                //     // 각 멤버에 대해 팀 변경 API 호출
+                //     memberAssignTeam(teamId, member.id, member.teamNo);
+                // });
+                const members = selectedMembers.map(member => ({
+                    memberId: member.id,
+                    beforeTeamNo: member.teamNo
+                }));
 
                 console.log("이동하려는 팀 : " + teamId);
-                console.log("이동하려는 멤버 : " + memberId);
-                console.log("원래 소속 팀 : " + beforeTeamNo);
+                console.log("이동하려는 멤버들 : ", members);
 
-                memberAssignTeam(teamId, memberId, beforeTeamNo);
+                memberAssignTeam(teamId, members, teamLoadStatus, teamLoadNo);
             }
             $('#dragging-div').remove();
             $(document).off('mousemove');
@@ -178,8 +215,10 @@ $(document).ready(function() {
     });
 
 
+    setTimeout(function (){
+        $(".team-overview, .team-members").hide();
+    }, 100);
 
-    $(".team-overview, .team-members").hide();
     $("#project-member-grid-section").show();
 });
 
@@ -207,7 +246,7 @@ function openPopup(teamNo){
     window.open(
         "/projects/addMember?teamNo=" + teamNo + '&prjNo=' + prjNo,
         "그룹등록",
-        "width=1000, height=800, resizable=yes"
+        "width=1000, height=850, resizable=yes"
     );
 }
 
@@ -313,11 +352,15 @@ function renderTeamTree(treeData) {
         tree.reload(treeData);
     } else {
         $("#tree-table").fancytree({
-            extensions: ["table", "dnd5", "filter"],
+            extensions: ["table", "dnd5", "filter", "gridnav"],
             checkbox: false,
             selectMode: 1,
             quicksearch: true,
             source: treeData,
+            keyboard: true,
+            focusOnSelect: true,
+            autoScroll: true,
+            titlesTabbable: true,
             icon: false,
             filter: {
                 autoApply: true,
@@ -344,6 +387,7 @@ function renderTeamTree(treeData) {
                 $tdList.eq(1).text(node.data.systemName || "-");
                 $tdList.eq(2).text(node.data.totalCount || "-");
             },
+
             dnd5: {
                 autoExpandMS: 400,
                 preventRecursion: false,
@@ -472,7 +516,25 @@ function loadTeamMembers(teamKey) {
         dataType: 'json',
         success: function(response) {
             console.log("팀원 목록 데이터:", response);
-            teamMemberGrid.setData(response);
+
+            const dataWithTeamKey = response.map(member => {
+                member.teamNo = teamKey;
+                if (member.endDate && member.endDate.startsWith("2999")) {
+                    member.endDate = null;
+                }
+                if (member.preEndDate && member.preEndDate.startsWith("2999")) {
+                    member.preEndDate = null;
+                }
+                if (member.startDate && member.startDate.startsWith("2999")) {
+                    member.startDate = null;
+                }
+                if (member.preStartDate && member.preStartDate.startsWith("2999")) {
+                    member.preStartDate = null;
+                }
+                return member;
+            });
+
+            teamMemberGrid.setData(dataWithTeamKey);
         },
         error: function(error) {
             console.error("팀원 목록 불러오기 실패:", error);
@@ -484,13 +546,18 @@ function loadTeamMembers(teamKey) {
 $(document).on("click", ".member-link", function(e) {
     e.preventDefault();
     var memberId = $(this).data("id");
-    var memberData = teamMemberGrid.list.find(item => item.id === memberId);
+    var teamNo = $(this).data("teamNo");
+    loadMemberDetails(memberId);
 
-    if (memberData) {
-        updateMemberDetail(memberData);
-    } else {
-        loadMemberDetails(memberId);
-    }
+    // var memberData = teamMemberGrid.list.find(item => item.id === memberId);
+    // console.log(memberData);
+    // if (memberData) {
+    //     console.log("!!!!!!!!!!!!!asfasf");
+    //     updateMemberDetail(memberData);
+    // } else {
+    //     console.log("!!!!!!!!!!!!!ffffff");
+    //     loadMemberDetails(memberId);
+    // }
 
     document.querySelector(".member-detail").scrollIntoView({ behavior: 'smooth' });
 });
@@ -501,7 +568,7 @@ function loadMemberDetails(memberNo) {
         method: 'GET',
         dataType: 'json',
         success: function(response) {
-            console.log("memberDetail" + response);
+            console.log("memberDetail=", response);
             updateMemberDetail(response);
         },
         error: function(xhr, status, error) {
@@ -512,15 +579,24 @@ function loadMemberDetails(memberNo) {
     });
 }
 
+function formatDate(dateStr) {
+    if (!dateStr || dateStr.startsWith("2999")) {
+        return '-';
+    }
+    // yyyy-mm-dd 형식으로 변환
+    return dateStr.split(' ')[0];
+}
+
+
 function updateMemberDetail(memberData) {
     $("#member-name").text(memberData.memberName || '-');
     $("#project-auth").text(memberData.auth || '-');
     $("#tech-grade").text(memberData.tech || '-');
     $("#position").text(memberData.position || '-');
-    $("#pre-start-date").text(memberData.preStartDate || '-');
-    $("#pre-end-date").text(memberData.preEndDate || '-');
-    $("#start-date").text(memberData.startDate || '-');
-    $("#end-date").text(memberData.endDate || '-');
+    $("#pre-start-date").text(formatDate(memberData.preStartDate));
+    $("#pre-end-date").text(formatDate(memberData.preEndDate));
+    $("#start-date").text(formatDate(memberData.startDate));
+    $("#end-date").text(formatDate(memberData.endDate));
     $("#email").text(memberData.email || '-');
     $("#phone-no").text(memberData.phoneNo || '-');
 
@@ -528,15 +604,14 @@ function updateMemberDetail(memberData) {
     const teamTable = $(".team-table");
     teamTable.empty();
 
-    memberData.connectTeams.forEach(team => {
+
+    memberData.connectTeam.forEach(team => {
         const row = `<tr>
-                        <td>팀명</td>
-                        <td>
-                            <select>
-                                <option>${team.teamName}</option>
-                            </select>
-                        </td>
-                    </tr>`;
+                    <td>팀명</td>
+                    <td>
+                        <span>${team.teamName}</span>
+                    </td>
+                </tr>`;
         teamTable.append(row);
     });
 
@@ -562,6 +637,22 @@ function loadProjectMembers(prjNo) {
         success: function (response) {
             console.log("loadProjectMember success");
             console.log("프로젝트 팀원 목록 데이터:", response);
+            response = response.map(member => {
+                // 날짜가 '2999'로 시작하면 null로 변경
+                if (member.endDate && member.endDate.startsWith("2999")) {
+                    member.endDate = null;
+                }
+                if (member.preEndDate && member.preEndDate.startsWith("2999")) {
+                    member.preEndDate = null;
+                }
+                if (member.startDate && member.startDate.startsWith("2999")) {
+                    member.startDate = null;
+                }
+                if (member.preStartDate && member.preStartDate.startsWith("2999")) {
+                    member.preStartDate = null;
+                }
+                return member;
+            });
             if (projectMemberGrid) {
                 projectMemberGrid.setData(response);
                 console.log("총인원수: " + response.length);
@@ -613,7 +704,7 @@ function initGrid() {
             target: $('[data-ax5grid="teamMemberGrid"]'),
             columns: [
                 {key: "memberName", label: "성명", align: "center", formatter: function() {
-                        return '<a href="#" class="clickable-name member-link" data-id="' + this.item.id + '">' + this.value + '</a>';
+                        return '<div class="clickable-name member-link" data-id="' + this.item.id + '" data-teamNo="' + this.item.teamNo + '" draggable="true">' + this.value + '</div>';
                     }},
                 {
                     key: "auth",
@@ -627,9 +718,6 @@ function initGrid() {
                                 optionText: "NM"
                             },
                             options: commonCodeOptions
-                        },
-                        disabled: function () {
-                            return !isEditing;
                         }
                     },
                     formatter: function() {
@@ -647,12 +735,10 @@ function initGrid() {
                         config: {
                             content: {
                                 config: {
-                                    mode: "year", selectMode: "day"
+                                    mode: "year",
+                                    selectMode: "day"
                                 }
                             }
-                        },
-                        disabled: function () {
-                            return !isEditing;
                         }
                     }, formatter: function() {
                         console.log(this.value);  // 디버그용
@@ -663,12 +749,10 @@ function initGrid() {
                         config: {
                             content: {
                                 config: {
-                                    mode: "year", selectMode: "day"
+                                    mode: "year",
+                                    selectMode: "day"
                                 }
                             }
-                        },
-                        disabled: function () {
-                            return !isEditing;
                         }
                     }, formatter: function() {
                         return this.value && this.value.substring(0, 10) !== '2999-12-31' ? this.value.substring(0, 10) : '-';
@@ -678,12 +762,10 @@ function initGrid() {
                         config: {
                             content: {
                                 config: {
-                                    mode: "year", selectMode: "day"
+                                    mode: "year",
+                                    selectMode: "day"
                                 }
                             }
-                        },
-                        disabled: function () {
-                            return !isEditing;
                         }
                     }, formatter: function() {
                         return this.value && this.value.substring(0, 10) !== '2999-12-31' ? this.value.substring(0, 10) : '-';
@@ -693,20 +775,31 @@ function initGrid() {
                         config: {
                             content: {
                                 config: {
-                                    mode: "year", selectMode: "day"
+                                    mode: "year",
+                                    selectMode: "day"
                                 }
                             }
-                        },
-                        disabled: function () {
-                            return !isEditing;
                         }
                     }, formatter: function() {
                         return this.value && this.value.substring(0, 10) !== '2999-12-31' ? this.value.substring(0, 10) : '-';
                     }}
             ],
+            onDataChanged: function() {
+                // 그리드 데이터가 변경될 때마다 호출
+                const updatedData = projectMemberGrid.getList("modified"); // 변경된 행 목록 가져오기
+                updatedData.forEach(row => {
+                    const existingRowIndex = modifiedRows.findIndex(item => item.id === row.id);
+                    if (existingRowIndex === -1) {
+                        modifiedRows.push(row);
+                        alert("!@#");
+                    } else {
+                        modifiedRows[existingRowIndex] = row; // 기존 행 업데이트
+                    }
+                });
+            },
             page: {
                 display: false
-            }
+            },
         });
 
         // projectMemberGrid 설정
@@ -717,14 +810,9 @@ function initGrid() {
                 showRowSelector: true,
                 target: $('[data-ax5grid="projectMemberGrid"]'),
                 columns: [
-                    {key: "memberName", label: "성명", align: "center", formatter: function() {
-                            if (this.item.connectTeams && this.item.connectTeams.length > 1) {
-                                // 소속 팀이 여러 개일 경우, 드래그 앤 드롭 비활성화
-                                return '<div class="clickable-name member-link disabled" data-id="' + this.item.id + '" data-teamNo="' + this.item.connectTeams[0].teamNo + '">' + this.value + '</div>';
-                            } else {
-                                // 소속 팀이 하나인 경우, 드래그 앤 드롭 가능
-                                return '<div class="clickable-name member-link" data-id="' + this.item.id + '" data-teamNo="' + this.item.connectTeams[0].teamNo + '" draggable="true">' + this.value + '</div>';
-                            }
+                    {key: "memberName", width: 85, label: "성명", align: "center", formatter: function() {
+                            console.log(this.item.teamNo);
+                            return '<div class="clickable-name member-link" data-id="' + this.item.id + '" data-teamNo="' + this.item.teamNo + '" draggable="true">' + this.value + '</div>';
                         }},
                     {
                         key: "auth",
@@ -734,16 +822,14 @@ function initGrid() {
                             type: "select",
                             config: {
                                 columnKeys: {
-                                    optionValue: "CD",
-                                    optionText: "NM"
+                                    optionValue: "CD", // 실제 값으로 코드값을 사용
+                                    optionText: "NM" // 화면에 표시할 텍스트로 코드명을 사용
                                 },
                                 options: commonCodeOptions
-                            },
-                            disabled: function () {
-                                return !isEditing;
                             }
                         },
                         formatter: function() {
+                            // 화면에 코드명이 표시되도록 formatter 설정
                             var selectedOption = commonCodeOptions.find(function(option) {
                                 return option.CD === this.value;
                             }.bind(this));
@@ -753,16 +839,9 @@ function initGrid() {
                     {key: "groupName", width: 80, label: "소속", align: "center"},
                     {key: "position", width: 75, label: "직위", align: "center"},
                     {key: "tech", width: 75, label: "기술등급", align: "center"},
-                    {key: "teamName", width: 110, label: "소속팀", align: "center", formatter: function() {
-                            // connectedTeams을 탐색하면서 소속된 팀들 모두 가져옴
-                            if (this.item.connectTeams && this.item.connectTeams.length > 0) {
-                                // 소속팀이 하나뿐이고 parentNo이 null인 경우
-                                if (this.item.connectTeams.length === 1 && this.item.connectTeams[0].parentNo === null) {
-                                    return '-'; // 소속팀이 없음을 표시
-                                }
-                                return this.item.connectTeams.map(function(team) {
-                                    return team.teamName;
-                                }).join(', '); // 팀 이름을 ', '로 구분하여 표시
+                    {key: "teamName", width: 120, label: "소속팀", align: "center", formatter: function() {
+                            if (this.item.parentNo != null) {
+                                return this.item.teamName;
                             } else {
                                 return '-';
                             }
@@ -772,12 +851,10 @@ function initGrid() {
                             config: {
                                 content: {
                                     config: {
-                                        mode: "year", selectMode: "day"
+                                        mode: "year",
+                                        selectMode: "day"
                                     }
                                 }
-                            },
-                            disabled: function () {
-                                return !isEditing;
                             }
                         }, formatter: function() {
                             return this.value && this.value.substring(0, 10) !== '2999-12-31' ? this.value.substring(0, 10) : '-';
@@ -787,12 +864,10 @@ function initGrid() {
                             config: {
                                 content: {
                                     config: {
-                                        mode: "year", selectMode: "day"
+                                        mode: "year",
+                                        selectMode: "day"
                                     }
                                 }
-                            },
-                            disabled: function () {
-                                return !isEditing;
                             }
                         }, formatter: function() {
                             return this.value && this.value.substring(0, 10) !== '2999-12-31' ? this.value.substring(0, 10) : '-';
@@ -802,12 +877,10 @@ function initGrid() {
                             config: {
                                 content: {
                                     config: {
-                                        mode: "year", selectMode: "day"
+                                        mode: "year",
+                                        selectMode: "day"
                                     }
                                 }
-                            },
-                            disabled: function () {
-                                return !isEditing;
                             }
                         }, formatter: function() {
                             return this.value && this.value.substring(0, 10) !== '2999-12-31' ? this.value.substring(0, 10) : '-';
@@ -817,12 +890,10 @@ function initGrid() {
                             config: {
                                 content: {
                                     config: {
-                                        mode: "year", selectMode: "day"
+                                        mode: "year",
+                                        selectMode: "day"
                                     }
                                 }
-                            },
-                            disabled: function () {
-                                return !isEditing;
                             }
                         }, formatter: function() {
                             return this.value && this.value.substring(0, 10) !== '2999-12-31' ? this.value.substring(0, 10) : '-';
@@ -962,23 +1033,166 @@ function submitTeamCreation(formData) {
 }
 
 
-function memberAssignTeam(teamNo, memberNo, beforeTeamNo){
+function memberAssignTeam(teamNo, members, teamLoadStatus, teamLoadNo){
+    console.log("memberAssignTeam");
+    console.log(members);
     $.ajax({
-        url: '/projects/members/' + memberNo + '/team/' + teamNo,
-        type: 'PATCH',
+        url: '/projects/members/team/' + teamNo,
+        type: 'POST',
         contentType: 'application/json',
         cache: false,
-        data: JSON.stringify({
-            beforeTeamNo: beforeTeamNo
-        }),
+        data: JSON.stringify(members),
         success: function (response) {
-            alert('팀 배정에 성공하였습니다');
+            toastNotification(response);
             loadTeamData(prjNo);
-            loadProjectMembers(prjNo);
+            if(teamLoadStatus === 'teamLoad'){
+                loadTeamMembers(teamLoadNo);
+            } else{
+                loadProjectMembers(prjNo);
+            }
         },
         error: function(xhr, status, error) {
-            console.error('팀 배정 중 오류 발생: ', error);
-            alert('팀 배정에 실패하였습니다.');
+            var error = xhr.responseText;
+            errorMessage(error);
         }
     })
+}
+
+$('#startProject').click(function (e) {
+    e.preventDefault();
+    const selectedStartMembers = teamMemberGrid.getList('selected');
+    const currentDate = new Date().toISOString().slice(0, 10);
+
+    selectedStartMembers.forEach(member => {
+        member.startDate = currentDate;
+    });
+
+    $.ajax({
+        url: '/projects/members/date?type=start',
+        method: 'POST',
+        data: JSON.stringify(selectedStartMembers),
+        contentType: 'application/json',
+        success: function(response) {
+            console.log("Start date 설정 완료:", response);
+            loadTeamMembers(selectedStartMembers[0].teamNo);
+            toastNotification("참여시작일 설정 완료");
+        },
+        error: function(error) {
+            console.error("Start date 설정 실패:", error);
+        }
+    });
+
+    teamMemberGrid.clearSelect();
+});
+
+$('#endProject').click(function (e) {
+    e.preventDefault();
+    const selectedEndMembers = teamMemberGrid.getList('selected');
+    const currentDate = new Date().toISOString().slice(0, 10);
+
+    selectedEndMembers.forEach(member => {
+        member.endDate = currentDate;
+    });
+
+    $.ajax({
+        url: '/projects/members/date?type=end',
+        method: 'POST',
+        data: JSON.stringify(selectedEndMembers),
+        contentType: 'application/json',
+        success: function(response) {
+            console.log("End date 설정 완료:", response);
+            loadTeamMembers(selectedEndMembers[0].teamNo);
+            toastNotification("참여종료일 설정 완료");
+
+        },
+        error: function(error) {
+            console.error("End date 설정 실패:", error);
+        }
+    });
+
+    teamMemberGrid.clearSelect();
+});
+
+
+
+$('#teamMemberUpdateBtn').click(function (e) {
+   const modifiedRow = teamMemberGrid.getList("modified");
+   console.log("teamMember modify = ", modifiedRow);
+
+    if (modifiedRow.length === 0) {
+        toastNotification("변경된 내용이 없습니다");
+        return;
+    }
+
+    $.ajax({
+        url: '/projects/members',
+        method: 'POST',
+        contentType: 'application/json',
+        data: JSON.stringify(modifiedRow),
+        success: function(response) {
+            toastNotification("변경 사항이 성공적으로 저장되었습니다");
+            loadTeamMembers(modifiedRow[0].teamNo);
+        },
+        error: function(error) {
+            console.error("저장 실패:", error);
+            alert("저장에 실패했습니다.");
+        }
+    });
+
+
+});
+
+$('#projectMemberUpdateBtn').click(function (e){
+    const modifiedRow = projectMemberGrid.getList("modified");
+    console.log("projectMember modify = ", modifiedRow);
+
+    if (modifiedRow.length === 0) {
+        toastNotification("변경된 내용이 없습니다");
+        return;
+    }
+
+    $.ajax({
+        url: '/projects/members',
+        method: 'POST',
+        contentType: 'application/json',
+        data: JSON.stringify(modifiedRow),
+        success: function(response) {
+            toastNotification("변경 사항이 성공적으로 저장되었습니다");
+            loadProjectMembers(prjNo);
+        },
+        error: function(error) {
+            console.error("저장 실패:", error);
+            alert("저장에 실패했습니다.");
+        }
+    });
+});
+
+
+function toastNotification(message) {
+    const Toast = Swal.mixin({
+        toast: true,
+        position: "top-end",
+        showConfirmButton: false,
+        timer: 2000,
+        timerProgressBar: true,
+        didOpen: (toast) => {
+            toast.addEventListener("mouseenter", Swal.stopTimer);
+            toast.addEventListener("mouseleave", Swal.resumeTimer);
+        },
+    });
+
+    Toast.fire({
+        icon: "success",
+        title: message,
+    });
+}
+
+
+function errorMessage(message) {
+    Swal.fire({
+        title: "오류!",
+        text: message,
+        icon: "error",
+        confirmButtonText: "확인",
+    });
 }

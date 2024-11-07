@@ -5,6 +5,7 @@ import com.kcc.pms.domain.common.model.vo.FileMasterNumbers;
 import com.kcc.pms.domain.common.service.CommonService;
 import com.kcc.pms.domain.risk.mapper.RiskMapper;
 import com.kcc.pms.domain.risk.model.dto.*;
+import com.kcc.pms.domain.risk.model.excel.ExcelRiskDto;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -20,8 +21,8 @@ public class RiskServiceImpl implements RiskService {
     private final CommonService commonService;
 
     @Override
-    public List<CommonCodeOptions> getRiskCommonCode() {
-        return mapper.getRiskCommonCode();
+    public List<CommonCodeOptions> getRiskCommonCode(String typeCode) {
+        return mapper.getRiskCommonCode(typeCode);
     }
 
     @Override
@@ -131,8 +132,8 @@ public class RiskServiceImpl implements RiskService {
 
     @Override
     public int deleteHistory(Long historyNo) {
-         RiskHistoryDto history = Optional.ofNullable(mapper.getHistoryByNo(historyNo))
-                 .orElseThrow(() -> new RuntimeException("해당 조치 이력을 찾을 수 없습니다."));
+        RiskHistoryDto history = Optional.ofNullable(mapper.getHistoryByNo(historyNo))
+                .orElseThrow(() -> new RuntimeException("해당 조치 이력을 찾을 수 없습니다."));
 
         if (history.getFileMasterNo() != null) {
             commonService.deleteFile(history.getFileMasterNo());
@@ -141,13 +142,18 @@ public class RiskServiceImpl implements RiskService {
         return mapper.deleteByNo(historyNo);
     }
 
+    @Override
+    public List<ExcelRiskDto> getRiskWithHistoriesAndFiles(Long prjNo, String typeCode) {
+        return mapper.getRiskWithHistoriesAndFiles(prjNo, typeCode);
+    }
+
 
     private static Map<String, Object> makeParams(CriteriaRisk cri) {
         Map<String, Object> params = new HashMap<>();
         params.put("prjNo", cri.getPrjNo());
         params.put("startRow", cri.getStartRow());
         params.put("endRow", cri.getEndRow());
-
+        params.put("typeCode", cri.getTypeCode());
         params.put("systemNo", cri.getFilters().get("systemNo"));
         params.put("selectedClassNo", cri.getFilters().get("selectedClassNo"));
         params.put("selectedStatusNo", cri.getFilters().get("selectedStatusNo"));
