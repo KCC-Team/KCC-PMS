@@ -1,6 +1,10 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 
 <%@ include file="../common.jsp" %>
+
+<link rel="stylesheet" type="text/css" href="https://cdn.rawgit.com/ax5ui/ax5ui-toast/master/dist/ax5toast.css" />
+<script type="text/javascript" src="https://cdn.rawgit.com/ax5ui/ax5ui-toast/master/dist/ax5toast.min.js"></script>
+
 <link rel="stylesheet" type="text/css" href="../../../resources/common/css/ax5grid.css">
 <link rel="stylesheet" type="text/css" href="../../../resources/defect/css/list.css">
 
@@ -14,9 +18,6 @@
                     <a class="d-flex align-items-center text-nowrap">
                         <button class="add-item add-defect">
                             <i class="fas fa-plus"></i>&nbsp;&nbsp;결함 등록</button>
-                    </a>
-                    <a href="#">
-                        <button class="danger-export-excel"><i class="fa-solid fa-download"></i> 액셀받기</button>
                     </a>
                 </div>
             </div>
@@ -64,7 +65,6 @@
                     <div style="width: 94%;">
                         <div style="position: relative; height:100%;" id="test-grid-parent">
                             <div class="list_table" data-ax5grid="first-grid"  data-ax5grid-config="{
-                            sortable: true,
                             header: {
                                 columnHeight: 34,
                             },

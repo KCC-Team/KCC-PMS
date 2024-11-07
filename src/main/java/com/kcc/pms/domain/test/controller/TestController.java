@@ -54,9 +54,16 @@ public class TestController {
     @ResponseBody
     public ResponseEntity<Long> insertTest(
             @AuthenticationPrincipal PrincipalDetail principal,
-            HttpSession session, @RequestBody TestMasterRequestDto testReq) {
+            HttpSession session, @RequestBody TestMasterRequestDto testReq,
+            @RequestParam(value = "type") String type) {
         Long prjNo = (Long) session.getAttribute("prjNo");
-        return ResponseEntity.ok().body(testService.saveTest(principal.getMember().getMemNo(), prjNo, testReq));
+        return ResponseEntity.ok().body(testService.saveTest(principal.getMember().getMemNo(), prjNo, testReq, type));
+    }
+
+    @PutMapping("/{id}")
+    @ResponseBody
+    public ResponseEntity<Long> updateTest(@PathVariable Long id, @RequestBody TestMasterRequestDto testReq) {
+        return ResponseEntity.ok().body(testService.updateTest(testReq));
     }
 
     @GetMapping("/{id}")
@@ -67,7 +74,7 @@ public class TestController {
     @GetMapping("/api/{id}")
     @ResponseBody
     public ResponseEntity<TestMasterRequestDto> findById(@PathVariable Long id) {
-        return ResponseEntity.ok().body(testService.getTestDetail(id));
+        return ResponseEntity.ok().body(testService.getTest(id));
     }
 
     @DeleteMapping("/{id}")

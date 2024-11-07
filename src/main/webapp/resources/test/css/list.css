@@ -24,9 +24,9 @@ label {
 }
 
 .button-area {
-    position: fixed;
+    position: absolute;
     top: 90px;
-    right: 120px;
+    right: 60px;
     display: flex;
     justify-content: flex-end;
     padding: 10px;
@@ -39,6 +39,7 @@ label {
 
 
 .div-info {
+    position: relative;
     font-size: 20px;
     font-weight: bold;
     border-bottom: 1px solid #989898;

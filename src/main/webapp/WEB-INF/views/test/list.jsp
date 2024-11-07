@@ -62,7 +62,6 @@
                     <div style="width: 94%;">
                         <div style="position: relative;height:100%;" id="test-grid-parent">
                             <div class="list_table" data-ax5grid="first-grid"  data-ax5grid-config="{
-                                sortable: true,
                                 header: {
                                     columnHeight: 34,
                                 },
