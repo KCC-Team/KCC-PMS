@@ -1,11 +1,14 @@
 package com.kcc.pms.domain.test.controller;
 
+import com.aspose.cells.SaveFormat;
+import com.aspose.cells.Workbook;
 import com.kcc.pms.auth.PrincipalDetail;
 import com.kcc.pms.domain.common.model.dto.CommonCodeOptions;
 import com.kcc.pms.domain.feature.model.dto.FeatureSimpleResponseDto;
 import com.kcc.pms.domain.test.domain.dto.TestPageResponseDto;
 import com.kcc.pms.domain.test.domain.dto.TestMasterRequestDto;
 import com.kcc.pms.domain.test.service.TestService;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -13,6 +16,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.OutputStream;
 import java.util.List;
 
 @Controller
@@ -64,6 +68,19 @@ public class TestController {
     @ResponseBody
     public ResponseEntity<Long> updateTest(@PathVariable Long id, @RequestBody TestMasterRequestDto testReq) {
         return ResponseEntity.ok().body(testService.updateTest(testReq));
+    }
+
+    @GetMapping("/excelDownload/{id}")
+    @ResponseBody
+    public ResponseEntity<HttpServletResponse> excelDownload(HttpServletResponse response, @PathVariable Long id) throws Exception {
+        Workbook workbook = testService.excelDownload(response, id);
+        response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+        response.setHeader("Content-Disposition", "attachment; filename=\"download.xlsx\"");
+        OutputStream out = response.getOutputStream();
+        workbook.save(out, SaveFormat.XLSX);
+        out.flush();
+        out.close();
+        return ResponseEntity.ok().body(response);
     }
 
     @GetMapping("/{id}")

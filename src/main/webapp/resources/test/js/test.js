@@ -354,6 +354,13 @@ $(function() {
             }
         });
     });
+
+    $('.export-excel').on('click', function() {
+        $.ajax({
+            url: '/projects/tests/excelDownload/' + lastSegment,
+            method: 'GET',
+        })
+    });
 });
 
 function clearWriter(type, TestIdx) {

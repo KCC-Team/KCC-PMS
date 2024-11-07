@@ -1,5 +1,6 @@
-package com.kcc.pms.domain.test.service;
-
+import com.aspose.cells.SaveFormat;
+import com.aspose.cells.Workbook;
+import com.aspose.cells.Worksheet;
 import com.kcc.pms.domain.common.model.dto.CommonCodeOptions;
 import com.kcc.pms.domain.feature.model.dto.FeatureSimpleResponseDto;
 import com.kcc.pms.domain.test.domain.dto.TestDetailRequestDto;
@@ -7,9 +8,10 @@ import com.kcc.pms.domain.test.domain.dto.TestMasterRequestDto;
 import com.kcc.pms.domain.test.domain.dto.TestPageResponseDto;
 import com.kcc.pms.domain.test.domain.dto.TestRequestDto;
 import com.kcc.pms.domain.test.mapper.TestMapper;
+import com.kcc.pms.domain.test.service.TestService;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.compress.utils.Lists;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -63,6 +65,23 @@ public class TestServiceImpl implements TestService {
     }
 
     @Override
+    public Workbook excelDownload(HttpServletResponse response, Long testNo) throws Exception {
+        TestMasterRequestDto test = getTest(testNo);
+
+        Workbook workbook = new Workbook();
+        if (Objects.equals(test.getTestType(), "PMS01201")) {
+            excelDownloadUnitTest(response, workbook, test);
+            return workbook;
+        } else {
+        }
+        List<TestDetailRequestDto> testDetails = test.getTestCaseList();
+        List<TestRequestDto> testRequests = new ArrayList<>();
+
+        return workbook;
+
+    }
+
+    @Override
     public TestMasterRequestDto getTest(Long testNo) {
         String testType = testMapper.getTestType(testNo);
         if (Objects.equals(testType, "PMS01201")) {
@@ -72,7 +91,7 @@ public class TestServiceImpl implements TestService {
 
             List<TestDetailRequestDto> details = new ArrayList<>();
             int idx = -1;
-            List<Integer> detailIdx = new ArrayList<>();
+            int detailIdx = -1;
             for (TestDetailRequestDto req : testMasterRequestDto.getTestCaseList()) {
                 if (req.getPreCondition() != null) {
                     idx++;
@@ -81,31 +100,31 @@ public class TestServiceImpl implements TestService {
                     details.add(req);
                 } else if (req.getTestData() != null) {
                     details.get(idx).getTestCaseDetails().add(new TestDetailRequestDto());
-                    detailIdx.add(0);
-                    details.get(idx).getTestCaseDetails().get(detailIdx.get(idx)).setTestDetailNumber(req.getTestDetailNumber());
-                    details.get(idx).getTestCaseDetails().get(detailIdx.get(idx)).setWorkContent(req.getWorkContent());
-                    details.get(idx).getTestCaseDetails().get(detailIdx.get(idx)).setTestData(req.getTestData());
+                    detailIdx++;
+                    details.get(idx).getTestCaseDetails().get(detailIdx).setTestDetailNumber(req.getTestDetailNumber());
+                    details.get(idx).getTestCaseDetails().get(detailIdx).setWorkContent(req.getWorkContent());
+                    details.get(idx).getTestCaseDetails().get(detailIdx).setTestData(req.getTestData());
                     if (!req.getFeatNumbers().isEmpty()) {
-                        details.get(idx).getTestCaseDetails().get(detailIdx.get(idx)).setFeatNumbers(req.getFeatNumbers());
+                        details.get(idx).getTestCaseDetails().get(detailIdx).setFeatNumbers(req.getFeatNumbers());
                     }
-                    details.get(idx).getTestCaseDetails().get(detailIdx.get(idx)).setEstimatedResult(req.getEstimatedResult());
-                    details.get(idx).getTestCaseDetails().get(detailIdx.get(idx)).setWrittenDate(req.getWrittenDate());
-                    details.get(idx).getTestCaseDetails().get(detailIdx.get(idx)).setWriterNo(req.getWriterNo());
-                    details.get(idx).getTestCaseDetails().get(detailIdx.get(idx)).setWriterName(req.getWriterName());
-                    details.get(idx).getTestCaseDetails().get(detailIdx.get(idx)).setTestDate(req.getTestDate());
-                    details.get(idx).getTestCaseDetails().get(detailIdx.get(idx)).setResult(req.getResult());
-                    details.get(idx).getTestCaseDetails().get(detailIdx.get(idx)).setDefectNos(req.getDefectNos());
+                    details.get(idx).getTestCaseDetails().get(detailIdx).setEstimatedResult(req.getEstimatedResult());
+                    details.get(idx).getTestCaseDetails().get(detailIdx).setWrittenDate(req.getWrittenDate());
+                    details.get(idx).getTestCaseDetails().get(detailIdx).setWriterNo(req.getWriterNo());
+                    details.get(idx).getTestCaseDetails().get(detailIdx).setWriterName(req.getWriterName());
+                    details.get(idx).getTestCaseDetails().get(detailIdx).setTestDate(req.getTestDate());
+                    details.get(idx).getTestCaseDetails().get(detailIdx).setResult(req.getResult());
+                    details.get(idx).getTestCaseDetails().get(detailIdx).setDefectNos(req.getDefectNos());
                 } else if (req.getTestDetailContent() != null) {
-                    if (details.get(idx).getTestCaseDetails().get(detailIdx.get(idx)).getTests() == null) {
-                        details.get(idx).getTestCaseDetails().get(detailIdx.get(idx)).setTests(new ArrayList<>());
+                    if (details.get(idx).getTestCaseDetails().get(detailIdx).getTests() == null) {
+                        details.get(idx).getTestCaseDetails().get(detailIdx).setTests(new ArrayList<>());
                     }
-                    details.get(idx).getTestCaseDetails().get(detailIdx.get(idx)).getTests().add(
+                    details.get(idx).getTestCaseDetails().get(detailIdx).getTests().add(
                             new TestRequestDto(req.getTestDetailNumber(), req.getTestDetailId(), req.getTestDetailContent())
                     );
                 }
             }
             testMasterRequestDto.setTestCaseList(details);
-             return  testMasterRequestDto;
+            return  testMasterRequestDto;
         }
     }
 
@@ -115,35 +134,38 @@ public class TestServiceImpl implements TestService {
         String testType = testMapper.getTestType(testReq.getTestNumber());
         testMapper.updateTest(testReq);
 
-            for (TestDetailRequestDto testDetail : testReq.getTestCaseList()) {
-                if (Objects.equals(testType, "PMS01201")) {
-                    if (testDetail.getFeatNumbers() != null) {
-                        testMapper.deleteFeatureTests(testDetail.getTestDetailNumber());
-                        for (Long featNumber : testDetail.getFeatNumbers()) {
-                            testMapper.saveFeatureTest(featNumber, testDetail.getTestDetailNumber());
-                        }
-                    }
-
-                    if (testReq.getTestCaseList() != null) {
-                        testMapper.updateTestDetail(testDetail);
-                    } else {
-                        testMapper.saveUnitTestDetails(testReq.getTestNumber(), testDetail);
-                    }
-
-                    if (testDetail.getTests() != null) {
-                        for (TestRequestDto test : testDetail.getTests()) {
-                            testMapper.updateTestStage(test);
-                        }
-                    }
-                } else {
+        for (TestDetailRequestDto testDetail : testReq.getTestCaseList()) {
+            if (Objects.equals(testType, "PMS01201")) {
+                if (testDetail.getFeatNumbers() != null) {
                     if (testDetail.getTestDetailNumber() == null) {
-                        testMapper.saveIntegrationTestDetails(testReq.getTestNumber(), testDetail.getTestDetailId(), testDetail);
-                    } else {
-                        testMapper.updateIntegrationTestDetails(testReq.getTestNumber(), testDetail);
+                        saveUnitTestDetails(testReq.getTestNumber(), testDetail);
                     }
-                    updateIntegrationTestDetails(testReq.getTestNumber(), testDetail);
+                    testMapper.deleteFeatureTests(testDetail.getTestDetailNumber());
+                    for (Long featNumber : testDetail.getFeatNumbers()) {
+                        testMapper.saveFeatureTest(featNumber, testDetail.getTestDetailNumber());
+                    }
                 }
+
+                if (testReq.getTestCaseList() != null) {
+                    testMapper.updateTestDetail(testDetail);
+                } else {
+                    testMapper.saveUnitTestDetails(testReq.getTestNumber(), testDetail);
+                }
+
+                if (testDetail.getTests() != null) {
+                    for (TestRequestDto test : testDetail.getTests()) {
+                        testMapper.updateTestStage(test);
+                    }
+                }
+            } else {
+                if (testDetail.getTestDetailNumber() == null) {
+                    testMapper.saveIntegrationTestDetails(testReq.getTestNumber(), testDetail.getTestDetailId(), testDetail);
+                } else {
+                    testMapper.updateIntegrationTestDetails(testReq.getTestNumber(), testDetail);
+                }
+                updateIntegrationTestDetails(testReq.getTestNumber(), testDetail);
             }
+        }
 
         return testReq.getTestNumber();
     }
@@ -195,4 +217,26 @@ public class TestServiceImpl implements TestService {
             }
         }
     }
+
+    private void excelDownloadUnitTest(HttpServletResponse response, Workbook workbook, TestMasterRequestDto test) throws Exception {
+        Worksheet worksheet = workbook.getWorksheets().get(0);
+
+        // 셀 병합
+        worksheet.getCells().merge(0, 0, 1, 3); // A1:C1 셀 병합
+        worksheet.getCells().merge(0, 3, 1, 7); // D1:J1 셀 병합
+        worksheet.getCells().merge(1, 0, 1, 3); // A2:C2 셀 병합
+        worksheet.getCells().merge(1, 3, 1, 3); // D2:F2 셀 병합
+        worksheet.getCells().merge(2, 0, 1, 3); // A3:C3 셀 병합
+
+        // 병합된 셀에 값 입력
+        worksheet.getCells().get("A1").putValue("테스트 명");
+        worksheet.getCells().get("D1").putValue(test.getTestTitle());
+        worksheet.getCells().get("A2").putValue("테스트 ID");
+        worksheet.getCells().get("D2").putValue(test.getTestNumber());
+        worksheet.getCells().get("A3").putValue("테스트 타입");
+
+        // 엑셀 파일 저장
+        workbook.save("Column-Chart.xlsx", SaveFormat.XLSX);
+    }
+
 }
