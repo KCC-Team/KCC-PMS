@@ -356,10 +356,7 @@ $(function() {
     });
 
     $('.export-excel').on('click', function() {
-        $.ajax({
-            url: '/projects/tests/excelDownload/' + lastSegment,
-            method: 'GET',
-        })
+        window.location.href = '/projects/tests/excelDownload/' + lastSegment;
     });
 });
 
