@@ -11,9 +11,9 @@ public interface MemberService {
     List<GroupResponseDto> getGroupList();
     List<GroupMembersResponseDto> getGroupMembers(Long groupNo);
     List<MemberResponseDto> getProjectMemberList(Long projectNo);
-    List<MemberResponseTCDto> getTeamMember(Long teamNo);
+    List<MemberResponseDto> getTeamMember(Long teamNo);
     MemberResponseTCDto getMemberDetail(Long projectNo, Long memberNo);
-    Integer memberAssignTeam(Long memberNo, Long teamNo, Integer beforeTeamNo) throws SQLException;
+    Integer memberAssignTeam(Long teamNo, List<MemberTeamUpdateRequest> teamUpdateMembers);
     void updateOrInsertDate(String type, List<MemberStartFinishRequestDto> updateList) throws SQLException;
     void updateMembers(List<MemberUpdateRequestDto> members);
     int saveMember(MemberVO member);

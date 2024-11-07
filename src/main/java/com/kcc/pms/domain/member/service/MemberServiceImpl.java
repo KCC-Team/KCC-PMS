@@ -8,6 +8,7 @@ import com.kcc.pms.domain.member.model.vo.MemberVO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
@@ -38,7 +39,7 @@ public class MemberServiceImpl implements MemberService{
     }
 
     @Override
-    public List<MemberResponseTCDto> getTeamMember(Long teamNo) {
+    public List<MemberResponseDto> getTeamMember(Long teamNo) {
         return mapper.getTeamMember(teamNo);
     }
 
@@ -47,15 +48,15 @@ public class MemberServiceImpl implements MemberService{
         return mapper.getMemberDetail(projectNo, memberNo);
     }
 
-    @Transactional(rollbackFor = Exception.class)
+    @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRED)
     @Override
-    public Integer memberAssignTeam(Long memberNo, Long teamNo, Integer beforeTeamNo)  {
+    public Integer memberAssignTeam(Long teamNo, List<MemberTeamUpdateRequest> teamUpdateMembers)  {
         mapper.disableTaskMemberConstraint();
         mapper.disableFeatureMemberConstraint();
         try {
-            Integer result = mapper.memberAssignTeam(memberNo, teamNo, beforeTeamNo);
-            mapper.updateTaskMember(memberNo, teamNo, beforeTeamNo);
-            mapper.updateFeatureMember(memberNo, teamNo, beforeTeamNo);
+            Integer result = mapper.memberAssignTeam(teamNo, teamUpdateMembers);
+            mapper.updateTaskMember(teamNo, teamUpdateMembers);
+            mapper.updateFeatureMember(teamNo, teamUpdateMembers);
             return result;
         } finally {
             mapper.enableTaskMemberConstraint();

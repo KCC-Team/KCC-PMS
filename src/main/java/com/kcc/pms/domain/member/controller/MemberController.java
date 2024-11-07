@@ -51,7 +51,7 @@ public class MemberController {
 
     @GetMapping("/{projectNo}/members/team/{teamNo}")
     @ResponseBody
-    public List<MemberResponseTCDto> teamMembers(@PathVariable("projectNo") Long projectNo, @PathVariable("teamNo") Long teamNo) {
+    public List<MemberResponseDto> teamMembers(@PathVariable("projectNo") Long projectNo, @PathVariable("teamNo") Long teamNo) {
         return memberService.getTeamMember(teamNo);
     }
 
@@ -76,14 +76,11 @@ public class MemberController {
 
     @PostMapping("/members/team/{teamNo}")
     @ResponseBody
-    public ResponseEntity<String> memberAssignTeam(@PathVariable Long teamNo, @RequestBody List<MemberTeamUpdateRequest> members) {
+    public ResponseEntity<String> memberAssignTeam(@PathVariable Long teamNo, @RequestBody List<MemberTeamUpdateRequest> teamUpdateMembers) {
         System.out.println("MemberController.memberAssignTeam");
-        System.out.println("teamNo = " + teamNo);
-        System.out.println("members = " + members);
         try {
-            for (MemberTeamUpdateRequest member : members) {
-                memberService.memberAssignTeam(member.getMemberId(), teamNo, member.getBeforeTeamNo());
-            }
+            memberService.memberAssignTeam(teamNo, teamUpdateMembers);
+
             return ResponseEntity.ok("팀 배정에 성공하였습니다.");
         } catch (DataIntegrityViolationException e) {
             System.err.println("무결성 제약 조건 위반: " + e.getMessage());

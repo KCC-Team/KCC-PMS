@@ -17,6 +17,8 @@ public class MemberAddRequestDto {
     private String pre_end_dt;
     private String st_dt;
     private String end_dt;
+    private Integer beforeTeamNo;
+    private String type;
 
     public void formatDates() {
         this.pre_st_dt = formatDate(this.pre_st_dt);
