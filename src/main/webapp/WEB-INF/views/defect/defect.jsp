@@ -103,18 +103,26 @@
                                 </select>
                             </td>
                         </tr>
-                        <tr>
-                            <td class="td-title">테스트 ID</td>
-                            <td>
-                                <a href="#">${req.testId}</a>
-                                <input type="text" name="testNumber" value="${req.testNumber}" readonly >
-                            </td>
-                            <td class="td-title">기능 ID</td>
-                            <td>
-                                <a href="#">${req.testId}</a>
-                                <input type="text" name="testNumber" value="${req.testNumber}" readonly >
-                            </td>
-                        </tr>
+                        <c:if test="${req.testDetailNo != null}">
+                            <tr>
+                                <td class="td-title">테스트 케이스 ID</td>
+                                <td>
+                                    <input type="hidden" name="testNo" value="${req.testNo}" />
+                                    <input type="hidden" name="testDetailNo" value="${req.testDetailNo}" />
+                                    <input type="hidden" name="testDetailId" value="${req.testDetailId}" />
+                                    <a id="test" href="/projects/tests/${req.testNo}" target="_blank">
+                                        <c:choose>
+                                            <c:when test="${req.testDetailId != null}">
+                                                <c:out value="${req.testDetailId}" />
+                                            </c:when>
+                                            <c:otherwise>
+                                                <c:out value="-" />
+                                            </c:otherwise>
+                                        </c:choose>
+                                    </a>
+                                </td>
+                            </tr>
+                        </c:if>
                         <tr>
                             <td colspan="4" class="td-title">결함 내용&nbsp;&nbsp;&nbsp;<span class="es-star">*</span></td>
                         </tr>
@@ -210,6 +218,7 @@
 
 <script src="../../../resources/common/js/common.js"></script>
 <script type="text/javascript">
+    let testDetailNo = '<c:out value="${req.testDetailNo}" escapeXml="false" />';
     let discoverFilesJson = '<c:out value="${discoverFilesJson}" escapeXml="false" />';
     let workFilesJson = '<c:out value="${workFilesJson}" escapeXml="false" />';
     let typeSelect = '<c:out value="${req.typeSelect}" escapeXml="false" />';

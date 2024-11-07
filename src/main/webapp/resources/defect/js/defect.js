@@ -235,7 +235,9 @@ function setOptions($selectElement, options) {
             text: option.cd_dtl_nm
         });
 
-        if (option.cd_dtl_no === typeSelect) {
+        if (option.cd_dtl_no === 'PMS00801' && testDetailNo != null) {
+            $option.attr('selected', 'selected');
+        } else if (option.cd_dtl_no === typeSelect) {
             $option.attr('selected', 'selected');
         } else if (option.cd_dtl_no === prioritySelect) {
             $option.attr('selected', 'selected');
