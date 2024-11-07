@@ -364,9 +364,9 @@
                      td.par_test_dtl_no as parentDetailNo,
                      td.test_no as testNo,
                      ft.feat_no AS ft_feat_no,
-                     d.df_no,
-                     d.df_id,
-                     d.stat_cd
+                     d.df_no as defectNumber,
+                     d.df_id as defectId,
+                     d.stat_cd as defectStatusCode
                  FROM testdetail td
                           LEFT JOIN featuretest ft ON td.test_dtl_no = ft.test_dtl_no
                           LEFT JOIN defect d ON d.test_dtl_no = td.test_dtl_no

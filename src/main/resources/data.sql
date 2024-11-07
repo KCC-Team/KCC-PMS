@@ -412,19 +412,22 @@ ALTER TABLE TestDetail ADD CONSTRAINT fk_td_test_no_002 FOREIGN KEY (test_no) RE
 ALTER TABLE TestDetail ADD CONSTRAINT fk_td_test_mem_no_003 FOREIGN KEY (mem_no) REFERENCES Member (mem_no);
 ALTER TABLE TestDetail ADD CONSTRAINT fk_td_test_par_test_dtl_no_004 FOREIGN KEY (par_test_dtl_no) REFERENCES TestDetail (test_dtl_no);
 
-ALTER TABLE Defect ADD CONSTRAINT pk_df_no_001 PRIMARY KEY (df_no);
-ALTER TABLE Defect ADD CONSTRAINT fk_df_prj_no_002 FOREIGN KEY (prj_no) REFERENCES Project (prj_no);
-ALTER TABLE Defect ADD CONSTRAINT fk_df_work_no_003 FOREIGN KEY (work_no) REFERENCES System (sys_no);
-ALTER TABLE Defect ADD CONSTRAINT fk_df_test_dtl_no_004 FOREIGN KEY (test_dtl_no) REFERENCES TestDetail (test_dtl_no);
-ALTER TABLE Defect ADD CONSTRAINT fk_df_fl_ms_fd_no_005 FOREIGN KEY (fl_ms_fd_no) REFERENCES Member (mem_no);
-ALTER TABLE Defect ADD CONSTRAINT fk_df_fl_ms_work_no_006 FOREIGN KEY (fl_ms_work_no) REFERENCES Member (mem_no);
-ALTER TABLE Defect ADD CONSTRAINT fk_df_test_no_007 FOREIGN KEY (test_no) REFERENCES TestMaster (test_no);
 
 ALTER TABLE FeatureTest ADD CONSTRAINT pk_ft_feat_test_no_001 PRIMARY KEY (feat_no, test_dtl_no);
 ALTER TABLE FeatureTest ADD CONSTRAINT fk_ft_feat_no_002 FOREIGN KEY (feat_no) REFERENCES Feature (feat_no);
 ALTER TABLE FeatureTest ADD CONSTRAINT fk_ft_feat_test_dtl_no_003 FOREIGN KEY (test_dtl_no) REFERENCES TestDetail (test_dtl_no);
 
 ALTER TABLE FileMaster ADD CONSTRAINT pk_fl_ms_no_001 PRIMARY KEY (fl_ms_no);
+
+ALTER TABLE Defect ADD CONSTRAINT pk_df_no_001 PRIMARY KEY (df_no);
+ALTER TABLE Defect ADD CONSTRAINT fk_df_prj_no_002 FOREIGN KEY (prj_no) REFERENCES Project (prj_no);
+ALTER TABLE Defect ADD CONSTRAINT fk_df_work_no_003 FOREIGN KEY (work_no) REFERENCES System (sys_no);
+ALTER TABLE Defect ADD CONSTRAINT fk_df_test_dtl_no_004 FOREIGN KEY (test_dtl_no) REFERENCES TestDetail (test_dtl_no);
+ALTER TABLE Defect ADD CONSTRAINT fk_df_fl_ms_fd_no_005 FOREIGN KEY (fl_ms_fd_no) REFERENCES FileMaster (fl_ms_no);
+ALTER TABLE Defect ADD CONSTRAINT fk_df_fl_ms_work_no_006 FOREIGN KEY (fl_ms_work_no) REFERENCES FileMaster (fl_ms_no);
+ALTER TABLE Defect ADD CONSTRAINT fk_df_mem_001 FOREIGN KEY (mem_fd_no) REFERENCES Member (mem_no);
+ALTER TABLE Defect ADD CONSTRAINT fk_df_mem_002 FOREIGN KEY (mem_work_no) REFERENCES Member (mem_no);
+ALTER TABLE Defect ADD CONSTRAINT fk_df_test_no_007 FOREIGN KEY (test_no) REFERENCES TestMaster (test_no);
 
 ALTER TABLE FileDetail ADD CONSTRAINT pk_fl_no_001 PRIMARY KEY (fl_no);
 ALTER TABLE FileDetail ADD CONSTRAINT fk_fl_ms_no_002 FOREIGN KEY (fl_ms_no) REFERENCES FileMaster (fl_ms_no) ON DELETE CASCADE;

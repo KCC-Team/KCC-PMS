@@ -72,7 +72,7 @@ public class TestServiceImpl implements TestService {
 
             List<TestDetailRequestDto> details = new ArrayList<>();
             int idx = -1;
-            int detailIdx = -1;
+            List<Integer> detailIdx = new ArrayList<>();
             for (TestDetailRequestDto req : testMasterRequestDto.getTestCaseList()) {
                 if (req.getPreCondition() != null) {
                     idx++;
@@ -81,25 +81,25 @@ public class TestServiceImpl implements TestService {
                     details.add(req);
                 } else if (req.getTestData() != null) {
                     details.get(idx).getTestCaseDetails().add(new TestDetailRequestDto());
-                    detailIdx++;
-                    details.get(idx).getTestCaseDetails().get(detailIdx).setTestDetailNumber(req.getTestDetailNumber());
-                    details.get(idx).getTestCaseDetails().get(detailIdx).setWorkContent(req.getWorkContent());
-                    details.get(idx).getTestCaseDetails().get(detailIdx).setTestData(req.getTestData());
+                    detailIdx.add(0);
+                    details.get(idx).getTestCaseDetails().get(detailIdx.get(idx)).setTestDetailNumber(req.getTestDetailNumber());
+                    details.get(idx).getTestCaseDetails().get(detailIdx.get(idx)).setWorkContent(req.getWorkContent());
+                    details.get(idx).getTestCaseDetails().get(detailIdx.get(idx)).setTestData(req.getTestData());
                     if (!req.getFeatNumbers().isEmpty()) {
-                        details.get(idx).getTestCaseDetails().get(detailIdx).setFeatNumbers(req.getFeatNumbers());
+                        details.get(idx).getTestCaseDetails().get(detailIdx.get(idx)).setFeatNumbers(req.getFeatNumbers());
                     }
-                    details.get(idx).getTestCaseDetails().get(detailIdx).setEstimatedResult(req.getEstimatedResult());
-                    details.get(idx).getTestCaseDetails().get(detailIdx).setWrittenDate(req.getWrittenDate());
-                    details.get(idx).getTestCaseDetails().get(detailIdx).setWriterNo(req.getWriterNo());
-                    details.get(idx).getTestCaseDetails().get(detailIdx).setWriterName(req.getWriterName());
-                    details.get(idx).getTestCaseDetails().get(detailIdx).setTestDate(req.getTestDate());
-                    details.get(idx).getTestCaseDetails().get(detailIdx).setResult(req.getResult());
-                    details.get(idx).getTestCaseDetails().get(detailIdx).setDefectNos(req.getDefectNos());
+                    details.get(idx).getTestCaseDetails().get(detailIdx.get(idx)).setEstimatedResult(req.getEstimatedResult());
+                    details.get(idx).getTestCaseDetails().get(detailIdx.get(idx)).setWrittenDate(req.getWrittenDate());
+                    details.get(idx).getTestCaseDetails().get(detailIdx.get(idx)).setWriterNo(req.getWriterNo());
+                    details.get(idx).getTestCaseDetails().get(detailIdx.get(idx)).setWriterName(req.getWriterName());
+                    details.get(idx).getTestCaseDetails().get(detailIdx.get(idx)).setTestDate(req.getTestDate());
+                    details.get(idx).getTestCaseDetails().get(detailIdx.get(idx)).setResult(req.getResult());
+                    details.get(idx).getTestCaseDetails().get(detailIdx.get(idx)).setDefectNos(req.getDefectNos());
                 } else if (req.getTestDetailContent() != null) {
-                    if (details.get(idx).getTestCaseDetails().get(detailIdx).getTests() == null) {
-                        details.get(idx).getTestCaseDetails().get(detailIdx).setTests(new ArrayList<>());
+                    if (details.get(idx).getTestCaseDetails().get(detailIdx.get(idx)).getTests() == null) {
+                        details.get(idx).getTestCaseDetails().get(detailIdx.get(idx)).setTests(new ArrayList<>());
                     }
-                    details.get(idx).getTestCaseDetails().get(detailIdx).getTests().add(
+                    details.get(idx).getTestCaseDetails().get(detailIdx.get(idx)).getTests().add(
                             new TestRequestDto(req.getTestDetailNumber(), req.getTestDetailId(), req.getTestDetailContent())
                     );
                 }

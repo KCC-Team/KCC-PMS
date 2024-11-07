@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 
 import java.sql.SQLException;
+import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.*;
 
 @Service
@@ -108,7 +109,7 @@ public class TeamServiceImpl implements TeamService{
 
     @Transactional(rollbackFor = Exception.class)
     @Override
-    public int addMemberTeam(Long teamNo, Long prjNo, List<MemberAddRequestDto> addMembers) {
+    public int addMemberTeam(Long teamNo, Long prjNo, List<MemberAddRequestDto> addMembers) throws SQLIntegrityConstraintViolationException {
         int result = 0;
         addMembers.forEach(MemberAddRequestDto::formatDates);
 
@@ -123,8 +124,12 @@ public class TeamServiceImpl implements TeamService{
            }
         }
 
-        result += mapper.addMembersTeam(teamNo, prjNo, newMembers);
-        result += memberService.memberAssignTeam(teamNo, updateMembers);
+        if(!newMembers.isEmpty()){
+            result += mapper.addMembersTeam(teamNo, prjNo, newMembers);
+        }
+        if(!updateMembers.isEmpty()){
+            result += memberService.memberAssignTeam(teamNo, updateMembers);
+        }
 
         return result;
     }

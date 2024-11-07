@@ -10,10 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -88,6 +85,7 @@ public class OutputServiceImpl implements OutputService {
 
     @Override
     public OutputResponseDto findOutput(Long outputNo) {
+        Optional<OutputResponseDto> output = outputMapper.findOutput(outputNo);
         return outputMapper.findOutput( outputNo).orElseThrow(() -> new RuntimeException("Output not found"));
     }
 
