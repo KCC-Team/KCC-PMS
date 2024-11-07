@@ -152,17 +152,21 @@
     </select>
 
     <update id="updateTaskMember">
-        UPDATE TaskMember
-        SET tm_no = #{teamNo}
-        WHERE mem_no = #{memberNo}
-          AND tm_no = #{beforeTeamNo}
+        <foreach collection="teamUpdateMembers" item="member" open="DECLARE BEGIN" separator=";" close="; END;">
+            UPDATE TaskMember
+            SET tm_no = #{teamNo}
+            WHERE mem_no = #{member.memberId}
+            AND tm_no = #{member.beforeTeamNo}
+        </foreach>
     </update>
 
     <update id="updateFeatureMember">
-        UPDATE Feature
-        SET tm_no = #{teamNo}
-        WHERE mem_no = #{memberNo}
-          AND tm_no = #{beforeTeamNo}
+        <foreach collection="teamUpdateMembers" item="member" open="DECLARE BEGIN" separator=";" close="; END;">
+            UPDATE Feature
+            SET tm_no = #{teamNo}
+            WHERE mem_no = #{member.memberId}
+              AND tm_no = #{member.beforeTeamNo}
+        </foreach>
     </update>
 
     <update id="disableTaskMemberConstraint">
@@ -182,10 +186,12 @@
     </update>
 
     <update id="memberAssignTeam">
-        UPDATE ProjectMember
-        SET tm_no = #{teamNo}
-        WHERE mem_no = #{memberNo}
-        AND tm_no = #{beforeTeamNo}
+        <foreach collection="teamUpdateMembers" item="member" open="DECLARE BEGIN" separator=";" close="; END;">
+            UPDATE ProjectMember
+            SET tm_no = #{teamNo}
+            WHERE mem_no = #{member.memberId}
+            AND tm_no = #{member.beforeTeamNo}
+        </foreach>
     </update>
 
     <insert id="saveMember">

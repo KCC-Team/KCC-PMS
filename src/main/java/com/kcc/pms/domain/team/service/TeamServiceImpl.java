@@ -3,13 +3,17 @@ package com.kcc.pms.domain.team.service;
 import com.kcc.pms.domain.member.mapper.MemberMapper;
 import com.kcc.pms.domain.member.model.dto.MemberResponseDto;
 import com.kcc.pms.domain.member.model.dto.MemberResponseTCDto;
+import com.kcc.pms.domain.member.model.dto.MemberTeamUpdateRequest;
+import com.kcc.pms.domain.member.service.MemberService;
 import com.kcc.pms.domain.team.mapper.TeamMapper;
 import com.kcc.pms.domain.team.model.dto.*;
 import com.kcc.pms.domain.team.model.vo.Team;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 
+import java.sql.SQLException;
 import java.util.*;
 
 @Service
@@ -17,6 +21,7 @@ import java.util.*;
 public class TeamServiceImpl implements TeamService{
     private final TeamMapper mapper;
     private final MemberMapper memberMapper;
+    private final MemberService memberService;
 
     @Override
     public List<TeamResponseDto> getTeamList(Long projectNo) {
@@ -101,13 +106,29 @@ public class TeamServiceImpl implements TeamService{
         return mapper.createTeam(team);
     }
 
+    @Transactional(rollbackFor = Exception.class)
     @Override
-    public int addMemberTeam(Long teamNo, Long prjNo, List<MemberAddRequestDto> addMembers) {
+    public int addMemberTeam(Long teamNo, Long prjNo, List<MemberAddRequestDto> addMembers) throws SQLException {
+        int result = 0;
         addMembers.forEach(MemberAddRequestDto::formatDates);
+
+        List<MemberAddRequestDto> newMembers = new ArrayList<>();
+        List<MemberTeamUpdateRequest> updateMembers = new ArrayList<>();
+
         for (MemberAddRequestDto addMember : addMembers) {
-            System.out.println("service addMember = " + addMember);
+           if(addMember.getType().equals("update")){
+               updateMembers.add(new MemberTeamUpdateRequest(addMember.getId(), addMember.getBeforeTeamNo()));
+           } else {
+               newMembers.add(addMember);
+           }
         }
-        return mapper.addMembersTeam(teamNo, prjNo, addMembers);
+
+        result += memberService.memberAssignTeam(teamNo, updateMembers);
+
+        result += mapper.addMembersTeam(teamNo, prjNo, newMembers);
+
+
+        return result;
     }
 
     @Override

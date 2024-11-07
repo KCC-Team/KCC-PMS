@@ -9,4 +9,9 @@ import lombok.ToString;
 public class MemberTeamUpdateRequest {
     private Long memberId;
     private Integer beforeTeamNo;
+
+    public MemberTeamUpdateRequest(Long id, Integer beforeTeamNo) {
+        this.memberId = id;
+        this.beforeTeamNo = beforeTeamNo;
+    }
 }
