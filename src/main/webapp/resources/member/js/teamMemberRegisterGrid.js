@@ -86,7 +86,7 @@ $(document.body).ready(function () {
         insertProject();
     });
 
-    initGrid();
+    initGrid(typeValue);
     checkProject();
 
     $('#jstree').on("ready.jstree", function(e, data) {
@@ -129,10 +129,20 @@ function updateAddedGrid() {
 
 
 
-function initGrid() {
+function initGrid(typeValue) {
+    var multiple = true;
+    var headerSelect = true;
+    if(typeValue === 'feature' || typeValue === 'defect1' || typeValue === 'defect2' || typeValue.includes('test_') || typeValue === 'test_unit_'){
+         multiple = false;
+         headerSelect = false;
+    }
     team_reg_groupmemGrid = new ax5.ui.grid();
     team_reg_groupmemGrid.setConfig({
         showRowSelector: true,
+        multipleSelect: multiple,
+        header: {
+            selector: headerSelect
+        },
         target: $('[data-ax5grid="team-groupmemGrid"]'),
         columns: [
             {key: "memberName", label: "성명", align: "center"},
@@ -167,7 +177,11 @@ function initGrid() {
     console.log("init Grid Finish");
  }
 
-
+// $('[data-ax5grid="team-groupmemGrid"]').on("click", ".checkBox", function () {
+//     team_reg_groupmemGrid.clearSelect();  // 기존 선택 해제
+//     var rowIndex = $(this).closest('[data-ax5grid-tr-data-index]').data("ax5grid-tr-data-index");
+//     team_reg_groupmemGrid.select(rowIndex);  // 현재 클릭한 항목 선택
+// });
 
 function closePopupAndUpdateParent() {
     // 부모 페이지로 메시지 전달

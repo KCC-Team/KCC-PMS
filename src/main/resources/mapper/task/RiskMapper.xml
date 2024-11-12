@@ -45,8 +45,8 @@
         (
         #{req.riskNumber}, #{req.riskId, jdbcType=VARCHAR}, #{req.riskTitle, jdbcType=VARCHAR},
         #{req.issueRiskType, jdbcType=VARCHAR}, #{req.classCode, jdbcType=VARCHAR}, #{req.statusCode, jdbcType=VARCHAR}, #{req.priorCode, jdbcType=VARCHAR},
-        #{req.riskContent, jdbcType=VARCHAR}, #{req.riskPlan, jdbcType=VARCHAR}, #{req.dueDate, jdbcType=DATE},
-        #{req.completeDate, jdbcType=DATE}, #{req.prjNo}, #{req.systemNo, jdbcType=NUMERIC}, #{req.memberNo, jdbcType=NUMERIC},
+        #{req.riskContent, jdbcType=VARCHAR}, #{req.riskPlan, jdbcType=VARCHAR}, TO_DATE(#{req.dueDate, jdbcType=DATE}),
+        TO_DATE(#{req.completeDate, jdbcType=DATE}), #{req.prjNo}, #{req.systemNo, jdbcType=NUMERIC}, #{req.memberNo, jdbcType=NUMERIC},
         #{fileMasterWorkNumber, jdbcType=NUMERIC}, #{fileMasterFoundNumber, jdbcType=NUMERIC}, SYSDATE
         )
     </insert>
@@ -93,8 +93,8 @@
             <if test="priorCode != null">PRI_CD = #{priorCode},</if>
             <if test="riskContent != null">RISK_CONT = #{riskContent},</if>
             <if test="riskPlan != null">RISK_PLAN = #{riskPlan},</if>
-            <if test="dueDate != null">DUE_DT = #{dueDate},</if>
-            <if test="completeDate != null">COMPL_DT = #{completeDate},</if>
+            <if test="dueDate != null">DUE_DT = TO_DATE(#{dueDate}),</if>
+            <if test="completeDate != null">COMPL_DT = TO_DATE(#{completeDate}),</if>
             <if test="statusCode != null">STAT_CD = #{statusCode},</if>
             SYS_NO = #{systemNo, jdbcType=NUMERIC},
             <if test="memberNo != null">MEM_NO = #{memberNo},</if>
@@ -207,7 +207,7 @@
             fl_ms_no
         ) VALUES (
                      SEQ_HISTORY.nextval,
-                     #{recordDate, jdbcType=DATE},
+                     TO_DATE(#{recordDate, jdbcType=DATE}),
                      #{recordContent, jdbcType=VARCHAR},
                      #{riskNo, jdbcType=NUMERIC},
                      #{memberNo, jdbcType=NUMERIC},
@@ -248,7 +248,7 @@
         UPDATE history
         <set>
             <if test="recordDate != null">
-                record_dt = #{recordDate},
+                record_dt = TO_DATE(#{recordDate}),
             </if>
             <if test="recordContent != null">
                 record_cont = #{recordContent}
@@ -260,9 +260,6 @@
     <delete id="deleteByNo">
         DELETE FROM history where history_no = #{historyNo}
     </delete>
-
-
-
 
     <resultMap id="FileDetailMap" type="com.kcc.pms.domain.risk.model.excel.ExcelFileDetailDto">
         <id property="flNo" column="FIND_FL_NO"/>

@@ -273,6 +273,10 @@ function insertData(dropzone_dis, dropzone_work, $form) {
         success: function(response) {
             // 성공 로직
             window.location.href = response + "?toastMsg=defectSaved";
+            
+		    if (window.opener && !window.opener.closed) {
+		        window.opener.submitTestData();
+		    }
         },
         error: function(response) {
             console.error(response);
@@ -324,6 +328,10 @@ function updateData(dropzone_dis, dropzone_work, $form, defectNumber) {
             }
             deleteFiles = [];
             window.location.href = response + "?toastMsg=defectSaved";
+            
+            if (window.opener && !window.opener.closed) {
+		        window.opener.submitTestData();
+		    }
         },
         error: function(response) {
             console.error(response);

@@ -33,4 +33,5 @@ public class MemberResponseDto implements Serializable {
     private Integer systemNo;
     private String teamContent;
     private Long projectNo;
+    private String participateYn;
 }

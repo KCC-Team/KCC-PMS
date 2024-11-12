@@ -32,7 +32,7 @@ public interface TestMapper {
     int updateTest(TestMasterRequestDto testReq);
     int updateIntegrationTestDetails(Long testNo, TestDetailRequestDto testDetail);
     int updateTestDetail(TestDetailRequestDto testDetail);
-    int updateTestDetails(Long testNo, TestDetailRequestDto testDetail);
+    int updateStatus(Long testNo, String status);
     int updateTestStage(TestRequestDto test);
     Integer deleteTest(Long testNo);
     List<FeatureSimpleResponseDto> getFeatures(Long projectNo);

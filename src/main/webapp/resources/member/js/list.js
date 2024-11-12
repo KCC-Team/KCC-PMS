@@ -630,7 +630,7 @@ function loadProjectMembers(prjNo) {
     }
 
     $.ajax({
-        url: '/projects/projectmembers?projectNo=' + prjNo,
+        url: '/projects/projectmembersList?projectNo=' + prjNo,
         method: 'GET',
         dataType: 'json',
         cache: false,
@@ -812,7 +812,8 @@ function initGrid() {
                 columns: [
                     {key: "memberName", width: 85, label: "성명", align: "center", formatter: function() {
                             console.log(this.item.teamNo);
-                            return '<div class="clickable-name member-link" data-id="' + this.item.id + '" data-teamNo="' + this.item.teamNo + '" draggable="true">' + this.value + '</div>';
+                            return '<div class="clickable-name member-link" data-id="' + this.item.id + '" data-teamNo="' +
+                                this.item.teamNo + '" draggable="true">' + this.value + '</div>';
                         }},
                     {
                         key: "auth",

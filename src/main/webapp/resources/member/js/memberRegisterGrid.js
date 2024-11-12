@@ -74,6 +74,13 @@ $(document.body).ready(function () {
             return false;
         }
 
+        // 참여 여부가 'N'인 멤버가 있는지 확인
+        const invalidMembers = selectedMembers.filter(member => member.participateYn === 'Y');
+        if (invalidMembers.length > 0) {
+            alert("참여가 불가능한 멤버가 포함되어 있습니다.");
+            return false; // 추가하지 않고 종료
+        }
+
         selectedMembers.forEach(member => {
             var typeValue = urlParams.get('type');
             if (typeValue == 'project') {
@@ -82,7 +89,7 @@ $(document.body).ready(function () {
 
             console.log("추가된 멤버 : " + JSON.stringify(member, null, 2));
 
-            let exists = addedMembers.some(m => m.id === member.id);
+            let exists = addedMembers.some(m => m.id === member.id || reg_addedGrid.getList().some(m => m.id === member.id));
             if (!exists) {
                 console.log(member.preStartDate);
                 console.log(member.preEndDate);
@@ -171,7 +178,7 @@ function updateAddedGrid() {
 function reg_loadProjectMember() {
     //프로젝트 총인원
     $.ajax({
-        url: '/projects/projectmembers?projectNo=' + prjNo,
+        url: '/projects/projectmembers?projectNo=' + prjNo + '&teamNo=' + teamNo,
         method: 'GET',
         success: function(response) {
             console.log("reg_loadProjectMember success" + response);
@@ -218,7 +225,8 @@ function initGrid() {
             {key: "memberName", width:70, label: "성명", align: "center"},
             {key: "position", label: "직위", align: "center" },
             {key: "email", width: 230, label: "이메일", align: "center"},
-            {key: "participate_yn", width: 70, label: "참여여부",align: "center"},
+            {key: "participateYn", width: 70, label: "투입여부",align: "center"},
+
             {key: "tech", width: 70, label: "기술등급",align: "center"}
         ],
         page: {
@@ -258,6 +266,7 @@ function initGrid() {
                             return '-';
                         }
                     }},
+                {key: "participateYn", width: 70, label: "투입여부",align: "center"},
                 {key: "preStartDate", width: 100, label: "예정시작일", align: "center", formatter: function() {
                         return this.value && this.value.substring(0, 10) !== '2999-12-31' ? this.value.substring(0, 10) : '-';
                     }},

@@ -14,4 +14,5 @@ public interface SystemMapper {
     List<SystemPageDto> getParentSystems(@Param("startRow") int startRow,
                                          @Param("endRow") int endRow,
                                          @Param("prjNo") Long prjNo);
+    String getSystemName(Long systemNo);
 }

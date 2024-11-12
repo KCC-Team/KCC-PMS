@@ -211,6 +211,22 @@
         )
     </insert>
 
+    <update id="updateStatus">
+        update testdetail
+        <choose>
+            <when test='status == "PMS00703"'>
+                set test_result_cd = 'PMS01401'
+            </when>
+            <when test='status == "PMS00702" or status == "PMS00701"'>
+                set test_result_cd = 'PMS01402'
+            </when>
+            <otherwise>
+                set test_result_cd = null
+            </otherwise>
+        </choose>
+        where test_no = #{testNo}
+    </update>
+
     <update id="updateIntegrationTestDetails" parameterType="map">
         UPDATE testdetail
         <set>
@@ -248,7 +264,7 @@
         #{testDetail.workContent},
         #{testDetail.writerNo, jdbcType=NUMERIC},
         #{testNo}, sysdate,
-        #{testDetail.testDate, jdbcType=DATE},
+        TO_DATE(#{testDetail.testDate, jdbcType=DATE}),
         <choose>
             <when test="testDetail.result == '결과 선택'">
                 null,
@@ -264,11 +280,12 @@
     <update id="updateTestDetails">
         UPDATE testdetail
         <set>
-            test_data = #{testDetail.testData},
+            test_data = TO_DATE(#{testDetail.testData}),
             estimated_rlt = #{testDetail.estimatedResult},
             wrk_proc_cont = #{testDetail.workContent},
             mem_no = #{testDetail.writerNo, jdbcType=NUMERIC},
-            test_st_dt = #{testDetail.testDate, jdbcType=DATE},
+            test_st_dt = TO_DATE(#{testDetail.testDate, jdbcType=DATE}),
+
             test_result_cd =
             <choose>
                 <when test="testDetail.result == '결과 선택'">
@@ -376,6 +393,68 @@
              ) td
                  LEFT JOIN testmaster tm ON td.testNo = tm.test_no
     </select>
+    
+    <update id="updateTest">
+        update testmaster t
+        set
+            t.test_id = #{testId},
+            t.test_title = #{testTitle},
+            t.test_cont = #{testContent},
+            t.stat_cd = #{testStatus, jdbcType=CHAR},
+            t.type_cd = #{testType, jdbcType=CHAR},
+            t.sys_work_no = #{workSystemNo, jdbcType=NUMERIC},
+            t.test_st_dt = #{testStartDate, jdbcType=DATE},
+            t.test_end_dt = #{testEndDate, jdbcType=DATE}
+        where t.test_no = #{testNumber, jdbcType=NUMERIC}
+    </update>
+
+    <update id="updateTestDetail">
+        update testdetail td
+        set td.pre_cond = #{preCondition, jdbcType=VARCHAR},
+            td.test_detail_cont = #{testDetailContent, jdbcType=VARCHAR},
+            td.progress_cont = #{testProcedure, jdbcType=VARCHAR},
+            td.wrk_proc_cont = #{workContent, jdbcType=VARCHAR},
+            td.test_data = #{testData, jdbcType=VARCHAR},
+            td.estimated_rlt = #{estimatedResult, jdbcType=VARCHAR},
+            td.mem_no = #{writerNo, jdbcType=NUMERIC},
+            td.test_st_dt = TO_DATE(SUBSTR(#{testDate}, 1, 10), 'YYYY-MM-DD'),
+        <choose>
+            <when test="result == '결과 선택'">
+                td.test_result_cd = null
+            </when>
+            <otherwise>
+                td.test_result_cd = #{result, jdbcType=CHAR}
+            </otherwise>
+        </choose>
+        where td.test_dtl_no = #{testDetailNumber, jdbcType=NUMERIC}
+    </update>
+
+    <insert id="saveTestStage" parameterType="map">
+        INSERT INTO testdetail (
+            test_dtl_no,
+            test_dtl_id,
+            test_detail_cont,
+            par_test_dtl_no,
+            created_dt,
+            test_no
+        )
+        VALUES (
+                   seq_testdetail.nextval,
+                   #{test.testId, jdbcType=VARCHAR},
+                   #{test.testStageContent, jdbcType=VARCHAR},
+                   #{testDetailNo, jdbcType=NUMERIC},
+                   sysdate,
+                   #{testNo, jdbcType=NUMERIC}
+               )
+    </insert>
+
+    <update id="updateTestStage">
+        update TESTDETAIL
+        set
+            test_dtl_id = #{testId},
+            test_detail_cont = #{testStageContent}
+        where test_dtl_no = #{testDetailNumber}
+    </update>
 
     <select id="getTestType">
         select type_cd from testmaster where test_no = #{testNumber}
@@ -396,8 +475,8 @@
             t.stat_cd = #{testStatus, jdbcType=CHAR},
             t.type_cd = #{testType, jdbcType=CHAR},
             t.sys_work_no = #{workSystemNo, jdbcType=NUMERIC},
-            t.test_st_dt = #{testStartDate, jdbcType=DATE},
-            t.test_end_dt = #{testEndDate, jdbcType=DATE}
+            t.test_st_dt = TO_DATE(#{testStartDate, jdbcType=DATE}),
+            t.test_end_dt = TO_DATE(#{testEndDate, jdbcType=DATE})
         where t.test_no = #{testNumber, jdbcType=NUMERIC}
     </update>
 
