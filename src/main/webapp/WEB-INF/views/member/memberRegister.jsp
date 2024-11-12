@@ -71,6 +71,9 @@
                 <h3 class="group-name">추가 인원</h3>
             </div>
             <div class="button-container">
+                <button class="preStartSetButton">예정시작</button>
+                <button class="preEndSetButton">예정종료</button>
+                <button class="startSetButton">참여시작</button>
                 <button class="reg-member-edit-button">편집</button>
                 <button class="member-remove-button">제거하기</button>
                 <button class="apply">적용하기</button>
@@ -106,6 +109,9 @@
                 <h3 class="group-name">추가 인원</h3>
             </div>
             <div class="button-container">
+                <button class="preStartSetButton">예정시작</button>
+                <button class="preEndSetButton">예정종료</button>
+                <button class="startSetButton">참여시작</button>
                 <button class="reg-member-edit-button">편집</button>
                 <button class="member-remove-button">제거하기</button>
                 <button class="apply">적용하기</button>

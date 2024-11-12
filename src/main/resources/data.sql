@@ -521,9 +521,19 @@ INSERT INTO UserGroup (grp_no, grp_nm, par_grp_no) VALUES (seq_usergroup.nextval
 INSERT INTO UserGroup (grp_no, grp_nm, par_grp_no) VALUES (seq_usergroup.nextval, 'SI 1팀', 2);
 INSERT INTO UserGroup (grp_no, grp_nm, par_grp_no) VALUES (seq_usergroup.nextval, 'SI 2팀', 2);
 INSERT INTO UserGroup (grp_no, grp_nm, par_grp_no) VALUES (seq_usergroup.nextval, '금융', NULL);
+INSERT INTO UserGroup (grp_no, grp_nm, par_grp_no) VALUES (seq_usergroup.nextval, '보안 솔루션 개발 1팀', 5);
+INSERT INTO UserGroup (grp_no, grp_nm, par_grp_no) VALUES (seq_usergroup.nextval, '핀테크', 5);
+INSERT INTO UserGroup (grp_no, grp_nm, par_grp_no) VALUES (seq_usergroup.nextval, '결제 시스템 개발', 7);
+INSERT INTO UserGroup (grp_no, grp_nm, par_grp_no) VALUES (seq_usergroup.nextval, '모바일 뱅킹 지원', 7);
 INSERT INTO UserGroup (grp_no, grp_nm, par_grp_no) VALUES (seq_usergroup.nextval, 'RDD', NULL);
+INSERT INTO UserGroup (grp_no, grp_nm, par_grp_no) VALUES (seq_usergroup.nextval, 'AI 개발팀', 10);
+INSERT INTO UserGroup (grp_no, grp_nm, par_grp_no) VALUES (seq_usergroup.nextval, '인공지능 모델 개발', 11);
+INSERT INTO UserGroup (grp_no, grp_nm, par_grp_no) VALUES (seq_usergroup.nextval, '자연어 처리', 11);
+INSERT INTO UserGroup (grp_no, grp_nm, par_grp_no) VALUES (seq_usergroup.nextval, '데이터 분석팀', 10);
 INSERT INTO UserGroup (grp_no, grp_nm, par_grp_no) VALUES (seq_usergroup.nextval, '신사업', NULL);
-INSERT INTO UserGroup (grp_no, grp_nm, par_grp_no) VALUES (seq_usergroup.nextval, '클라우드', NULL);
+INSERT INTO UserGroup (grp_no, grp_nm, par_grp_no) VALUES (seq_usergroup.nextval, 'IoT 개발팀', 15);
+INSERT INTO UserGroup (grp_no, grp_nm, par_grp_no) VALUES (seq_usergroup.nextval, '5G 통신팀', 15);
+
 
 INSERT INTO CommonCode VALUES ('PMS017', '직위코드', 'Y');
 INSERT INTO CommonCode VALUES ('PMS001', '프로젝트상태코드', 'Y');
@@ -630,7 +640,7 @@ INSERT INTO CodeDetail (cd_dtl_no, common_cd_no, cd_dtl_nm, order_no, use_yn) VA
 
 
 INSERT INTO project (prj_no, prj_title, prj_cont, stat_cd, prg, org, pre_st_dt, pre_end_dt, st_dt, end_dt, use_yn, reg_id, reg_dt, mod_dt)
-VALUES (seq_project.nextval, '차세대 공공 프로젝트', '공공 프로젝트', 'PMS00102', 30, '경찰청', '2024-10-01', '2024-10-30', '2024-10-01', '2024-10-30', 'Y', 'user1', '2024-10-01', '2024-10-01');
+VALUES (seq_project.nextval, '차세대 철도 운영 시스템 구축', '공공 프로젝트', 'PMS00102', 30, '경찰청', '2024-10-01', '2024-10-30', '2024-10-01', '2024-10-30', 'Y', 'user1', '2024-10-01', '2024-10-01');
 
 INSERT INTO project (prj_no, prj_title, prj_cont, stat_cd, prg, org, pre_st_dt, pre_end_dt, st_dt, end_dt, use_yn, reg_id, reg_dt, mod_dt)
 VALUES (seq_project.nextval, '차세대 금융 프로젝트', '금융 프로젝트', 'PMS00102', 10, '새마을금고중앙회', '2024-09-30', '2024-11-30', '2024-09-30', '2024-11-30', 'Y', 'user1', '2024-09-30', '2024-10-01');
@@ -673,55 +683,90 @@ VALUES (seq_project.nextval, '인사관리 시스템', '인사관리 시스템',
 
 
 INSERT INTO Member (mem_no, grp_no, login_id, pw, mem_nm, phone_no, email, auth_cd, pos_nm, birth_dt, tech_grd_cd, org, use_yn, rec_prj)
-VALUES (seq_member.nextval, 3, 'user1', '$2a$10$GBpeKte0vdpwmnB3brH3LeB4YwMZnbHQpyDkvTp9BWo0BS6fYXINe', '이철수', '010-1234-5678', 'hong@example.com', 'PMS01501', 'PMS01706', '1990-01-01', 'PMS01503', '공공', 'Y', NULL);
+VALUES (seq_member.nextval, 3, 'user1', '$2a$10$GBpeKte0vdpwmnB3brH3LeB4YwMZnbHQpyDkvTp9BWo0BS6fYXINe', '이철수', '010-1234-5678', 'hong@kcc.co.kr', 'PMS01501', 'PMS01706', '1990-01-01', 'PMS01503', '공공', 'Y', NULL);
 
 INSERT INTO Member (mem_no, grp_no, login_id, pw, mem_nm, phone_no, email, auth_cd, pos_nm, birth_dt, tech_grd_cd, org, use_yn, rec_prj)
-VALUES (seq_member.nextval, 3, 'user2', '$2a$10$GBpeKte0vdpwmnB3brH3LeB4YwMZnbHQpyDkvTp9BWo0BS6fYXINe', '김철수', '010-9876-5432', 'kim@example.com', 'PMS01501', 'PMS01703', '1992-05-21', 'PMS01502', 'SI', 'Y', NULL);
+VALUES (seq_member.nextval, 3, 'user2', '$2a$10$GBpeKte0vdpwmnB3brH3LeB4YwMZnbHQpyDkvTp9BWo0BS6fYXINe', '김철수', '010-9876-5432', 'kim@kcc.co.kr', 'PMS01501', 'PMS01703', '1992-05-21', 'PMS01502', 'SI', 'Y', NULL);
 
 INSERT INTO Member (mem_no, grp_no, login_id, pw, mem_nm, phone_no, email, auth_cd, pos_nm, birth_dt, tech_grd_cd, org, use_yn, rec_prj)
-VALUES (seq_member.nextval, 3, 'user3', '$2a$10$GBpeKte0vdpwmnB3brH3LeB4YwMZnbHQpyDkvTp9BWo0BS6fYXINe', '박철수', '010-9876-5432', 'kim@example.com', 'PMS01501', 'PMS01703', '1992-05-21', 'PMS01502', 'SI', 'Y', NULL);
+VALUES (seq_member.nextval, 3, 'user3', '$2a$10$GBpeKte0vdpwmnB3brH3LeB4YwMZnbHQpyDkvTp9BWo0BS6fYXINe', '박철수', '010-9876-5432', 'kim@kcc.co.kr', 'PMS01501', 'PMS01703', '1992-05-21', 'PMS01502', 'SI', 'Y', NULL);
 
 INSERT INTO Member (mem_no, grp_no, login_id, pw, mem_nm, phone_no, email, auth_cd, pos_nm, birth_dt, tech_grd_cd, org, use_yn, rec_prj)
-VALUES (seq_member.nextval, 4, 'user4', '$2a$10$GBpeKte0vdpwmnB3brH3LeB4YwMZnbHQpyDkvTp9BWo0BS6fYXINe', '강재석', '010-9876-5432', 'kim@example.com', 'PMS01501', 'PMS01703', '1992-05-21', 'PMS01502', 'SI', 'Y', NULL);
+VALUES (seq_member.nextval, 4, 'user4', '$2a$10$GBpeKte0vdpwmnB3brH3LeB4YwMZnbHQpyDkvTp9BWo0BS6fYXINe', '강재석', '010-9876-5432', 'kim@kcc.co.kr', 'PMS01501', 'PMS01703', '1992-05-21', 'PMS01502', 'SI', 'Y', NULL);
 
 INSERT INTO Member (mem_no, grp_no, login_id, pw, mem_nm, phone_no, email, auth_cd, pos_nm, birth_dt, tech_grd_cd, org, use_yn, rec_prj)
-VALUES (seq_member.nextval, 4, 'user5', '$2a$10$GBpeKte0vdpwmnB3brH3LeB4YwMZnbHQpyDkvTp9BWo0BS6fYXINe', '김상중', '010-9876-5432', 'kim@example.com', 'PMS01501', 'PMS01703', '1992-05-21', 'PMS01502', 'SI', 'Y', NULL);
+VALUES (seq_member.nextval, 4, 'user5', '$2a$10$GBpeKte0vdpwmnB3brH3LeB4YwMZnbHQpyDkvTp9BWo0BS6fYXINe', '김상중', '010-9876-5432', 'kim@kcc.co.kr', 'PMS01501', 'PMS01703', '1992-05-21', 'PMS01502', 'SI', 'Y', NULL);
 
 INSERT INTO Member (mem_no, grp_no, login_id, pw, mem_nm, phone_no, email, auth_cd, pos_nm, birth_dt, tech_grd_cd, org, use_yn, rec_prj)
-VALUES (seq_member.nextval, 3, 'user6', '$2a$10$GBpeKte0vdpwmnB3brH3LeB4YwMZnbHQpyDkvTp9BWo0BS6fYXINe', '김연호', '010-9876-5432', 'kim@example.com', 'PMS01501', 'PMS01703', '1992-05-21', 'PMS01502', 'SI', 'Y', NULL);
+VALUES (seq_member.nextval, 3, 'user6', '$2a$10$GBpeKte0vdpwmnB3brH3LeB4YwMZnbHQpyDkvTp9BWo0BS6fYXINe', '김연호', '010-9876-5432', 'kim@kcc.co.kr', 'PMS01501', 'PMS01703', '1992-05-21', 'PMS01502', 'SI', 'Y', NULL);
 
 INSERT INTO Member (mem_no, grp_no, login_id, pw, mem_nm, phone_no, email, auth_cd, pos_nm, birth_dt, tech_grd_cd, org, use_yn, rec_prj)
-VALUES (seq_member.nextval, 3, 'user7', '$2a$10$GBpeKte0vdpwmnB3brH3LeB4YwMZnbHQpyDkvTp9BWo0BS6fYXINe', '이수호', '010-9876-5432', 'kim@example.com', 'PMS01501', 'PMS01703', '1992-05-21', 'PMS01501', 'SI', 'Y', NULL);
+VALUES (seq_member.nextval, 3, 'user7', '$2a$10$GBpeKte0vdpwmnB3brH3LeB4YwMZnbHQpyDkvTp9BWo0BS6fYXINe', '이수호', '010-9876-5432', 'kim@kcc.co.kr', 'PMS01501', 'PMS01703', '1992-05-21', 'PMS01501', 'SI', 'Y', NULL);
 
 INSERT INTO Member (mem_no, grp_no, login_id, pw, mem_nm, phone_no, email, auth_cd, pos_nm, birth_dt, tech_grd_cd, org, use_yn, rec_prj)
-VALUES (seq_member.nextval, 4, 'user8', '$2a$10$GBpeKte0vdpwmnB3brH3LeB4YwMZnbHQpyDkvTp9BWo0BS6fYXINe', '이한희', '010-9876-5432', 'kim@example.com', 'PMS01501', 'PMS01703', '1992-05-21', 'PMS01503', 'SI', 'Y', NULL);
+VALUES (seq_member.nextval, 4, 'user8', '$2a$10$GBpeKte0vdpwmnB3brH3LeB4YwMZnbHQpyDkvTp9BWo0BS6fYXINe', '이한희', '010-9876-5432', 'kim@kcc.co.kr', 'PMS01501', 'PMS01703', '1992-05-21', 'PMS01503', 'SI', 'Y', NULL);
 
 INSERT INTO Member (mem_no, grp_no, login_id, pw, mem_nm, phone_no, email, auth_cd, pos_nm, birth_dt, tech_grd_cd, org, use_yn, rec_prj)
-VALUES (seq_member.nextval, 4, 'user9', '$2a$10$GBpeKte0vdpwmnB3brH3LeB4YwMZnbHQpyDkvTp9BWo0BS6fYXINe', '황철순', '010-9876-5432', 'kim@example.com', 'PMS01501', 'PMS01703', '1992-05-21', 'PMS01502', 'SI', 'Y', NULL);
+VALUES (seq_member.nextval, 4, 'user9', '$2a$10$GBpeKte0vdpwmnB3brH3LeB4YwMZnbHQpyDkvTp9BWo0BS6fYXINe', '황철순', '010-9876-5432', 'kim@kcc.co.kr', 'PMS01501', 'PMS01703', '1992-05-21', 'PMS01502', 'SI', 'Y', NULL);
 
 INSERT INTO Member (mem_no, grp_no, login_id, pw, mem_nm, phone_no, email, auth_cd, pos_nm, birth_dt, tech_grd_cd, org, use_yn, rec_prj)
-VALUES (seq_member.nextval, 4, 'user10', '$2a$10$GBpeKte0vdpwmnB3brH3LeB4YwMZnbHQpyDkvTp9BWo0BS6fYXINe', '유재석', '010-9876-5432', 'kim@example.com', 'PMS01501', 'PMS01703', '1992-05-21', 'PMS01501', 'SI', 'Y', NULL);
+VALUES (seq_member.nextval, 4, 'user10', '$2a$10$GBpeKte0vdpwmnB3brH3LeB4YwMZnbHQpyDkvTp9BWo0BS6fYXINe', '유재석', '010-9876-5432', 'kim@kcc.co.kr', 'PMS01501', 'PMS01703', '1992-05-21', 'PMS01501', 'SI', 'Y', NULL);
 
 INSERT INTO Member (mem_no, grp_no, login_id, pw, mem_nm, phone_no, email, auth_cd, pos_nm, birth_dt, tech_grd_cd, org, use_yn, rec_prj)
-VALUES (seq_member.nextval, 4, 'user11', '$2a$10$GBpeKte0vdpwmnB3brH3LeB4YwMZnbHQpyDkvTp9BWo0BS6fYXINe', '강호동', '010-9876-5432', 'kim@example.com', 'PMS01501', 'PMS01703', '1992-05-21', 'PMS01502', 'SI', 'Y', NULL);
+VALUES (seq_member.nextval, 4, 'user11', '$2a$10$GBpeKte0vdpwmnB3brH3LeB4YwMZnbHQpyDkvTp9BWo0BS6fYXINe', '강호동', '010-9876-5432', 'kim@kcc.co.kr', 'PMS01501', 'PMS01703', '1992-05-21', 'PMS01502', 'SI', 'Y', NULL);
 
 INSERT INTO Member (mem_no, grp_no, login_id, pw, mem_nm, phone_no, email, auth_cd, pos_nm, birth_dt, tech_grd_cd, org, use_yn, rec_prj)
-VALUES (seq_member.nextval, 4, 'user12', '$2a$10$GBpeKte0vdpwmnB3brH3LeB4YwMZnbHQpyDkvTp9BWo0BS6fYXINe', '이경규', '010-9876-5432', 'kim@example.com', 'PMS01501', 'PMS01703', '1992-05-21', 'PMS01503', 'SI', 'Y', NULL);
+VALUES (seq_member.nextval, 4, 'user12', '$2a$10$GBpeKte0vdpwmnB3brH3LeB4YwMZnbHQpyDkvTp9BWo0BS6fYXINe', '이경규', '010-9876-5432', 'kim@kcc.co.kr', 'PMS01501', 'PMS01703', '1992-05-21', 'PMS01503', 'SI', 'Y', NULL);
 
 INSERT INTO Member (mem_no, grp_no, login_id, pw, mem_nm, phone_no, email, auth_cd, pos_nm, birth_dt, tech_grd_cd, org, use_yn, rec_prj)
-VALUES (seq_member.nextval, 4, 'user13', '$2a$10$GBpeKte0vdpwmnB3brH3LeB4YwMZnbHQpyDkvTp9BWo0BS6fYXINe', '신동엽', '010-9876-5432', 'kim@example.com', 'PMS01501', 'PMS01703', '1992-05-21', 'PMS01501', 'SI', 'Y', NULL);
+VALUES (seq_member.nextval, 4, 'user13', '$2a$10$GBpeKte0vdpwmnB3brH3LeB4YwMZnbHQpyDkvTp9BWo0BS6fYXINe', '신동엽', '010-9876-5432', 'kim@kcc.co.kr', 'PMS01501', 'PMS01703', '1992-05-21', 'PMS01501', 'SI', 'Y', NULL);
 
 INSERT INTO Member (mem_no, grp_no, login_id, pw, mem_nm, phone_no, email, auth_cd, pos_nm, birth_dt, tech_grd_cd, org, use_yn, rec_prj)
-VALUES (seq_member.nextval, 4, 'pm1', '$2a$10$GBpeKte0vdpwmnB3brH3LeB4YwMZnbHQpyDkvTp9BWo0BS6fYXINe', '홍길동', '010-9876-5432', 'kim@example.com', 'PMS01503', 'PMS01702', '1992-05-21', 'PMS01503', 'SI', 'Y', NULL);
+VALUES (seq_member.nextval, 4, 'pm1', '$2a$10$GBpeKte0vdpwmnB3brH3LeB4YwMZnbHQpyDkvTp9BWo0BS6fYXINe', '홍길동', '010-9876-5432', 'kim@kcc.co.kr', 'PMS01503', 'PMS01702', '1992-05-21', 'PMS01503', 'SI', 'Y', NULL);
 
 INSERT INTO Member (mem_no, grp_no, login_id, pw, mem_nm, phone_no, email, auth_cd, pos_nm, birth_dt, tech_grd_cd, org, use_yn, rec_prj)
-VALUES (seq_member.nextval, 4, 'pm2', '$2a$10$GBpeKte0vdpwmnB3brH3LeB4YwMZnbHQpyDkvTp9BWo0BS6fYXINe', '김길동', '010-9876-5432', 'kim@example.com', 'PMS01503', 'PMS01702', '1992-05-21', 'PMS01503', 'SI', 'Y', NULL);
+VALUES (seq_member.nextval, 4, 'pm2', '$2a$10$GBpeKte0vdpwmnB3brH3LeB4YwMZnbHQpyDkvTp9BWo0BS6fYXINe', '김길동', '010-9876-5432', 'kim@kcc.co.kr', 'PMS01503', 'PMS01702', '1992-05-21', 'PMS01503', 'SI', 'Y', NULL);
 
 INSERT INTO Member (mem_no, grp_no, login_id, pw, mem_nm, phone_no, email, auth_cd, pos_nm, birth_dt, tech_grd_cd, org, use_yn, rec_prj)
-VALUES (seq_member.nextval, 3, 'pm3', '$2a$10$GBpeKte0vdpwmnB3brH3LeB4YwMZnbHQpyDkvTp9BWo0BS6fYXINe', '이길동', '010-9876-5432', 'kim@example.com', 'PMS01503', 'PMS01702', '1992-05-21', 'PMS01503', 'SI', 'Y', NULL);
+VALUES (seq_member.nextval, 3, 'pm3', '$2a$10$GBpeKte0vdpwmnB3brH3LeB4YwMZnbHQpyDkvTp9BWo0BS6fYXINe', '이길동', '010-9876-5432', 'kim@kcc.co.kr', 'PMS01503', 'PMS01702', '1992-05-21', 'PMS01503', 'SI', 'Y', NULL);
 
 INSERT INTO team (tm_no, tm_nm, tm_cont, use_yn, order_no, par_tm_no, prj_no, sys_no, reg_id, reg_dt, mod_id, mod_dt)
-VALUES (seq_team.nextval, '차세대 공공 프로젝트', '테스트 내용', 'Y', 1, NULL, 1, NULL, 'user1', '2021-01-01', NULL, NULL);
+VALUES (seq_team.nextval, '차세대철도 운영시스템 구축', '테스트 내용', 'Y', 1, NULL, 1, NULL, 'user1', '2021-01-01', NULL, NULL);
+INSERT INTO team (tm_no, tm_nm, tm_cont, use_yn, order_no, par_tm_no, prj_no, sys_no, reg_id, reg_dt, mod_id, mod_dt)
+VALUES (seq_team.nextval, '열차 운행 관리 팀', '테스트 내용', 'Y', 1, 1, 1, NULL, 'user1', '2021-01-01', NULL, NULL);
+INSERT INTO team (tm_no, tm_nm, tm_cont, use_yn, order_no, par_tm_no, prj_no, sys_no, reg_id, reg_dt, mod_id, mod_dt)
+VALUES (seq_team.nextval, '스케줄 관리 팀', '테스트 내용', 'Y', 1, 2, 1, NULL, 'user1', '2021-01-01', NULL, NULL);
+INSERT INTO team (tm_no, tm_nm, tm_cont, use_yn, order_no, par_tm_no, prj_no, sys_no, reg_id, reg_dt, mod_id, mod_dt)
+VALUES (seq_team.nextval, '실시간 운행 모니터링 팀', '테스트 내용', 'Y', 2, 2, 1, NULL, 'user1', '2021-01-01', NULL, NULL);
+INSERT INTO team (tm_no, tm_nm, tm_cont, use_yn, order_no, par_tm_no, prj_no, sys_no, reg_id, reg_dt, mod_id, mod_dt)
+VALUES (seq_team.nextval, '통신 관리 팀', '테스트 내용', 'Y', 3, 2, 1, NULL, 'user1', '2021-01-01', NULL, NULL);
+INSERT INTO team (tm_no, tm_nm, tm_cont, use_yn, order_no, par_tm_no, prj_no, sys_no, reg_id, reg_dt, mod_id, mod_dt)
+VALUES (seq_team.nextval, '승객 서비스 관리 팀', '테스트 내용', 'Y', 2, 1, 1, NULL, 'user1', '2021-01-01', NULL, NULL);
+INSERT INTO team (tm_no, tm_nm, tm_cont, use_yn, order_no, par_tm_no, prj_no, sys_no, reg_id, reg_dt, mod_id, mod_dt)
+VALUES (seq_team.nextval, '예매 및 승차권 발급 팀', '테스트 내용', 'Y', 1, 6, 1, NULL, 'user1', '2021-01-01', NULL, NULL);
+INSERT INTO team (tm_no, tm_nm, tm_cont, use_yn, order_no, par_tm_no, prj_no, sys_no, reg_id, reg_dt, mod_id, mod_dt)
+VALUES (seq_team.nextval, '고객 지원 팀', '테스트 내용', 'Y', 2, 6, 1, NULL, 'user1', '2021-01-01', NULL, NULL);
+
+INSERT INTO team (tm_no, tm_nm, tm_cont, use_yn, order_no, par_tm_no, prj_no, sys_no, reg_id, reg_dt, mod_id, mod_dt)
+VALUES (seq_team.nextval, '시설 관리 팀', '테스트 내용', 'Y', 3, 1, 1, NULL, 'user1', '2021-01-01', NULL, NULL);
+INSERT INTO team (tm_no, tm_nm, tm_cont, use_yn, order_no, par_tm_no, prj_no, sys_no, reg_id, reg_dt, mod_id, mod_dt)
+VALUES (seq_team.nextval, '역무 및 선로 관리 팀', '테스트 내용', 'Y', 1, 9, 1, NULL, 'user1', '2021-01-01', NULL, NULL);
+INSERT INTO team (tm_no, tm_nm, tm_cont, use_yn, order_no, par_tm_no, prj_no, sys_no, reg_id, reg_dt, mod_id, mod_dt)
+VALUES (seq_team.nextval, '안전 점검 팀', '테스트 내용', 'Y', 2, 9, 1, NULL, 'user1', '2021-01-01', NULL, NULL);
+
+INSERT INTO team (tm_no, tm_nm, tm_cont, use_yn, order_no, par_tm_no, prj_no, sys_no, reg_id, reg_dt, mod_id, mod_dt)
+VALUES (seq_team.nextval, '물류 및 화물 관리 팀', '테스트 내용', 'Y', 4, 1, 1, NULL, 'user1', '2021-01-01', NULL, NULL);
+INSERT INTO team (tm_no, tm_nm, tm_cont, use_yn, order_no, par_tm_no, prj_no, sys_no, reg_id, reg_dt, mod_id, mod_dt)
+VALUES (seq_team.nextval, '화물 예약 및 배차 팀', '테스트 내용', 'Y', 1, 12, 1, NULL, 'user1', '2021-01-01', NULL, NULL);
+INSERT INTO team (tm_no, tm_nm, tm_cont, use_yn, order_no, par_tm_no, prj_no, sys_no, reg_id, reg_dt, mod_id, mod_dt)
+VALUES (seq_team.nextval, '화물 추적 및 보안 관리 팀', '테스트 내용', 'Y', 2, 12, 1, NULL, 'user1', '2021-01-01', NULL, NULL);
+
+INSERT INTO team (tm_no, tm_nm, tm_cont, use_yn, order_no, par_tm_no, prj_no, sys_no, reg_id, reg_dt, mod_id, mod_dt)
+VALUES (seq_team.nextval, '데이터 분석 및 예측 팀', '테스트 내용', 'Y', 5, 1, 1, NULL, 'user1', '2021-01-01', NULL, NULL);
+INSERT INTO team (tm_no, tm_nm, tm_cont, use_yn, order_no, par_tm_no, prj_no, sys_no, reg_id, reg_dt, mod_id, mod_dt)
+VALUES (seq_team.nextval, '운행 데이터 분석 팀', '테스트 내용', 'Y', 1, 15, 1, NULL, 'user1', '2021-01-01', NULL, NULL);
+
+
 
 INSERT INTO projectMember (mem_no, tm_no, prj_no, prj_auth_cd, pre_start_dt, pre_end_dt, start_dt, end_dt, use_yn, reg_id, reg_dt, mod_id, mod_dt)
 VALUES (1, 1, 1, 'PMS00203', '2021-01-01', '2021-01-01', '2021-01-01', '2021-01-01', 'Y', 'user1', '2021-01-01', NULL, NULL);
@@ -736,32 +781,53 @@ INSERT INTO projectMember (mem_no, tm_no, prj_no, prj_auth_cd, pre_start_dt, pre
 VALUES (14, 1, 1, 'PMS00201', '2021-01-01', '2021-01-01', '2021-01-01', '2021-01-01', 'Y', 'pm1', '2021-01-01', NULL, NULL);
 
 INSERT INTO System (sys_no, sys_ttl, sys_cont, use_yn, prj_no, par_sys_no, sys_yn)
-VALUES (seq_system.nextval, 'A 업무 시스템', '시스템1 내용', 'Y', 1, NULL, 'Y');
+VALUES (seq_system.nextval, '열차 운행 관리 시스템', '시스템1 내용', 'Y', 1, NULL, 'Y');
 INSERT INTO System (sys_no, sys_ttl, sys_cont, use_yn, prj_no, par_sys_no, sys_yn)
-VALUES (seq_system.nextval, 'B 업무 시스템', '시스템2 내용', 'Y', 1, NULL, 'Y');
+VALUES (seq_system.nextval, '승객 정보 관리 시스템', '시스템2 내용', 'Y', 1, NULL, 'Y');
 INSERT INTO System (sys_no, sys_ttl, sys_cont, use_yn, prj_no, par_sys_no, sys_yn)
-VALUES (seq_system.nextval, 'C 업무 시스템', '시스템3 내용', 'Y', 1, NULL, 'Y');
+VALUES (seq_system.nextval, '철도 시설 관리 시스템', '시스템3 내용', 'Y', 1, NULL, 'Y');
 INSERT INTO System (sys_no, sys_ttl, sys_cont, use_yn, prj_no, par_sys_no, sys_yn)
-VALUES (seq_system.nextval, 'D 업무 시스템', '시스템4 내용', 'Y', 1, NULL, 'Y');
+VALUES (seq_system.nextval, '물류 및 화물관리시스템', '시스템4 내용', 'Y', 1, NULL, 'Y');
+INSERT INTO System (sys_no, sys_ttl, sys_cont, use_yn, prj_no, par_sys_no, sys_yn)
+VALUES (seq_system.nextval, '철도 데이터 분석 시스템', '시스템4 내용', 'Y', 1, NULL, 'Y');
+INSERT INTO System (sys_no, sys_ttl, sys_cont, use_yn, prj_no, par_sys_no, sys_yn)
+VALUES (seq_system.nextval, '사업관리', '사업관리', 'Y', 1, NULL, 'Y');
+
 -- 업무 seq = 5
 INSERT INTO System (sys_no, sys_ttl, sys_cont, use_yn, prj_no, par_sys_no, sys_yn)
-VALUES (seq_system.nextval, '범위관리', '시스템1 내용', 'Y', 1, 1, 'Y');
+VALUES (seq_system.nextval, '열차 스케줄 관리', '시스템1 내용', 'Y', 1, 1, 'Y');
 INSERT INTO System (sys_no, sys_ttl, sys_cont, use_yn, prj_no, par_sys_no, sys_yn)
-VALUES (seq_system.nextval, '일정관리', '시스템2 내용', 'Y', 1, 1, 'Y');
+VALUES (seq_system.nextval, '실시간 위치 추적', '시스템2 내용', 'Y', 1, 1, 'Y');
 INSERT INTO System (sys_no, sys_ttl, sys_cont, use_yn, prj_no, par_sys_no, sys_yn)
-VALUES (seq_system.nextval, '비용관리', '시스템3 내용', 'Y', 1, 1, 'Y');
+VALUES (seq_system.nextval, '운행 로그 기록', '시스템3 내용', 'Y', 1, 1, 'Y');
 INSERT INTO System (sys_no, sys_ttl, sys_cont, use_yn, prj_no, par_sys_no, sys_yn)
-VALUES (seq_system.nextval, '품질관리', '시스템4 내용', 'Y', 1, 2, 'Y');
+VALUES (seq_system.nextval, '차량 간 통신 관리', '시스템4 내용', 'Y', 1, 1, 'Y');
 INSERT INTO System (sys_no, sys_ttl, sys_cont, use_yn, prj_no, par_sys_no, sys_yn)
-VALUES (seq_system.nextval, '인적자원관리', '시스템5 내용', 'Y', 1, 2, 'Y');
+VALUES (seq_system.nextval, '승객 예매 관리', '시스템5 내용', 'Y', 1, 2, 'Y');
 INSERT INTO System (sys_no, sys_ttl, sys_cont, use_yn, prj_no, par_sys_no, sys_yn)
-VALUES (seq_system.nextval, '통신관리', '시스템6 내용', 'Y', 1, 3, 'Y');
+VALUES (seq_system.nextval, '승차권 발급 및 검표', '시스템6 내용', 'Y', 1, 2, 'Y');
 INSERT INTO System (sys_no, sys_ttl, sys_cont, use_yn, prj_no, par_sys_no, sys_yn)
-VALUES (seq_system.nextval, '위험관리', '시스템7 내용', 'Y', 1, 3, 'Y');
+VALUES (seq_system.nextval, '승객 정보 보안 관리', '시스템7 내용', 'Y', 1, 2, 'Y');
 INSERT INTO System (sys_no, sys_ttl, sys_cont, use_yn, prj_no, par_sys_no, sys_yn)
-VALUES (seq_system.nextval, '조달관리', '시스템8 내용', 'Y', 1, 4, 'Y');
+VALUES (seq_system.nextval, '고객 서비스 지원', '시스템8 내용', 'Y', 1, 2, 'Y');
 INSERT INTO System (sys_no, sys_ttl, sys_cont, use_yn, prj_no, par_sys_no, sys_yn)
-VALUES (seq_system.nextval, '통합관리', '시스템9 내용', 'Y', 1, 4, 'Y');
+VALUES (seq_system.nextval, '역무 시설 관리', '시스템9 내용', 'Y', 1, 3, 'Y');
+INSERT INTO System (sys_no, sys_ttl, sys_cont, use_yn, prj_no, par_sys_no, sys_yn)
+VALUES (seq_system.nextval, '선로 유지 보수', '시스템9 내용', 'Y', 1, 3, 'Y');
+INSERT INTO System (sys_no, sys_ttl, sys_cont, use_yn, prj_no, par_sys_no, sys_yn)
+VALUES (seq_system.nextval, '시설 안전 점검', '시스템9 내용', 'Y', 1, 3, 'Y');
+INSERT INTO System (sys_no, sys_ttl, sys_cont, use_yn, prj_no, par_sys_no, sys_yn)
+VALUES (seq_system.nextval, '신호 시스템 관리', '시스템9 내용', 'Y', 1, 3, 'Y');
+INSERT INTO System (sys_no, sys_ttl, sys_cont, use_yn, prj_no, par_sys_no, sys_yn)
+VALUES (seq_system.nextval, '화물 예약 및 배차 관리', '시스템9 내용', 'Y', 1, 4, 'Y');
+INSERT INTO System (sys_no, sys_ttl, sys_cont, use_yn, prj_no, par_sys_no, sys_yn)
+VALUES (seq_system.nextval, '화물 추적 및 위치 관리', '시스템9 내용', 'Y', 1, 4, 'Y');
+INSERT INTO System (sys_no, sys_ttl, sys_cont, use_yn, prj_no, par_sys_no, sys_yn)
+VALUES (seq_system.nextval, '화물 보험 및 보안 관리', '시스템9 내용', 'Y', 1, 4, 'Y');
+INSERT INTO System (sys_no, sys_ttl, sys_cont, use_yn, prj_no, par_sys_no, sys_yn)
+VALUES (seq_system.nextval, '화물 운송 경로 최적화', '시스템9 내용', 'Y', 1, 4, 'Y');
+INSERT INTO System (sys_no, sys_ttl, sys_cont, use_yn, prj_no, par_sys_no, sys_yn)
+VALUES (seq_system.nextval, '운행 데이터 수집 및 분석', '시스템9 내용', 'Y', 1, 5, 'Y');
 
 insert into task
 (tsk_no, order_no, tsk_ttl, tsk_stat_cd, pre_st_dt, pre_end_dt, prg, use_yn, prj_no, st_dt,end_dt, par_task_no, reg_id, reg_dt, sys_no)

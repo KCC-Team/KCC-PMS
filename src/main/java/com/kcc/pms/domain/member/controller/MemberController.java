@@ -45,8 +45,8 @@ public class MemberController {
 
     @GetMapping("/members/groups")
     @ResponseBody
-    public List<GroupMembersResponseDto> groupMembers(@RequestParam Long groupNo) {
-        return memberService.getGroupMembers(groupNo);
+    public List<GroupMembersResponseDto> groupMembers(@RequestParam Long groupNo, @RequestParam Long exceptTeamNo) {
+        return memberService.getGroupMembers(groupNo,exceptTeamNo);
     }
 
     @GetMapping("/{projectNo}/members/team/{teamNo}")
@@ -57,10 +57,18 @@ public class MemberController {
 
     @GetMapping("/projectmembers")
     @ResponseBody
+    public List<MemberResponseDto> projectMembersPopUp(@RequestParam Long projectNo, @RequestParam Long teamNo) {
+        List<MemberResponseDto> projectMemberList = memberService.getProjectMemberList(projectNo, teamNo);
+        System.out.println(projectMemberList);
+        return projectMemberList;
+    }
+
+    @GetMapping("/projectmembersList")
+    @ResponseBody
     public List<MemberResponseDto> projectMembers(@RequestParam Long projectNo) {
         List<MemberResponseDto> projectMemberList = memberService.getProjectMemberList(projectNo);
         System.out.println(projectMemberList);
-        return memberService.getProjectMemberList(projectNo);
+        return projectMemberList;
     }
 
     @GetMapping("/{projectNo}/members/{memberNo}")

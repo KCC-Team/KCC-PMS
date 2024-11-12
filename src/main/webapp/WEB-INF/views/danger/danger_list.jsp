@@ -57,7 +57,6 @@
         <div style="position: relative;height:100%; width: 94%;" id="grid-parent">
             <!-- 위험 목록 테이블 -->
             <div class="list_table" data-ax5grid="first-grid"  data-ax5grid-config="{
-                sortable: true,
                 header: {
                     columnHeight: 34
                 },

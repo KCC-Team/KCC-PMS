@@ -33,7 +33,7 @@
                     <input type="text" name="search" placeholder="팀명 겸색..." style="font-size: 12px; padding: 5px; width: 40%;">
                     <div class="btn-group" style="display: flex; align-items: center;">
                         <span id="matches" style="font-size: 12px; margin-right: 10px;"></span>
-                        <button class="openModalBtn">그룹 등록</button>
+                        <button class="openModalBtn">팀 등록</button>
                         <button id="btnEdit" style="font-size: 14px; padding: 5px;">순서 편집</button>
                     </div>
                 </div>
@@ -61,6 +61,10 @@
                     <div class="team-overview-title">
                         <div class="team-title">전체 투입 인력 목록</div>
                         <div class="btn-group">
+                            <button id="prjMemPreStartProject" class="">예정시작</button>
+                            <button id="prjMemPreEndProject" class="">예정종료</button>
+                            <button id="prjMemStartProject" class="">참여시작</button>
+                            <button id="prjMemEndProject" class="">참여종료</button>
                             <button class="">삭제</button>
                             <button id="projectMemberUpdateBtn" class="member-edit-button">저장</button>
                             <button class="" onclick="openGroupPopup()">인력등록</button>

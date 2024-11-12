@@ -15,4 +15,5 @@ public class GroupMembersResponseDto implements Serializable {
     private String position;
     private String tech;
     private String groupName;
+    private String participateYn;
 }

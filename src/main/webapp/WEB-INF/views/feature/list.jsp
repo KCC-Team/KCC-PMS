@@ -80,7 +80,7 @@
                     <select id="featStatusOption" class="feat-select-option" name="feat-option5">
                         <option value="">전체</option>
                     </select>
-                    <input id="midSearchBar" type="text" class="search-text" name="" value="" placeholder="작업자명 검색...">
+                    <input id="midSearchBar" type="text" class="search-text" name="" value="" placeholder=" 작업자명 검색...">
                     <button id="featureSearch" type="submit" class="feat-submit-btn">검색</button>
                 </form>
 
