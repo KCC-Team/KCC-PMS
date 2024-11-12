@@ -77,7 +77,7 @@ body {
     margin: 5px 3px 5px 5px;
 }
 
-.member-remove-button, .reg-member-edit-button  {
+.member-remove-button, .reg-member-edit-button, .preStartSetButton, .preEndSetButton, .startSetButton  {
     background-color: #4a4a4a;
     color: white;
     border: none;

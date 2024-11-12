@@ -14,6 +14,7 @@ import org.springframework.stereotype.Component;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.Comparator;
 import java.util.List;
 
 @Component
@@ -107,6 +108,9 @@ public class ExcelGenerator {
             // 조치 이력과 첨부파일 처리
             StringBuilder historyContent = new StringBuilder();
             int historyRow = 0;
+
+            risk.getHistories().sort(Comparator.comparing(ExcelHistoryDto::getRecordDt));
+
             for (ExcelHistoryDto history : risk.getHistories()) {
                 historyRow++;
                 historyContent.append(historyRow).append(". ")
