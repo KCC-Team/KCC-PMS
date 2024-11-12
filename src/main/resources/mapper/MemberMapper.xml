@@ -198,7 +198,7 @@
         insert into member
         (mem_no, grp_no, login_id, pw, mem_nm, phone_no, email, auth_cd, pos_nm, birth_dt, tech_grd_cd, org, use_yn)
         values (seq_member.nextval, #{groupNumber}, #{id}, #{pw}, #{memberName}, #{phoneNumber},
-        #{email}, #{authCode}, #{positionCode}, #{birthDate}, #{techGradeCode}, #{organization}, 'Y')
+        #{email}, #{authCode}, #{positionCode}, TO_DATE(#{birthDate}), #{techGradeCode}, #{organization}, 'Y')
     </insert>
 
 
@@ -228,10 +228,10 @@
             UPDATE projectmember
             SET
             <if test="type == 'start'">
-                start_dt = #{member.startDate}
+                start_dt = TO_DATE(#{member.startDate})
             </if>
             <if test="type == 'end'">
-                end_dt = #{member.endDate}
+                end_dt = TO_DATE(#{member.endDate})
             </if>
             WHERE mem_no = #{member.id}
         </foreach>
@@ -242,10 +242,10 @@
             UPDATE projectmember
             SET
             prj_auth_cd = #{member.auth,jdbcType=VARCHAR},
-            start_dt = #{member.startDate,jdbcType=DATE},
-            end_dt = #{member.endDate,jdbcType=DATE},
-            pre_start_dt = #{member.preStartDate,jdbcType=DATE},
-            pre_end_dt = #{member.preEndDate,jdbcType=DATE}
+            start_dt = TO_DATE(#{member.startDate,jdbcType=DATE}),
+            end_dt = TO_DATE((#{member.endDate,jdbcType=DATE}),
+            pre_start_dt = TO_DATE(#{member.preStartDate,jdbcType=DATE}),
+            pre_end_dt = TO_DATE(#{member.preEndDate,jdbcType=DATE})
             WHERE mem_no = #{member.id}
         </foreach>
     </update>
