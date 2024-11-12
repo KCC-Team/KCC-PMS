@@ -561,7 +561,7 @@ $(function() {
                 defectNos: row[18] ? parseDefectNos(row[18]) : []
             };
         });
-    });
+    }
 
     function parseIntegrationTestData(jsonData) {
         const dataRows = jsonData.slice(1);
