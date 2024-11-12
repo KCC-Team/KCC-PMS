@@ -34,13 +34,13 @@
         stat_cd, pri_cd, prg, diff_cd, class_cd, use_yn, sys_no, mem_no, tm_no, prj_no
         ) VALUES (
         #{featNo}, #{featId}, #{featTitle}, #{featDescription},
-        <if test="preStartDateStr != null and preStartDateStr != ''">TO_DATE(#{preStartDateStr}),</if>
+        <if test="preStartDateStr != null and preStartDateStr != ''">TO_DATE(#{preStartDateStr},'YYYY-MM-DD'),</if>
         <if test="preStartDateStr == null or preStartDateStr == ''">NULL,</if>
-        <if test="preEndDateStr != null and preEndDateStr != ''">TO_DATE(#{preEndDateStr}),</if>
+        <if test="preEndDateStr != null and preEndDateStr != ''">TO_DATE(#{preEndDateStr},'YYYY-MM-DD'),</if>
         <if test="preEndDateStr == null or preEndDateStr == ''">NULL,</if>
-        <if test="startDateStr != null and startDateStr != ''">TO_DATE(#{startDateStr}),</if>
+        <if test="startDateStr != null and startDateStr != ''">TO_DATE(#{startDateStr},'YYYY-MM-DD'),</if>
         <if test="startDateStr == null or startDateStr == ''">NULL,</if>
-        <if test="endDateStr != null and endDateStr != ''">TO_DATE(#{endDateStr}),</if>
+        <if test="endDateStr != null and endDateStr != ''">TO_DATE(#{endDateStr},'YYYY-MM-DD'),</if>
         <if test="endDateStr == null or endDateStr == ''">NULL,</if>
         #{statusCode}, #{priorCode}, #{progress},
         <if test="diffCode != null and diffCode != ''">#{diffCode},</if>
@@ -393,6 +393,7 @@
             difficulty.common_cd_no = 'PMS011'
         GROUP BY
             difficulty.cd_dtl_nm, difficulty.common_cd_no, difficulty.order_no
+
 
         UNION ALL
 

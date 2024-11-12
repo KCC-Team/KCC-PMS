@@ -108,7 +108,6 @@ public class ExcelGenerator {
             // 조치 이력과 첨부파일 처리
             StringBuilder historyContent = new StringBuilder();
             int historyRow = 0;
-
             risk.getHistories().sort(Comparator.comparing(ExcelHistoryDto::getRecordDt));
 
             for (ExcelHistoryDto history : risk.getHistories()) {

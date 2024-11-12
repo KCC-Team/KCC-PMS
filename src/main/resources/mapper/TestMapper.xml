@@ -393,16 +393,6 @@
                  LEFT JOIN testmaster tm ON td.testNo = tm.test_no
     </select>
 
-    <select id="getTestType">
-        select type_cd from testmaster where test_no = #{testNumber}
-    </select>
-
-    <select id="getFeatures" resultType="FeatureSimpleResponseDto">
-        SELECT feat_no AS featureNo, feat_title AS featureName
-        FROM feature
-        WHERE prj_no = #{projectNumber}
-    </select>
-    
     <update id="updateTest">
         update testmaster t
         set
@@ -456,6 +446,16 @@
                    #{testNo, jdbcType=NUMERIC}
                )
     </insert>
+
+    <select id="getTestType">
+        select type_cd from testmaster where test_no = #{testNumber}
+    </select>
+
+    <select id="getFeatures" resultType="FeatureSimpleResponseDto">
+        SELECT feat_no AS featureNo, feat_title AS featureName
+        FROM feature
+        WHERE prj_no = #{projectNumber}
+    </select>
 
     <update id="updateTestStage">
         update TESTDETAIL

@@ -226,6 +226,7 @@ function initGrid() {
             {key: "position", label: "직위", align: "center" },
             {key: "email", width: 230, label: "이메일", align: "center"},
             {key: "participateYn", width: 70, label: "투입여부",align: "center"},
+
             {key: "tech", width: 70, label: "기술등급",align: "center"}
         ],
         page: {

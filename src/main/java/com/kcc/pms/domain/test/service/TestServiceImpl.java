@@ -366,8 +366,8 @@ public class TestServiceImpl implements TestService {
                 cell.setCellValue("결함 발생");
                 failCount++;
             } else {
-            	cell.setCellValue("-");
-            	defaultCount++;
+                cell.setCellValue("-");
+                defaultCount++;
             }
 
             cell.setCellStyle(centerStyle);
