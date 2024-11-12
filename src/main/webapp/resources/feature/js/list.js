@@ -629,14 +629,6 @@ function closeModal() {
 }
 
 
-function openMemberModal(memberNo, memberName) {
-    cachedMemberNo = memberNo;
-    cachedMemberName = memberName;
-
-    // 모달의 다른 내용 초기화
-    $('#memberPrgVal').text('0%');
-    $('#memberFeatBar').attr('value', 0);
-}
 
 function formatDate(dateString) {
     const date = new Date(dateString);
