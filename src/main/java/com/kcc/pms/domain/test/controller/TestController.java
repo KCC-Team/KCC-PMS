@@ -3,9 +3,10 @@ package com.kcc.pms.domain.test.controller;
 import com.kcc.pms.auth.PrincipalDetail;
 import com.kcc.pms.domain.common.model.dto.CommonCodeOptions;
 import com.kcc.pms.domain.feature.model.dto.FeatureSimpleResponseDto;
-import com.kcc.pms.domain.test.domain.dto.TestPageResponseDto;
 import com.kcc.pms.domain.test.domain.dto.TestMasterRequestDto;
+import com.kcc.pms.domain.test.domain.dto.TestPageResponseDto;
 import com.kcc.pms.domain.test.service.TestService;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -64,6 +65,12 @@ public class TestController {
     @ResponseBody
     public ResponseEntity<Long> updateTest(@PathVariable Long id, @RequestBody TestMasterRequestDto testReq) {
         return ResponseEntity.ok().body(testService.updateTest(testReq));
+    }
+
+    @GetMapping("/excelDownload/{id}")
+    public void excelDownload(HttpServletResponse response, @PathVariable Long id) throws Exception {
+        System.out.println("excelDownload");
+        testService.excelDownload(response, id);
     }
 
     @GetMapping("/{id}")

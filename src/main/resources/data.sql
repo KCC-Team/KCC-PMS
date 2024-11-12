@@ -217,7 +217,7 @@ CREATE TABLE FileDetail (
 
 CREATE TABLE Output (
     opt_no number NOT NULL,
-    opt_ttl VARCHAR2(50) NOT NULL,
+    opt_ttl VARCHAR2(100) NOT NULL,
     note VARCHAR2(1000) null,
     prj_no NUMBER NOT NULL,
     high_folder_no NUMBER NULL,
@@ -828,6 +828,69 @@ INSERT INTO System (sys_no, sys_ttl, sys_cont, use_yn, prj_no, par_sys_no, sys_y
 VALUES (seq_system.nextval, '화물 운송 경로 최적화', '시스템9 내용', 'Y', 1, 4, 'Y');
 INSERT INTO System (sys_no, sys_ttl, sys_cont, use_yn, prj_no, par_sys_no, sys_yn)
 VALUES (seq_system.nextval, '운행 데이터 수집 및 분석', '시스템9 내용', 'Y', 1, 5, 'Y');
+
+INSERT INTO System (sys_no, sys_ttl, sys_cont, use_yn, prj_no, par_sys_no, sys_yn)
+VALUES (seq_system.nextval, '철도 운행 관리 시스템', '시스템1 내용', 'Y', 2, NULL, 'Y');
+INSERT INTO System (sys_no, sys_ttl, sys_cont, use_yn, prj_no, par_sys_no, sys_yn)
+VALUES (seq_system.nextval, '철도 안전 관리 시스템', '시스템2 내용', 'Y', 2, NULL, 'Y');
+INSERT INTO System (sys_no, sys_ttl, sys_cont, use_yn, prj_no, par_sys_no, sys_yn)
+VALUES (seq_system.nextval, '철도 예약 관리 시스템', '시스템3 내용', 'Y', 2, NULL, 'Y');
+INSERT INTO System (sys_no, sys_ttl, sys_cont, use_yn, prj_no, par_sys_no, sys_yn)
+VALUES (seq_system.nextval, '철도 차량 관리 시스템', '시스템4 내용', 'Y', 2, NULL, 'Y');
+INSERT INTO System (sys_no, sys_ttl, sys_cont, use_yn, prj_no, par_sys_no, sys_yn)
+VALUES (seq_system.nextval, '철도 기타 시스템', '시스템4 내용', 'Y', 2, NULL, 'Y');
+-- 업무 seq = 5
+INSERT INTO System (sys_no, sys_ttl, sys_cont, use_yn, prj_no, par_sys_no, sys_yn)
+VALUES (seq_system.nextval, '열차운행계획', '시스템1 내용', 'Y', 2, 1, 'Y');
+INSERT INTO System (sys_no, sys_ttl, sys_cont, use_yn, prj_no, par_sys_no, sys_yn)
+VALUES (seq_system.nextval, '운행실적관리', '시스템1 내용', 'Y', 2, 1, 'Y');
+INSERT INTO System (sys_no, sys_ttl, sys_cont, use_yn, prj_no, par_sys_no, sys_yn)
+VALUES (seq_system.nextval, '일정관리', '시스템1 내용', 'Y', 2, 1, 'Y');
+INSERT INTO System (sys_no, sys_ttl, sys_cont, use_yn, prj_no, par_sys_no, sys_yn)
+VALUES (seq_system.nextval, '근무관리', '시스템2 내용', 'Y', 2, 1, 'Y');
+INSERT INTO System (sys_no, sys_ttl, sys_cont, use_yn, prj_no, par_sys_no, sys_yn)
+VALUES (seq_system.nextval, '운영관리', '시스템3 내용', 'Y', 2, 1, 'Y');
+INSERT INTO System (sys_no, sys_ttl, sys_cont, use_yn, prj_no, par_sys_no, sys_yn)
+VALUES (seq_system.nextval, '위험관리', '시스템2 내용', 'Y', 2, 2, 'Y');
+INSERT INTO System (sys_no, sys_ttl, sys_cont, use_yn, prj_no, par_sys_no, sys_yn)
+VALUES (seq_system.nextval, '품질관리', '시스템2 내용', 'Y', 2, 2, 'Y');
+INSERT INTO System (sys_no, sys_ttl, sys_cont, use_yn, prj_no, par_sys_no, sys_yn)
+VALUES (seq_system.nextval, '안전점검', '시스템2 내용', 'Y', 2, 2, 'Y');
+INSERT INTO System (sys_no, sys_ttl, sys_cont, use_yn, prj_no, par_sys_no, sys_yn)
+VALUES (seq_system.nextval, '교육훈련', '시스템2 내용', 'Y', 2, 2, 'Y');
+INSERT INTO System (sys_no, sys_ttl, sys_cont, use_yn, prj_no, par_sys_no, sys_yn)
+VALUES (seq_system.nextval, '사고분석', '시스템2 내용', 'Y', 2, 2, 'Y');
+INSERT INTO System (sys_no, sys_ttl, sys_cont, use_yn, prj_no, par_sys_no, sys_yn)
+VALUES (seq_system.nextval, '좌석관리', '시스템3 내용', 'Y', 2, 3, 'Y');
+INSERT INTO System (sys_no, sys_ttl, sys_cont, use_yn, prj_no, par_sys_no, sys_yn)
+VALUES (seq_system.nextval, '예매관리', '시스템3 내용', 'Y', 1, 3, 'Y');
+INSERT INTO System (sys_no, sys_ttl, sys_cont, use_yn, prj_no, par_sys_no, sys_yn)
+VALUES (seq_system.nextval, '결제관리', '시스템3 내용', 'Y', 2, 3, 'Y');
+INSERT INTO System (sys_no, sys_ttl, sys_cont, use_yn, prj_no, par_sys_no, sys_yn)
+VALUES (seq_system.nextval, '고객서비스', '시스템3 내용', 'Y', 2, 3, 'Y');
+INSERT INTO System (sys_no, sys_ttl, sys_cont, use_yn, prj_no, par_sys_no, sys_yn)
+VALUES (seq_system.nextval, '할인 및 프로모션 관리', '시스템3 내용', 'Y', 2, 3, 'Y');
+INSERT INTO System (sys_no, sys_ttl, sys_cont, use_yn, prj_no, par_sys_no, sys_yn)
+VALUES (seq_system.nextval, '차량정비', '시스템4 내용', 'Y', 2, 4, 'Y');
+INSERT INTO System (sys_no, sys_ttl, sys_cont, use_yn, prj_no, par_sys_no, sys_yn)
+VALUES (seq_system.nextval, '차량배치', '시스템4 내용', 'Y', 2, 4, 'Y');
+INSERT INTO System (sys_no, sys_ttl, sys_cont, use_yn, prj_no, par_sys_no, sys_yn)
+VALUES (seq_system.nextval, '차량상태모니터링', '시스템4 내용', 'Y', 2, 4, 'Y');
+INSERT INTO System (sys_no, sys_ttl, sys_cont, use_yn, prj_no, par_sys_no, sys_yn)
+VALUES (seq_system.nextval, '부품관리', '시스템4 내용', 'Y', 2, 4, 'Y');
+INSERT INTO System (sys_no, sys_ttl, sys_cont, use_yn, prj_no, par_sys_no, sys_yn)
+VALUES (seq_system.nextval, '차량검수', '시스템4 내용', 'Y', 2, 4, 'Y');
+INSERT INTO System (sys_no, sys_ttl, sys_cont, use_yn, prj_no, par_sys_no, sys_yn)
+VALUES (seq_system.nextval, '통신관리', '시스템5 내용', 'Y', 2, 5, 'Y');
+INSERT INTO System (sys_no, sys_ttl, sys_cont, use_yn, prj_no, par_sys_no, sys_yn)
+VALUES (seq_system.nextval, '인적자원관리', '시스템5 내용', 'Y', 2, 5, 'Y');
+INSERT INTO System (sys_no, sys_ttl, sys_cont, use_yn, prj_no, par_sys_no, sys_yn)
+VALUES (seq_system.nextval, '조달관리', '시스템5 내용', 'Y', 2, 5, 'Y');
+INSERT INTO System (sys_no, sys_ttl, sys_cont, use_yn, prj_no, par_sys_no, sys_yn)
+VALUES (seq_system.nextval, '통합관리', '시스템5 내용', 'Y', 2, 5, 'Y');
+INSERT INTO System (sys_no, sys_ttl, sys_cont, use_yn, prj_no, par_sys_no, sys_yn)
+VALUES (seq_system.nextval, '환경관리', '시스템5 내용', 'Y', 2, 5, 'Y');
+
 
 insert into task
 (tsk_no, order_no, tsk_ttl, tsk_stat_cd, pre_st_dt, pre_end_dt, prg, use_yn, prj_no, st_dt,end_dt, par_task_no, reg_id, reg_dt, sys_no)

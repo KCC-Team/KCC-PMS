@@ -124,12 +124,13 @@
                             </tr>
                         </c:if>
                         <tr>
-                            <td colspan="4" class="td-title">결함 내용&nbsp;&nbsp;&nbsp;<span class="es-star">*</span></td>
-                        </tr>
-                        <tr>
-                            <td colspan="4">
+                            <td colspan="1" class="td-title">결함 내용&nbsp;&nbsp;&nbsp;<span class="es-star">*</span></td>
+                            <td colspan="3">
                                 <textarea name="defectContent" required >${req.defectContent}</textarea>
                             </td>
+                        </tr>
+                        <tr>
+
                         </tr>
                         <tr>
                             <td class="td-title">우선순위&nbsp;&nbsp;&nbsp;<span class="es-star">*</span></td>

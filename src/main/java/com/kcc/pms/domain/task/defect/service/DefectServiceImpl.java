@@ -8,6 +8,7 @@ import com.kcc.pms.domain.task.defect.domain.dto.DefectFileRequestDto;
 import com.kcc.pms.domain.task.defect.domain.dto.DefectPageResponseDto;
 import com.kcc.pms.domain.task.defect.domain.dto.DefectResponseDto;
 import com.kcc.pms.domain.task.defect.mapper.DefectMapper;
+import com.kcc.pms.domain.test.mapper.TestMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,6 +22,8 @@ import java.util.Optional;
 @Transactional(readOnly = true)
 public class DefectServiceImpl implements DefectService {
     private final DefectMapper defectMapper;
+    private final TestMapper testMapper;
+
     private final CommonService commonService;
 
     private static final int LIMIT = 15;
@@ -81,6 +84,7 @@ public class DefectServiceImpl implements DefectService {
                     commonService.deleteFileDetail(MemberName, file);
                 }));
         int isPassed = defectMapper.updateDefect(no, defect);
+        testMapper.updateStatus(no, defect.getStatusSelect());
         if (isPassed != 1) {
             throw new RuntimeException("Defect 수정 중 오류가 발생했습니다.");
         }

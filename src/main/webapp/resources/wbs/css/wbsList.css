@@ -9,6 +9,18 @@
     overflow: hidden;
 }
 
+.defect-button {
+    position: fixed;
+    top: 100px;
+    right: 70px;
+    padding: 5px 9px 5px 9px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    color: white;
+    cursor: pointer;
+    background-color: red;
+}
+
 .project-info {
     width: 100%;
     margin: 5px 0px 13px 3px;

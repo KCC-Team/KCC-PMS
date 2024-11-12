@@ -32,4 +32,9 @@
         ]]>
     </select>
 
+    <select id="getSystemName" resultType="string">
+        SELECT sys_ttl
+        FROM system
+        WHERE sys_no = #{systemNo}
+    </select>
 </mapper>
