@@ -248,7 +248,7 @@
         UPDATE history
         <set>
             <if test="recordDate != null">
-                record_dt = TO_DATE(#{recordDate}),
+                record_dt = TO_DATE(#{recordDate},'YYYY-MM-DD'),
             </if>
             <if test="recordContent != null">
                 record_cont = #{recordContent}
