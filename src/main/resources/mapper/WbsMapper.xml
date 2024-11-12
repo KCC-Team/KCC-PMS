@@ -19,9 +19,9 @@
                 <if test="ante_task_no != null">ante_task_no,</if>
                 <if test="sys_no != null">sys_no,</if>
         reg_id, reg_dt)
-        values (#{tsk_no}, #{order_no}, #{tsk_ttl}, #{tsk_stat_cd}, TO_DATE(#{pre_st_dt}, 'YYYY-MM-DD')), TO_DATE(#{pre_end_dt}, 'YYYY-MM-DD')), #{prg}, 'Y', #{prj_no},
-                <if test="st_dt != null">TO_DATE(#{st_dt}, 'YYYY-MM-DD')),</if>
-                <if test="end_dt != null">TO_DATE(#{end_dt}, 'YYYY-MM-DD')),</if>
+        values (#{tsk_no}, #{order_no}, #{tsk_ttl}, #{tsk_stat_cd}, TO_DATE(#{pre_st_dt}, 'YYYY-MM-DD'), TO_DATE(#{pre_end_dt}, 'YYYY-MM-DD'), #{prg}, 'Y', #{prj_no},
+                <if test="st_dt != null">TO_DATE(#{st_dt}, 'YYYY-MM-DD'),</if>
+                <if test="end_dt != null">TO_DATE(#{end_dt}, 'YYYY-MM-DD'),</if>
                 <if test="weight_val != null">#{weight_val},</if>
                 <if test="rel_out_nm != null">#{rel_out_nm},</if>
                 <if test="par_task_no != null">#{par_task_no},</if>
@@ -136,16 +136,16 @@
             , tsk_stat_cd = #{tsk_stat_cd}
         </if>
         <if test="pre_st_dt != null">
-            , pre_st_dt = TO_DATE(#{pre_st_dt}, 'YYYY-MM-DD'))
+            , pre_st_dt = TO_DATE(#{pre_st_dt}, 'YYYY-MM-DD')
         </if>
         <if test="pre_end_dt != null">
-            , pre_end_dt = TO_DATE(#{pre_end_dt}, 'YYYY-MM-DD'))
+            , pre_end_dt = TO_DATE(#{pre_end_dt}, 'YYYY-MM-DD')
         </if>
         <if test="st_dt != null">
-            , st_dt = TO_DATE(#{st_dt}, 'YYYY-MM-DD'))
+            , st_dt = TO_DATE(#{st_dt}, 'YYYY-MM-DD')
         </if>
         <if test="end_dt != null">
-            , end_dt = TO_DATE(#{end_dt}, 'YYYY-MM-DD'))
+            , end_dt = TO_DATE(#{end_dt}, 'YYYY-MM-DD')
         </if>
         <if test="weight_val != null">
            , weight_val = #{weight_val}
