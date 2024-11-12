@@ -626,8 +626,11 @@ function closeModal() {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         canvas.removeAttribute('style'); // 크기 스타일 초기화
     });
-}
 
+    // 모달의 다른 내용 초기화
+    $('#memberPrgVal').text('0%');
+    $('#memberFeatBar').attr('value', 0);
+}
 
 
 function formatDate(dateString) {
