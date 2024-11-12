@@ -85,6 +85,8 @@ $(document).ready(function (){
 
 
     setPageInfo(4);
+    var projectTitle = $('.common-project-title').text().trim();
+    $('.project-title').text(projectTitle);
 });
 
 
@@ -187,7 +189,9 @@ function initGrid(){
                         return '<span style="font-size: 13px;">' + this.value + "%" + '</span>';
                     }},
                 {key: "remainingDays", label: "남은일수", width: 60, align: "center", formatter: function (){
-                        return '<span style="font-size: 13px;">' + this.value + '</span>';
+                        const value = this.value;
+                        const color = value.startsWith('+') ? 'black' : 'red'; // '+'로 시작하지 않으면 빨간색, 그 외 검정색
+                        return `<span style="font-size: 13px; color: ${color};">${value}</span>`;
                     }}
             ],
             page: {

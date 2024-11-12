@@ -29,8 +29,36 @@ public class MemberServiceImpl implements MemberService{
     }
 
     @Override
-    public List<GroupMembersResponseDto> getGroupMembers(Long groupNo) {
-        return mapper.getGroupMemberList(groupNo);
+    public List<GroupMembersResponseDto> getGroupMembers(Long groupNo, Long exceptTeamNo) {
+        List<GroupMembersResponseDto> groupMemberList = mapper.getGroupMemberList(groupNo);
+        List<MemberResponseDto> teamMember = mapper.getTeamMember(exceptTeamNo);
+        for (GroupMembersResponseDto groupMembersResponseDto : groupMemberList) {
+            groupMembersResponseDto.setParticipateYn("N");
+            for (MemberResponseDto memberResponseDto : teamMember) {
+                if(groupMembersResponseDto.getId().equals(memberResponseDto.getId())){
+                    groupMembersResponseDto.setParticipateYn("Y");
+                }
+            }
+        }
+
+        return groupMemberList;
+    }
+
+    @Override
+    public List<MemberResponseDto> getProjectMemberList(Long projectNo, Long teamNo) {
+        List<MemberResponseDto> projectMemberList = mapper.getProjectMemberList(projectNo);
+        List<MemberResponseDto> teamMember = mapper.getTeamMember(teamNo);
+
+        for (MemberResponseDto prjMemberResponseDto : projectMemberList) {
+            prjMemberResponseDto.setParticipateYn("N");
+            for (MemberResponseDto teamMemberResponseDto : teamMember) {
+                if(teamMemberResponseDto.getId().equals(prjMemberResponseDto.getId())){
+                    prjMemberResponseDto.setParticipateYn("Y");
+                }
+            }
+        }
+
+        return projectMemberList;
     }
 
     @Override

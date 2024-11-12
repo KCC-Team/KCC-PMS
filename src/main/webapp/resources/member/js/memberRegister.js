@@ -21,6 +21,8 @@ $(document).ready(function() {
                     'check_callback': true
                 },
                 'plugins': ["search", "dnd"]
+            }).on("ready.jstree", function() {
+                $(this).jstree("open_all");
             });
         },
     });
@@ -28,12 +30,14 @@ $(document).ready(function() {
     //부서 인원 목록 가져오기
     $('#jstree').on("select_node.jstree", function (e, data) {
         const selectedNodeId = data.node.id;
-
+        const url = new URL(window.location.href);
+        const teamNo = url.searchParams.get('teamNo');
         $.ajax({
             url: "/projects/members/groups",
             type: 'GET',
             data: {
-                groupNo: selectedNodeId
+                groupNo: selectedNodeId,
+                exceptTeamNo: teamNo // teamNo를 추가
             },
             success: function(members) {
                 $('#selectedGroupName').text(members[0].groupName);

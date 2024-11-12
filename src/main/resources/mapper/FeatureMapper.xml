@@ -381,16 +381,18 @@
             COUNT(CASE WHEN f.MEM_NO != #{memberNo} THEN f.FEAT_NO END) /
             (SELECT COUNT(DISTINCT MEM_NO || '-' || TM_NO) - 1
              FROM feature
-             WHERE prj_no =  #{prjNo}) AS avg_count
+             WHERE prj_no = #{prjNo}) AS avg_count,
+            difficulty.common_cd_no AS common_cd_no,
+            difficulty.order_no AS order_no
         FROM
             codedetail difficulty
                 LEFT JOIN
             feature f ON f.diff_cd = difficulty.cd_dtl_no
-                AND f.prj_no =  #{prjNo}
+                AND f.prj_no = #{prjNo}
         WHERE
             difficulty.common_cd_no = 'PMS011'
         GROUP BY
-            difficulty.cd_dtl_nm
+            difficulty.cd_dtl_nm, difficulty.common_cd_no, difficulty.order_no
 
         UNION ALL
 
@@ -401,16 +403,18 @@
             COUNT(CASE WHEN f.MEM_NO != #{memberNo} THEN f.FEAT_NO END) /
             (SELECT COUNT(DISTINCT MEM_NO || '-' || TM_NO) - 1
              FROM feature
-             WHERE prj_no =  #{prjNo}) AS avg_count
+             WHERE prj_no = #{prjNo}) AS avg_count,
+            status.common_cd_no AS common_cd_no,
+            status.order_no AS order_no
         FROM
             codedetail status
                 LEFT JOIN
             feature f ON f.stat_cd = status.cd_dtl_no
-                AND f.prj_no =  #{prjNo}
+                AND f.prj_no = #{prjNo}
         WHERE
             status.common_cd_no = 'PMS009'
         GROUP BY
-            status.cd_dtl_nm
+            status.cd_dtl_nm, status.common_cd_no, status.order_no
 
         UNION ALL
 
@@ -421,16 +425,18 @@
             COUNT(CASE WHEN f.MEM_NO != #{memberNo} THEN f.FEAT_NO END) /
             (SELECT COUNT(DISTINCT MEM_NO || '-' || TM_NO) - 1
              FROM feature
-             WHERE prj_no =  #{prjNo}) AS avg_count
+             WHERE prj_no = #{prjNo}) AS avg_count,
+            pri.common_cd_no AS common_cd_no,
+            pri.order_no AS order_no
         FROM
             codedetail pri
                 LEFT JOIN
             feature f ON f.pri_cd = pri.cd_dtl_no
-                AND f.prj_no =  #{prjNo}
+                AND f.prj_no = #{prjNo}
         WHERE
             pri.common_cd_no = 'PMS006'
         GROUP BY
-            pri.cd_dtl_nm
+            pri.cd_dtl_nm, pri.common_cd_no, pri.order_no
 
         UNION ALL
 
@@ -441,7 +447,9 @@
             COUNT(CASE WHEN f.MEM_NO != #{memberNo} THEN f.FEAT_NO END) /
             (SELECT COUNT(DISTINCT MEM_NO || '-' || TM_NO) - 1
              FROM feature
-             WHERE prj_no =  #{prjNo}) AS avg_count
+             WHERE prj_no = #{prjNo}) AS avg_count,
+            class.common_cd_no AS common_cd_no,
+            class.order_no AS order_no
         FROM
             codedetail class
                 LEFT JOIN
@@ -450,7 +458,10 @@
         WHERE
             class.common_cd_no = 'PMS010'
         GROUP BY
-            class.cd_dtl_nm
+            class.cd_dtl_nm, class.common_cd_no, class.order_no
+
+        ORDER BY
+            common_cd_no, order_no
     </select>
 
     <select id="getDelayList" resultType="com.kcc.pms.domain.feature.model.dto.FeatureSummaryResponseDto">
