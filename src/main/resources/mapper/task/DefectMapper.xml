@@ -49,7 +49,7 @@
         (
          #{defect.defectNumber}, #{defect.defectId, jdbcType=VARCHAR}, #{defect.testDetailNo, jdbcType=NUMERIC}, #{defect.defectTitle, jdbcType=VARCHAR},
          #{defect.statusSelect, jdbcType=VARCHAR}, #{defect.prioritySelect, jdbcType=VARCHAR}, #{defect.typeSelect, jdbcType=VARCHAR}, #{defect.defectContent, jdbcType=VARCHAR},
-         #{defect.discoverDate, jdbcType=DATE}, #{defect.scheduleWorkDate, jdbcType=DATE}, #{defect.workDate, jdbcType=DATE},
+         TO_DATE(#{defect.discoverDate, jdbcType=DATE}), TO_DATE(#{defect.scheduleWorkDate, jdbcType=DATE}), TO_DATE(#{defect.workDate, jdbcType=DATE}),
          #{defect.workContent, jdbcType=VARCHAR}, #{fileMasterFoundNumber, jdbcType=NUMERIC}, #{fileMasterWorkNumber, jdbcType=NUMERIC},
          #{defect.foundMemberNo, jdbcType=NUMERIC}, #{defect.workMemberNo, jdbcType=NUMERIC},
          #{defect.systemNumber, jdbcType=NUMERIC}, #{projectNumber, jdbcType=NUMERIC}, #{defect.testNo, jdbcType=NUMERIC}
@@ -65,11 +65,11 @@
             pri_cd = #{defect.prioritySelect, jdbcType=VARCHAR},
             type_cd = #{defect.typeSelect, jdbcType=VARCHAR},
             df_cont = #{defect.defectContent, jdbcType=VARCHAR},
-            df_fd_dt = #{defect.discoverDate, jdbcType=DATE},
-            due_dt = #{defect.scheduleWorkDate, jdbcType=DATE},
+            df_fd_dt = TO_DATE(#{defect.discoverDate, jdbcType=DATE}),
+            due_dt = TO_DATE(#{defect.scheduleWorkDate, jdbcType=DATE}),
             mem_fd_no = #{defect.foundMemberNo, jdbcType=NUMERIC},
             mem_work_no = #{defect.workMemberNo, jdbcType=NUMERIC},
-            work_dt = #{defect.workDate, jdbcType=DATE},
+            work_dt = TO_DATE(#{defect.workDate, jdbcType=DATE}),
             df_work_cont = #{defect.workContent, jdbcType=VARCHAR},
             work_no = #{defect.systemNumber, jdbcType=NUMERIC}
         WHERE df_no = #{defect.defectNumber}

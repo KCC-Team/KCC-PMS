@@ -264,7 +264,7 @@
         #{testDetail.workContent},
         #{testDetail.writerNo, jdbcType=NUMERIC},
         #{testNo}, sysdate,
-        #{testDetail.testDate, jdbcType=DATE},
+        TO_DATE(#{testDetail.testDate, jdbcType=DATE}),
         <choose>
             <when test="testDetail.result == '결과 선택'">
                 null,
@@ -280,11 +280,11 @@
     <update id="updateTestDetails">
         UPDATE testdetail
         <set>
-            test_data = #{testDetail.testData},
+            test_data = TO_DATE(#{testDetail.testData}),
             estimated_rlt = #{testDetail.estimatedResult},
             wrk_proc_cont = #{testDetail.workContent},
             mem_no = #{testDetail.writerNo, jdbcType=NUMERIC},
-            test_st_dt = #{testDetail.testDate, jdbcType=DATE},
+            test_st_dt = TO_DATE(#{testDetail.testDate, jdbcType=DATE}),
             test_result_cd =
             <choose>
                 <when test="testDetail.result == '결과 선택'">
@@ -412,8 +412,8 @@
             t.stat_cd = #{testStatus, jdbcType=CHAR},
             t.type_cd = #{testType, jdbcType=CHAR},
             t.sys_work_no = #{workSystemNo, jdbcType=NUMERIC},
-            t.test_st_dt = #{testStartDate, jdbcType=DATE},
-            t.test_end_dt = #{testEndDate, jdbcType=DATE}
+            t.test_st_dt = TO_DATE(#{testStartDate, jdbcType=DATE}),
+            t.test_end_dt = TO_DATE(#{testEndDate, jdbcType=DATE})
         where t.test_no = #{testNumber, jdbcType=NUMERIC}
     </update>
 

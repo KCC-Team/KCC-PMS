@@ -14,9 +14,9 @@
         <if test="st_dt != null">st_dt,</if>
         <if test="end_dt != null">end_dt,</if>
         reg_id, reg_dt)
-        values (#{prj_no}, #{prj_title}, #{prj_cont}, #{stat_cd}, #{prg}, #{org}, #{pre_st_dt}, #{pre_end_dt}, 'Y',
-        <if test="st_dt != null">#{st_dt},</if>
-        <if test="end_dt != null">#{end_dt},</if>
+        values (#{prj_no}, #{prj_title}, #{prj_cont}, #{stat_cd}, #{prg}, #{org}, TO_DATE(#{pre_st_dt}), TO_DATE(#{pre_end_dt}), 'Y',
+        <if test="st_dt != null">TO_DATE(#{st_dt}),</if>
+        <if test="end_dt != null">TO_DATE(#{end_dt}),</if>
         #{reg_id}, SYSDATE)
     </insert>
 
@@ -46,13 +46,12 @@
         <if test="pm_end_dt != null">end_dt,</if>
         reg_id, reg_dt)
         values (#{mem_no}, #{tm_no}, #{prj_no}, #{prj_auth_cd}, 'Y',
-        <if test="pm_pre_start_dt != null">#{pm_pre_start_dt},</if>
-        <if test="pm_pre_end_dt != null">#{pm_pre_end_dt},</if>
-        <if test="pm_start_dt != null">#{pm_start_dt},</if>
-        <if test="pm_end_dt != null">#{pm_end_dt},</if>
+        <if test="pm_pre_start_dt != null">TO_DATE(#{pm_pre_start_dt}),</if>
+        <if test="pm_pre_end_dt != null">TO_DATE(#{pm_pre_end_dt}),</if>
+        <if test="pm_start_dt != null">TO_DATE(#{pm_start_dt}),</if>
+        <if test="pm_end_dt != null">TO_DATE(#{pm_end_dt}),</if>
         #{reg_id}, SYSDATE)
     </insert>
-
 
     <update id="updateProject">
         update project set
@@ -61,10 +60,10 @@
             stat_cd = #{stat_cd},
             prg = #{prg},
             org = #{org},
-            pre_st_dt = #{pre_st_dt},
-            pre_end_dt = #{pre_end_dt},
-            <if test="st_dt != null"> st_dt = #{st_dt}, </if>
-            <if test="end_dt != null"> end_dt = #{end_dt}, </if>
+            pre_st_dt = TO_DATE(#{pre_st_dt}),
+            pre_end_dt = TO_DATE(#{pre_end_dt}),
+            <if test="st_dt != null"> st_dt = TO_DATE(#{st_dt}), </if>
+            <if test="end_dt != null"> end_dt = TO_DATE(#{end_dt}), </if>
             use_yn = #{use_yn},
             mod_id = #{mod_id},
             mod_dt = SYSDATE
