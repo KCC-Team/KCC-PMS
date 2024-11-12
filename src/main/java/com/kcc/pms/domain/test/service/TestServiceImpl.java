@@ -12,8 +12,12 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.util.CellRangeAddress;
+import org.apache.poi.xddf.usermodel.*;
 import org.apache.poi.xddf.usermodel.chart.*;
-import org.apache.poi.xssf.usermodel.*;
+import org.apache.poi.xssf.usermodel.XSSFChart;
+import org.apache.poi.xssf.usermodel.XSSFClientAnchor;
+import org.apache.poi.xssf.usermodel.XSSFDrawing;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -222,10 +226,13 @@ public class TestServiceImpl implements TestService {
     private void excelDownloadUnitTest(HttpServletResponse response, TestMasterRequestDto test) throws Exception {
         int passCount = 0;
         int failCount = 0;
+        int defaultCount = 0;
 
         InputStream inputStream = new FileInputStream("src/main/resources/templates/unitTest.xlsx");
         Workbook workbook = WorkbookFactory.create(inputStream);
         Sheet sheet = workbook.getSheetAt(0);
+        sheet.setDisplayGridlines(false);
+        sheet.setPrintGridlines(false);
 
         CellStyle borderStyle = workbook.createCellStyle();
         borderStyle.setAlignment(HorizontalAlignment.LEFT);
@@ -244,6 +251,9 @@ public class TestServiceImpl implements TestService {
         centerStyle.setBorderLeft(BorderStyle.THIN);
         centerStyle.setBorderRight(BorderStyle.THIN);
 
+        borderStyle.setWrapText(true);
+        centerStyle.setWrapText(true);
+
         Row row = sheet.getRow(3);
         Cell cell = row.getCell(4);
         if (cell == null) {
@@ -251,6 +261,7 @@ public class TestServiceImpl implements TestService {
         }
         cell.setCellValue(test.getTestTitle());
         cell.setCellStyle(borderStyle);
+        cell.getCellStyle().setWrapText(true);
         cell = row.getCell(13);
         if (cell == null) {
             cell = row.createCell(13);
@@ -261,6 +272,8 @@ public class TestServiceImpl implements TestService {
             cell.setCellValue("통합 테스트");
         }
         cell.setCellStyle(borderStyle);
+        cell.getCellStyle().setWrapText(true);
+
         row = sheet.getRow(4);
         cell = row.getCell(4);
         if (cell == null) {
@@ -268,12 +281,15 @@ public class TestServiceImpl implements TestService {
         }
         cell.setCellValue(test.getTestId());
         cell.setCellStyle(borderStyle);
+        cell.getCellStyle().setWrapText(true);
         cell = row.getCell(13);
         if (cell == null) {
             cell = row.createCell(13);
         }
         cell.setCellValue(systemMapper.getSystemName(test.getWorkSystemNo()));
         cell.setCellStyle(borderStyle);
+        cell.getCellStyle().setWrapText(true);
+
         row = sheet.getRow(5);
         cell = row.getCell(4);
         if (cell == null) {
@@ -281,12 +297,15 @@ public class TestServiceImpl implements TestService {
         }
         cell.setCellValue(test.getTestStartDate());
         cell.setCellStyle(borderStyle);
+        cell.getCellStyle().setWrapText(true);
         cell = row.getCell(13);
         if (cell == null) {
             cell = row.createCell(13);
         }
         cell.setCellValue(test.getTestEndDate());
         cell.setCellStyle(borderStyle);
+        cell.getCellStyle().setWrapText(true);
+
         row = sheet.getRow(6);
         cell = row.getCell(4);
         if (cell == null) {
@@ -294,21 +313,15 @@ public class TestServiceImpl implements TestService {
         }
         cell.setCellValue(test.getTestContent());
         cell.setCellStyle(borderStyle);
-        row = sheet.getRow(8);
+        cell.getCellStyle().setWrapText(true);
+
+        row = sheet.getRow(9);
         cell = row.getCell(4);
         if (cell == null) {
             cell = row.createCell(4);
         }
-        cell.setCellValue(test.getTestCaseList().get(0).getTestDetailId());
-        cell.setCellStyle(borderStyle);
-
-        row = sheet.getRow(8);
-        cell = row.getCell(13);
-        if (cell == null) {
-            cell = row.createCell(13);
-        }
         cell.setCellValue(featureMapper.getFeatureDetail(test.getTestCaseList().get(0).getFeatNumbers().get(0)).getFeatTitle());
-        cell.setCellStyle(borderStyle);
+        cell.getCellStyle().setWrapText(true);
         int startRow = 12;
         int chartDataStartRow = 17;
         for (int i = 0; i < test.getTestCaseList().size(); i++) {
@@ -323,11 +336,13 @@ public class TestServiceImpl implements TestService {
             }
             cell.setCellValue((i+1));
             cell.setCellStyle(centerStyle);
-            mergeCellsAndSetValue(sheet, startRow + i, "B", "D", testCase.getPreCondition(), "y");
-            mergeCellsAndSetValue(sheet, startRow + i, "E", "G", testCase.getTestDetailContent(), "y");
-            mergeCellsAndSetValue(sheet, startRow + i, "H", "J", testCase.getTestProcedure(), "y");
-            mergeCellsAndSetValue(sheet, startRow + i, "K", "M", testCase.getEstimatedResult(), "y");
-            mergeCellsAndSetValue(sheet, startRow + i, "N", "O", testCase.getWrittenDate(), null);
+            cell.getCellStyle().setWrapText(true);
+            mergeCellsAndSetValue(sheet, startRow + i, "B", "D", testCase.getPreCondition(), "y", borderStyle);
+            mergeCellsAndSetValue(sheet, startRow + i, "E", "G", testCase.getTestDetailContent(), "y", borderStyle);
+            mergeCellsAndSetValue(sheet, startRow + i, "H", "J", testCase.getTestProcedure(), "y", borderStyle);
+            mergeCellsAndSetValue(sheet, startRow + i, "K", "M", testCase.getEstimatedResult(), "y", borderStyle);
+            mergeCellsAndSetValue(sheet, startRow + i, "N", "O", testCase.getWrittenDate(), null, centerStyle);
+
             cell = row.getCell(15);
             if (cell == null) {
                 cell = row.createCell(15);
@@ -347,10 +362,14 @@ public class TestServiceImpl implements TestService {
             if (Objects.equals(testCase.getResult(), "PMS01401")) {
                 cell.setCellValue("PASS");
                 passCount++;
-            } else {
+            } else if (Objects.equals(testCase.getResult(), "PMS01402")){
                 cell.setCellValue("결함 발생");
                 failCount++;
+            } else {
+            	cell.setCellValue("-");
+            	defaultCount++;
             }
+
             cell.setCellStyle(centerStyle);
             cell = row.getCell(18);
             if (cell == null) {
@@ -360,36 +379,37 @@ public class TestServiceImpl implements TestService {
                 cell.setCellValue(defectNo.getDefectId() != null ? defectNo.getDefectId() : "-");
             }
             cell.setCellStyle(centerStyle);
-
+            adjustRowHeight(sheet, row);
         }
-        row = sheet.getRow(0);
-        if (row == null) {
-            row = sheet.createRow(0);
-        }
-        Cell dataCell_1 = row.createCell(chartDataStartRow);
-        dataCell_1.setCellValue("결과");
-        dataCell_1.setCellStyle(borderStyle);
-        Cell dataCell_2 = row.createCell(chartDataStartRow + 1);
-        dataCell_2.setCellValue("개수");
-        dataCell_2.setCellStyle(borderStyle);
-        Row dataRow2 = sheet.createRow(1);
-        dataRow2.createCell(chartDataStartRow).setCellValue("PASS");
-        Cell cell1 = dataRow2.createCell(chartDataStartRow + 1);
+        Row dataRow2 = sheet.getRow(4);
+        Cell cell6 = dataRow2.createCell(chartDataStartRow + 3);
+        cell6.setCellStyle(centerStyle);
+        cell6.setCellValue("PASS");
+        Cell cell1 = dataRow2.createCell(chartDataStartRow + 4);
         cell1.setCellValue(passCount);
         cell1.setCellStyle(centerStyle);
 
-        Row dataRow3 = sheet.createRow(2);
-        dataRow3.createCell(chartDataStartRow).setCellValue("결함 발생");
-        Cell cell2 = dataRow3.createCell(chartDataStartRow + 1);
+        Row dataRow3 = sheet.getRow(5);
+        Cell cell5 = dataRow3.createCell(chartDataStartRow + 3);
+        cell5.setCellStyle(centerStyle);
+        cell5.setCellValue("결함 발생");
+        Cell cell2 = dataRow3.createCell(chartDataStartRow + 4);
         cell2.setCellValue(failCount);
         cell2.setCellStyle(centerStyle);
 
-        // 드로잉 패트리아트 생성
+        Row dataRow4 = sheet.getRow(6);
+        Cell cell4 = dataRow4.createCell(chartDataStartRow + 3);
+        cell4.setCellStyle(centerStyle);
+        cell4.setCellValue("계획");
+        Cell cell3 = dataRow4.createCell(chartDataStartRow + 4);
+        cell3.setCellValue(defaultCount);
+        cell3.setCellStyle(centerStyle);
+
         XSSFDrawing drawing = (XSSFDrawing) sheet.createDrawingPatriarch();
         XSSFClientAnchor anchor = drawing.createAnchor(0, 0, 0, 0, 0, 10, 15, 25);
-        anchor.setCol1(19); // 차트 시작 열
+        anchor.setCol1(17); // 차트 시작 열
         anchor.setRow1(0); // 차트 시작 행
-        anchor.setCol2(23); // 차트 끝 열
+        anchor.setCol2(20); // 차트 끝 열
         anchor.setRow2(9); // 차트 끝 행
 
         XSSFChart chart = drawing.createChart(anchor);
@@ -397,13 +417,23 @@ public class TestServiceImpl implements TestService {
         XDDFChartLegend legend = chart.getOrAddLegend();
         legend.setPosition(LegendPosition.TOP_RIGHT);
         XDDFDataSource<String> xs = XDDFDataSourcesFactory.fromStringCellRange((XSSFSheet) sheet,
-                new CellRangeAddress(1, 2, 17, 17));
+                new CellRangeAddress(4, 6, 20, 20));
         XDDFNumericalDataSource<Double> ys = XDDFDataSourcesFactory.fromNumericCellRange((XSSFSheet) sheet,
-                new CellRangeAddress(1, 2 , 18, 18));
+                new CellRangeAddress(4, 6 , 21, 21));
 
         XDDFPieChartData pieChartData = (XDDFPieChartData) chart.createData(ChartTypes.PIE, null, null);
 
         XDDFPieChartData.Series series = (XDDFPieChartData.Series) pieChartData.addSeries(xs, ys);
+        String[] sliceColors = new String[]{"#4caf50", "#ff0e27", "#757575"}; // PASS, 결함 발생, 계획에 해당하는 색상
+        for (int i = 0; i < sliceColors.length; i++) {
+            XDDFDataPoint dataPoint = series.getDataPoint(i);
+            XDDFSolidFillProperties fill = new XDDFSolidFillProperties(getXDDFColorFromHex(sliceColors[i]));
+            XDDFShapeProperties properties = new XDDFShapeProperties();
+            properties.setFillProperties(fill);
+            properties.setLineProperties(new XDDFLineProperties(new XDDFSolidFillProperties(XDDFColor.from(PresetColor.BLACK))));
+            dataPoint.setShapeProperties(properties);
+        }
+
         series.setTitle("테스트 결과", null);
         chart.plot(pieChartData);
         chart.setTitleText("테스트 결과 분포");
@@ -422,7 +452,17 @@ public class TestServiceImpl implements TestService {
         inputStream.close();
     }
 
-    private void mergeCellsAndSetValue(Sheet sheet, int rowNumber, String startColumn, String endColumn, String value, String type) {
+    private XDDFColor getXDDFColorFromHex(String hexColor) {
+        java.awt.Color decode = java.awt.Color.decode(hexColor);
+        byte[] rgb = new byte[] {
+                (byte) decode.getRed(),
+                (byte) decode.getGreen(),
+                (byte) decode.getBlue()
+        };
+        return XDDFColor.from(rgb);
+    }
+
+    private void mergeCellsAndSetValue(Sheet sheet, int rowNumber, String startColumn, String endColumn, String value, String type, CellStyle style) {
         int startColIndex = columnNameToIndex(startColumn);
         int endColIndex = columnNameToIndex(endColumn);
 
@@ -434,19 +474,6 @@ public class TestServiceImpl implements TestService {
             row = sheet.createRow(rowNumber);
         }
 
-        CellStyle style = sheet.getWorkbook().createCellStyle();
-        if (type != null) {
-            style.setAlignment(HorizontalAlignment.LEFT);
-        } else {
-            style.setAlignment(HorizontalAlignment.CENTER);
-        }
-        style.setAlignment(HorizontalAlignment.LEFT);
-        style.setVerticalAlignment(VerticalAlignment.CENTER);
-        style.setBorderTop(BorderStyle.THIN);
-        style.setBorderBottom(BorderStyle.THIN);
-        style.setBorderLeft(BorderStyle.THIN);
-        style.setBorderRight(BorderStyle.THIN);
-
         for (int colIdx = startColIndex; colIdx <= endColIndex; colIdx++) {
             Cell cell = row.createCell(colIdx);
             cell.setCellStyle(style);
@@ -454,6 +481,7 @@ public class TestServiceImpl implements TestService {
                 cell.setCellValue(value);
             }
         }
+        row.setZeroHeight(false);
     }
 
     private int columnNameToIndex(String columnName) {
@@ -465,4 +493,62 @@ public class TestServiceImpl implements TestService {
         }
         return columnIndex - 1;
     }
+
+    private void adjustRowHeight(Sheet sheet, Row row) {
+        int maxLines = 1;
+        for (Cell cell : row) {
+            CellStyle cellStyle = cell.getCellStyle();
+            if (cellStyle.getWrapText()) {
+                String cellContent = getCellContentAsString(cell);
+                Font font = sheet.getWorkbook().getFontAt(cellStyle.getFontIndex());
+                int fontHeight = font.getFontHeightInPoints();
+                int columnWidthInPixels = sheet.getColumnWidth(cell.getColumnIndex());
+
+                int mergedColumns = getMergedRegionWidth(sheet, cell.getRowIndex(), cell.getColumnIndex());
+                int effectiveColumnWidth = columnWidthInPixels * mergedColumns;
+
+                int textWidth = computeCellTextWidth(cellContent, font);
+                int lines = (int) Math.ceil((double) textWidth / effectiveColumnWidth);
+                maxLines = Math.max(maxLines, lines);
+            }
+        }
+        row.setHeightInPoints(maxLines * sheet.getDefaultRowHeightInPoints());
+    }
+
+    private String getCellContentAsString(Cell cell) {
+        switch (cell.getCellType()) {
+            case STRING:
+                return cell.getStringCellValue();
+            case NUMERIC:
+                if (DateUtil.isCellDateFormatted(cell)) {
+                    DataFormatter formatter = new DataFormatter();
+                    return formatter.formatCellValue(cell);
+                } else {
+                    return String.valueOf(cell.getNumericCellValue());
+                }
+            case BOOLEAN:
+                return String.valueOf(cell.getBooleanCellValue());
+            case FORMULA:
+                return cell.getCellFormula();
+            default:
+                return "";
+        }
+    }
+
+    private int computeCellTextWidth(String text, Font font) {
+        int fontWidth = font.getFontHeight() * 3;
+        return text.length() * fontWidth;
+    }
+
+    private int getMergedRegionWidth(Sheet sheet, int rowIndex, int colIndex) {
+        int mergedColumns = 1;
+        for (CellRangeAddress region : sheet.getMergedRegions()) {
+            if (region.isInRange(rowIndex, colIndex)) {
+                mergedColumns = region.getLastColumn() - region.getFirstColumn() + 1;
+                break;
+            }
+        }
+        return mergedColumns;
+    }
+
 }

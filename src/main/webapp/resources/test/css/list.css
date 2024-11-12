@@ -17,6 +17,11 @@ label {
     z-index: 1000;
 }
 
+.excel-btn {
+    background-color: #4caf50;
+    color: #fff;
+}
+
 .div-section {
     display: flex;
     padding-top: 15px;

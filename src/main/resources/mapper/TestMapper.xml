@@ -211,6 +211,22 @@
         )
     </insert>
 
+    <update id="updateStatus">
+        update testdetail
+        <choose>
+            <when test='status == "PMS00703"'>
+                set test_result_cd = 'PMS01401'
+            </when>
+            <when test='status == "PMS00702" or status == "PMS00701"'>
+                set test_result_cd = 'PMS01402'
+            </when>
+            <otherwise>
+                set test_result_cd = null
+            </otherwise>
+        </choose>
+        where test_no = #{testNo}
+    </update>
+
     <update id="updateIntegrationTestDetails" parameterType="map">
         UPDATE testdetail
         <set>

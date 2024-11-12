@@ -13,6 +13,16 @@ let observer = new MutationObserver(function(mutations) {
                         dateFormat: "yy-mm-dd"
                     });
                 });
+
+                if (node.nodeType === 1) {
+                    let textareas = node.querySelectorAll('textarea');
+                    if (textareas.length > 0) {
+                        let tr = node.closest('tr') || node.querySelector('tr');
+                        if (tr) {
+                            resizeTextareasInRow(tr);
+                        }
+                    }
+                }
             });
         }
     });
@@ -21,6 +31,33 @@ let observer = new MutationObserver(function(mutations) {
 observer.observe(document.body, {
     childList: true,
     subtree: true
+});
+
+function resizeTextareasInRow(tr) {
+    let textareas = tr.querySelectorAll('textarea');
+    let maxHeight = 0;
+
+    textareas.forEach(function(textarea) {
+        textarea.style.height = 'auto';
+    });
+
+    textareas.forEach(function(textarea) {
+        let scrollHeight = textarea.scrollHeight;
+        if (scrollHeight > maxHeight) {
+            maxHeight = scrollHeight;
+        }
+    });
+
+    textareas.forEach(function(textarea) {
+        textarea.style.height = maxHeight + 'px';
+    });
+
+    tr.style.height = 'auto';
+    tr.style.height = tr.scrollHeight + 'px';
+}
+
+document.querySelectorAll('tr').forEach(function(tr) {
+    resizeTextareasInRow(tr);
 });
 
 let observer_mem = new MutationObserver(function(mutations) {
@@ -40,6 +77,42 @@ observer_mem.observe(document.body, {
     subtree: true
 });
 
+function autoResize() {
+    document.addEventListener('input', function(event) {
+        if (event.target.matches('textarea')) {
+            if ('testContent' === event.target.id) {
+                return;
+            }
+            let tr = event.target.closest('tr');
+            if (tr) {
+                resizeTextareasInRow(tr);
+            }
+        }
+    });
+
+    function resizeTextareasInRow(tr) {
+        let textareas = tr.querySelectorAll('textarea');
+        let maxHeight = 0;
+
+        textareas.forEach(function(textarea) {
+            textarea.style.height = 'auto';
+        });
+
+        textareas.forEach(function(textarea) {
+            let scrollHeight = textarea.scrollHeight;
+            if (scrollHeight > maxHeight) {
+                maxHeight = scrollHeight;
+            }
+        });
+
+        textareas.forEach(function(textarea) {
+            textarea.style.height = maxHeight + 'px';
+        });
+
+        tr.style.height = 'auto';
+        tr.style.height = tr.scrollHeight + 'px';
+    }
+}
 
 $(function() {
     Chart.register(ChartDataLabels);
@@ -49,6 +122,7 @@ $(function() {
 
     if (lastSegment === 'test' && pathSegments[pathSegments.length - 2] === 'tests') {
         $('#chartArea').hide();
+        $('.excel-btn').html(`&nbsp;&nbsp;<i class="fa-solid fa-file-csv"></i> 액셀 업로드&nbsp;&nbsp;`);
     } else {
         $('#chartArea').show();
     }
@@ -63,7 +137,6 @@ $(function() {
     });
 
     fetchOptions();
-    autoResize();
 
     $(".test-date").datepicker({
         dateFormat: "yy-mm-dd"
@@ -122,6 +195,19 @@ $(function() {
                 }
                 collectAndProcessTestData();
                 generateCharts();
+                function resizeTextarea(textarea) {
+                    textarea.style.height = 'auto';
+                    textarea.style.height = textarea.scrollHeight + 'px';
+
+                    let tr = textarea.closest('tr');
+                    if (tr) {
+                        tr.style.height = 'auto';
+                        tr.style.height = tr.scrollHeight + 'px';
+                    }
+                }
+                document.querySelectorAll('textarea').forEach(function(textarea) {
+                    resizeTextareasInRow(textarea);
+                });
             });
         });
     }
@@ -146,13 +232,9 @@ $(function() {
             let testDetailNo = $tr.find('input[name="testDetailNumber"]').val();
             let testDetailId;
 
-            // Determine the test type
             if ($('#PMS012').val() === 'PMS01201') {
-                // Unit Test
                 testDetailId = $('#testDetailId').val();
             } else if ($('#PMS012').val() === 'PMS01202') {
-                // Integration Test
-                // Find the closest tab-pane
                 let $tabPane = $(this).closest('.tab-pane');
                 let tabContentId = $tabPane.attr('id');
                 let $tabButton = $(`#integrationTestTabs button[aria-controls="${tabContentId}"]`);
@@ -280,8 +362,8 @@ $(function() {
         $(workTaskAreaId).append(generateWorkTask());
     });
 
-    $('.save-btn-test').click(function() {
-        submitTestData(lastSegment);
+    $('#save-test').click(function() {
+        submitTestData();
     });
 
     $(document).on('click', '.unit-delete-row-btn', function() {
@@ -356,8 +438,214 @@ $(function() {
     });
 
     $('.export-excel').on('click', function() {
-        window.location.href = '/projects/tests/excelDownload/' + lastSegment;
+        if ($('.excel-btn').text().includes('업로드')) {
+
+        } else {
+            window.location.href = '/projects/tests/excelDownload/' + lastSegment;
+        }
     });
+
+    document.getElementById('excelFileInput').addEventListener('change', function(event) {
+        const input = event.target;
+        if (!input.files.length) return;
+
+        const file = input.files[0];
+
+        document.getElementById('removeFileButton').style.display = 'inline';
+    });
+
+    // '업로드' 버튼 클릭 시 파일 처리
+    document.getElementById('uploadExcelButton').addEventListener('click', function() {
+        const fileInput = document.getElementById('excelFileInput');
+        const file = fileInput.files[0];
+
+        if (!file) {
+            alert('엑셀 파일을 선택해주세요.');
+            return;
+        }
+
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            const data = new Uint8Array(e.target.result);
+            const workbook = XLSX.read(data, { type: 'array' });
+
+            processExcelData(workbook);
+            excelUploadModal.hide();
+            resetFileInput();
+        };
+
+        reader.readAsArrayBuffer(file);
+    });
+
+    document.getElementById('removeFileButton').addEventListener('click', function() {
+        resetFileInput();
+    });
+
+    document.getElementById('excelUploadModal').addEventListener('hidden.bs.modal', function () {
+        resetFileInput();
+    });
+
+    function resetFileInput() {
+        const fileInput = document.getElementById('excelFileInput');
+        fileInput.value = '';
+
+        document.getElementById('removeFileButton').style.display = 'none';
+    }
+
+    function processExcelData(workbook) {
+        const firstSheetName = workbook.SheetNames[0];
+        const worksheet = workbook.Sheets[firstSheetName];
+
+        const jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
+        const testData = parseTestData(jsonData);
+
+        renderTestCases(testData);
+    }
+
+    function parseTestData(jsonData) {
+        console.log(jsonData);
+        let testMasterData = {};
+
+        // 테스트 마스터 데이터 파싱 (예시로 작성, 실제 셀 위치에 따라 수정 필요)
+        testMasterData.testTitle = jsonData[0][1]; // 예: 테스트 명이 A1 셀에 위치
+        testMasterData.testId = jsonData[1][1];    // 예: 테스트 ID가 A2 셀에 위치
+        testMasterData.testType = jsonData[2][1];  // 예: 테스트 구분이 A3 셀에 위치
+        testMasterData.testStatus = jsonData[3][1]; // 예: 테스트 상태가 A4 셀에 위치
+        testMasterData.testStartDate = jsonData[4][1]; // 예: 테스트 시작일이 A5 셀에 위치
+        testMasterData.testEndDate = jsonData[5][1];   // 예: 테스트 종료일이 A6 셀에 위치
+        testMasterData.testContent = jsonData[6][1];   // 예: 테스트 설명이 A7 셀에 위치
+
+        // 테스트 타입 결정
+        const firstCell = jsonData[3][13];
+        let testType;
+
+        if (firstCell === '단위 테스트') {
+            testType = 'unit';
+        } else if (firstCell === '통합 테스트') {
+            testType = 'integration';
+        } else {
+            alert('알 수 없는 테스트 유형입니다.');
+            return;
+        }
+
+        let testData;
+        if (testType === 'unit') {
+            $('.testCase-section').css('background', '#fff');
+            testData = parseUnitTestData(jsonData.slice(12));
+        } else {
+            $('.testCase-section').css('background', '#fff');
+            testData = parseIntegrationTestData(jsonData.slice(12));
+        }
+
+        return {
+            testType: testType,
+            testMasterData: testMasterData, // 추가된 부분
+            testData: testData
+        };
+    }
+
+    function parseUnitTestData(jsonData) {
+        const dataRows = jsonData.slice(1);
+        console.log(dataRows);
+        return dataRows.map((row, index) => {
+            return {
+                testDetailNumber: row[0],
+                preCondition: row[1],
+                testDetailContent: row[4],
+                testProcedure: row[7],
+                estimatedResult: row[10],
+                writtenDate: row[13],
+                writerName: row[15],
+                testDate: row[16],
+                result: row[17],
+                defectNos: row[18] ? parseDefectNos(row[18]) : []
+            };
+        });
+    }
+
+    function parseIntegrationTestData(jsonData) {
+        const dataRows = jsonData.slice(1);
+        return dataRows.map((row, index) => {
+            return {
+                testDetailNumber: row[0],
+                testDetailContent: row[1],
+                preCondition: row[2],
+                testCaseDetails: parseIntegrationTestCaseDetails(row)
+            };
+        });
+    }
+
+    function parseIntegrationTestCaseDetails(row) {
+        return [];
+    }
+
+    function parseDefectNos(defectStr) {
+        return defectStr.split(',').map(defectId => ({ defectId: defectId.trim() }));
+    }
+
+    function renderTestCases(data) {
+        console.log(data);
+        if (data.testMasterData) {
+            $('#testTitle').val(data.testMasterData.testTitle);
+            $('#testId').val(data.testMasterData.testId);
+            $('#PMS012').val(data.testMasterData.testType).trigger('change');
+            $('#PMS013').val(data.testMasterData.testStatus);
+            $('#testStartDate').val(data.testMasterData.testStartDate);
+            $('#testEndDate').val(data.testMasterData.testEndDate);
+            $('#testContent').val(data.testMasterData.testContent);
+        }
+
+        // 테스트 타입에 따른 케이스 렌더링
+        if (data.testType === 'unit') {
+            $('#PMS012').val('PMS01201').trigger('change');
+            $('.feature-select-area').show();
+            renderUnitTestCases(data.testData);
+        } else if (data.testType === 'integration') {
+            $('#PMS012').val('PMS01202').trigger('change');
+            renderIntegrationTestCases(data.testData);
+        }
+        $('#PMS012').val(mapTestType(data.testMasterData.testType)).trigger('change');
+        $('#PMS013').val(mapTestStatus(data.testMasterData.testStatus));
+    }
+
+    function mapTestStatus(statusStr) {
+        if (statusStr === '진행중') {
+            return '진행중 코드값';
+        } else if (statusStr === '완료') {
+            return '완료 코드값';
+        } else {
+            return '';
+        }
+    }
+
+    function mapTestType(testTypeStr) {
+        if (testTypeStr === '단위 테스트') {
+            return 'PMS01201';
+        } else if (testTypeStr === '통합 테스트') {
+            return 'PMS01202';
+        } else {
+            return '';
+        }
+    }
+
+    function resetTestCaseArea() {
+        $('#test-case-area').empty();
+        unitTestIdx = 0;
+        integrationTestCaseIdx = 0;
+    }
+
+    let excelUploadModal = new bootstrap.Modal(document.getElementById('excelUploadModal'), {
+        backdrop: 'static',
+        keyboard: false
+    });
+
+    if (lastSegment === 'test') {
+        $('#excelUploadButton').on('click', function() {
+            excelUploadModal.show();
+        });
+    }
+
+    autoResize();
 });
 
 function clearWriter(type, TestIdx) {
@@ -788,24 +1076,6 @@ window.addEventListener('message', function (event) {
     }
 });
 
-function autoResize() {
-    document.addEventListener('input', function(event) {
-        if (event.target.matches('.')) {
-            resizeTextarea(event.target);
-        }
-    });
-
-    function resizeTextarea(textarea) {
-        textarea.style.height = 'auto';
-        textarea.style.height = textarea.scrollHeight + 'px';
-
-        let tr = textarea.closest('tr');
-        if (tr) {
-            tr.style.height = textarea.scrollHeight + 'px';
-        }
-    }
-}
-
 function generateUnitTestcase(testCaseData, index) {
     unitTestIdx = index || (unitTestIdx + 1);
     testCaseData = testCaseData || {};
@@ -881,7 +1151,6 @@ function renderIntegrationTestCases(testCaseList) {
     $('#test-case-area').show(50);
 
     integrationTestCaseIdx = 0;
-
     testCaseList.forEach((testCaseData) => {
         addIntegrationTestCaseTab(testCaseData);
     });
@@ -889,6 +1158,11 @@ function renderIntegrationTestCases(testCaseList) {
     $('#add-tab-button').off('click').on('click', function() {
         addIntegrationTestCaseTab();
     });
+
+    initializeDatepickers();
+    autoResize();
+    collectAndProcessTestData();
+    generateCharts();
 }
 
 function generateWorkTask(test) {
@@ -1049,6 +1323,10 @@ function renderUnitTestCases(testCaseList) {
     $('#test-case-area').html(html);
     $('#test-case-area').show(50);
     initializeSortable('test-table-body-unit');
+    initializeDatepickers();
+    autoResize();
+    collectAndProcessTestData();
+    generateCharts();
 }
 
 function generateIntegrationTestContent(testCaseData, testCaseIdx) {
@@ -1383,7 +1661,10 @@ function collectTestData(lastSegment) {
     };
 }
 
-function submitTestData(lastSegment) {
+function submitTestData() {
+	let pathname = window.location.pathname;
+    let pathSegments = pathname.split('/');
+    let lastSegment = pathSegments[pathSegments.length - 1];
     let testData = collectTestData(lastSegment);
     console.log(testData.testData);
     if (testData.type === 'PMS01201') {

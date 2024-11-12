@@ -11,6 +11,8 @@
 <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+
 
 <link rel="stylesheet" type="text/css" href="https://cdn.rawgit.com/ax5ui/ax5ui-toast/master/dist/ax5toast.css" />
 <script type="text/javascript" src="https://cdn.rawgit.com/ax5ui/ax5core/master/dist/ax5core.min.js"></script>
@@ -31,11 +33,11 @@
                     테스트 정보</label>
                 <div class="button-area">
                     <div class="d-flex justify-content-end me-5">
-                        <button type="submit" class="excel-btn export-excel">
-                            &nbsp;&nbsp;&nbsp;&nbsp;엑셀받기&nbsp;&nbsp;&nbsp;&nbsp;
+                        <button type="submit" id="excelUploadButton" class="excel-btn export-excel">
+                            &nbsp;&nbsp;<i class="fa-solid fa-file-csv"></i>&nbsp;&nbsp;액셀받기&nbsp;&nbsp;&nbsp;&nbsp;
                         </button>
                         &nbsp;
-                        <button type="submit" class="save-btn-test">
+                        <button type="submit" class="save-btn-test" id="save-test">
                             &nbsp;&nbsp;&nbsp;저장&nbsp;&nbsp;&nbsp;&nbsp;
                         </button>
                         &nbsp;&nbsp;&nbsp;&nbsp;
@@ -130,25 +132,50 @@
             </section>
         </section>
         <section>
-            <section>
-                <div class="center-area d-flex justify-content-left">
-                    <div class="feature-area">
-                        <div class="feature-select-area">
-                            <label class="text-nowrap">테스트케이스ID&nbsp;&nbsp;&nbsp;</label>
-                            <input type="text" id="testDetailId" name="testDetailId" value="${testReq.testDetailId}" style="width: 200px">
-                            &nbsp;&nbsp;&nbsp;<label class="text-nowrap">기능 ID 선택&nbsp;&nbsp;&nbsp;</label>
-                            <select id="feature" class="feature-select" name="taskSelect">
-                                <option value="" selected disabled>기능 선택</option>
-                            </select>
-                        </div>
+            <div class="d-flex justify-content-left">
+                <div class="feature-area">
+                    <div class="feature-select-area">
+                        <table>
+                            <tr>
+                                <td class="td-title text-nowrap">테스트케이스ID&nbsp;&nbsp;&nbsp;</td>
+                                <td>
+                                    <input type="text" id="testDetailId" name="testDetailId" value="${testReq.testDetailId}" style="width: 200px">
+                                </td>
+                                <td class="td-title text-nowrap">기능 ID 선택&nbsp;&nbsp;&nbsp;</td>
+                                <td style="width: 200px !important;">
+                                    <select id="feature" class="feature-select" name="taskSelect">
+                                        <option value="" selected disabled>기능 선택</option>
+                                    </select>
+                                </td>
+                            </tr>
+                        </table>
                     </div>
                 </div>
-                <div class="testCase-section">
-                    <table id="test-case-area">
-                    </table>
-                </div>
-            </section>
+            </div>
+            <div class="testCase-section">
+                <table id="test-case-area">
+                </table>
+            </div>
         </section>
+    </div>
+
+    <div class="modal fade" id="excelUploadModal" tabindex="-1" aria-labelledby="excelUploadModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="excelUploadModalLabel"><i class="fa-solid fa-file-csv"></i> 액셀 파일 업로드</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body d-flex justify-content-left align-items-center">
+                    <input type="file" id="excelFileInput" accept=".xlsx, .xls" style="width: 300px"/>
+                    <label class="clear-btn" id="removeFileButton" style="display: none;">&times;</label>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="cancel-btn" data-bs-dismiss="modal">닫기</button>
+                    <button type="button" class="save-btn-test" id="uploadExcelButton">업로드</button>
+                </div>
+            </div>
+        </div>
     </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-serializeJSON/3.2.1/jquery.serializejson.min.js"></script>
