@@ -59,7 +59,6 @@ function resizeTextareasInRow(tr) {
 document.querySelectorAll('tr').forEach(function(tr) {
     resizeTextareasInRow(tr);
 });
-
 let observer_mem = new MutationObserver(function(mutations) {
     mutations.forEach(function(mutation) {
         if (mutation.addedNodes) {
@@ -123,6 +122,7 @@ $(function() {
     if (lastSegment === 'test' && pathSegments[pathSegments.length - 2] === 'tests') {
         $('#chartArea').hide();
         $('.excel-btn').html(`&nbsp;&nbsp;<i class="fa-solid fa-file-csv"></i> 액셀 업로드&nbsp;&nbsp;`);
+
     } else {
         $('#chartArea').show();
     }
@@ -561,7 +561,7 @@ $(function() {
                 defectNos: row[18] ? parseDefectNos(row[18]) : []
             };
         });
-    }
+    });
 
     function parseIntegrationTestData(jsonData) {
         const dataRows = jsonData.slice(1);
@@ -1665,6 +1665,7 @@ function submitTestData() {
 	let pathname = window.location.pathname;
     let pathSegments = pathname.split('/');
     let lastSegment = pathSegments[pathSegments.length - 1];
+
     let testData = collectTestData(lastSegment);
     console.log(testData.testData);
     if (testData.type === 'PMS01201') {

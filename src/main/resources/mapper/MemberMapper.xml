@@ -232,6 +232,7 @@
             </if>
             <if test="type == 'end'">
                 end_dt = TO_DATE(#{member.endDate})
+
             </if>
             WHERE mem_no = #{member.id}
         </foreach>
@@ -246,6 +247,7 @@
             end_dt = TO_DATE((#{member.endDate,jdbcType=DATE}),
             pre_start_dt = TO_DATE(#{member.preStartDate,jdbcType=DATE}),
             pre_end_dt = TO_DATE(#{member.preEndDate,jdbcType=DATE})
+
             WHERE mem_no = #{member.id}
         </foreach>
     </update>

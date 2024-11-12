@@ -394,6 +394,7 @@
         GROUP BY
             difficulty.cd_dtl_nm, difficulty.common_cd_no, difficulty.order_no
 
+
         UNION ALL
 
         SELECT

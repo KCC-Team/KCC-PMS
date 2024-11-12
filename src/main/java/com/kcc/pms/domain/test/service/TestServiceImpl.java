@@ -84,6 +84,8 @@ public class TestServiceImpl implements TestService {
         } else {
             // Handle other test types if necessary
         }
+
+        return testReq.getTestNumber();
     }
 
     @Override
@@ -550,5 +552,4 @@ public class TestServiceImpl implements TestService {
         }
         return mergedColumns;
     }
-
 }

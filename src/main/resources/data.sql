@@ -766,8 +766,6 @@ VALUES (seq_team.nextval, '데이터 분석 및 예측 팀', '테스트 내용',
 INSERT INTO team (tm_no, tm_nm, tm_cont, use_yn, order_no, par_tm_no, prj_no, sys_no, reg_id, reg_dt, mod_id, mod_dt)
 VALUES (seq_team.nextval, '운행 데이터 분석 팀', '테스트 내용', 'Y', 1, 15, 1, NULL, 'user1', '2021-01-01', NULL, NULL);
 
-
-
 INSERT INTO projectMember (mem_no, tm_no, prj_no, prj_auth_cd, pre_start_dt, pre_end_dt, start_dt, end_dt, use_yn, reg_id, reg_dt, mod_id, mod_dt)
 VALUES (1, 1, 1, 'PMS00203', '2021-01-01', '2021-01-01', '2021-01-01', '2021-01-01', 'Y', 'user1', '2021-01-01', NULL, NULL);
 
@@ -1417,7 +1415,6 @@ INSERT INTO FEATURE (FEAT_NO, FEAT_ID, FEAT_TITLE, FEAT_CONT, PRE_ST_DT, PRE_END
 VALUES (seq_feature.nextval, 'F014', '기능14', '내용14', TO_DATE('24/11/01', 'YY/MM/DD'), TO_DATE('24/11/15', 'YY/MM/DD'), NULL, NULL, 'PMS00901', 'PMS00601', 0, 'PMS01101', 'PMS01001', 'Y', 1, 1, 1, 1);
 INSERT INTO FEATURE (FEAT_NO, FEAT_ID, FEAT_TITLE, FEAT_CONT, PRE_ST_DT, PRE_END_DT, ST_DT, END_DT, STAT_CD, PRI_CD, PRG, DIFF_CD, CLASS_CD, USE_YN, SYS_NO, MEM_NO, TM_NO, PRJ_NO)
 VALUES (seq_feature.nextval, 'F015', '기능15', '내용15', TO_DATE('24/11/02', 'YY/MM/DD'), TO_DATE('24/11/18', 'YY/MM/DD'), NULL, NULL, 'PMS00901', 'PMS00602', 0, 'PMS01102', 'PMS01002', 'Y', 2, 2, 1, 1);
-
 
 -- output
 InSERT InTO Output (opt_no, opt_ttl, prj_no, high_folder_no, fld_yn, use_yn)
