@@ -91,6 +91,49 @@ $(document).ready(function (){
 
     $("#system-select span:first").text("시스템 선택");
 
+
+    initializeProgressField();
+
+    $('#PMS009').on('change', function() {
+        updateProgressField($(this).val());
+    });
+
+    function initializeProgressField() {
+        var initialValue = $('#PMS009').val();
+        updateProgressField(initialValue);
+    }
+
+    function updateProgressField(selectedValue) {
+        var progressValue;
+        var todayDate = new Date().toISOString().slice(0, 10); // yyyy-mm-dd 형식의 오늘 날짜
+
+        switch (selectedValue) {
+            case 'pms00903':
+                progressValue = 70;
+                $('#prg').prop('readonly', true);
+                break;
+            case 'pms00904':
+                progressValue = 80;
+                $('#prg').prop('readonly', true);
+                break;
+            case 'pms00905':
+                progressValue = 90;
+                $('#prg').prop('readonly', true);
+                break;
+            case 'pms00906':
+                progressValue = 100;
+                $('#prg').prop('readonly', true);
+                $('#end_dt').val(todayDate);
+                break;
+            default:
+                progressValue = 0;
+                $('#prg').prop('readonly', false);
+                $('#end_dt').val('');
+                break;
+        }
+
+        $('#prg').val(progressValue); // 진척도를 설정합니다
+    }
 })
 
 
