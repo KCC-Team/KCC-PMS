@@ -154,7 +154,7 @@
 
 
     <select id="getFeatureTestNo" resultType="com.kcc.pms.domain.feature.model.dto.FeatureTestResponseDto">
-        SELECT
+        SELECT DISTINCT
             td.test_no as testNo, tm.test_id as testId
         FROM
             featuretest ft
