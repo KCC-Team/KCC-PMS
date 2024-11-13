@@ -141,10 +141,18 @@
         VALUES
             (#{testReq.testNumber}, #{testReq.testId}, #{testReq.testTitle},
              #{testReq.testContent}, #{testReq.testStatus},
-             #{testReq.testType}, TO_DATE(#{testReq.testStartDate, jdbcType=DATE}, 'YYYY-MM-DD'), TO_DATE(#{testReq.testEndDate, jdbcType=DATE}, 'YYYY-MM-DD'),
+             #{testReq.testType}, TO_DATE(#{testReq.testStartDate, jdbcType=DATE}, 'YYYY-MM-DD'),
+            <choose>
+                <when test="testReq.testEndDate != null">
+                    TO_DATE(#{testReq.testEndDate}, 'YYYY-MM-DD'),
+                </when>
+                <otherwise>
+                    NULL,
+                </otherwise>
+            </choose>,
              #{projectNo}, #{testReq.workSystemNo, jdbcType=NUMERIC},
              #{memberNo},
-             TO_DATE(sysdate, 'YYYY-MM-DD'), 'Y')
+             sysdate, 'Y')
     </insert>
 
     <insert id="saveUnitTestDetails">
