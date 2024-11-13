@@ -6,6 +6,7 @@ import lombok.Setter;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 @Getter
 @Setter
@@ -38,4 +39,6 @@ public class FeatureDetailResponseDto implements Serializable {
     private String preEndDateStr;
     private String startDateStr;
     private String endDateStr;
+
+    private List<FeatureTestResponseDto> testNo;
 }

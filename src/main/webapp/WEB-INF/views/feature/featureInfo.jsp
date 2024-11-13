@@ -126,8 +126,8 @@
                         </tr>
                         <tr>
                             <th>테스트ID</th>
-                            <td colspan="3">
-                                <a href="#">테스트아이디1</a>
+                            <td colspan="3" id="testIdList">
+
                             </td>
                         </tr>
 

@@ -63,6 +63,9 @@ public class FeatureServiceImpl implements FeatureService{
         if (featureDetail.getEndDate() != null) {
             featureDetail.setEndDateStr(sdf.format(featureDetail.getEndDate()));
         }
+        List<FeatureTestResponseDto> featureTestNo = mapper.getFeatureTestNo(featNo);
+
+        featureDetail.setTestNo(featureTestNo);
 
         return featureDetail;
     }
@@ -96,5 +99,6 @@ public class FeatureServiceImpl implements FeatureService{
     public List<FeatureSummaryResponseDto> getDelayList(Long prjNo) {
         return mapper.getDelayList(prjNo);
     }
+
 
 }

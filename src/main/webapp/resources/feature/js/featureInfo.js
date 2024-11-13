@@ -266,6 +266,19 @@ function getFeatureInfo(featNo) {
                 $('#systemNo').val(response.systemNo);
                 setSystemPath(response.systemNo);
 
+
+                response.testNo.forEach(function(test) {
+                    var link = document.createElement('a');
+                    link.href = "https://www.kccpms.co.kr/projects/tests/" + test.testNo;
+                    link.textContent = test.testId;
+                    link.target = "_blank"; // 새 창에서 열기
+
+                    // 링크 간에 공백 추가
+                    document.getElementById('testIdList').appendChild(link);
+                    document.getElementById('testIdList').appendChild(document.createTextNode(" "));
+                });
+
+
                 resolve(); // 성공 시 Promise를 resolve
             },
             error: function(xhr, status, error) {
