@@ -144,7 +144,7 @@
              #{testReq.testType}, TO_DATE(#{testReq.testStartDate, jdbcType=DATE}, 'YYYY-MM-DD'), TO_DATE(#{testReq.testEndDate, jdbcType=DATE}, 'YYYY-MM-DD'),
              #{projectNo}, #{testReq.workSystemNo, jdbcType=NUMERIC},
              #{memberNo},
-             sysdate, 'Y')
+             TO_DATE(sysdate, 'YYYY-MM-DD'), 'Y')
     </insert>
 
     <insert id="saveUnitTestDetails">
