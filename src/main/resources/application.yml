@@ -80,7 +80,7 @@ spring:
       on-profile: prod
   datasource:
 #    url: jdbc:oracle:thin:@${db.host}:${db.port}/xe
-    url: jdbc:log4jdbc:oracle:thin:@localhost:${db.port}:xe
+    url: jdbc:log4jdbc:oracle:thin:@${db.host}:${db.port}:xe
     username: ${db.username}
     password: ${db.password}
 #    driver-class-name: oracle.jdbc.OracleDriver
