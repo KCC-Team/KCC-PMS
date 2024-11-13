@@ -244,7 +244,7 @@
             SET
             prj_auth_cd = #{member.auth,jdbcType=VARCHAR},
             start_dt = TO_DATE(#{member.startDate,jdbcType=DATE},'YYYY-MM-DD'),
-            end_dt = TO_DATE((#{member.endDate,jdbcType=DATE},'YYYY-MM-DD'),
+            end_dt = TO_DATE(#{member.endDate,jdbcType=DATE},'YYYY-MM-DD'),
             pre_start_dt = TO_DATE(#{member.preStartDate,jdbcType=DATE},'YYYY-MM-DD'),
             pre_end_dt = TO_DATE(#{member.preEndDate,jdbcType=DATE},'YYYY-MM-DD')
 
