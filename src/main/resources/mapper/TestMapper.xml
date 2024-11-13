@@ -402,8 +402,8 @@
             t.stat_cd = #{testStatus, jdbcType=CHAR},
             t.type_cd = #{testType, jdbcType=CHAR},
             t.sys_work_no = #{workSystemNo, jdbcType=NUMERIC},
-            t.test_st_dt = #{testStartDate, jdbcType=DATE},
-            t.test_end_dt = #{testEndDate, jdbcType=DATE}
+            t.test_st_dt = TO_DATE(#{testStartDate, jdbcType=DATE}, 'YYYY-MM-DD'),
+            t.test_end_dt = TO_DATE(#{testEndDate, jdbcType=DATE}, 'YYYY-MM-DD')
         where t.test_no = #{testNumber, jdbcType=NUMERIC}
     </update>
 
