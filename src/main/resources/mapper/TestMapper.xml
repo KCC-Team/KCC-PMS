@@ -149,7 +149,7 @@
                 <otherwise>
                     NULL,
                 </otherwise>
-            </choose>,
+            </choose>
              #{projectNo}, #{testReq.workSystemNo, jdbcType=NUMERIC},
              #{memberNo},
              sysdate, 'Y')
