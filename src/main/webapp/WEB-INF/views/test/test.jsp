@@ -138,11 +138,11 @@
                     <div class="feature-select-area">
                         <table>
                             <tr>
-                                <td class="td-title text-nowrap">테스트케이스ID&nbsp;&nbsp;&nbsp;</td>
+                                <td class="td-title text-nowrap">테스트케이스ID&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="es-star">*</span></td>
                                 <td>
                                     <input type="text" id="testDetailId" name="testDetailId" value="${testReq.testDetailId}" style="width: 200px">
                                 </td>
-                                <td class="td-title text-nowrap">기능 ID 선택&nbsp;&nbsp;&nbsp;</td>
+                                <td class="td-title text-nowrap">기능 ID 선택&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="es-star">*</span></td>
                                 <td style="width: 200px !important;">
                                     <select id="feature" class="feature-select" name="taskSelect">
                                         <option value="" selected disabled>기능 선택</option>

@@ -13,6 +13,7 @@ import static lombok.AccessLevel.PROTECTED;
 @NoArgsConstructor(access = PROTECTED)
 @AllArgsConstructor
 public class OutputFile {
+    private Long fileNo;
     private FileItem fileItem;
     private String fileType;
     private String fileSize;

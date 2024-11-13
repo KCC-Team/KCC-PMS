@@ -8,6 +8,16 @@ let toast = new ax5.ui.toast({
 $(function() {
     setToast();
 
+    // 검색 기능 설정
+    var to = false;
+    $('#searchFolder').keyup(function () {
+        if (to) { clearTimeout(to); }
+        to = setTimeout(function () {
+            var v = $('#searchFolder').val();
+            $('.jstree-folder-in').jstree(true).search(v);
+        }, 250);
+    });
+
     $.ajax({
         url: '/projects/outputs/api/list',
         type: 'GET',
@@ -20,7 +30,7 @@ $(function() {
                     "themes": {"stripes": true},
                     'check_callback': true
                 },
-                'plugins': ["types", "dnd", "wholerow", "search", "contextmenu"],
+                'plugins': ["types", "dnd", "wholerow", "search"],
                 'search': {
                     'show_only_matches': true,
                     'show_only_matches_children': true
@@ -61,6 +71,10 @@ $(function() {
                     'check_callback': true
                 },
                 'plugins': ["types", "dnd", "wholerow", "search"],
+                'search': {
+                    'show_only_matches': true,
+                    'show_only_matches_children': true
+                },
                 'types': {
                     "default": {
                         "icon": "fa fa-folder text-warning"
@@ -203,6 +217,10 @@ function initializeJsTree(treeData) {
             'check_callback': true,
         },
         'plugins': ["types", "dnd", "wholerow", "search"],
+        'search': {
+            'show_only_matches': true,
+            'show_only_matches_children': true
+        },
         'types': {
             "default": {
                 "icon": "fa fa-folder text-warning"

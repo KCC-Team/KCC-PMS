@@ -44,11 +44,15 @@ public class DefectController {
 	public String showInsertForm(Model model,
 								 @RequestParam(value = "test", required = false) Long testNO,
 								 @RequestParam(value = "testDetailNo", required = false) Long testDetailNo,
-								 @RequestParam(value = "testDetailId", required = false) String testDetailId) {
+								 @RequestParam(value = "testDetailId", required = false) String testDetailId, @RequestParam(value = "featureId", required = false) String featureId,
+								 @RequestParam(value = "featttl", required = false) String featureName) {
 		DefectDto defectDto = new DefectDto();
 		defectDto.setTestNo(testNO);
 		defectDto.setTestDetailNo(testDetailNo);
 		defectDto.setTestDetailId(testDetailId);
+		if (featureId != null && !featureId.isEmpty()) {
+			defectDto.setDefectContent("- 화면ID: " + featureId + ", - 화면명: " + featureName);
+		}
 		model.addAttribute("req", defectDto);
 		return "defect/defect";
 	}

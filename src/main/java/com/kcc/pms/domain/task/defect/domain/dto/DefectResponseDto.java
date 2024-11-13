@@ -15,7 +15,7 @@ import static lombok.AccessLevel.PROTECTED;
 @AllArgsConstructor
 public class DefectResponseDto implements Serializable {
     private DefectItem defectItem;
-    private String defectTitle;
+    private String defectId;
     private String priority;
     private String status;
     private String discoverName;
@@ -30,6 +30,6 @@ public class DefectResponseDto implements Serializable {
     @AllArgsConstructor
     private static class DefectItem implements Serializable {
         private Integer defectNumber;
-        private String defectId;
+        private String defectTitle;
     }
 }

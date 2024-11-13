@@ -5,11 +5,13 @@
 
 <mapper namespace="com.kcc.pms.domain.output.mapper.OutputMapper">
     <resultMap id="TaskOutput" type="TaskOutput">
-        <result property="taskNo" column="tsk_no"/>
+        <id property="taskNo" column="tsk_no"/>
         <result property="taskTitle" column="tsk_ttl"/>
     </resultMap>
 
+
     <resultMap id="OutputFile" type="OutputFile">
+        <id property="fileNo" column="fl_no"/>
         <result property="fileType" column="fl_type"/>
         <result property="fileSize" column="fl_size"/>
         <result property="registedDate" column="registedDate"/>
@@ -20,6 +22,7 @@
             <result property="filePath" column="file_path"/>
         </association>
     </resultMap>
+
 
     <resultMap id="outputRes" type="OutputResponseDto">
         <id property="optNo" column="opt_no"/>
@@ -45,6 +48,7 @@
 
     <select id="findOutput" parameterType="map" resultMap="outputRes">
         SELECT
+            td.fl_no as fileNo,
             o.opt_no as opt_no,
             o.opt_ttl as title,
             o.note as note,

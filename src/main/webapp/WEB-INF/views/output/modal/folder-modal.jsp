@@ -27,7 +27,7 @@
             </div>
             <div class="modal-body">
                 <section class="info-section d-flex flex-column">
-                    <input type="text" class="form-control mb-1" id="search" placeholder="폴더를 검색하세요." style="width: 270px;">
+                    <input type="text" class="form-control mb-1" id="searchFolder" placeholder="폴더를 검색하세요." style="width: 270px;">
                     <div>
                         <div class="jstree-folder-in">
                         </div>

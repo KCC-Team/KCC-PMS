@@ -23,14 +23,15 @@ $(function () {
             }
         },
         columns: [
-            {key: "testItem", label: "테스트 ID", align: "center", width: 200, formatter: function() {
+            {key: "testItem", label: "테스트 명", width: 423.3, align: "left" , formatter: function (){
                     let item = this.value;
-                    return '<a href="/projects/tests/' + encodeURIComponent(item.testNumber) + '" class="defect-title" style="color: #2383f8; font-size: 13px; font-weight: bold; text-decoration: none;">' + item.testId + '</a>';
+                    return '<a href="/projects/tests/' + encodeURIComponent(item.testNumber) + '" class="defect-title" style="color: #0044cc; font-size: 13px; ' +
+                        'font-weight: bold; text-decoration: none;">' + item.testTitle + '</a>';
                 }},
-            {key: "testType", label: "구분", width: 90, align: "center", formatter: function (){
+            {key: "testId", label: "테스트 ID", align: "center", width: 180, formatter: function() {
                     return '<span style="font-size: 13px;">' + this.value + '</span>';
                 }},
-            {key: "testTitle", label: "테스트 명", width: 463.3, align: "center" , formatter: function (){
+            {key: "testType", label: "구분", width: 90, align: "center", formatter: function (){
                     return '<span style="font-size: 13px;">' + this.value + '</span>';
                 }},
             {key: "testStatus", label: "상태", width: 100, align: "center", formatter: function (){
@@ -51,7 +52,7 @@ $(function () {
 
                     return '<span class="' + statusClass + '" style="font-size: 12px;">' + this.value + '</span>';
                 }},
-            {key: "workTitle", label: "업무 구분", width: 117, align: "center", formatter: function (){
+            {key: "workTitle", label: "업무 구분", width: 177, align: "center", formatter: function (){
                     return '<span style="font-size: 13px;">' + (this.value ? this.value : '-') + '</span>';
                 }},
             {key: "testStartDate", label: "시작일자", width: 100, align: "center", formatter: function (){
@@ -165,7 +166,8 @@ function createMenu(menuData) {
         $('#system-select span:first-child').text(projectTitle);
         $('#systemNo').val("");
         $('.mymenu').slideUp();
-        reloadDataTest(testGrid, $('#systemNo').val(), $('.test-opt').val(), $('.test-status').val(), $('#searchTest').val(), selectPage);
+        $('#systemNo').val() ? reloadDataTest(testGrid, $('#systemNo').val(), $('.test-opt').val(), $('.test-status').val(), $('#searchTest').val(), this.page.selectPage+1) :
+            reloadDataTest(testGrid, 0, $('.test-opt').val(), $('.test-status').val(), $('#searchTest').val(), 0);
     });
     parentElement.append(allMenuItem);
 

@@ -45,13 +45,20 @@ $(function () {
             }
         },
         columns: [
-            {key: "defectItem", label: "결함 ID", align: "center", width: 150, formatter: function() {
+            {
+                key: "defectItem",
+                label: "결함명",
+                width: 418,
+                align: "left",
+                formatter: function() {
                     let item = this.value;
-                    return '<input type=hidden name=defect_id value=${item.defectNumber} />' +
-                        '<a href="/projects/defects/' + encodeURIComponent(item.defectNumber) + '" class="defect-id" style="color: #2383f8; font-size: 13px; font-weight: bold; text-decoration: none;">' + item.defectId + '</a>';
-                }},
-            {key: "defectTitle", label: "결함명", width: 418, align: "left" , formatter: function (){
-                    return '<span style="font-size: 12px;">' + this.value + '</span>';
+                    return '<a href="/projects/defects/' + encodeURIComponent(item.defectNumber) + '" class="defect-id" style="color: #0044cc; font-size: 13px; font-weight: bold; text-decoration: none;">' + item.defectTitle + '</a>';
+                }
+            },
+            {key: "defectId", label: "결함 ID", align: "center", width: 150, formatter: function() {
+                    let item = this.value;
+                    return '<input type=hidden name=defect_id value=${item} />' +
+                        '<span>' + item + '</span>';
                 }},
             {key: "priority", label: "우선순위", width: 100, align: "center", formatter: function (){
                     return '<span style="font-size: 12px;">' + this.value + '</span>';

@@ -17,7 +17,7 @@
 
     <resultMap id="testDto" type="testDto">
         <result property="testType" column="testType" />
-        <result property="testTitle" column="testTitle" />
+        <result property="testId" column="testId" />
         <result property="workTitle" column="workTitle" />
         <result property="testStartDate" column="testStartDate"/>
         <result property="testEndDate" column="testEndDate"/>
@@ -26,7 +26,7 @@
         <result property="testStatus" column="testStatus" />
         <association property="testItem" column="testItem">
             <id property="testNumber" column="testNumber" />
-            <result property="testId" column="testId" />
+            <result property="testTitle" column="testTitle" />
         </association>
     </resultMap>
 

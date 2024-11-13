@@ -202,8 +202,6 @@ $(function () {
     });
 
     const $selectElement = $('#task-select-list');
-    const $selectBox = $('.select-box-list');
-
     let selectedOptions = [];
     $selectElement.on('change', function () {
         const value = $selectElement.val();
@@ -233,7 +231,6 @@ $(function () {
             fileTitle: fileTitle
         }
 
-        console.log(file);
         fetch('/projects/outputs/api/download', {
             method: 'post',
             headers: {
@@ -332,7 +329,7 @@ $(function () {
             }
         })
     });
-    
+
     $('#output-delete-btn').on('click', function () {
        $.ajax({
               url: '/projects/outputs/api/delete',
@@ -532,7 +529,6 @@ function getNode(id, type) {
                         $('#outputTask').append($taskLink, '<br>');
                     });
 
-                    // 그리드가 표시된 후에 setData 호출
                     grid.setData(response.files);
                 }
 

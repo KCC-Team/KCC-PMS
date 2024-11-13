@@ -4,10 +4,10 @@ import com.kcc.pms.auth.PrincipalDetail;
 import com.kcc.pms.domain.common.config.EnvVariableProperties;
 import com.kcc.pms.domain.common.model.dto.CommonCodeSelectListResponseDto;
 import com.kcc.pms.domain.common.service.CommonService;
-import com.kcc.pms.domain.project.model.dto.ProjectManagerResponseDto;
-import com.kcc.pms.domain.project.model.dto.ProjectResponseDto;
+import com.kcc.pms.domain.project.model.dto.*;
 import com.kcc.pms.domain.project.service.ProjectService;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
@@ -15,11 +15,13 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.io.IOException;
 import java.net.URI;
 import java.util.List;
 
@@ -30,6 +32,14 @@ public class CommonController {
     private final ProjectService projectService;
 
     private final EnvVariableProperties properties;
+    private final HttpServletResponse httpServletResponse;
+
+    @GetMapping("/")
+    @ResponseBody
+    public String list(HttpServletResponse response) throws IOException {
+        response.sendRedirect("/projects/list");
+        return "redirect:/projects/list";
+    }
 
     @GetMapping({"/projects", "/outputs"})
     @ResponseBody

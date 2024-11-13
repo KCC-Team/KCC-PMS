@@ -6,25 +6,20 @@ let testCaseDataArray = [];
 
 let observer = new MutationObserver(function(mutations) {
     mutations.forEach(function(mutation) {
-        if (mutation.addedNodes) {
-            mutation.addedNodes.forEach(function(node) {
-                $(node).find('.test-date').addBack('.test-date').each(function() {
-                    $(this).datepicker({
-                        dateFormat: "yy-mm-dd"
-                    });
-                });
-
-                if (node.nodeType === 1) {
-                    let textareas = node.querySelectorAll('textarea');
-                    if (textareas.length > 0) {
-                        let tr = node.closest('tr') || node.querySelector('tr');
-                        if (tr) {
-                            resizeTextareasInRow(tr);
-                        }
+        mutation.addedNodes.forEach(function(node) {
+            if (node.nodeType === 1) {
+                if (node.matches('tr')) {
+                    resizeTextareasInRow(node);
+                } else if (node.querySelector('tr')) {
+                    resizeTextareasInRow(node.querySelector('tr'));
+                } else {
+                    let tr = node.closest('tr');
+                    if (tr) {
+                        resizeTextareasInRow(tr);
                     }
                 }
-            });
-        }
+            }
+        });
     });
 });
 
@@ -38,7 +33,7 @@ function resizeTextareasInRow(tr) {
     let maxHeight = 0;
 
     textareas.forEach(function(textarea) {
-        textarea.style.height = 'auto';
+        textarea.style.height = 'auto'; // 높이를 초기화하여 scrollHeight를 정확히 측정
     });
 
     textareas.forEach(function(textarea) {
@@ -49,16 +44,11 @@ function resizeTextareasInRow(tr) {
     });
 
     textareas.forEach(function(textarea) {
-        textarea.style.height = maxHeight + 'px';
+        textarea.style.height = maxHeight + 'px'; // 최대 높이로 모든 textarea 높이 설정
     });
 
-    tr.style.height = 'auto';
-    tr.style.height = tr.scrollHeight + 'px';
 }
 
-document.querySelectorAll('tr').forEach(function(tr) {
-    resizeTextareasInRow(tr);
-});
 let observer_mem = new MutationObserver(function(mutations) {
     mutations.forEach(function(mutation) {
         if (mutation.addedNodes) {
@@ -88,29 +78,6 @@ function autoResize() {
             }
         }
     });
-
-    function resizeTextareasInRow(tr) {
-        let textareas = tr.querySelectorAll('textarea');
-        let maxHeight = 0;
-
-        textareas.forEach(function(textarea) {
-            textarea.style.height = 'auto';
-        });
-
-        textareas.forEach(function(textarea) {
-            let scrollHeight = textarea.scrollHeight;
-            if (scrollHeight > maxHeight) {
-                maxHeight = scrollHeight;
-            }
-        });
-
-        textareas.forEach(function(textarea) {
-            textarea.style.height = maxHeight + 'px';
-        });
-
-        tr.style.height = 'auto';
-        tr.style.height = tr.scrollHeight + 'px';
-    }
 }
 
 $(function() {
@@ -205,8 +172,8 @@ $(function() {
                         tr.style.height = tr.scrollHeight + 'px';
                     }
                 }
-                document.querySelectorAll('textarea').forEach(function(textarea) {
-                    resizeTextareasInRow(textarea);
+                document.querySelectorAll('tr').forEach(function(tr) {
+                    resizeTextareasInRow(tr);
                 });
             });
         });
@@ -328,6 +295,9 @@ $(function() {
             $('#test-table-body-unit').append(generateUnitTestcase());
             updateTestCaseIndices($('#test-table-body-unit > tr'), 'unit');
 
+            let newTr = $('#test-table-body-unit tr:last-child')[0];
+            resizeTextareasInRow(newTr);
+
             collectAndProcessTestData();
             generateCharts();
         } else if ($('#PMS012').val() === 'PMS01202') {
@@ -360,6 +330,15 @@ $(function() {
         console.log(`#itg-test-area-${testcaseId}-${rowId}`);
         let workTaskAreaId = `#itg-test-area-${testcaseId}-${rowId}`;
         $(workTaskAreaId).append(generateWorkTask());
+    });
+
+    $('#test-case-area').on('input', 'textarea', function(event) {
+        if (event.target.id !== 'testContent') {
+            let tr = event.target.closest('tr');
+            if (tr) {
+                resizeTextareasInRow(tr);
+            }
+        }
     });
 
     $('#save-test').click(function() {
@@ -505,10 +484,10 @@ $(function() {
     function parseTestData(jsonData) {
         console.log(jsonData);
         let testMasterData = {};
-
+        console.log(jsonData);
         // 테스트 마스터 데이터 파싱 (예시로 작성, 실제 셀 위치에 따라 수정 필요)
-        testMasterData.testTitle = jsonData[0][1]; // 예: 테스트 명이 A1 셀에 위치
-        testMasterData.testId = jsonData[1][1];    // 예: 테스트 ID가 A2 셀에 위치
+        testMasterData.testTitle = jsonData[3][4]; // 예: 테스트 명이 A1 셀에 위치
+        testMasterData.testId = jsonData[4][4];    // 예: 테스트 ID가 A2 셀에 위치
         testMasterData.testType = jsonData[2][1];  // 예: 테스트 구분이 A3 셀에 위치
         testMasterData.testStatus = jsonData[3][1]; // 예: 테스트 상태가 A4 셀에 위치
         testMasterData.testStartDate = jsonData[4][1]; // 예: 테스트 시작일이 A5 셀에 위치
@@ -520,16 +499,16 @@ $(function() {
         let testType;
 
         if (firstCell === '단위 테스트') {
-            testType = 'unit';
+            testType = 'PMS01201';
         } else if (firstCell === '통합 테스트') {
-            testType = 'integration';
+            testType = 'PMS01202';
         } else {
             alert('알 수 없는 테스트 유형입니다.');
             return;
         }
 
         let testData;
-        if (testType === 'unit') {
+        if (testType === 'PMS01201') {
             $('.testCase-section').css('background', '#fff');
             testData = parseUnitTestData(jsonData.slice(12));
         } else {
@@ -588,23 +567,22 @@ $(function() {
         if (data.testMasterData) {
             $('#testTitle').val(data.testMasterData.testTitle);
             $('#testId').val(data.testMasterData.testId);
-            $('#PMS012').val(data.testMasterData.testType).trigger('change');
+            $('#PMS012').val(data.testType).trigger('change');
             $('#PMS013').val(data.testMasterData.testStatus);
             $('#testStartDate').val(data.testMasterData.testStartDate);
             $('#testEndDate').val(data.testMasterData.testEndDate);
             $('#testContent').val(data.testMasterData.testContent);
         }
 
-        // 테스트 타입에 따른 케이스 렌더링
-        if (data.testType === 'unit') {
+        if (data.testType === 'PMS01201') {
             $('#PMS012').val('PMS01201').trigger('change');
             $('.feature-select-area').show();
             renderUnitTestCases(data.testData);
-        } else if (data.testType === 'integration') {
+        } else if (data.testType === 'PMS01202') {
             $('#PMS012').val('PMS01202').trigger('change');
             renderIntegrationTestCases(data.testData);
         }
-        $('#PMS012').val(mapTestType(data.testMasterData.testType)).trigger('change');
+        // $('#PMS012').val(mapTestType(data.testMasterData.testType)).trigger('change');
         $('#PMS013').val(mapTestStatus(data.testMasterData.testStatus));
     }
 
@@ -815,9 +793,9 @@ function changeTestType($this) {
                 <tr>
                     <th class="text-nowrap" rowspan="2">순번</th>
                     <th rowspan="2">사전조건</th>
-                    <th rowspan="2">테스트케이스 설명</th>
-                    <th rowspan="2">수행절차 / 테스트 데이터</th>
-                    <th rowspan="2">예상결과</th>
+                    <th rowspan="2">테스트케이스 설명&nbsp;&nbsp;&nbsp;<span class="es-star">*</span></th>
+                    <th rowspan="2">수행절차 / 테스트 데이터&nbsp;&nbsp;&nbsp;<span class="es-star">*</span></th>
+                    <th rowspan="2">예상결과&nbsp;&nbsp;&nbsp;<span class="es-star">*</span></th>
                     <th rowspan="2" style="width: 130px">케이스 작성일자</th>
                     <th rowspan="2" style="width: 130px">시험자</th>
                     <th colspan="3">테스트 결과</th>
@@ -1056,14 +1034,12 @@ window.addEventListener('message', function (event) {
         let idParts = event.data.type.split('_');
 
         if (idParts[1] === 'unit') {
-            // 단위 테스트의 경우
             let unitTestIdx = idParts[2];
             let nameInputId = `mem_no_unit_${unitTestIdx}`;
             let idInputId = `mem_id_unit_${unitTestIdx}`;
             $(`#${nameInputId}`).val(event.data.member[0].memberName);
             $(`#${idInputId}`).val(event.data.member[0].id);
         } else {
-            // 통합 테스트의 경우
             let testCaseId = idParts[1];
             let rowIdx = idParts[2];
             let nameInputId = `mem_no_${testCaseId}_${rowIdx}`;
@@ -1159,10 +1135,20 @@ function renderIntegrationTestCases(testCaseList) {
         addIntegrationTestCaseTab();
     });
 
-    initializeDatepickers();
+    $('#test-case-area').html(html);
+    $('#test-case-area').show(50);
+
+    $('[id^="test-table-body-itg-"] tr').each(function() {
+        resizeTextareasInRow(this);
+    });
+
     autoResize();
     collectAndProcessTestData();
     generateCharts();
+
+    $('[id^="test-table-body-itg-"] tr').each(function() {
+        resizeTextareasInRow(this);
+    });
 }
 
 function generateWorkTask(test) {
@@ -1289,9 +1275,9 @@ function renderUnitTestCases(testCaseList) {
             <tr>
                 <th class="text-nowrap" rowspan="2">순번</th>
                 <th rowspan="2">사전조건</th>
-                <th rowspan="2">테스트케이스 설명</th>
-                <th rowspan="2">수행절차 / 테스트 데이터</th>
-                <th rowspan="2">예상결과</th>
+                <th rowspan="2">테스트케이스 설명&nbsp;&nbsp;&nbsp;<span class="es-star">*</span></th>
+                <th rowspan="2">수행절차 / 테스트 데이터&nbsp;&nbsp;&nbsp;<span class="es-star">*</span></th>
+                <th rowspan="2">예상결과&nbsp;&nbsp;&nbsp;<span class="es-star">*</span></th>
                 <th rowspan="2" style="width: 130px">케이스 작성일자</th>
                 <th rowspan="2" style="width: 100px">시험자</th>
                 <th colspan="3">테스트 결과</th>
@@ -1323,10 +1309,17 @@ function renderUnitTestCases(testCaseList) {
     $('#test-case-area').html(html);
     $('#test-case-area').show(50);
     initializeSortable('test-table-body-unit');
-    initializeDatepickers();
+    $('#test-table-body-unit tr').each(function() {
+        resizeTextareasInRow(this);
+    });
+
     autoResize();
     collectAndProcessTestData();
     generateCharts();
+
+    $('#test-table-body-unit tr').each(function() {
+        resizeTextareasInRow(this);
+    });
 }
 
 function generateIntegrationTestContent(testCaseData, testCaseIdx) {
@@ -1356,11 +1349,11 @@ function generateIntegrationTestContent(testCaseData, testCaseIdx) {
             <thead>
                 <tr>
                     <th class="text-nowrap" rowspan="2">순번</th>
-                    <th rowspan="2">업무처리 내용</th>
-                    <th rowspan="2" style="width: 350px">테스트</th>
-                    <th rowspan="2" style="width: 100px;">관련 프로그램</th>
-                    <th rowspan="2">테스트 데이터</th>
-                    <th rowspan="2">예상결과</th>
+                    <th rowspan="2">업무처리 내용&nbsp;&nbsp;&nbsp;<span class="es-star">*</span></th>
+                    <th rowspan="2" style="width: 350px">테스트&nbsp;&nbsp;&nbsp;<span class="es-star">*</span></th>
+                    <th rowspan="2" style="width: 100px;">관련 프로그램&nbsp;&nbsp;&nbsp;<span class="es-star">*</span></th>
+                    <th rowspan="2">테스트 데이터&nbsp;&nbsp;&nbsp;<span class="es-star">*</span></th>
+                    <th rowspan="2">예상결과&nbsp;&nbsp;&nbsp;<span class="es-star">*</span></th>
                     <th colspan="4">테스트 결과</th>
                 </tr>
                 <tr>
@@ -1421,6 +1414,11 @@ function addIntegrationTestCaseTab(testCaseData) {
     `;
 
     $('#integrationTestTabsContent').append(tabContentHtml);
+
+    $(`#${tabContentId} tr`).each(function() {
+        resizeTextareasInRow(this);
+    });
+
     initializeSortable(`test-table-body-itg-${integrationTestCaseIdx}`);
 }
 
@@ -1555,8 +1553,8 @@ function collectTestData(lastSegment) {
     let testId = $('#testId').val();
     let testStatus = $('#PMS013').val();
     let workSystemNo = $('#systemNo').val();
-    let testStartDate = $('#testStartDate').val();
-    let testEndDate = $('#testEndDate').val();
+    let testStartDate = $('#testStartDate').val().substring(0, 10);
+    let testEndDate = $('#testEndDate').val().substring(0, 10);
     let testContent = $('#testContent').val();
 
     let testData = {
@@ -1566,8 +1564,8 @@ function collectTestData(lastSegment) {
         testTitle: testTitle,
         testStatus: testStatus,
         workSystemNo: workSystemNo,
-        testStartDate: testStartDate,
-        testEndDate: testEndDate,
+        testStartDate: testStartDate.substring(0, 10),
+        testEndDate: testEndDate.substring(0, 10),
         testContent: testContent,
         testCaseList: []
     };
@@ -1586,10 +1584,10 @@ function collectTestData(lastSegment) {
                 testProcedure: $(row).find('textarea[name="testProcedure"]').val(),
                 estimatedResult: $(row).find('textarea[name="expectedResult"]').val(),
                 featNumbers: [featureId],
-                writtenDate: $(row).find('input[name="writtenDate"]').val(),
+                writtenDate: $(row).find('input[name="writtenDate"]').val().substring(0, 10),
                 writerNo: $(row).find('input[name="writerNo"]').val(),
                 writerName: $(row).find('input[name="writerName"]').val(),
-                testDate: $(row).find('input[name="testDate"]').val(),
+                testDate: $(row).find('input[name="testDate"]').val().substring(0, 10),
                 result: $(row).find('select[name="result"]').val(),
                 defect: $(row).find('input[name="defect"]').val()
             };

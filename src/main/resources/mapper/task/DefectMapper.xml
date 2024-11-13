@@ -5,7 +5,7 @@
 
 <mapper namespace="com.kcc.pms.domain.task.defect.mapper.DefectMapper">
     <resultMap id="DefectListDto" type="DefectResponseDto">
-        <result property="defectTitle" column="defectTitle" />
+        <result property="defectId" column="defectId" />
         <result property="priority" column="priority" />
         <result property="status" column="status" />
         <result property="discoverName" column="discoverName" />
@@ -14,8 +14,8 @@
         <result property="scheduleWorkDate" column="scheduleWorkDate" />
         <result property="workDate" column="workDate" />
         <association property="defectItem" column="defectItem">
-            <id property="defectNumber" column="defectNumber" />
-            <result property="defectId" column="defectId" />
+            <result property="defectTitle" column="defectTitle" />
+            <result property="defectNumber" column="defectNumber" />
         </association>
     </resultMap>
 
@@ -137,7 +137,7 @@
         status != 'all'">AND stat_cd = #{status}
         </if>
         <if test="search != ''">
-            AND (df_id LIKE '%' || #{search} || '%' OR df_ttl LIKE '%' || #{search} || '%' OR df_cont LIKE '%' || #{search} || '%')
+            AND (lower(df_id) LIKE '%' || #{search} || '%' OR lower(df_ttl) LIKE '%' || #{search} || '%' OR lower(df_cont) LIKE '%' || #{search} || '%')
         </if>
         ORDER BY df_fd_dt DESC
         ) sub
@@ -163,9 +163,9 @@
             AND stat_cd = #{status}
         </if>
         <if test="search != ''">
-            AND (df_id LIKE '%' || #{search} || '%'
-            OR df_ttl LIKE '%' || #{search} || '%'
-            OR df_cont LIKE '%' || #{search} || '%')
+            AND (lower(df_id) LIKE '%' || #{search} || '%'
+            OR lower(df_ttl) LIKE '%' || #{search} || '%'
+            OR lower(df_cont) LIKE '%' || #{search} || '%')
         </if>
     </select>
 

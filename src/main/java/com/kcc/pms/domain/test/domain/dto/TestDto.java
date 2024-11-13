@@ -11,8 +11,8 @@ import static lombok.AccessLevel.*;
 @AllArgsConstructor
 public class TestDto implements Serializable {
     private TestItem testItem;
+    private String testId;
     private String testType;
-    private String testTitle;
     private String workTitle;
     private String testStartDate;
     private String testEndDate;
@@ -25,6 +25,6 @@ public class TestDto implements Serializable {
     @AllArgsConstructor
     private static class TestItem implements Serializable {
         private Integer testNumber;
-        private String testId;
+        private String testTitle;
     }
 }

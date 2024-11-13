@@ -94,3 +94,39 @@ function openTeamPopUp(type){
         "width=1000, height=" + height + ", resizable=yes"
     );
 }
+
+document.addEventListener('DOMContentLoaded', function() {
+    // 현재 페이지의 URL 경로를 가져옵니다.
+    var currentPath = window.location.pathname;
+
+    // 모든 사이드바 메뉴의 링크를 선택합니다.
+    var menuLinks = document.querySelectorAll('.menu a');
+
+    menuLinks.forEach(function(link) {
+        var linkPath = link.getAttribute('href');
+
+        // 현재 경로와 링크의 경로를 비교합니다.
+        console.log(linkPath);
+        if (currentPath.includes(linkPath)) {
+            link.classList.add('active');
+
+            // 부모 메뉴가 서브메뉴인 경우, 해당 서브메뉴를 펼칩니다.
+            var submenu = link.closest('.submenu');
+            if (submenu) {
+                submenu.classList.add('visible');
+
+                var parentMenu = submenu.parentElement;
+                if (parentMenu) {
+                    parentMenu.classList.remove('collapsed');
+                }
+            }
+        }
+    });
+});
+
+$(function () {
+    $(document).on('click', '.add-defect', function(e) {
+        e.preventDefault();
+        let popup = window.open('/projects/defects/defect?featureId=RTS_1002_01&featttl=wbs작업목록조회', 'popup', 'width=1150, height=810');
+    });
+});
