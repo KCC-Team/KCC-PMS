@@ -420,8 +420,8 @@ async function registerMember() {
             let memberData = {
                 id: member.id,
                 auth: authCode,
-                pre_st_dt: member.preStartDate ? member.preStartDate : null,
-                pre_end_dt: member.preEndDate ? member.preEndDate : null,
+                pre_st_dt: member.pre_st_dt ? member.pre_st_dt : null,
+                pre_end_dt: member.pre_end_dt ? member.pre_end_dt : null,
                 st_dt: member.startDate ? member.startDate : null,
                 end_dt: member.endDate ? member.endDate : null,
                 beforeTeamNo: member.teamNo ? member.teamNo : null,
