@@ -77,13 +77,20 @@ $(document).ready(function (){
         });
     });
 
-    fetchMenuData().then(function(menuData) {
-        createMenu(menuData);
-        if (featureNo) {
-            console.log("featureNo" + featureNo);
-            getFeatureInfo(featureNo);
-        }
-    });
+    fetchMenuData()
+        .then(function(menuData) {
+            createMenu(menuData);
+            if (featureNo) {
+                console.log("featureNo: " + featureNo);
+                return getFeatureInfo(featureNo); // Promise 반환
+            }
+        })
+        .then(function() {
+            initializeProgressField(); // getFeatureInfo가 완료된 후 실행
+        })
+        .catch(function(error) {
+            console.error("Error:", error); // 오류 처리
+        });
 
     $('#system-select').click(function() {
         $('#system-menu').slideToggle();  // 메뉴를 보여주거나 숨기기
@@ -98,45 +105,51 @@ $(document).ready(function (){
         updateProgressField($(this).val());
     });
 
-    function initializeProgressField() {
-        var initialValue = $('#PMS009').val();
-        updateProgressField(initialValue);
-    }
 
-    function updateProgressField(selectedValue) {
-        var progressValue;
-        var todayDate = new Date().toISOString().slice(0, 10); // yyyy-mm-dd 형식의 오늘 날짜
-
-        switch (selectedValue) {
-            case 'PMS00903':
-                progressValue = 70;
-                $('#prg').prop('readonly', true);
-                break;
-            case 'PMS00904':
-                progressValue = 80;
-                $('#prg').prop('readonly', true);
-                break;
-            case 'PMS00905':
-                progressValue = 90;
-                $('#prg').prop('readonly', true);
-                break;
-            case 'PMS00906':
-                progressValue = 100;
-                $('#prg').prop('readonly', true);
-                $('#end_dt').val(todayDate);
-                break;
-            default:
-                progressValue = 0;
-                $('#prg').prop('readonly', false);
-                $('#end_dt').val('');
-                break;
-        }
-
-        $('#prg').val(progressValue); // 진척도를 설정합니다
-    }
 })
 
+function initializeProgressField() {
+    var initialValue = $('#PMS009').val();
+    updateProgressField(initialValue);
+}
 
+function updateProgressField(selectedValue) {
+    var progressValue;
+    var todayDate = new Date().toISOString().slice(0, 10); // yyyy-mm-dd 형식의 오늘 날짜
+
+    switch (selectedValue) {
+        case 'PMS00903':
+            progressValue = 70;
+            $('#prg').prop('disabled', true);
+            break;
+        case 'PMS00904':
+            progressValue = 80;
+            $('#prg').prop('disabled', true);
+            break;
+        case 'PMS00905':
+            progressValue = 90;
+            $('#prg').prop('disabled', true);
+            break;
+        case 'PMS00906':
+            progressValue = 100;
+            $('#prg').prop('disabled', true);
+            $('#end_dt').val(todayDate);
+            break;
+        case 'PMS00901':
+        case 'PMS00902':
+            progressValue = 0;
+            $('#prg').prop('disabled', false); // prg 선택 가능
+            $('#end_dt').val('');
+            break;
+        default:
+            progressValue = 0;
+            $('#prg').prop('disabled', false); // prg 선택 가능
+            $('#end_dt').val('');
+            break;
+    }
+
+    $('#prg').val(progressValue); // 진척도 값을 설정합니다
+}
 
 function fetchOptions() {
     $.ajax({
@@ -224,37 +237,42 @@ function createMenuHTML(menuData, parentElement, path) {
 }
 
 function getFeatureInfo(featNo) {
-    $.ajax({
-        url: '/projects/features/details?featNo=' + featNo,
-        type: 'GET',
-        success: function (response) {
-            console.log("featureInfo: ", response);
-            $('#featNo').val(response.featNo);
-            $('#feat_title').val(response.featTitle);
-            $('#feat_id').val(response.featId);
-            $('#pre_st_dt').val(response.preStartDateStr);
-            $('#pre_end_dt').val(response.preEndDateStr);
-            $('#st_dt').val(response.startDateStr);
-            $('#end_dt').val(response.endDateStr);
+    return new Promise(function(resolve, reject) {
+        $.ajax({
+            url: '/projects/features/details?featNo=' + featNo,
+            type: 'GET',
+            success: function(response) {
+                console.log("featureInfo: ", response);
+                $('#featNo').val(response.featNo);
+                $('#feat_title').val(response.featTitle);
+                $('#feat_id').val(response.featId);
+                $('#pre_st_dt').val(response.preStartDateStr);
+                $('#pre_end_dt').val(response.preEndDateStr);
+                $('#st_dt').val(response.startDateStr);
+                $('#end_dt').val(response.endDateStr);
 
-            $('#PMS009').val(response.statusCode);
-            $('#PMS006').val(response.priorCode);
-            $('#PMS011').val(response.diffCode);
-            $('#PMS010').val(response.classCode);
-            $('#prg').val(response.progress);
+                $('#PMS009').val(response.statusCode);
+                $('#PMS006').val(response.priorCode);
+                $('#PMS011').val(response.diffCode);
+                $('#PMS010').val(response.classCode);
+                $('#prg').val(response.progress);
 
-            $('#feat_cont').val(response.featDescription);
-            $('#mem_no').val(response.memberNo);
-            $('#mem_nm').val(response.memberName);
-            $('#tm_no').val(response.teamNo);
+                $('#feat_cont').val(response.featDescription);
+                $('#mem_no').val(response.memberNo);
+                $('#mem_nm').val(response.memberName);
+                $('#tm_no').val(response.teamNo);
 
-            // 시스템 번호도 존재한다면 해당 시스템 번호 선택
-            $('#systemNo').val(response.systemNo);
-            setSystemPath(response.systemNo);
-        },
-        error: function (xhr, status, error) {
-            console.error("Failed to fetch feature info:", xhr, status, error);
-        }
+                // 시스템 번호도 존재한다면 해당 시스템 번호 선택
+                $('#systemNo').val(response.systemNo);
+                setSystemPath(response.systemNo);
+
+                resolve(); // 성공 시 Promise를 resolve
+            },
+            error: function(xhr, status, error) {
+                console.error("Failed to fetch feature info:", xhr, status, error);
+                reject(error); // 오류 발생 시 Promise를 reject
+            }
+        });
     });
 }
 
