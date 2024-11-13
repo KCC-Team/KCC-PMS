@@ -141,7 +141,7 @@
         VALUES
             (#{testReq.testNumber}, #{testReq.testId}, #{testReq.testTitle},
              #{testReq.testContent}, #{testReq.testStatus},
-             #{testReq.testType}, #{testReq.testStDate, jdbcType=DATE},
+             #{testReq.testType}, #{testReq.testStartDate, jdbcType=DATE},
             <choose>
                 <when test="testReq.testEndDate != null">
                     TO_DATE(#{testReq.testEndDate}, 'YYYY-MM-DD'),
