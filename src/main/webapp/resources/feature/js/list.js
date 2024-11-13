@@ -55,7 +55,17 @@ $(document).ready(function (){
             fetchGridData(1);
             getParentSystems(1,3);
             getMemberProgress();
+            getDelayList();
         } else if (event.data.status === 'update'){
+            console.log('Received:', event.data.message);
+            console.log(event.data.featClassCd);
+            console.log(event.data.systemNo);
+            console.log(event.data.featClassCd);
+            $('#featClassOption').val(event.data.featClassCd);
+            $('#systemNo').val(event.data.systemNo);
+            getProgressSummary(event.data.systemNo, event.data.featClassCd);
+            setSystemPath(event.data.systemNo);
+            fetchGridData(1);
             getParentSystems(1,3);
             getMemberProgress();
             loadMemberFeatures(cachedMemberNo, cachedMemberName);
