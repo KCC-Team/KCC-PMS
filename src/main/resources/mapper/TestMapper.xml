@@ -284,7 +284,7 @@
             estimated_rlt = #{testDetail.estimatedResult},
             wrk_proc_cont = #{testDetail.workContent},
             mem_no = #{testDetail.writerNo, jdbcType=NUMERIC},
-            test_st_dt = TO_DATE(#{testDetail.testDate, jdbcType=DATE}, 'YYYY-MM-DD'),
+            test_st_dt = #{testDetail.testDate, jdbcType=DATE}, 'YYYY-MM-DD',
             test_result_cd =
             <choose>
                 <when test="testDetail.result == '결과 선택'">
@@ -402,8 +402,8 @@
             t.stat_cd = #{testStatus, jdbcType=CHAR},
             t.type_cd = #{testType, jdbcType=CHAR},
             t.sys_work_no = #{workSystemNo, jdbcType=NUMERIC},
-            t.test_st_dt = TO_DATE(#{testStartDate, jdbcType=DATE}, 'YYYY-MM-DD'),
-            t.test_end_dt = TO_DATE(#{testEndDate, jdbcType=DATE}, 'YYYY-MM-DD')
+            t.test_st_dt = #{testStartDate, jdbcType=DATE},
+            t.test_end_dt = #{testEndDate, jdbcType=DATE}
         where t.test_no = #{testNumber, jdbcType=NUMERIC}
     </update>
 
@@ -416,7 +416,7 @@
             td.test_data = #{testData, jdbcType=VARCHAR},
             td.estimated_rlt = #{estimatedResult, jdbcType=VARCHAR},
             td.mem_no = #{writerNo, jdbcType=NUMERIC},
-            td.test_st_dt = TO_DATE(SUBSTR(#{testDate}, 1, 10), 'YYYY-MM-DD'),
+            td.test_st_dt = SUBSTR(#{testDate}, 1, 10),
         <choose>
             <when test="result == '결과 선택'">
                 td.test_result_cd = null
