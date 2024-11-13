@@ -108,19 +108,19 @@ $(document).ready(function (){
         var todayDate = new Date().toISOString().slice(0, 10); // yyyy-mm-dd 형식의 오늘 날짜
 
         switch (selectedValue) {
-            case 'pms00903':
+            case 'PMS00903':
                 progressValue = 70;
                 $('#prg').prop('readonly', true);
                 break;
-            case 'pms00904':
+            case 'PMS00904':
                 progressValue = 80;
                 $('#prg').prop('readonly', true);
                 break;
-            case 'pms00905':
+            case 'PMS00905':
                 progressValue = 90;
                 $('#prg').prop('readonly', true);
                 break;
-            case 'pms00906':
+            case 'PMS00906':
                 progressValue = 100;
                 $('#prg').prop('readonly', true);
                 $('#end_dt').val(todayDate);
