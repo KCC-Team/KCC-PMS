@@ -110,29 +110,35 @@ $(document).ready(function (){
         switch (selectedValue) {
             case 'PMS00903':
                 progressValue = 70;
-                $('#prg').prop('readonly', true);
+                $('#prg').prop('disabled', true);
                 break;
             case 'PMS00904':
                 progressValue = 80;
-                $('#prg').prop('readonly', true);
+                $('#prg').prop('disabled', true);
                 break;
             case 'PMS00905':
                 progressValue = 90;
-                $('#prg').prop('readonly', true);
+                $('#prg').prop('disabled', true);
                 break;
             case 'PMS00906':
                 progressValue = 100;
-                $('#prg').prop('readonly', true);
+                $('#prg').prop('disabled', true);
                 $('#end_dt').val(todayDate);
+                break;
+            case 'PMS00901':
+            case 'PMS00902':
+                progressValue = 0;
+                $('#prg').prop('disabled', false); // prg 선택 가능
+                $('#end_dt').val('');
                 break;
             default:
                 progressValue = 0;
-                $('#prg').prop('readonly', false);
+                $('#prg').prop('disabled', false); // prg 선택 가능
                 $('#end_dt').val('');
                 break;
         }
 
-        $('#prg').val(progressValue); // 진척도를 설정합니다
+        $('#prg').val(progressValue); // 진척도 값을 설정합니다
     }
 })
 
