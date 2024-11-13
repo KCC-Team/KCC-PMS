@@ -141,7 +141,7 @@
         VALUES
             (#{testReq.testNumber}, #{testReq.testId}, #{testReq.testTitle},
              #{testReq.testContent}, #{testReq.testStatus},
-             #{testReq.testType}, #{testReq.testStartDate, jdbcType=DATE}, #{testReq.testEndDate, jdbcType=DATE},
+             #{testReq.testType}, TO_DATE(#{testReq.testStartDate, jdbcType=DATE}, 'YYYY-MM-DD'), TO_DATE(#{testReq.testEndDate, jdbcType=DATE}, 'YYYY-MM-DD'),
              #{projectNo}, #{testReq.workSystemNo, jdbcType=NUMERIC},
              #{memberNo},
              sysdate, 'Y')
@@ -176,7 +176,7 @@
             #{testDetail.estimatedResult},
             #{testDetail.writerNo, jdbcType=NUMERIC},
             #{testNo}, sysdate,
-            #{testDetail.testDate, jdbcType=DATE},
+            TO_DATE(#{testDetail.testDate, jdbcType=DATE}, 'YYYY-MM-DD'),
             <choose>
                 <when test="testDetail.result == '결과 선택'">
                     null
@@ -402,8 +402,8 @@
             t.stat_cd = #{testStatus, jdbcType=CHAR},
             t.type_cd = #{testType, jdbcType=CHAR},
             t.sys_work_no = #{workSystemNo, jdbcType=NUMERIC},
-            t.test_st_dt = #{testStartDate, jdbcType=DATE},
-            t.test_end_dt = #{testEndDate, jdbcType=DATE}
+            t.test_st_dt = TO_DATE(#{testStartDate, jdbcType=DATE}, 'YYYY-MM-DD'),
+            t.test_end_dt = TO_DATE(#{testEndDate, jdbcType=DATE}, 'YYYY-MM-DD')
         where t.test_no = #{testNumber, jdbcType=NUMERIC}
     </update>
 
