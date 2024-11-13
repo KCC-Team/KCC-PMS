@@ -175,7 +175,7 @@
             #{testDetail.testProcedure},
             #{testDetail.estimatedResult},
             #{testDetail.writerNo, jdbcType=NUMERIC},
-            #{testNo}, sysdate,
+            #{testNo}, TO_DATE(sysdate, 'YYYY-MM-DD'),
             TO_DATE(#{testDetail.testDate, jdbcType=DATE}, 'YYYY-MM-DD'),
             <choose>
                 <when test="testDetail.result == '결과 선택'">
