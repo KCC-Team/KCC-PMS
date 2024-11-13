@@ -144,7 +144,7 @@
              #{testReq.testType}, TO_DATE(#{testReq.testStartDate, jdbcType=DATE}, 'YYYY-MM-DD'), TO_DATE(#{testReq.testEndDate, jdbcType=DATE}, 'YYYY-MM-DD'),
              #{projectNo}, #{testReq.workSystemNo, jdbcType=NUMERIC},
              #{memberNo},
-             sysdate, 'Y')
+             TO_DATE(sysdate, 'YYYY-MM-DD'), 'Y')
     </insert>
 
     <insert id="saveUnitTestDetails">
@@ -175,7 +175,7 @@
             #{testDetail.testProcedure},
             #{testDetail.estimatedResult},
             #{testDetail.writerNo, jdbcType=NUMERIC},
-            #{testNo}, sysdate,
+            #{testNo}, TO_DATE(sysdate, 'YYYY-MM-DD'),
             TO_DATE(#{testDetail.testDate, jdbcType=DATE}, 'YYYY-MM-DD'),
             <choose>
                 <when test="testDetail.result == '결과 선택'">
