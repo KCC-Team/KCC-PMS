@@ -88,5 +88,12 @@ spring:
     hikari:
       connection-init-sql: "ALTER SESSION SET NLS_DATE_FORMAT='YYYY-MM-DD' NLS_LANGUAGE='KOREAN' NLS_TERRITORY='KOREA'"
 
+
 API-SERVER:
   url: http://13.125.32.253:8085
+logging:
+  level:
+    java:
+        sql: debug
+    org:
+      mybatis: debug
