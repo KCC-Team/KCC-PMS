@@ -93,7 +93,4 @@ API-SERVER:
   url: http://13.125.32.253:8085
 logging:
   level:
-    java:
-        sql: debug
-    org:
-      mybatis: debug
+    root: debug
