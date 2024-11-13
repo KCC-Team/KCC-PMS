@@ -26,7 +26,7 @@
                     <div class="project-title">차세대 공공 프로젝트</div>
                     <div class="feat-all-chart">
                         <div class="circle">
-                            <strong class="circle_strong">라벨</strong>
+                            <strong class="circle_strong"></strong>
                         </div>
                     </div>
                 </div>
