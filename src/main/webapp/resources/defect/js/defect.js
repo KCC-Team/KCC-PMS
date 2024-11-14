@@ -196,6 +196,9 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         }
     });
+
+    $('#PMS007').val("PMS00701");
+    $('.defect-date').val(new Date().toISOString().slice(0, 10));
 });
 
 function getDefectNumberFromPath() {

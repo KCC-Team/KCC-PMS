@@ -15,11 +15,12 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
-@Transactional(readOnly = true)
+@Transactional
 public class DefectServiceImpl implements DefectService {
     private final DefectMapper defectMapper;
     private final TestMapper testMapper;
@@ -69,6 +70,7 @@ public class DefectServiceImpl implements DefectService {
                 Long Number = generateFile(prgNo, MemberName, files.getWorkFiles());
                 int isPassed = defectMapper.updateFileMasterNumbers(no, null, Number);
             }
+
         } else {
             Long[] filesMasterNos = generateFiles(prgNo, MemberName, files);
             if (!(filesMasterNos[0] == null && filesMasterNos[1] == null)) {
@@ -84,7 +86,11 @@ public class DefectServiceImpl implements DefectService {
                     commonService.deleteFileDetail(MemberName, file);
                 }));
         int isPassed = defectMapper.updateDefect(no, defect);
-        testMapper.updateStatus(no, defect.getStatusSelect());
+        if (defect.getTestDetailNo() != null && Objects.equals(defect.getStatusSelect(), "PMS00703")) {
+            testMapper.updateTestStatus(defect.getTestDetailNo(), "PMS01401");
+        } else if (defect.getTestDetailNo() != null && (Objects.equals(defect.getStatusSelect(), "PMS00701") || Objects.equals(defect.getStatusSelect(), "PMS00702"))) {
+            testMapper.updateTestStatus(defect.getTestDetailNo(), "PMS01402");
+        }
         if (isPassed != 1) {
             throw new RuntimeException("Defect 수정 중 오류가 발생했습니다.");
         }

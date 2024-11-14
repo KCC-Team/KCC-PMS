@@ -137,8 +137,9 @@ public class TestServiceImpl implements TestService {
     @Override
     public Long updateTest(TestMasterRequestDto testReq) {
         String testType = testMapper.getTestType(testReq.getTestNumber());
-        testMapper.updateTest(testReq);
 
+        boolean isTrue = false;
+        boolean isDefect = false;
         for (TestDetailRequestDto testDetail : testReq.getTestCaseList()) {
             if (Objects.equals(testType, "PMS01201")) {
                 if (testDetail.getFeatNumbers() != null) {
@@ -152,6 +153,11 @@ public class TestServiceImpl implements TestService {
                 }
 
                 if (testReq.getTestCaseList() != null) {
+                    if (testDetail.getWriterNo() != null && testDetail.getDefectNos() == null) {
+                        isTrue = true;
+                    } else if (testDetail.getDefectNos() != null) {
+                        isDefect = true;
+                    }
                     testMapper.updateTestDetail(testDetail);
                 } else {
                     testMapper.saveUnitTestDetails(testReq.getTestNumber(), testDetail);
@@ -171,7 +177,12 @@ public class TestServiceImpl implements TestService {
                 updateIntegrationTestDetails(testReq.getTestNumber(), testDetail);
             }
         }
-
+        if (isTrue) {
+            testReq.setTestStatus("PMS01302");
+        } else if (isDefect) {
+            testReq.setTestStatus("PMS01303");
+        }
+        testMapper.updateTest(testReq);
         return testReq.getTestNumber();
     }
 

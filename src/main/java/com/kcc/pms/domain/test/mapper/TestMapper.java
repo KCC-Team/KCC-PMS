@@ -32,6 +32,7 @@ public interface TestMapper {
     int updateTest(TestMasterRequestDto testReq);
     int updateIntegrationTestDetails(Long testNo, TestDetailRequestDto testDetail);
     int updateTestDetail(TestDetailRequestDto testDetail);
+    int updateTestStatus(@Param(value = "testNo") Long testNo, @Param(value = "statusSelect") String statusSelect);
     int updateStatus(Long testNo, String status);
     int updateTestStage(TestRequestDto test);
     Integer deleteTest(Long testNo);

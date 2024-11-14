@@ -300,6 +300,9 @@ $(function() {
 
             collectAndProcessTestData();
             generateCharts();
+            $(".test-date").datepicker({
+                dateFormat: "yy-mm-dd"
+            });
         } else if ($('#PMS012').val() === 'PMS01202') {
             let testcaseId = $(this).data('testcase');
             let rowIdx = $(`#test-table-body-itg-${testcaseId} > tr`).length + 1;;
@@ -309,6 +312,9 @@ $(function() {
             collectAndProcessTestData();
             generateCharts();
             fetchFeatureData();
+            $(".test-date").datepicker({
+                dateFormat: "yy-mm-dd"
+            });
         }
     });
 
@@ -492,7 +498,8 @@ $(function() {
         testMasterData.testStatus = jsonData[3][1]; // 예: 테스트 상태가 A4 셀에 위치
         testMasterData.testStartDate = jsonData[4][1]; // 예: 테스트 시작일이 A5 셀에 위치
         testMasterData.testEndDate = jsonData[5][1];   // 예: 테스트 종료일이 A6 셀에 위치
-        testMasterData.testContent = jsonData[6][1];   // 예: 테스트 설명이 A7 셀에 위치
+        testMasterData.testContent = jsonData[6][4];   // 예: 테스트 설명이 A7 셀에 위치
+        testMasterData.featNumbers = jsonData[9][4];
 
         // 테스트 타입 결정
         const firstCell = jsonData[3][13];
@@ -568,7 +575,7 @@ $(function() {
             $('#testTitle').val(data.testMasterData.testTitle);
             $('#testId').val(data.testMasterData.testId);
             $('#PMS012').val(data.testType).trigger('change');
-            $('#PMS013').val(data.testMasterData.testStatus);
+            $('#PMS013').val("PMS01301");
             $('#testStartDate').val(data.testMasterData.testStartDate);
             $('#testEndDate').val(data.testMasterData.testEndDate);
             $('#testContent').val(data.testMasterData.testContent);
@@ -576,6 +583,9 @@ $(function() {
 
         if (data.testType === 'PMS01201') {
             $('#PMS012').val('PMS01201').trigger('change');
+            $('#PMS013').val('PMS01301').trigger('change');
+            $('#testDetailId').val(data.testMasterData.testId + '_01');
+            $('#feature').val("1").trigger('change');
             $('.feature-select-area').show();
             renderUnitTestCases(data.testData);
         } else if (data.testType === 'PMS01202') {
@@ -583,7 +593,10 @@ $(function() {
             renderIntegrationTestCases(data.testData);
         }
         // $('#PMS012').val(mapTestType(data.testMasterData.testType)).trigger('change');
-        $('#PMS013').val(mapTestStatus(data.testMasterData.testStatus));
+        // $('#PMS013').val(mapTestStatus(data.testMasterData.testStatus));
+        $(".test-date").datepicker({
+            dateFormat: "yy-mm-dd"
+        });
     }
 
     function mapTestStatus(statusStr) {
@@ -1055,6 +1068,17 @@ window.addEventListener('message', function (event) {
 function generateUnitTestcase(testCaseData, index) {
     unitTestIdx = index || (unitTestIdx + 1);
     testCaseData = testCaseData || {};
+    if (testCaseData.defectNos != null) {
+        testCaseData.defectNos.forEach(defect => {
+            console.log(defect);
+            if (defect.defectStatusCode === 'PMS00703') {
+                testCaseData.result = 'PMS01401';
+            } else {
+                testCaseData.result = 'PMS01402';
+            }
+        })
+    }
+
 
     return `
         <tr id="test_${unitTestIdx}_tr">
@@ -1319,6 +1343,9 @@ function renderUnitTestCases(testCaseList) {
 
     $('#test-table-body-unit tr').each(function() {
         resizeTextareasInRow(this);
+    });
+    $(".test-date").datepicker({
+        dateFormat: "yy-mm-dd"
     });
 }
 
@@ -1782,10 +1809,11 @@ function collectAndProcessTestData() {
             } else if (result === 'PMS01402') {
                 defectOccurredCount++;
 
-                // Collect defect status code from the test case
                 let defectStatusCode = $(this).find('input[name="defectStatusCode"]').val();
                 updateDefectCounts(defectCounts, defectStatusCode);
             } else if (result === 'PMS01401') {
+                let defectStatusCode = $(this).find('input[name="defectStatusCode"]').val();
+                updateDefectCounts(defectCounts, defectStatusCode);
                 completedCount++;
             }
         });
@@ -1827,6 +1855,7 @@ function collectAndProcessTestData() {
 }
 
 function updateDefectCounts(defectCounts, defectStatusCode) {
+    console.log("Defect: " + defectStatusCode)
     switch (defectStatusCode) {
         case 'PMS00701':
             defectCounts.newDefects++;
