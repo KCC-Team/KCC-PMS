@@ -153,6 +153,19 @@
     </select>
 
 
+    <select id="getFeatureTestNo" resultType="com.kcc.pms.domain.feature.model.dto.FeatureTestResponseDto">
+        SELECT DISTINCT
+            td.test_no as testNo, tm.test_id as testId
+        FROM
+            featuretest ft
+                JOIN
+            testdetail td ON ft.test_dtl_no = td.test_dtl_no
+                JOIN
+            testmaster tm on td.test_no = tm.test_no
+        WHERE
+            ft.feat_no = #{featNo}
+    </select>
+
     <select id="getFeatureDetail" resultType="com.kcc.pms.domain.feature.model.dto.FeatureDetailResponseDto">
         SELECT
             f.feat_no as featNo,

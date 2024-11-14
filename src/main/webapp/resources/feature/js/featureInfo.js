@@ -21,6 +21,7 @@ $(document).ready(function (){
 
 
     $(".btn-save-feature").on("click", function (e) {
+        $('#prg').prop('disabled', false); // 일시적으로 disabled 해제
         e.preventDefault();
         const formData = $("#feat_form").serializeArray();
         const formDataObject = {};
@@ -82,11 +83,8 @@ $(document).ready(function (){
             createMenu(menuData);
             if (featureNo) {
                 console.log("featureNo: " + featureNo);
-                return getFeatureInfo(featureNo); // Promise 반환
+                return getFeatureInfo(featureNo).then(initializeProgressField); // getFeatureInfo 완료 후 initializeProgressField 실행
             }
-        })
-        .then(function() {
-            initializeProgressField(); // getFeatureInfo가 완료된 후 실행
         })
         .catch(function(error) {
             console.error("Error:", error); // 오류 처리
@@ -265,6 +263,19 @@ function getFeatureInfo(featNo) {
                 // 시스템 번호도 존재한다면 해당 시스템 번호 선택
                 $('#systemNo').val(response.systemNo);
                 setSystemPath(response.systemNo);
+
+
+                response.testNo.forEach(function(test) {
+                    var link = document.createElement('a');
+                    link.href = "https://www.kccpms.co.kr/projects/tests/" + test.testNo;
+                    link.textContent = test.testId;
+                    link.target = "_blank"; // 새 창에서 열기
+
+                    // 링크 간에 공백 추가
+                    document.getElementById('testIdList').appendChild(link);
+                    document.getElementById('testIdList').appendChild(document.createTextNode(" "));
+                });
+
 
                 resolve(); // 성공 시 Promise를 resolve
             },
