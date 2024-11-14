@@ -468,7 +468,7 @@
     <select id="getFeatures" resultType="FeatureSimpleResponseDto">
         SELECT feat_no AS featureNo, feat_title AS featureName
         FROM feature
-        WHERE prj_no = #{projectNumber}
+        WHERE prj_no = #{projectNumber} and STAT_CD = 'PMS00903'
     </select>
 
     <update id="updateTestStage">
