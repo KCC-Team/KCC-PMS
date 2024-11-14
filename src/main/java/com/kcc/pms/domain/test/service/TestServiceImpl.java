@@ -239,7 +239,7 @@ public class TestServiceImpl implements TestService {
         int failCount = 0;
         int defaultCount = 0;
 
-        InputStream inputStream = new FileInputStream("src/main/resources/templates/unitTest.xlsx");
+        InputStream inputStream = getClass().getResourceAsStream("/templates/unitTest.xlsx");
         Workbook workbook = WorkbookFactory.create(inputStream);
         Sheet sheet = workbook.getSheetAt(0);
         sheet.setDisplayGridlines(false);
