@@ -1625,8 +1625,8 @@ function collectTestData(lastSegment) {
     let testId = $('#testId').val();
     let testStatus = $('#PMS013').val();
     let workSystemNo = $('#systemNo').val();
-    let testStartDate = $('#testStartDate').val().substring(0, 10);
-    let testEndDate = $('#testEndDate').val().substring(0, 10);
+    let testStartDate = $('#testStartDate').val();
+    let testEndDate = $('#testEndDate').val();
     let testContent = $('#testContent').val();
 
     let testData = {

@@ -62,7 +62,6 @@
             contentType: 'application/json',
             data: JSON.stringify(updatedTreeData),
             success: function(response) {
-                alert('폴더가 성공적으로 저장되었습니다.');
                 window.location.href = '/projects/outputs';
             },
             error: function(xhr, status, error) {
