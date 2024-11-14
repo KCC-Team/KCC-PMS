@@ -239,7 +239,7 @@ public class TestServiceImpl implements TestService {
         int failCount = 0;
         int defaultCount = 0;
 
-        InputStream inputStream = new FileInputStream("src/main/resources/templates/unitTest.xlsx");
+        InputStream inputStream = getClass().getResourceAsStream("/templates/unitTest.xlsx");
         Workbook workbook = WorkbookFactory.create(inputStream);
         Sheet sheet = workbook.getSheetAt(0);
         sheet.setDisplayGridlines(false);
@@ -297,9 +297,11 @@ public class TestServiceImpl implements TestService {
         if (cell == null) {
             cell = row.createCell(13);
         }
-        cell.setCellValue(systemMapper.getSystemName(test.getWorkSystemNo()));
-        cell.setCellStyle(borderStyle);
-        cell.getCellStyle().setWrapText(true);
+        if (test.getWorkSystemNo() != null) {
+            cell.setCellValue(systemMapper.getSystemName(test.getWorkSystemNo()));
+            cell.setCellStyle(borderStyle);
+            cell.getCellStyle().setWrapText(true);
+        }
 
         row = sheet.getRow(5);
         cell = row.getCell(4);
