@@ -9,7 +9,9 @@ var delayGrid;
 function openFeaturePopup(featureNo) {
     let url;
     if(featureNo != null){
-        url = '/projects/features/register?featureNo=' + encodeURIComponent(featureNo);
+        url = '/projects/features/register?featureNo=' + encodeURIComponent(featureNo)
+            + '&loginMemberNo=' + encodeURIComponent(loginMemberNo)
+            + '&authCode=' + encodeURIComponent(authCode);
     } else {
         url = '/projects/features/register'
     }
@@ -43,6 +45,9 @@ document.addEventListener("DOMContentLoaded", function() {
 
 
 $(document).ready(function (){
+    if (authCode !== 'PMS00201' && authCode !== 'PMS00202') {
+        $('.add-feat').hide();
+    }
     window.addEventListener('message', function(event) {
         if (event.data.status === 'register') {
             console.log('Received:', event.data.message);
