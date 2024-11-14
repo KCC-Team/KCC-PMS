@@ -81,7 +81,7 @@
             SELECT t2.tm_no
             FROM team t2
             WHERE t2.prj_no = #{projectNo}
-        ) ORDER BY t.tm_no
+        ) ORDER BY pos.order_no
     </select>
 
 
