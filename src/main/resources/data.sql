@@ -1033,273 +1033,309 @@ VALUES (seq_feature.nextval, 'F002', 'RSTR111', '기능2 내용', '2024-10-25', 
 INSERT INTO Feature (feat_no, feat_id, feat_title, feat_cont, pre_st_dt, pre_end_dt, st_dt, end_dt, stat_cd, pri_cd, prg, diff_cd, use_yn, sys_no, mem_no, tm_no, prj_no, class_cd)
 VALUES (seq_feature.nextval, 'F003', 'RSTR123', '기능3 내용', '2024-11-01', '2024-11-10', '2024-11-02', null, 'PMS00902', 'PMS00603', 10, 'PMS01103', 'Y', 1, 1, 1, 1, 'PMS01005');
 
+-- 테스트 데이터 INSERT 문 시작
+
+-- 테스트 1
 INSERT INTO TestMaster (
     test_no, test_id, test_title, test_cont, stat_cd, type_cd, prj_no,
     test_st_dt, test_end_dt, sys_work_no, reg_id, reg_dt, use_yn
 )
 VALUES (
-           seq_testmaster.nextval, 't_001', '테스트1', '테스트1 내용', 'PMS01301',
-           'PMS01201', 1, '2021-01-01', '2021-01-01', 5, 'user1', '2021-01-01', 'Y'
+           seq_testmaster.nextval, 'T_01_TRN_001', '열차 시간표 조회 및 검증 테스트', '열차 시간표를 조회하고 검증하는 테스트', 'PMS01301',
+           'PMS01201', 1, TO_DATE('2023-01-15', 'YYYY-MM-DD'), TO_DATE('2023-01-16', 'YYYY-MM-DD'), 5, 'user1', SYSDATE, 'Y'
        );
 
+-- 테스트 2
 INSERT INTO TestMaster (
     test_no, test_id, test_title, test_cont, stat_cd, type_cd, prj_no,
     test_st_dt, test_end_dt, sys_work_no, reg_id, reg_dt, use_yn
 )
 VALUES (
-           seq_testmaster.nextval, 't_002', '테스트2', '테스트2 내용', 'PMS01301',
-           'PMS01201', 1, '2021-01-01', '2021-01-01', 6, 'user1', '2021-01-01', 'Y'
+           seq_testmaster.nextval, 'T_01_TRN_002', '열차 좌석 예약 및 확인 테스트', '열차 좌석을 예약하고 확인하는 테스트', 'PMS01302',
+           'PMS01201', 1, TO_DATE('2023-02-10', 'YYYY-MM-DD'), TO_DATE('2023-02-12', 'YYYY-MM-DD'), 6, 'user1', SYSDATE, 'Y'
        );
 
+-- 테스트 3
 INSERT INTO TestMaster (
     test_no, test_id, test_title, test_cont, stat_cd, type_cd, prj_no,
     test_st_dt, test_end_dt, sys_work_no, reg_id, reg_dt, use_yn
 )
 VALUES (
-           seq_testmaster.nextval, 't_003', '테스트3', '테스트3 내용', 'PMS01303',
-           'PMS01201', 1, '2021-01-01', '2021-01-01', 7, 'user1', '2021-01-01', 'Y'
+           seq_testmaster.nextval, 'T_01_TRN_003', '열차 예약 내역 확인 및 상세 정보 조회 테스트', '예약된 열차 티켓의 상세 정보를 확인하는 테스트', 'PMS01303',
+           'PMS01202', 1, TO_DATE('2023-03-05', 'YYYY-MM-DD'), TO_DATE('2023-03-06', 'YYYY-MM-DD'), 7, 'user1', SYSDATE, 'Y'
        );
 
+-- 테스트 4
 INSERT INTO TestMaster (
     test_no, test_id, test_title, test_cont, stat_cd, type_cd, prj_no,
     test_st_dt, test_end_dt, sys_work_no, reg_id, reg_dt, use_yn
 )
 VALUES (
-           seq_testmaster.nextval, 't_004', '테스트4', '테스트4 내용', 'PMS01302',
-           'PMS01201', 1, '2021-01-01', '2021-01-01', 8, 'user1', '2021-01-01', 'Y'
+           seq_testmaster.nextval, 'T_01_TRN_004', '예약된 열차 티켓 취소 및 환불 처리 테스트', '예약된 티켓을 취소하고 환불을 처리하는 테스트', 'PMS01304',
+           'PMS01201', 1, TO_DATE('2023-04-20', 'YYYY-MM-DD'), TO_DATE('2023-04-21', 'YYYY-MM-DD'), 8, 'user1', SYSDATE, 'Y'
        );
 
+-- 테스트 5
 INSERT INTO TestMaster (
     test_no, test_id, test_title, test_cont, stat_cd, type_cd, prj_no,
     test_st_dt, test_end_dt, sys_work_no, reg_id, reg_dt, use_yn
 )
 VALUES (
-           seq_testmaster.nextval, 't_005', '테스트5', '테스트5 내용', 'PMS01303',
-           'PMS01201', 1, '2021-01-01', '2021-01-01', 9, 'user1', '2021-01-01', 'Y'
+           seq_testmaster.nextval, 'T_01_TRN_005', '열차 탑승권 출력 및 모바일 티켓 발급 테스트', '탑승권을 출력하고 모바일 티켓을 발급하는 테스트', 'PMS01301',
+           'PMS01202', 1, TO_DATE('2023-05-15', 'YYYY-MM-DD'), TO_DATE('2023-05-16', 'YYYY-MM-DD'), 9, 'user1', SYSDATE, 'Y'
        );
 
+-- 테스트 6
 INSERT INTO TestMaster (
     test_no, test_id, test_title, test_cont, stat_cd, type_cd, prj_no,
     test_st_dt, test_end_dt, sys_work_no, reg_id, reg_dt, use_yn
 )
 VALUES (
-           seq_testmaster.nextval, 't_006', '테스트6', '테스트6 내용', 'PMS01301',
-           'PMS01201', 1, '2021-01-01', '2021-01-01', 5, 'user1', '2021-01-01', 'Y'
+           seq_testmaster.nextval, 'T_01_TRN_006', '열차 서비스 신규 회원가입 및 이메일 인증 테스트', '신규 회원가입을 하고 이메일 인증을 확인하는 테스트', 'PMS01302',
+           'PMS01201', 1, TO_DATE('2023-06-10', 'YYYY-MM-DD'), TO_DATE('2023-06-11', 'YYYY-MM-DD'), 5, 'user1', SYSDATE, 'Y'
        );
 
+-- 테스트 7
 INSERT INTO TestMaster (
     test_no, test_id, test_title, test_cont, stat_cd, type_cd, prj_no,
     test_st_dt, test_end_dt, sys_work_no, reg_id, reg_dt, use_yn
 )
 VALUES (
-           seq_testmaster.nextval, 't_007', '테스트7', '테스트7 내용', 'PMS01304',
-           'PMS01201', 1, '2021-01-01', '2021-01-01', 6, 'user1', '2021-01-01', 'Y'
+           seq_testmaster.nextval, 'T_01_TRN_007', '회원 로그인 및 세션 유지 기능 테스트', '로그인 후 세션이 유지되는지 확인하는 테스트', 'PMS01303',
+           'PMS01202', 1, TO_DATE('2023-07-05', 'YYYY-MM-DD'), TO_DATE('2023-07-06', 'YYYY-MM-DD'), 6, 'user1', SYSDATE, 'Y'
        );
 
+-- 테스트 8
 INSERT INTO TestMaster (
     test_no, test_id, test_title, test_cont, stat_cd, type_cd, prj_no,
     test_st_dt, test_end_dt, sys_work_no, reg_id, reg_dt, use_yn
 )
 VALUES (
-           seq_testmaster.nextval, 't_008', '테스트8', '테스트8 내용', 'PMS01304',
-           'PMS01201', 1, '2021-01-01', '2021-01-01', 7, 'user1', '2021-01-01', 'Y'
+           seq_testmaster.nextval, 'T_01_TRN_008', '비밀번호 찾기 및 재설정 이메일 발송 테스트', '비밀번호를 찾고 재설정 이메일을 발송하는 테스트', 'PMS01304',
+           'PMS01201', 1, TO_DATE('2023-08-20', 'YYYY-MM-DD'), TO_DATE('2023-08-21', 'YYYY-MM-DD'), 7, 'user1', SYSDATE, 'Y'
        );
 
+-- 테스트 9
 INSERT INTO TestMaster (
     test_no, test_id, test_title, test_cont, stat_cd, type_cd, prj_no,
     test_st_dt, test_end_dt, sys_work_no, reg_id, reg_dt, use_yn
 )
 VALUES (
-           seq_testmaster.nextval, 't_009', '테스트9', '테스트9 내용', 'PMS01301',
-           'PMS01201', 1, '2021-01-01', '2021-01-01', 8, 'user1', '2021-01-01', 'Y'
-       );
-INSERT INTO TestMaster (
-    test_no, test_id, test_title, test_cont, stat_cd, type_cd, prj_no,
-    test_st_dt, test_end_dt, sys_work_no, reg_id, reg_dt, use_yn
-)
-VALUES (
-           seq_testmaster.nextval, 't_010', '테스트10', '테스트10 내용', 'PMS01303',
-           'PMS01201', 1, '2021-01-01', '2021-01-01', 9, 'user1', '2021-01-01', 'Y'
-       );
-INSERT INTO TestMaster (
-    test_no, test_id, test_title, test_cont, stat_cd, type_cd, prj_no,
-    test_st_dt, test_end_dt, sys_work_no, reg_id, reg_dt, use_yn
-)
-VALUES (
-           seq_testmaster.nextval, 't_011', '테스트11', '테스트11 내용', 'PMS01301',
-           'PMS01201', 1, '2021-01-01', '2021-01-01', 5, 'user1', '2021-01-01', 'Y'
+           seq_testmaster.nextval, 'T_01_TRN_009', '회원 정보 수정 및 프로필 사진 업데이트 테스트', '회원 정보를 수정하고 프로필 사진을 변경하는 테스트', 'PMS01301',
+           'PMS01202', 1, TO_DATE('2023-09-15', 'YYYY-MM-DD'), TO_DATE('2023-09-16', 'YYYY-MM-DD'), 8, 'user1', SYSDATE, 'Y'
        );
 
+-- 테스트 10
 INSERT INTO TestMaster (
     test_no, test_id, test_title, test_cont, stat_cd, type_cd, prj_no,
     test_st_dt, test_end_dt, sys_work_no, reg_id, reg_dt, use_yn
 )
 VALUES (
-           seq_testmaster.nextval, 't_012', '테스트12', '테스트12 내용', 'PMS01302',
-           'PMS01201', 1, '2021-01-01', '2021-01-01', 6, 'user1', '2021-01-01', 'Y'
+           seq_testmaster.nextval, 'T_01_TRN_010', '회원 탈퇴 및 데이터 삭제 처리 테스트', '회원 탈퇴를 진행하고 데이터가 삭제되는지 확인하는 테스트', 'PMS01302',
+           'PMS01201', 1, TO_DATE('2023-10-10', 'YYYY-MM-DD'), TO_DATE('2023-10-11', 'YYYY-MM-DD'), 9, 'user1', SYSDATE, 'Y'
        );
 
+-- 테스트 11
 INSERT INTO TestMaster (
     test_no, test_id, test_title, test_cont, stat_cd, type_cd, prj_no,
     test_st_dt, test_end_dt, sys_work_no, reg_id, reg_dt, use_yn
 )
 VALUES (
-           seq_testmaster.nextval, 't_013', '테스트13', '테스트13 내용', 'PMS01301',
-           'PMS01201', 1, '2021-01-01', '2021-01-01', 7, 'user1', '2021-01-01', 'Y'
+           seq_testmaster.nextval, 'T_01_TRN_011', '열차 공지사항 조회 및 상세 내용 확인 테스트', '공지사항을 조회하고 상세 내용을 확인하는 테스트', 'PMS01303',
+           'PMS01202', 1, TO_DATE('2023-11-05', 'YYYY-MM-DD'), TO_DATE('2023-11-06', 'YYYY-MM-DD'), 5, 'user1', SYSDATE, 'Y'
        );
 
+-- 테스트 12
 INSERT INTO TestMaster (
     test_no, test_id, test_title, test_cont, stat_cd, type_cd, prj_no,
     test_st_dt, test_end_dt, sys_work_no, reg_id, reg_dt, use_yn
 )
 VALUES (
-           seq_testmaster.nextval, 't_014', '테스트14', '테스트14 내용', 'PMS01301',
-           'PMS01201', 1, '2021-01-01', '2021-01-01', 8, 'user1', '2021-01-01', 'Y'
+           seq_testmaster.nextval, 'T_01_TRN_012', '이벤트 참여 및 포인트 적립 기능 테스트', '이벤트에 참여하고 포인트가 적립되는지 확인하는 테스트', 'PMS01304',
+           'PMS01201', 1, TO_DATE('2023-12-20', 'YYYY-MM-DD'), TO_DATE('2023-12-21', 'YYYY-MM-DD'), 6, 'user1', SYSDATE, 'Y'
        );
 
+-- 테스트 13
 INSERT INTO TestMaster (
     test_no, test_id, test_title, test_cont, stat_cd, type_cd, prj_no,
     test_st_dt, test_end_dt, sys_work_no, reg_id, reg_dt, use_yn
 )
 VALUES (
-           seq_testmaster.nextval, 't_015', '테스트15', '테스트15 내용', 'PMS01303',
-           'PMS01201', 1, '2021-01-01', '2021-01-01', 9, 'user1', '2021-01-01', 'Y'
+           seq_testmaster.nextval, 'T_01_TRN_013', '포인트 적립 및 사용 내역 조회 테스트', '포인트를 적립하고 사용 내역을 조회하는 테스트', 'PMS01301',
+           'PMS01202', 1, TO_DATE('2023-01-25', 'YYYY-MM-DD'), TO_DATE('2023-01-26', 'YYYY-MM-DD'), 7, 'user1', SYSDATE, 'Y'
        );
 
+-- 테스트 14
 INSERT INTO TestMaster (
     test_no, test_id, test_title, test_cont, stat_cd, type_cd, prj_no,
     test_st_dt, test_end_dt, sys_work_no, reg_id, reg_dt, use_yn
 )
 VALUES (
-           seq_testmaster.nextval, 't_016', '테스트16', '테스트16 내용', 'PMS01302',
-           'PMS01201', 1, '2021-01-01', '2021-01-01', 5, 'user1', '2021-01-01', 'Y'
+           seq_testmaster.nextval, 'T_01_TRN_014', '포인트 사용 및 결제 금액 차감 테스트', '포인트를 사용하여 결제 금액이 차감되는지 확인하는 테스트', 'PMS01302',
+           'PMS01201', 1, TO_DATE('2023-02-15', 'YYYY-MM-DD'), TO_DATE('2023-02-16', 'YYYY-MM-DD'), 8, 'user1', SYSDATE, 'Y'
        );
 
+-- 테스트 15
 INSERT INTO TestMaster (
     test_no, test_id, test_title, test_cont, stat_cd, type_cd, prj_no,
     test_st_dt, test_end_dt, sys_work_no, reg_id, reg_dt, use_yn
 )
 VALUES (
-           seq_testmaster.nextval, 't_017', '테스트17', '테스트17 내용', 'PMS01301',
-           'PMS01201', 1, '2021-01-01', '2021-01-01', 6, 'user1', '2021-01-01', 'Y'
+           seq_testmaster.nextval, 'T_01_TRN_015', '실시간 열차 위치 조회 및 지연 정보 알림 테스트', '실시간으로 열차 위치를 조회하고 지연 정보를 받는 테스트', 'PMS01303',
+           'PMS01202', 1, TO_DATE('2023-03-10', 'YYYY-MM-DD'), TO_DATE('2023-03-11', 'YYYY-MM-DD'), 9, 'user1', SYSDATE, 'Y'
        );
 
+-- 테스트 16
 INSERT INTO TestMaster (
     test_no, test_id, test_title, test_cont, stat_cd, type_cd, prj_no,
     test_st_dt, test_end_dt, sys_work_no, reg_id, reg_dt, use_yn
 )
 VALUES (
-           seq_testmaster.nextval, 't_018', '테스트18', '테스트18 내용', 'PMS01304',
-           'PMS01201', 1, '2021-01-01', '2021-01-01', 7, 'user1', '2021-01-01', 'Y'
+           seq_testmaster.nextval, 'T_01_TRN_016', '예약된 좌석 변경 및 추가 요금 결제 테스트', '예약된 좌석을 변경하고 추가 요금을 결제하는 테스트', 'PMS01304',
+           'PMS01201', 1, TO_DATE('2023-04-05', 'YYYY-MM-DD'), TO_DATE('2023-04-06', 'YYYY-MM-DD'), 5, 'user1', SYSDATE, 'Y'
        );
 
+-- 테스트 17
 INSERT INTO TestMaster (
     test_no, test_id, test_title, test_cont, stat_cd, type_cd, prj_no,
     test_st_dt, test_end_dt, sys_work_no, reg_id, reg_dt, use_yn
 )
 VALUES (
-           seq_testmaster.nextval, 't_019', '테스트19', '테스트19 내용', 'PMS01301',
-           'PMS01201', 1, '2021-01-01', '2021-01-01', 8, 'user1', '2021-01-01', 'Y'
+           seq_testmaster.nextval, 'T_01_TRN_017', '티켓 결제 처리 및 영수증 발급 테스트', '티켓 결제를 처리하고 영수증을 발급하는 테스트', 'PMS01301',
+           'PMS01202', 1, TO_DATE('2023-05-20', 'YYYY-MM-DD'), TO_DATE('2023-05-21', 'YYYY-MM-DD'), 6, 'user1', SYSDATE, 'Y'
        );
 
+-- 테스트 18
 INSERT INTO TestMaster (
     test_no, test_id, test_title, test_cont, stat_cd, type_cd, prj_no,
     test_st_dt, test_end_dt, sys_work_no, reg_id, reg_dt, use_yn
 )
 VALUES (
-           seq_testmaster.nextval, 't_020', '테스트20', '테스트20 내용', 'PMS01303',
-           'PMS01201', 1, '2021-01-01', '2021-01-01', 9, 'user1', '2021-01-01', 'Y'
+           seq_testmaster.nextval, 'T_01_TRN_018', '티켓 환불 요청 및 처리 상태 확인 테스트', '티켓 환불을 요청하고 처리 상태를 확인하는 테스트', 'PMS01302',
+           'PMS01201', 1, TO_DATE('2023-06-15', 'YYYY-MM-DD'), TO_DATE('2023-06-16', 'YYYY-MM-DD'), 7, 'user1', SYSDATE, 'Y'
        );
 
+-- 테스트 19
 INSERT INTO TestMaster (
     test_no, test_id, test_title, test_cont, stat_cd, type_cd, prj_no,
     test_st_dt, test_end_dt, sys_work_no, reg_id, reg_dt, use_yn
 )
 VALUES (
-           seq_testmaster.nextval, 't_021', '테스트21', '테스트21 내용', 'PMS01302',
-           'PMS01201', 1, '2021-01-01', '2021-01-01', 5, 'user1', '2021-01-01', 'Y'
+           seq_testmaster.nextval, 'T_01_TRN_019', '관리자 공지사항 등록 및 사용자 알림 테스트', '관리자로 로그인하여 공지사항을 등록하고 사용자에게 알림이 가는지 테스트', 'PMS01303',
+           'PMS01202', 1, TO_DATE('2023-07-10', 'YYYY-MM-DD'), TO_DATE('2023-07-11', 'YYYY-MM-DD'), 8, 'user1', SYSDATE, 'Y'
        );
 
+-- 테스트 20
 INSERT INTO TestMaster (
     test_no, test_id, test_title, test_cont, stat_cd, type_cd, prj_no,
     test_st_dt, test_end_dt, sys_work_no, reg_id, reg_dt, use_yn
 )
 VALUES (
-           seq_testmaster.nextval, 't_022', '테스트22', '테스트22 내용', 'PMS01304',
-           'PMS01201', 1, '2021-01-01', '2021-01-01', 6, 'user1', '2021-01-01', 'Y'
+           seq_testmaster.nextval, 'T_01_TRN_020', '고객센터 문의 등록 및 답변 확인 테스트', '고객센터에 문의를 등록하고 답변을 확인하는 테스트', 'PMS01304',
+           'PMS01201', 1, TO_DATE('2023-08-05', 'YYYY-MM-DD'), TO_DATE('2023-08-06', 'YYYY-MM-DD'), 9, 'user1', SYSDATE, 'Y'
        );
 
+-- 테스트 21
 INSERT INTO TestMaster (
     test_no, test_id, test_title, test_cont, stat_cd, type_cd, prj_no,
     test_st_dt, test_end_dt, sys_work_no, reg_id, reg_dt, use_yn
 )
 VALUES (
-           seq_testmaster.nextval, 't_023', '테스트23', '테스트23 내용', 'PMS01301',
-           'PMS01201', 1, '2021-01-01', '2021-01-01', 7, 'user1', '2021-01-01', 'Y'
+           seq_testmaster.nextval, 'T_01_TRN_021', '열차 노선도 조회 및 역별 정보 확인 테스트', '열차 노선도를 조회하고 각 역의 정보를 확인하는 테스트', 'PMS01301',
+           'PMS01202', 1, TO_DATE('2023-09-20', 'YYYY-MM-DD'), TO_DATE('2023-09-21', 'YYYY-MM-DD'), 5, 'user1', SYSDATE, 'Y'
        );
 
+-- 테스트 22
 INSERT INTO TestMaster (
     test_no, test_id, test_title, test_cont, stat_cd, type_cd, prj_no,
     test_st_dt, test_end_dt, sys_work_no, reg_id, reg_dt, use_yn
 )
 VALUES (
-           seq_testmaster.nextval, 't_024', '테스트24', '테스트24 내용', 'PMS01302',
-           'PMS01201', 1, '2021-01-01', '2021-01-01', 8, 'user1', '2021-01-01', 'Y'
+           seq_testmaster.nextval, 'T_01_TRN_022', '역 정보 조회 및 주변 시설 검색 테스트', '역 정보를 조회하고 주변 시설을 검색하는 테스트', 'PMS01302',
+           'PMS01201', 1, TO_DATE('2023-10-15', 'YYYY-MM-DD'), TO_DATE('2023-10-16', 'YYYY-MM-DD'), 6, 'user1', SYSDATE, 'Y'
        );
 
+-- 테스트 23
 INSERT INTO TestMaster (
     test_no, test_id, test_title, test_cont, stat_cd, type_cd, prj_no,
     test_st_dt, test_end_dt, sys_work_no, reg_id, reg_dt, use_yn
 )
 VALUES (
-           seq_testmaster.nextval, 't_025', '테스트25', '테스트25 내용', 'PMS01303',
-           'PMS01201', 1, '2021-01-01', '2021-01-01', 9, 'user1', '2021-01-01', 'Y'
+           seq_testmaster.nextval, 'T_01_TRN_023', '열차 연착 알림 설정 및 푸시 알림 테스트', '열차 연착 알림을 설정하고 푸시 알림을 받는 테스트', 'PMS01303',
+           'PMS01202', 1, TO_DATE('2023-11-10', 'YYYY-MM-DD'), TO_DATE('2023-11-11', 'YYYY-MM-DD'), 7, 'user1', SYSDATE, 'Y'
        );
 
+-- 테스트 24
 INSERT INTO TestMaster (
     test_no, test_id, test_title, test_cont, stat_cd, type_cd, prj_no,
     test_st_dt, test_end_dt, sys_work_no, reg_id, reg_dt, use_yn
 )
 VALUES (
-           seq_testmaster.nextval, 't_026', '테스트26', '테스트26 내용', 'PMS01304',
-           'PMS01201', 1, '2021-01-01', '2021-01-01', 5, 'user1', '2021-01-01', 'Y'
+           seq_testmaster.nextval, 'T_01_TRN_024', '승차권 검증 및 QR 코드 스캔 테스트', '승차권을 검증하고 QR 코드를 스캔하는 테스트', 'PMS01304',
+           'PMS01201', 1, TO_DATE('2023-12-05', 'YYYY-MM-DD'), TO_DATE('2023-12-06', 'YYYY-MM-DD'), 8, 'user1', SYSDATE, 'Y'
        );
 
+-- 테스트 25
 INSERT INTO TestMaster (
     test_no, test_id, test_title, test_cont, stat_cd, type_cd, prj_no,
     test_st_dt, test_end_dt, sys_work_no, reg_id, reg_dt, use_yn
 )
 VALUES (
-           seq_testmaster.nextval, 't_027', '테스트27', '테스트27 내용', 'PMS01301',
-           'PMS01201', 1, '2021-01-01', '2021-01-01', 6, 'user1', '2021-01-01', 'Y'
+           seq_testmaster.nextval, 'T_01_TRN_025', '단체 티켓 예약 및 좌석 배치 확인 테스트', '단체 티켓을 예약하고 좌석 배치를 확인하는 테스트', 'PMS01301',
+           'PMS01202', 1, TO_DATE('2023-01-15', 'YYYY-MM-DD'), TO_DATE('2023-01-16', 'YYYY-MM-DD'), 9, 'user1', SYSDATE, 'Y'
        );
 
+-- 테스트 26
 INSERT INTO TestMaster (
     test_no, test_id, test_title, test_cont, stat_cd, type_cd, prj_no,
     test_st_dt, test_end_dt, sys_work_no, reg_id, reg_dt, use_yn
 )
 VALUES (
-           seq_testmaster.nextval, 't_028', '테스트28', '테스트28 내용', 'PMS01302',
-           'PMS01201', 1, '2021-01-01', '2021-01-01', 7, 'user1', '2021-01-01', 'Y'
+           seq_testmaster.nextval, 'T_01_TRN_026', '분실물 신고 접수 및 처리 상태 확인 테스트', '분실물을 신고하고 처리 상태를 확인하는 테스트', 'PMS01302',
+           'PMS01201', 1, TO_DATE('2023-02-10', 'YYYY-MM-DD'), TO_DATE('2023-02-11', 'YYYY-MM-DD'), 5, 'user1', SYSDATE, 'Y'
        );
 
+-- 테스트 27
 INSERT INTO TestMaster (
     test_no, test_id, test_title, test_cont, stat_cd, type_cd, prj_no,
     test_st_dt, test_end_dt, sys_work_no, reg_id, reg_dt, use_yn
 )
 VALUES (
-           seq_testmaster.nextval, 't_029', '테스트29', '테스트29 내용', 'PMS01303',
-           'PMS01201', 1, '2021-01-01', '2021-01-01', 8, 'user1', '2021-01-01', 'Y'
+           seq_testmaster.nextval, 'T_01_TRN_027', '분실물 조회 및 습득물 목록 확인 테스트', '분실물을 조회하고 습득물 목록을 확인하는 테스트', 'PMS01303',
+           'PMS01202', 1, TO_DATE('2023-03-05', 'YYYY-MM-DD'), TO_DATE('2023-03-06', 'YYYY-MM-DD'), 6, 'user1', SYSDATE, 'Y'
        );
 
+-- 테스트 28
 INSERT INTO TestMaster (
     test_no, test_id, test_title, test_cont, stat_cd, type_cd, prj_no,
     test_st_dt, test_end_dt, sys_work_no, reg_id, reg_dt, use_yn
 )
 VALUES (
-           seq_testmaster.nextval, 't_030', '테스트30', '테스트30 내용', 'PMS01304',
-           'PMS01201', 1, '2021-01-01', '2021-01-01', 9, 'user1', '2021-01-01', 'Y'
+           seq_testmaster.nextval, 'T_01_TRN_028', '여행 패키지 예약 및 일정 확인 테스트', '여행 패키지를 예약하고 일정을 확인하는 테스트', 'PMS01304',
+           'PMS01201', 1, TO_DATE('2023-04-20', 'YYYY-MM-DD'), TO_DATE('2023-04-21', 'YYYY-MM-DD'), 7, 'user1', SYSDATE, 'Y'
        );
+
+-- 테스트 29
+INSERT INTO TestMaster (
+    test_no, test_id, test_title, test_cont, stat_cd, type_cd, prj_no,
+    test_st_dt, test_end_dt, sys_work_no, reg_id, reg_dt, use_yn
+)
+VALUES (
+           seq_testmaster.nextval, 'T_01_TRN_029', '특가 할인 정보 조회 및 적용 테스트', '특가 할인 정보를 조회하고 적용하는 테스트', 'PMS01301',
+           'PMS01202', 1, TO_DATE('2023-05-15', 'YYYY-MM-DD'), TO_DATE('2023-05-16', 'YYYY-MM-DD'), 8, 'user1', SYSDATE, 'Y'
+       );
+
+-- 테스트 30
+INSERT INTO TestMaster (
+    test_no, test_id, test_title, test_cont, stat_cd, type_cd, prj_no,
+    test_st_dt, test_end_dt, sys_work_no, reg_id, reg_dt, use_yn
+)
+VALUES (
+           seq_testmaster.nextval, 'T_01_TRN_030', '고객센터 문의 등록 및 실시간 채팅 지원 테스트', '고객센터에 문의를 등록하고 실시간 채팅을 이용하는 테스트', 'PMS01302',
+           'PMS01201', 1, TO_DATE('2023-06-10', 'YYYY-MM-DD'), TO_DATE('2023-06-11', 'YYYY-MM-DD'), 9, 'user1', SYSDATE, 'Y'
+       );
+
+-- 테스트 데이터 INSERT 문 끝
 
 INSERT INTO TestDetail (test_dtl_no, test_dtl_id, wrk_proc_cont, test_data, estimated_rlt, test_detail_cont, test_st_dt, test_result_cd, progress_cont, pre_cond, mem_no, par_test_dtl_no, test_no, created_dt)
 VALUES (seq_testdetail.nextval, 'TD001', '테스트상세1', '테스트상세1 내용', '테스트상세1 예상결과', '테스트상세1 내용', '2021-01-01', 'PMS01401', '테스트상세1 진행내용', '테스트상세1 사전조건', 1, NULL, 1, sysdate);
@@ -1316,65 +1352,65 @@ update codedetail set field_2 = 'Y' where common_cd_no = 'PMS004';
 update codedetail set field_3 = 'Y' where common_cd_no = 'PMS004' and cd_dtl_no IN ('PMS00402', 'PMS00403', 'PMS00404');
 
 INSERT INTO Defect (df_no, df_id, df_ttl, stat_cd, pri_cd, df_cont, df_fd_dt, mem_fd_no, prj_no, type_cd)
-VALUES (seq_defect.nextval, 'DF-0001', '로그인 오류', 'PMS00701', 'PMS00601', '사용자가 로그인할 수 없습니다.', TO_DATE('2024-10-01', 'YYYY-MM-DD'), 1, 1, 'PMS00801');
+VALUES (seq_defect.nextval, 'TRN-0001', '승무원 로그인 시스템 인증 오류 발생', 'PMS00701', 'PMS00601', '사용자가 로그인할 수 없습니다.', TO_DATE('2024-10-01', 'YYYY-MM-DD'), 1, 1, 'PMS00801');
 INSERT INTO Defect (df_no, df_id, df_ttl, stat_cd, pri_cd, df_cont, df_fd_dt, mem_fd_no, prj_no, type_cd)
-VALUES (seq_defect.nextval, 'DF-0002', '데이터 저장 실패', 'PMS00702', 'PMS00602', '새로운 데이터를 저장할 때 오류 발생.', TO_DATE('2024-10-02', 'YYYY-MM-DD'), 1, 1, 'PMS00802');
+VALUES (seq_defect.nextval, 'TRN-0002', '열차 운행 데이터 저장 실패로 인한 시스템 오류', 'PMS00702', 'PMS00602', '새로운 데이터를 저장할 때 오류 발생.', TO_DATE('2024-10-02', 'YYYY-MM-DD'), 1, 1, 'PMS00802');
 INSERT INTO Defect (df_no, df_id, df_ttl, stat_cd, pri_cd, df_cont, df_fd_dt, mem_fd_no, prj_no, type_cd)
-VALUES (seq_defect.nextval, 'DF-0003', '화면 로딩 지연', 'PMS00703', 'PMS00603', '메인 화면 로딩 시간이 오래 걸립니다.', TO_DATE('2024-10-03', 'YYYY-MM-DD'), 1, 1, 'PMS00803');
+VALUES (seq_defect.nextval, 'TRN-0003', '승객 정보 조회 시 화면 로딩 지연 현상 발생', 'PMS00703', 'PMS00603', '메인 화면 로딩 시간이 오래 걸립니다.', TO_DATE('2024-10-03', 'YYYY-MM-DD'), 1, 1, 'PMS00803');
 INSERT INTO Defect (df_no, df_id, df_ttl, stat_cd, pri_cd, df_cont, df_fd_dt, mem_fd_no, prj_no, type_cd)
-VALUES (seq_defect.nextval, 'DF-0004', '그래프 표시 오류', 'PMS00704', 'PMS00604', '통계 그래프가 올바르게 표시되지 않습니다.', TO_DATE('2024-10-04', 'YYYY-MM-DD'), 1, 1, 'PMS00801');
+VALUES (seq_defect.nextval, 'TRN-0004', '열차 운행 일정 그래프 표시 오류 발생', 'PMS00704', 'PMS00604', '통계 그래프가 올바르게 표시되지 않습니다.', TO_DATE('2024-10-04', 'YYYY-MM-DD'), 1, 1, 'PMS00801');
 INSERT INTO Defect (df_no, df_id, df_ttl, stat_cd, pri_cd, df_cont, df_fd_dt, mem_fd_no, prj_no, type_cd)
-VALUES (seq_defect.nextval, 'DF-0005', '파일 업로드 실패', 'PMS00701', 'PMS00605', '파일 업로드 시 에러 메시지 발생.', TO_DATE('2024-10-05', 'YYYY-MM-DD'), 1, 1, 'PMS00802');
+VALUES (seq_defect.nextval, 'TRN-0005', '차량 정비 기록 파일 업로드 실패 문제 발생', 'PMS00701', 'PMS00605', '파일 업로드 시 에러 메시지 발생.', TO_DATE('2024-10-05', 'YYYY-MM-DD'), 1, 1, 'PMS00802');
 INSERT INTO Defect (df_no, df_id, df_ttl, stat_cd, pri_cd, df_cont, df_fd_dt, mem_fd_no, prj_no, type_cd)
-VALUES (seq_defect.nextval, 'DF-0006', '메일 전송 오류', 'PMS00702', 'PMS00601', '인증 메일이 전송되지 않습니다.', TO_DATE('2024-10-06', 'YYYY-MM-DD'), 1, 1, 'PMS00803');
+VALUES (seq_defect.nextval, 'TRN-0006', '승객 예약 확인 메일 전송 오류 발생', 'PMS00702', 'PMS00601', '인증 메일이 전송되지 않습니다.', TO_DATE('2024-10-06', 'YYYY-MM-DD'), 1, 1, 'PMS00803');
 INSERT INTO Defect (df_no, df_id, df_ttl, stat_cd, pri_cd, df_cont, df_fd_dt, mem_fd_no, prj_no, type_cd)
-VALUES (seq_defect.nextval, 'DF-0007', '권한 설정 문제', 'PMS00703', 'PMS00602', '관리자 권한이 부여되지 않습니다.', TO_DATE('2024-10-07', 'YYYY-MM-DD'), 1, 1, 'PMS00801');
+VALUES (seq_defect.nextval, 'TRN-0007', '기관사 시스템 접근 권한 설정 문제 발생', 'PMS00703', 'PMS00602', '관리자 권한이 부여되지 않습니다.', TO_DATE('2024-10-07', 'YYYY-MM-DD'), 1, 1, 'PMS00801');
 INSERT INTO Defect (df_no, df_id, df_ttl, stat_cd, pri_cd, df_cont, df_fd_dt, mem_fd_no, prj_no, type_cd)
-VALUES (seq_defect.nextval, 'DF-0008', '페이지 이동 오류', 'PMS00704', 'PMS00603', '특정 페이지로 이동할 수 없습니다.', TO_DATE('2024-10-08', 'YYYY-MM-DD'), 1, 1, 'PMS00802');
+VALUES (seq_defect.nextval, 'TRN-0008', '시간표 관리 페이지 이동 오류 발생', 'PMS00704', 'PMS00603', '특정 페이지로 이동할 수 없습니다.', TO_DATE('2024-10-08', 'YYYY-MM-DD'), 1, 1, 'PMS00802');
 INSERT INTO Defect (df_no, df_id, df_ttl, stat_cd, pri_cd, df_cont, df_fd_dt, mem_fd_no, prj_no, type_cd)
-VALUES (seq_defect.nextval, 'DF-0009', '알림 기능 미작동', 'PMS00701', 'PMS00604', '새로운 알림이 표시되지 않습니다.', TO_DATE('2024-10-09', 'YYYY-MM-DD'), 1, 1, 'PMS00803');
+VALUES (seq_defect.nextval, 'TRN-0009', '열차 지연 알림 기능 미작동 현상 발생', 'PMS00701', 'PMS00604', '새로운 알림이 표시되지 않습니다.', TO_DATE('2024-10-09', 'YYYY-MM-DD'), 1, 1, 'PMS00803');
 INSERT INTO Defect (df_no, df_id, df_ttl, stat_cd, pri_cd, df_cont, df_fd_dt, mem_fd_no, prj_no, type_cd)
-VALUES (seq_defect.nextval, 'DF-0010', '검색 기능 오류', 'PMS00702', 'PMS00605', '검색 결과가 표시되지 않습니다.', TO_DATE('2024-10-10', 'YYYY-MM-DD'), 1, 1, 'PMS00801');
+VALUES (seq_defect.nextval, 'TRN-0010', '역 검색 기능 오류로 인한 사용자 불편 발생', 'PMS00702', 'PMS00605', '검색 결과가 표시되지 않습니다.', TO_DATE('2024-10-10', 'YYYY-MM-DD'), 1, 1, 'PMS00801');
 INSERT INTO Defect (df_no, df_id, df_ttl, stat_cd, pri_cd, df_cont, df_fd_dt, mem_fd_no, prj_no, type_cd)
-VALUES (seq_defect.nextval, 'DF-0011', '세션 만료 문제', 'PMS00703', 'PMS00601', '세션이 예상보다 빨리 만료됩니다.', TO_DATE('2024-10-11', 'YYYY-MM-DD'), 1, 1, 'PMS00802');
+VALUES (seq_defect.nextval, 'TRN-0011', '예약 시스템 세션 만료 시간 조정 필요', 'PMS00703', 'PMS00601', '세션이 예상보다 빨리 만료됩니다.', TO_DATE('2024-10-11', 'YYYY-MM-DD'), 1, 1, 'PMS00802');
 INSERT INTO Defect (df_no, df_id, df_ttl, stat_cd, pri_cd, df_cont, df_fd_dt, mem_fd_no, prj_no, type_cd)
-VALUES (seq_defect.nextval, 'DF-0012', 'UI 깨짐 현상', 'PMS00704', 'PMS00602', '브라우저 호환성 문제로 UI가 깨집니다.', TO_DATE('2024-10-12', 'YYYY-MM-DD'), 1, 1, 'PMS00803');
+VALUES (seq_defect.nextval, 'TRN-0012', '모바일 앱에서 승차권 UI 깨짐 현상 발생', 'PMS00704', 'PMS00602', '브라우저 호환성 문제로 UI가 깨집니다.', TO_DATE('2024-10-12', 'YYYY-MM-DD'), 1, 1, 'PMS00803');
 INSERT INTO Defect (df_no, df_id, df_ttl, stat_cd, pri_cd, df_cont, df_fd_dt, mem_fd_no, prj_no, type_cd)
-VALUES (seq_defect.nextval, 'DF-0013', '다국어 지원 오류', 'PMS00701', 'PMS00603', '일부 텍스트가 번역되지 않습니다.', TO_DATE('2024-10-13', 'YYYY-MM-DD'), 1, 1, 'PMS00801');
+VALUES (seq_defect.nextval, 'TRN-0013', '국제 승객을 위한 다국어 지원 오류 발생', 'PMS00701', 'PMS00603', '일부 텍스트가 번역되지 않습니다.', TO_DATE('2024-10-13', 'YYYY-MM-DD'), 1, 1, 'PMS00801');
 INSERT INTO Defect (df_no, df_id, df_ttl, stat_cd, pri_cd, df_cont, df_fd_dt, mem_fd_no, prj_no, type_cd)
-VALUES (seq_defect.nextval, 'DF-0014', '데이터 동기화 문제', 'PMS00702', 'PMS00604', '데이터 동기화가 제대로 이루어지지 않습니다.', TO_DATE('2024-10-14', 'YYYY-MM-DD'), 1, 1, 'PMS00802');
+VALUES (seq_defect.nextval, 'TRN-0014', '중앙 서버와 역 단말기 간 데이터 동기화 문제 발생', 'PMS00702', 'PMS00604', '데이터 동기화가 제대로 이루어지지 않습니다.', TO_DATE('2024-10-14', 'YYYY-MM-DD'), 1, 1, 'PMS00802');
 INSERT INTO Defect (df_no, df_id, df_ttl, stat_cd, pri_cd, df_cont, df_fd_dt, mem_fd_no, prj_no, type_cd)
-VALUES (seq_defect.nextval, 'DF-0015', '접속 불가 현상', 'PMS00703', 'PMS00605', '일부 사용자가 접속할 수 없습니다.', TO_DATE('2024-10-15', 'YYYY-MM-DD'), 1, 1, 'PMS00803');
+VALUES (seq_defect.nextval, 'TRN-0015', '원격 유지보수 시스템 접속 불가 현상 발생', 'PMS00703', 'PMS00605', '일부 사용자가 접속할 수 없습니다.', TO_DATE('2024-10-15', 'YYYY-MM-DD'), 1, 1, 'PMS00803');
 INSERT INTO Defect (df_no, df_id, df_ttl, stat_cd, pri_cd, df_cont, df_fd_dt, mem_fd_no, prj_no, type_cd)
-VALUES (seq_defect.nextval, 'DF-0016', '캐시 문제', 'PMS00704', 'PMS00601', '업데이트 후에도 이전 내용이 표시됩니다.', TO_DATE('2024-10-16', 'YYYY-MM-DD'), 1, 1, 'PMS00801');
+VALUES (seq_defect.nextval, 'TRN-0016', '예약 변경 후 캐시로 인해 이전 정보 표시 문제', 'PMS00704', 'PMS00601', '업데이트 후에도 이전 내용이 표시됩니다.', TO_DATE('2024-10-16', 'YYYY-MM-DD'), 1, 1, 'PMS00801');
 INSERT INTO Defect (df_no, df_id, df_ttl, stat_cd, pri_cd, df_cont, df_fd_dt, mem_fd_no, prj_no, type_cd)
-VALUES (seq_defect.nextval, 'DF-0017', '로그아웃 불가', 'PMS00701', 'PMS00602', '사용자가 로그아웃할 수 없습니다.', TO_DATE('2024-10-17', 'YYYY-MM-DD'), 1, 1, 'PMS00802');
+VALUES (seq_defect.nextval, 'TRN-0017', '운영자 계정 로그아웃 불가 현상 발생', 'PMS00701', 'PMS00602', '사용자가 로그아웃할 수 없습니다.', TO_DATE('2024-10-17', 'YYYY-MM-DD'), 1, 1, 'PMS00802');
 INSERT INTO Defect (df_no, df_id, df_ttl, stat_cd, pri_cd, df_cont, df_fd_dt, mem_fd_no, prj_no, type_cd)
-VALUES (seq_defect.nextval, 'DF-0018', '이미지 로딩 실패', 'PMS00702', 'PMS00603', '이미지가 로딩되지 않습니다.', TO_DATE('2024-10-18', 'YYYY-MM-DD'), 1, 1, 'PMS00803');
+VALUES (seq_defect.nextval, 'TRN-0018', '열차 노선도 이미지 로딩 실패 문제 발생', 'PMS00702', 'PMS00603', '이미지가 로딩되지 않습니다.', TO_DATE('2024-10-18', 'YYYY-MM-DD'), 1, 1, 'PMS00803');
 INSERT INTO Defect (df_no, df_id, df_ttl, stat_cd, pri_cd, df_cont, df_fd_dt, mem_fd_no, prj_no, type_cd)
-VALUES (seq_defect.nextval, 'DF-0019', 'API 호출 오류', 'PMS00703', 'PMS00604', '외부 API 호출 시 오류 발생.', TO_DATE('2024-10-19', 'YYYY-MM-DD'), 1, 1, 'PMS00801');
+VALUES (seq_defect.nextval, 'TRN-0019', '실시간 위치 추적 API 호출 오류 발생', 'PMS00703', 'PMS00604', '외부 API 호출 시 오류 발생.', TO_DATE('2024-10-19', 'YYYY-MM-DD'), 1, 1, 'PMS00801');
 INSERT INTO Defect (df_no, df_id, df_ttl, stat_cd, pri_cd, df_cont, df_fd_dt, mem_fd_no, prj_no, type_cd)
-VALUES (seq_defect.nextval, 'DF-0020', '보안 취약점 발견', 'PMS00704', 'PMS00605', 'SQL 인젝션 취약점 발견.', TO_DATE('2024-10-20', 'YYYY-MM-DD'), 1, 1, 'PMS00802');
+VALUES (seq_defect.nextval, 'TRN-0020', '승객 정보 시스템에서 보안 취약점 발견', 'PMS00704', 'PMS00605', 'SQL 인젝션 취약점 발견.', TO_DATE('2024-10-20', 'YYYY-MM-DD'), 1, 1, 'PMS00802');
 INSERT INTO Defect (df_no, df_id, df_ttl, stat_cd, pri_cd, df_cont, df_fd_dt, mem_fd_no, prj_no, type_cd)
-VALUES (seq_defect.nextval, 'DF-0021', '데이터 삭제 불가', 'PMS00701', 'PMS00601', '데이터를 삭제할 수 없습니다.', TO_DATE('2024-10-21', 'YYYY-MM-DD'), 1, 1, 'PMS00803');
+VALUES (seq_defect.nextval, 'TRN-0021', '역사 이벤트 로그 데이터 삭제 불가 문제', 'PMS00701', 'PMS00601', '데이터를 삭제할 수 없습니다.', TO_DATE('2024-10-21', 'YYYY-MM-DD'), 1, 1, 'PMS00803');
 INSERT INTO Defect (df_no, df_id, df_ttl, stat_cd, pri_cd, df_cont, df_fd_dt, mem_fd_no, prj_no, type_cd)
-VALUES (seq_defect.nextval, 'DF-0022', '푸시 알림 오류', 'PMS00702', 'PMS00602', '푸시 알림이 수신되지 않습니다.', TO_DATE('2024-10-22', 'YYYY-MM-DD'), 1, 1, 'PMS00801');
+VALUES (seq_defect.nextval, 'TRN-0022', '승객 모바일 앱 푸시 알림 오류 발생', 'PMS00702', 'PMS00602', '푸시 알림이 수신되지 않습니다.', TO_DATE('2024-10-22', 'YYYY-MM-DD'), 1, 1, 'PMS00801');
 INSERT INTO Defect (df_no, df_id, df_ttl, stat_cd, pri_cd, df_cont, df_fd_dt, mem_fd_no, prj_no, type_cd)
-VALUES (seq_defect.nextval, 'DF-0023', '프로필 업데이트 문제', 'PMS00703', 'PMS00603', '프로필 정보 수정 시 오류 발생.', TO_DATE('2024-10-23', 'YYYY-MM-DD'), 1, 1, 'PMS00802');
+VALUES (seq_defect.nextval, 'TRN-0023', '승무원 프로필 정보 업데이트 문제 발생', 'PMS00703', 'PMS00603', '프로필 정보 수정 시 오류 발생.', TO_DATE('2024-10-23', 'YYYY-MM-DD'), 1, 1, 'PMS00802');
 INSERT INTO Defect (df_no, df_id, df_ttl, stat_cd, pri_cd, df_cont, df_fd_dt, mem_fd_no, prj_no, type_cd)
-VALUES (seq_defect.nextval, 'DF-0024', '로그 파일 생성 안됨', 'PMS00704', 'PMS00604', '서버 로그 파일이 생성되지 않습니다.', TO_DATE('2024-10-24', 'YYYY-MM-DD'), 1, 1, 'PMS00803');
+VALUES (seq_defect.nextval, 'TRN-0024', '열차 운행 로그 파일 생성 안됨 현상 발생', 'PMS00704', 'PMS00604', '서버 로그 파일이 생성되지 않습니다.', TO_DATE('2024-10-24', 'YYYY-MM-DD'), 1, 1, 'PMS00803');
 INSERT INTO Defect (df_no, df_id, df_ttl, stat_cd, pri_cd, df_cont, df_fd_dt, mem_fd_no, prj_no, type_cd)
-VALUES (seq_defect.nextval, 'DF-0025', '시간대 설정 오류', 'PMS00701', 'PMS00605', '시간대 변경이 적용되지 않습니다.', TO_DATE('2024-10-25', 'YYYY-MM-DD'), 1, 1, 'PMS00801');
+VALUES (seq_defect.nextval, 'TRN-0025', '국제선 운행 시간대 설정 오류로 인한 혼란 발생', 'PMS00701', 'PMS00605', '시간대 변경이 적용되지 않습니다.', TO_DATE('2024-10-25', 'YYYY-MM-DD'), 1, 1, 'PMS00801');
 INSERT INTO Defect (df_no, df_id, df_ttl, stat_cd, pri_cd, df_cont, df_fd_dt, mem_fd_no, prj_no, type_cd)
-VALUES (seq_defect.nextval, 'DF-0026', '자동 저장 기능 문제', 'PMS00702', 'PMS00601', '자동 저장이 작동하지 않습니다.', TO_DATE('2024-10-26', 'YYYY-MM-DD'), 1, 1, 'PMS00802');
+VALUES (seq_defect.nextval, 'TRN-0026', '예약 입력 시 자동 저장 기능 작동 안함 문제', 'PMS00702', 'PMS00601', '자동 저장이 작동하지 않습니다.', TO_DATE('2024-10-26', 'YYYY-MM-DD'), 1, 1, 'PMS00802');
 INSERT INTO Defect (df_no, df_id, df_ttl, stat_cd, pri_cd, df_cont, df_fd_dt, mem_fd_no, prj_no, type_cd)
-VALUES (seq_defect.nextval, 'DF-0027', '메모리 누수 현상', 'PMS00703', 'PMS00602', '장시간 사용 시 메모리 사용량 증가.', TO_DATE('2024-10-27', 'YYYY-MM-DD'), 1, 1, 'PMS00803');
+VALUES (seq_defect.nextval, 'TRN-0027', '열차 운행 관리 시스템 메모리 누수 현상 발생', 'PMS00703', 'PMS00602', '장시간 사용 시 메모리 사용량 증가.', TO_DATE('2024-10-27', 'YYYY-MM-DD'), 1, 1, 'PMS00803');
+INSERT INTO Defect (df_no, df_id, df_ttl, stat_cd, pri_cd, df_cont, df_fd_dt, mem_fd_no, prj_no, type_cd
+VALUES (seq_defect.nextval, 'TRN-0028', '승무원이 접근하지 못하는 페이지 권한 오류 발생', 'PMS00704', 'PMS00603', '비인가 사용자가 페이지에 접근 가능합니다.', TO_DATE('2024-10-28', 'YYYY-MM-DD'), 1, 1, 'PMS00801');
 INSERT INTO Defect (df_no, df_id, df_ttl, stat_cd, pri_cd, df_cont, df_fd_dt, mem_fd_no, prj_no, type_cd)
-VALUES (seq_defect.nextval, 'DF-0028', '페이지 권한 오류', 'PMS00704', 'PMS00603', '비인가 사용자가 페이지에 접근 가능합니다.', TO_DATE('2024-10-28', 'YYYY-MM-DD'), 1, 1, 'PMS00801');
+VALUES (seq_defect.nextval, 'TRN-0029', '열차 번호 입력 시 특수문자 입력 불가 문제', 'PMS00701', 'PMS00604', '특정 필드에 입력이 불가능합니다.', TO_DATE('2024-10-29', 'YYYY-MM-DD'), 1, 1, 'PMS00802');
 INSERT INTO Defect (df_no, df_id, df_ttl, stat_cd, pri_cd, df_cont, df_fd_dt, mem_fd_no, prj_no, type_cd)
-VALUES (seq_defect.nextval, 'DF-0029', '텍스트 입력 문제', 'PMS00701', 'PMS00604', '특정 필드에 입력이 불가능합니다.', TO_DATE('2024-10-29', 'YYYY-MM-DD'), 1, 1, 'PMS00802');
-INSERT INTO Defect (df_no, df_id, df_ttl, stat_cd, pri_cd, df_cont, df_fd_dt, mem_fd_no, prj_no, type_cd)
-VALUES (seq_defect.nextval, 'DF-0030', '비밀번호 변경 오류', 'PMS00702', 'PMS00605', '비밀번호 변경 시 오류 발생.', TO_DATE('2024-10-30', 'YYYY-MM-DD'), 1, 1, 'PMS00803');
+VALUES (seq_defect.nextval, 'TRN-0030', '승무원 계정 비밀번호 변경 시 오류 발생', 'PMS00702', 'PMS00605', '비밀번호 변경 시 오류 발생.', TO_DATE('2024-10-30', 'YYYY-MM-DD'), 1, 1, 'PMS00803');
 
 -- 완료된 기능들 (8월~9월에 등록, 고객 확인 상태)
 INSERT INTO FEATURE (FEAT_NO, FEAT_ID, FEAT_TITLE, FEAT_CONT, PRE_ST_DT, PRE_END_DT, ST_DT, END_DT, STAT_CD, PRI_CD, PRG, DIFF_CD, CLASS_CD, USE_YN, SYS_NO, MEM_NO, TM_NO, PRJ_NO)
