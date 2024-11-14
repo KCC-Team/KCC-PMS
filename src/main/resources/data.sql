@@ -1414,45 +1414,102 @@ VALUES (seq_defect.nextval, 'TRN-0030', '승무원 계정 비밀번호 변경 �
 
 -- 완료된 기능들 (8월~9월에 등록, 고객 확인 상태)
 INSERT INTO FEATURE (FEAT_NO, FEAT_ID, FEAT_TITLE, FEAT_CONT, PRE_ST_DT, PRE_END_DT, ST_DT, END_DT, STAT_CD, PRI_CD, PRG, DIFF_CD, CLASS_CD, USE_YN, SYS_NO, MEM_NO, TM_NO, PRJ_NO)
-VALUES (seq_feature.nextval, 'F001', '기능1', '내용1', TO_DATE('24/08/01', 'YY/MM/DD'), TO_DATE('24/08/15', 'YY/MM/DD'), TO_DATE('24/08/02', 'YY/MM/DD'), TO_DATE('24/08/14', 'YY/MM/DD'), 'PMS00906', 'PMS00603', 100, 'PMS01103', 'PMS01001', 'Y', 1, 1, 1, 1);
-INSERT INTO FEATURE (FEAT_NO, FEAT_ID, FEAT_TITLE, FEAT_CONT, PRE_ST_DT, PRE_END_DT, ST_DT, END_DT, STAT_CD, PRI_CD, PRG, DIFF_CD, CLASS_CD, USE_YN, SYS_NO, MEM_NO, TM_NO, PRJ_NO)
-VALUES (seq_feature.nextval, 'F002', '기능2', '내용2', TO_DATE('24/08/05', 'YY/MM/DD'), TO_DATE('24/08/20', 'YY/MM/DD'), TO_DATE('24/08/06', 'YY/MM/DD'), TO_DATE('24/08/19', 'YY/MM/DD'), 'PMS00906', 'PMS00602', 100, 'PMS01102', 'PMS01002', 'Y', 2, 1, 1, 1);
-INSERT INTO FEATURE (FEAT_NO, FEAT_ID, FEAT_TITLE, FEAT_CONT, PRE_ST_DT, PRE_END_DT, ST_DT, END_DT, STAT_CD, PRI_CD, PRG, DIFF_CD, CLASS_CD, USE_YN, SYS_NO, MEM_NO, TM_NO, PRJ_NO)
-VALUES (seq_feature.nextval, 'F003', '기능3', '내용3', TO_DATE('24/08/10', 'YY/MM/DD'), TO_DATE('24/08/25', 'YY/MM/DD'), TO_DATE('24/08/11', 'YY/MM/DD'), TO_DATE('24/08/24', 'YY/MM/DD'), 'PMS00906', 'PMS00601', 100, 'PMS01101', 'PMS01003', 'Y', 3, 2, 1, 1);
-INSERT INTO FEATURE (FEAT_NO, FEAT_ID, FEAT_TITLE, FEAT_CONT, PRE_ST_DT, PRE_END_DT, ST_DT, END_DT, STAT_CD, PRI_CD, PRG, DIFF_CD, CLASS_CD, USE_YN, SYS_NO, MEM_NO, TM_NO, PRJ_NO)
-VALUES (seq_feature.nextval, 'F004', '기능4', '내용4', TO_DATE('24/08/15', 'YY/MM/DD'), TO_DATE('24/09/01', 'YY/MM/DD'), TO_DATE('24/08/16', 'YY/MM/DD'), TO_DATE('24/08/31', 'YY/MM/DD'), 'PMS00906', 'PMS00602', 100, 'PMS01102', 'PMS01004', 'Y', 4, 1, 1, 1);
-INSERT INTO FEATURE (FEAT_NO, FEAT_ID, FEAT_TITLE, FEAT_CONT, PRE_ST_DT, PRE_END_DT, ST_DT, END_DT, STAT_CD, PRI_CD, PRG, DIFF_CD, CLASS_CD, USE_YN, SYS_NO, MEM_NO, TM_NO, PRJ_NO)
-VALUES (seq_feature.nextval, 'F005', '기능5', '내용5', TO_DATE('24/08/20', 'YY/MM/DD'), TO_DATE('24/09/05', 'YY/MM/DD'), TO_DATE('24/08/21', 'YY/MM/DD'), TO_DATE('24/09/04', 'YY/MM/DD'), 'PMS00906', 'PMS00603', 100, 'PMS01103', 'PMS01005', 'Y', 5, 3, 1, 1);
+VALUES (seq_feature.nextval, 'TRN001', '고속열차 운행 스케줄 관리 시스템 개발', '고속열차 운행 스케줄을 효율적으로 관리하는 시스템을 개발합니다.', TO_DATE('24/08/01', 'YY/MM/DD'), TO_DATE('24/08/15', 'YY/MM/DD'), TO_DATE('24/08/02', 'YY/MM/DD'), TO_DATE('24/08/14', 'YY/MM/DD'), 'PMS00906', 'PMS00603', 100, 'PMS01103', 'PMS01001', 'Y', 1, 1, 1, 1);
+
+INSERT INTO FEATURE VALUES (seq_feature.nextval, 'TRN002', '승객 예약 시스템 개선', '온라인 승객 예약 시스템의 기능 개선 및 안정화를 진행합니다.', TO_DATE('24/08/05', 'YY/MM/DD'), TO_DATE('24/08/20', 'YY/MM/DD'), TO_DATE('24/08/06', 'YY/MM/DD'), TO_DATE('24/08/19', 'YY/MM/DD'), 'PMS00906', 'PMS00602', 100, 'PMS01102', 'PMS01002', 'Y', 2, 1, 1, 1);
+
+INSERT INTO FEATURE VALUES (seq_feature.nextval, 'TRN003', '화물 운송 추적 개발', '화물 열차의 실시간 위치 추적 및 상태 모니터링 시스템을 구축합니다.', TO_DATE('24/08/10', 'YY/MM/DD'), TO_DATE('24/08/25', 'YY/MM/DD'), TO_DATE('24/08/11', 'YY/MM/DD'), TO_DATE('24/08/24', 'YY/MM/DD'), 'PMS00906', 'PMS00601', 100, 'PMS01101', 'PMS01003', 'Y', 3, 2, 1, 1);
+
+INSERT INTO FEATURE VALUES (seq_feature.nextval, 'TRN004', '철도 안전 모니터링 구축', '철도 안전을 위한 실시간 모니터링 및 경보 시스템을 개발합니다.', TO_DATE('24/08/15', 'YY/MM/DD'), TO_DATE('24/09/01', 'YY/MM/DD'), TO_DATE('24/08/16', 'YY/MM/DD'), TO_DATE('24/08/31', 'YY/MM/DD'), 'PMS00906', 'PMS00602', 100, 'PMS01102', 'PMS01004', 'Y', 4, 1, 1, 1);
+
+INSERT INTO FEATURE VALUES (seq_feature.nextval, 'TRN005', '역사 안내 업그레이드', '승객을 위한 역사 내 안내 디스플레이 시스템을 업그레이드합니다.', TO_DATE('24/08/20', 'YY/MM/DD'), TO_DATE('24/09/05', 'YY/MM/DD'), TO_DATE('24/08/21', 'YY/MM/DD'), TO_DATE('24/09/04', 'YY/MM/DD'), 'PMS00906', 'PMS00603', 100, 'PMS01103', 'PMS01005', 'Y', 5, 3, 1, 1);
 
 -- PL 확인 상태 (진척도 90, 9월에 등록)
-INSERT INTO FEATURE (FEAT_NO, FEAT_ID, FEAT_TITLE, FEAT_CONT, PRE_ST_DT, PRE_END_DT, ST_DT, END_DT, STAT_CD, PRI_CD, PRG, DIFF_CD, CLASS_CD, USE_YN, SYS_NO, MEM_NO, TM_NO, PRJ_NO)
-VALUES (seq_feature.nextval, 'F006', '기능6', '내용6', TO_DATE('24/09/01', 'YY/MM/DD'), TO_DATE('24/09/15', 'YY/MM/DD'), TO_DATE('24/09/02', 'YY/MM/DD'), NULL, 'PMS00905', 'PMS00601', 90, 'PMS01102', 'PMS01001', 'Y', 1, 2, 1, 1);
-INSERT INTO FEATURE (FEAT_NO, FEAT_ID, FEAT_TITLE, FEAT_CONT, PRE_ST_DT, PRE_END_DT, ST_DT, END_DT, STAT_CD, PRI_CD, PRG, DIFF_CD, CLASS_CD, USE_YN, SYS_NO, MEM_NO, TM_NO, PRJ_NO)
-VALUES (seq_feature.nextval, 'F007', '기능7', '내용7', TO_DATE('24/09/05', 'YY/MM/DD'), TO_DATE('24/09/20', 'YY/MM/DD'), TO_DATE('24/09/06', 'YY/MM/DD'), NULL, 'PMS00905', 'PMS00602', 90, 'PMS01103', 'PMS01002', 'Y', 2, 3, 1, 1);
+INSERT INTO FEATURE VALUES (seq_feature.nextval, 'TRN006', '차량 정비 관리 기능 개선', '열차 차량의 정비 스케줄 및 이력 관리 시스템을 개선합니다.', TO_DATE('24/09/01', 'YY/MM/DD'), TO_DATE('24/09/15', 'YY/MM/DD'), TO_DATE('24/09/02', 'YY/MM/DD'), NULL, 'PMS00905', 'PMS00601', 90, 'PMS01102', 'PMS01001', 'Y', 1, 2, 1, 1);
+
+INSERT INTO FEATURE VALUES (seq_feature.nextval, 'TRN007', '승강장 안전 기능 개발', '승강장 내 승객 안전을 위한 시스템을 개발합니다.', TO_DATE('24/09/05', 'YY/MM/DD'), TO_DATE('24/09/20', 'YY/MM/DD'), TO_DATE('24/09/06', 'YY/MM/DD'), NULL, 'PMS00905', 'PMS00602', 90, 'PMS01103', 'PMS01002', 'Y', 2, 3, 1, 1);
 
 -- 단위 테스트 완료 상태 (진척도 80, 9월~10월 등록)
-INSERT INTO FEATURE (FEAT_NO, FEAT_ID, FEAT_TITLE, FEAT_CONT, PRE_ST_DT, PRE_END_DT, ST_DT, END_DT, STAT_CD, PRI_CD, PRG, DIFF_CD, CLASS_CD, USE_YN, SYS_NO, MEM_NO, TM_NO, PRJ_NO)
-VALUES (seq_feature.nextval, 'F008', '기능8', '내용8', TO_DATE('24/09/10', 'YY/MM/DD'), TO_DATE('24/09/25', 'YY/MM/DD'), TO_DATE('24/09/11', 'YY/MM/DD'), NULL, 'PMS00904', 'PMS00603', 80, 'PMS01101', 'PMS01003', 'Y', 3, 1, 1, 1);
-INSERT INTO FEATURE (FEAT_NO, FEAT_ID, FEAT_TITLE, FEAT_CONT, PRE_ST_DT, PRE_END_DT, ST_DT, END_DT, STAT_CD, PRI_CD, PRG, DIFF_CD, CLASS_CD, USE_YN, SYS_NO, MEM_NO, TM_NO, PRJ_NO)
-VALUES (seq_feature.nextval, 'F009', '기능9', '내용9', TO_DATE('24/10/01', 'YY/MM/DD'), TO_DATE('24/10/15', 'YY/MM/DD'), TO_DATE('24/10/02', 'YY/MM/DD'), NULL, 'PMS00904', 'PMS00602', 80, 'PMS01102', 'PMS01004', 'Y', 4, 2, 1, 1);
+INSERT INTO FEATURE VALUES (seq_feature.nextval, 'TRN008', '티켓 검표 시스템 통합', '모바일 및 종이 티켓의 검표 시스템을 통합 개발합니다.', TO_DATE('24/09/10', 'YY/MM/DD'), TO_DATE('24/09/25', 'YY/MM/DD'), TO_DATE('24/09/11', 'YY/MM/DD'), NULL, 'PMS00904', 'PMS00603', 80, 'PMS01101', 'PMS01003', 'Y', 3, 1, 1, 1);
+
+INSERT INTO FEATURE VALUES (seq_feature.nextval, 'TRN009', '열차 내 와이파이 개선', '승객을 위한 열차 내 와이파이 서비스 품질을 향상시킵니다.', TO_DATE('24/10/01', 'YY/MM/DD'), TO_DATE('24/10/15', 'YY/MM/DD'), TO_DATE('24/10/02', 'YY/MM/DD'), NULL, 'PMS00904', 'PMS00602', 80, 'PMS01102', 'PMS01004', 'Y', 4, 2, 1, 1);
 
 -- 개발 완료 상태 (진척도 70, 10월 등록)
-INSERT INTO FEATURE (FEAT_NO, FEAT_ID, FEAT_TITLE, FEAT_CONT, PRE_ST_DT, PRE_END_DT, ST_DT, END_DT, STAT_CD, PRI_CD, PRG, DIFF_CD, CLASS_CD, USE_YN, SYS_NO, MEM_NO, TM_NO, PRJ_NO)
-VALUES (seq_feature.nextval, 'F010', '기능10', '내용10', TO_DATE('24/10/05', 'YY/MM/DD'), TO_DATE('24/10/20', 'YY/MM/DD'), TO_DATE('24/10/06', 'YY/MM/DD'), NULL, 'PMS00903', 'PMS00603', 70, 'PMS01103', 'PMS01001', 'Y', 1, 1, 1, 1);
-INSERT INTO FEATURE (FEAT_NO, FEAT_ID, FEAT_TITLE, FEAT_CONT, PRE_ST_DT, PRE_END_DT, ST_DT, END_DT, STAT_CD, PRI_CD, PRG, DIFF_CD, CLASS_CD, USE_YN, SYS_NO, MEM_NO, TM_NO, PRJ_NO)
-VALUES (seq_feature.nextval, 'F011', '기능11', '내용11', TO_DATE('24/10/07', 'YY/MM/DD'), TO_DATE('24/10/22', 'YY/MM/DD'), TO_DATE('24/10/08', 'YY/MM/DD'), NULL, 'PMS00903', 'PMS00602', 70, 'PMS01101', 'PMS01002', 'Y', 2, 3, 1, 1);
+INSERT INTO FEATURE VALUES (seq_feature.nextval, 'TRN010', '열차 상태 진단 시스템 개발', '열차의 기계적 상태를 실시간으로 진단하는 시스템을 개발합니다.', TO_DATE('24/10/05', 'YY/MM/DD'), TO_DATE('24/10/20', 'YY/MM/DD'), TO_DATE('24/10/06', 'YY/MM/DD'), NULL, 'PMS00903', 'PMS00603', 70, 'PMS01103', 'PMS01001', 'Y', 1, 1, 1, 1);
+
+INSERT INTO FEATURE VALUES (seq_feature.nextval, 'TRN011', '역사 자동화 시스템 구축', '역사 내 자동화 시스템 구축을 통해 운영 효율성을 향상시킵니다.', TO_DATE('24/10/07', 'YY/MM/DD'), TO_DATE('24/10/22', 'YY/MM/DD'), TO_DATE('24/10/08', 'YY/MM/DD'), NULL, 'PMS00903', 'PMS00602', 70, 'PMS01101', 'PMS01002', 'Y', 2, 3, 1, 1);
 
 -- 개발 중 상태 (진척도 10~60, 10월~11월 등록)
-INSERT INTO FEATURE (FEAT_NO, FEAT_ID, FEAT_TITLE, FEAT_CONT, PRE_ST_DT, PRE_END_DT, ST_DT, END_DT, STAT_CD, PRI_CD, PRG, DIFF_CD, CLASS_CD, USE_YN, SYS_NO, MEM_NO, TM_NO, PRJ_NO)
-VALUES (seq_feature.nextval, 'F012', '기능12', '내용12', TO_DATE('24/10/10', 'YY/MM/DD'), TO_DATE('24/10/30', 'YY/MM/DD'), TO_DATE('24/10/11', 'YY/MM/DD'), NULL, 'PMS00902', 'PMS00601', 40, 'PMS01103', 'PMS01003', 'Y', 3, 1, 1, 1);
-INSERT INTO FEATURE (FEAT_NO, FEAT_ID, FEAT_TITLE, FEAT_CONT, PRE_ST_DT, PRE_END_DT, ST_DT, END_DT, STAT_CD, PRI_CD, PRG, DIFF_CD, CLASS_CD, USE_YN, SYS_NO, MEM_NO, TM_NO, PRJ_NO)
-VALUES (seq_feature.nextval, 'F013', '기능13', '내용13', TO_DATE('24/10/12', 'YY/MM/DD'), TO_DATE('24/11/01', 'YY/MM/DD'), TO_DATE('24/10/13', 'YY/MM/DD'), NULL, 'PMS00902', 'PMS00603', 50, 'PMS01102', 'PMS01002', 'Y', 4, 2, 1, 1);
+INSERT INTO FEATURE VALUES (seq_feature.nextval, 'TRN012', '철도 노선 최적화 알고리즘 개발', '효율적인 운행을 위한 노선 최적화 알고리즘을 개발합니다.', TO_DATE('24/10/10', 'YY/MM/DD'), TO_DATE('24/10/30', 'YY/MM/DD'), TO_DATE('24/10/11', 'YY/MM/DD'), NULL, 'PMS00902', 'PMS00601', 40, 'PMS01103', 'PMS01003', 'Y', 3, 1, 1, 1);
+
+INSERT INTO FEATURE VALUES (seq_feature.nextval, 'TRN013', '승객 혼잡도 분석 시스템', '실시간 승객 혼잡도 분석을 통해 운영을 개선합니다.', TO_DATE('24/10/12', 'YY/MM/DD'), TO_DATE('24/11/01', 'YY/MM/DD'), TO_DATE('24/10/13', 'YY/MM/DD'), NULL, 'PMS00902', 'PMS00603', 50, 'PMS01102', 'PMS01002', 'Y', 4, 2, 1, 1);
 
 -- 신규 상태 (진척도 0, 11월에 등록)
-INSERT INTO FEATURE (FEAT_NO, FEAT_ID, FEAT_TITLE, FEAT_CONT, PRE_ST_DT, PRE_END_DT, ST_DT, END_DT, STAT_CD, PRI_CD, PRG, DIFF_CD, CLASS_CD, USE_YN, SYS_NO, MEM_NO, TM_NO, PRJ_NO)
-VALUES (seq_feature.nextval, 'F014', '기능14', '내용14', TO_DATE('24/11/01', 'YY/MM/DD'), TO_DATE('24/11/15', 'YY/MM/DD'), NULL, NULL, 'PMS00901', 'PMS00601', 0, 'PMS01101', 'PMS01001', 'Y', 1, 1, 1, 1);
-INSERT INTO FEATURE (FEAT_NO, FEAT_ID, FEAT_TITLE, FEAT_CONT, PRE_ST_DT, PRE_END_DT, ST_DT, END_DT, STAT_CD, PRI_CD, PRG, DIFF_CD, CLASS_CD, USE_YN, SYS_NO, MEM_NO, TM_NO, PRJ_NO)
-VALUES (seq_feature.nextval, 'F015', '기능15', '내용15', TO_DATE('24/11/02', 'YY/MM/DD'), TO_DATE('24/11/18', 'YY/MM/DD'), NULL, NULL, 'PMS00901', 'PMS00602', 0, 'PMS01102', 'PMS01002', 'Y', 2, 2, 1, 1);
+INSERT INTO FEATURE VALUES (seq_feature.nextval, 'TRN014', '열차 좌석 예약 최적화', '승객 만족도를 높이기 위한 좌석 예약 시스템을 최적화합니다.', TO_DATE('24/11/01', 'YY/MM/DD'), TO_DATE('24/11/15', 'YY/MM/DD'), NULL, NULL, 'PMS00901', 'PMS00601', 0, 'PMS01101', 'PMS01001', 'Y', 1, 1, 1, 1);
+
+INSERT INTO FEATURE VALUES (seq_feature.nextval, 'TRN015', '국제 열차 운행 화면 개선', '국제 열차 운행을 위한 시스템을 구축하고 테스트합니다.', TO_DATE('24/11/02', 'YY/MM/DD'), TO_DATE('24/11/18', 'YY/MM/DD'), NULL, NULL, 'PMS00901', 'PMS00602', 0, 'PMS01102', 'PMS01002', 'Y', 2, 2, 1, 1);
+
+-- 추가된 기능들 (10월~11월에 등록, 다양한 진행 상태)
+INSERT INTO FEATURE VALUES (seq_feature.nextval, 'TRN016', '열차 운행 데이터 분석 도구 개발', '운행 데이터를 분석하여 효율성을 향상시킵니다.', TO_DATE('24/10/15', 'YY/MM/DD'), TO_DATE('24/10/30', 'YY/MM/DD'), TO_DATE('24/10/16', 'YY/MM/DD'), NULL, 'PMS00902', 'PMS00602', 50, 'PMS01101', 'PMS01002', 'Y', 1, 1, 1, 1);
+
+INSERT INTO FEATURE VALUES (seq_feature.nextval, 'TRN017', '승객 안내 방송 품질 개선', '승객 안내 방송의 음질과 내용을 개선합니다.', TO_DATE('24/10/17', 'YY/MM/DD'), TO_DATE('24/10/31', 'YY/MM/DD'), TO_DATE('24/10/18', 'YY/MM/DD'), NULL, 'PMS00903', 'PMS00601', 70, 'PMS01102', 'PMS01001', 'Y', 2, 2, 1, 1);
+
+INSERT INTO FEATURE VALUES (seq_feature.nextval, 'TRN018', '철도 교통 안전 교육 프로그램', '직원을 위한 안전 교육 프로그램을 개발합니다.', TO_DATE('24/10/20', 'YY/MM/DD'), TO_DATE('24/11/05', 'YY/MM/DD'), TO_DATE('24/10/21', 'YY/MM/DD'), NULL, 'PMS00901', 'PMS00603', 20, 'PMS01103', 'PMS01003', 'Y', 3, 3, 1, 1);
+
+INSERT INTO FEATURE VALUES (seq_feature.nextval, 'TRN019', '열차 내부 청결도 향상 프로젝트', '승객 만족도를 높이기 위한 청결도 개선을 추진합니다.', TO_DATE('24/10/22', 'YY/MM/DD'), TO_DATE('24/11/10', 'YY/MM/DD'), TO_DATE('24/10/23', 'YY/MM/DD'), NULL, 'PMS00902', 'PMS00602', 40, 'PMS01101', 'PMS01004', 'Y', 4, 1, 1, 1);
+
+INSERT INTO FEATURE VALUES (seq_feature.nextval, 'TRN020', '친환경 열차 도입 연구', '탄소 배출을 줄이기 위한 친환경 열차 도입을 연구합니다.', TO_DATE('24/10/25', 'YY/MM/DD'), TO_DATE('24/11/15', 'YY/MM/DD'), TO_DATE('24/10/26', 'YY/MM/DD'), NULL, 'PMS00901', 'PMS00601', 10, 'PMS01102', 'PMS01005', 'Y', 5, 2, 1, 1);
+
+INSERT INTO FEATURE VALUES (seq_feature.nextval, 'TRN021', '철도 네트워크 확장 계획 수립', '새로운 노선 추가를 위한 계획을 수립합니다.', TO_DATE('24/10/28', 'YY/MM/DD'), TO_DATE('24/11/20', 'YY/MM/DD'), TO_DATE('24/10/29', 'YY/MM/DD'), NULL, 'PMS00902', 'PMS00603', 30, 'PMS01103', 'PMS01001', 'Y', 1, 3, 1, 1);
+
+INSERT INTO FEATURE VALUES (seq_feature.nextval, 'TRN022', '고속열차 서비스 개선', '고속열차의 서비스 품질을 향상시킵니다.', TO_DATE('24/10/30', 'YY/MM/DD'), TO_DATE('24/11/25', 'YY/MM/DD'), TO_DATE('24/10/31', 'YY/MM/DD'), NULL, 'PMS00903', 'PMS00602', 60, 'PMS01101', 'PMS01002', 'Y', 2, 1, 1, 1);
+
+INSERT INTO FEATURE VALUES (seq_feature.nextval, 'TRN023', '열차 소음 저감 기술 적용', '주변 환경에 미치는 소음을 줄이기 위한 기술을 도입합니다.', TO_DATE('24/11/01', 'YY/MM/DD'), TO_DATE('24/11/30', 'YY/MM/DD'), TO_DATE('24/11/02', 'YY/MM/DD'), NULL, 'PMS00901', 'PMS00601', 20, 'PMS01102', 'PMS01003', 'Y', 3, 2, 1, 1);
+
+INSERT INTO FEATURE VALUES (seq_feature.nextval, 'TRN024', '승차권 자동 발매기 업그레이드', '사용자 친화적인 인터페이스로 개선합니다.', TO_DATE('24/11/03', 'YY/MM/DD'), TO_DATE('24/11/25', 'YY/MM/DD'), TO_DATE('24/11/04', 'YY/MM/DD'), NULL, 'PMS00902', 'PMS00603', 40, 'PMS01103', 'PMS01004', 'Y', 4, 3, 1, 1);
+
+INSERT INTO FEATURE VALUES (seq_feature.nextval, 'TRN025', '열차 운행 정보 모바일 앱 개발', '실시간 운행 정보를 제공하는 모바일 앱을 개발합니다.', TO_DATE('24/11/05', 'YY/MM/DD'), TO_DATE('24/12/05', 'YY/MM/DD'), TO_DATE('24/11/06', 'YY/MM/DD'), NULL, 'PMS00903', 'PMS00602', 50, 'PMS01101', 'PMS01005', 'Y', 5, 1, 1, 1);
+
+INSERT INTO FEATURE VALUES (seq_feature.nextval, 'TRN026', '역사 내 무선 인터넷 환경 개선', '승객을 위한 와이파이 속도와 안정성을 높입니다.', TO_DATE('24/11/07', 'YY/MM/DD'), TO_DATE('24/11/30', 'YY/MM/DD'), TO_DATE('24/11/08', 'YY/MM/DD'), NULL, 'PMS00901', 'PMS00601', 15, 'PMS01102', 'PMS01001', 'Y', 1, 2, 1, 1);
+
+INSERT INTO FEATURE VALUES (seq_feature.nextval, 'TRN027', '열차 내부 디자인 리뉴얼', '승객 편의를 위한 내부 디자인을 새롭게 합니다.', TO_DATE('24/11/09', 'YY/MM/DD'), TO_DATE('24/12/10', 'YY/MM/DD'), TO_DATE('24/11/10', 'YY/MM/DD'), NULL, 'PMS00902', 'PMS00603', 35, 'PMS01103', 'PMS01002', 'Y', 2, 3, 1, 1);
+
+INSERT INTO FEATURE VALUES (seq_feature.nextval, 'TRN028', '안전 운행 매뉴얼 개정', '최신 안전 기준에 맞게 운행 매뉴얼을 업데이트합니다.', TO_DATE('24/11/12', 'YY/MM/DD'), TO_DATE('24/12/01', 'YY/MM/DD'), TO_DATE('24/11/13', 'YY/MM/DD'), NULL, 'PMS00903', 'PMS00602', 55, 'PMS01101', 'PMS01003', 'Y', 3, 1, 1, 1);
+
+INSERT INTO FEATURE VALUES (seq_feature.nextval, 'TRN029', '승객 피드백 시스템 도입', '고객 의견을 수렴할 수 있는 채널을 마련합니다.', TO_DATE('24/11/14', 'YY/MM/DD'), TO_DATE('24/12/05', 'YY/MM/DD'), TO_DATE('24/11/15', 'YY/MM/DD'), NULL, 'PMS00901', 'PMS00601', 25, 'PMS01102', 'PMS01004', 'Y', 4, 2, 1, 1);
+
+INSERT INTO FEATURE VALUES (seq_feature.nextval, 'TRN030', '열차 운행 예측 모델 개발', '딥러닝을 활용한 운행 예측 모델을 개발합니다.', TO_DATE('24/11/16', 'YY/MM/DD'), TO_DATE('24/12/15', 'YY/MM/DD'), TO_DATE('24/11/17', 'YY/MM/DD'), NULL, 'PMS00902', 'PMS00603', 45, 'PMS01103', 'PMS01005', 'Y', 5, 3, 1, 1);
+
+INSERT INTO FEATURE VALUES (seq_feature.nextval, 'TRN031', '열차 예약 플랫폼 다국어 지원', '외국인 승객을 위한 다국어 서비스를 제공합니다.', TO_DATE('24/11/18', 'YY/MM/DD'), TO_DATE('24/12/20', 'YY/MM/DD'), TO_DATE('24/11/19', 'YY/MM/DD'), NULL, 'PMS00903', 'PMS00602', 50, 'PMS01101', 'PMS01001', 'Y', 1, 1, 1, 1);
+
+INSERT INTO FEATURE VALUES (seq_feature.nextval, 'TRN032', '역사 내 친환경 에너지 도입', '태양광 및 풍력 에너지 사용을 확대합니다.', TO_DATE('24/11/20', 'YY/MM/DD'), TO_DATE('24/12/25', 'YY/MM/DD'), TO_DATE('24/11/21', 'YY/MM/DD'), NULL, 'PMS00901', 'PMS00601', 20, 'PMS01102', 'PMS01002', 'Y', 2, 2, 1, 1);
+
+INSERT INTO FEATURE VALUES (seq_feature.nextval, 'TRN033', '열차 지연 보상 제도 개선', '승객 불편을 최소화하기 위한 보상 제도를 개선합니다.', TO_DATE('24/11/22', 'YY/MM/DD'), TO_DATE('24/12/10', 'YY/MM/DD'), TO_DATE('24/11/23', 'YY/MM/DD'), NULL, 'PMS00902', 'PMS00603', 30, 'PMS01103', 'PMS01003', 'Y', 3, 3, 1, 1);
+
+INSERT INTO FEATURE VALUES (seq_feature.nextval, 'TRN034', '철도 교량 안전 점검 강화', '교량의 안전 점검 주기와 범위를 확대합니다.', TO_DATE('24/11/24', 'YY/MM/DD'), TO_DATE('24/12/15', 'YY/MM/DD'), TO_DATE('24/11/25', 'YY/MM/DD'), NULL, 'PMS00903', 'PMS00602', 60, 'PMS01101', 'PMS01004', 'Y', 4, 1, 1, 1);
+
+INSERT INTO FEATURE VALUES (seq_feature.nextval, 'TRN035', '승객 맞춤형 서비스 제공', '개인화된 서비스로 승객 만족도를 높입니다.', TO_DATE('24/11/26', 'YY/MM/DD'), TO_DATE('24/12/20', 'YY/MM/DD'), TO_DATE('24/11/27', 'YY/MM/DD'), NULL, 'PMS00901', 'PMS00601', 25, 'PMS01102', 'PMS01005', 'Y', 5, 2, 1, 1);
+
+INSERT INTO FEATURE VALUES (seq_feature.nextval, 'TRN036', '열차 출발 알림 기능 강화', '승객의 편의를 위한 출발 알림 서비스를 개선합니다.', TO_DATE('24/11/28', 'YY/MM/DD'), TO_DATE('24/12/22', 'YY/MM/DD'), TO_DATE('24/11/29', 'YY/MM/DD'), NULL, 'PMS00902', 'PMS00603', 35, 'PMS01103', 'PMS01001', 'Y', 1, 3, 1, 1);
+
+INSERT INTO FEATURE VALUES (seq_feature.nextval, 'TRN037', '무인 역 운영 시범 사업', '인건비 절감을 위한 무인 역 운영을 시범적으로 도입합니다.', TO_DATE('24/11/30', 'YY/MM/DD'), TO_DATE('25/01/15', 'YY/MM/DD'), TO_DATE('24/12/01', 'YY/MM/DD'), NULL, 'PMS00901', 'PMS00602', 10, 'PMS01101', 'PMS01002', 'Y', 2, 1, 1, 1);
+
+INSERT INTO FEATURE VALUES (seq_feature.nextval, 'TRN038', '열차 내 편의 시설 확대', '승객을 위한 편의 시설을 추가 설치합니다.', TO_DATE('24/12/02', 'YY/MM/DD'), TO_DATE('25/01/10', 'YY/MM/DD'), TO_DATE('24/12/03', 'YY/MM/DD'), NULL, 'PMS00902', 'PMS00601', 20, 'PMS01102', 'PMS01003', 'Y', 3, 2, 1, 1);
+
+INSERT INTO FEATURE VALUES (seq_feature.nextval, 'TRN039', '철도 운행 시뮬레이션 개발', '운행 최적화를 위한 시뮬레이션 도구를 개발합니다.', TO_DATE('24/12/05', 'YY/MM/DD'), TO_DATE('25/01/20', 'YY/MM/DD'), TO_DATE('24/12/06', 'YY/MM/DD'), NULL, 'PMS00903', 'PMS00603', 50, 'PMS01103', 'PMS01004', 'Y', 4, 3, 1, 1);
+
+INSERT INTO FEATURE VALUES (seq_feature.nextval, 'TRN040', '열차 안전 센서 기술 도입', '최신 센서 기술로 안전성을 강화합니다.', TO_DATE('24/12/07', 'YY/MM/DD'), TO_DATE('25/01/25', 'YY/MM/DD'), TO_DATE('24/12/08', 'YY/MM/DD'), NULL, 'PMS00901', 'PMS00602', 15, 'PMS01101', 'PMS01005', 'Y', 5, 1, 1, 1);
+
+INSERT INTO FEATURE VALUES (seq_feature.nextval, 'TRN041', '역사 주변 상권 활성화 계획', '지역 경제 활성화를 위한 상권 개발을 추진합니다.', TO_DATE('24/12/09', 'YY/MM/DD'), TO_DATE('25/01/30', 'YY/MM/DD'), TO_DATE('24/12/10', 'YY/MM/DD'), NULL, 'PMS00902', 'PMS00601', 25, 'PMS01102', 'PMS01001', 'Y', 1, 2, 1, 1);
+
+INSERT INTO FEATURE VALUES (seq_feature.nextval, 'TRN042', '열차 내 식음료 서비스 개선', '고품질의 식음료 서비스를 제공하기 위한 개선을 실시합니다.', TO_DATE('24/12/12', 'YY/MM/DD'), TO_DATE('25/02/05', 'YY/MM/DD'), TO_DATE('24/12/13', 'YY/MM/DD'), NULL, 'PMS00903', 'PMS00603', 45, 'PMS01103', 'PMS01002', 'Y', 2, 3, 1, 1);
+
+INSERT INTO FEATURE VALUES (seq_feature.nextval, 'TRN043', '철도 재난 대응 체계 구축', '재난 발생 시 신속한 대응을 위한 체계를 마련합니다.', TO_DATE('24/12/14', 'YY/MM/DD'), TO_DATE('25/02/10', 'YY/MM/DD'), TO_DATE('24/12/15', 'YY/MM/DD'), NULL, 'PMS00901', 'PMS00602', 30, 'PMS01101', 'PMS01003', 'Y', 3, 1, 1, 1);
+
+INSERT INTO FEATURE VALUES (seq_feature.nextval, 'TRN044', '열차 예약 취소 정책 개선', '승객 편의를 위한 예약 취소 절차를 간소화합니다.', TO_DATE('24/12/16', 'YY/MM/DD'), TO_DATE('25/02/15', 'YY/MM/DD'), TO_DATE('24/12/17', 'YY/MM/DD'), NULL, 'PMS00902', 'PMS00601', 35, 'PMS01102', 'PMS01004', 'Y', 4, 2, 1, 1);
+
+INSERT INTO FEATURE VALUES (seq_feature.nextval, 'TRN045', '국제 열차 운행 확대 계획', '국제 노선 확대를 위한 계획을 수립합니다.', TO_DATE('24/12/18', 'YY/MM/DD'), TO_DATE('25/02/20', 'YY/MM/DD'), TO_DATE('24/12/19', 'YY/MM/DD'), NULL, 'PMS00903', 'PMS00603', 50, 'PMS01103', 'PMS01005', 'Y', 5, 3, 1, 1);
+
 
 -- output
 InSERT InTO Output (opt_no, opt_ttl, prj_no, high_folder_no, fld_yn, use_yn)
