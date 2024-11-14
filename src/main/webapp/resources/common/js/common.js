@@ -106,7 +106,6 @@ document.addEventListener('DOMContentLoaded', function() {
         var linkPath = link.getAttribute('href');
 
         // 현재 경로와 링크의 경로를 비교합니다.
-        console.log(linkPath);
         if (currentPath.includes(linkPath)) {
             link.classList.add('active');
 

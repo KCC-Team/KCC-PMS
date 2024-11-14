@@ -94,6 +94,12 @@ td textarea {
     min-height: 45px;
 }
 
+.auto-resize {
+    box-sizing: border-box;
+    overflow: hidden;
+    resize: none;
+}
+
 .type {
     padding: 2px;
     width: 100%;

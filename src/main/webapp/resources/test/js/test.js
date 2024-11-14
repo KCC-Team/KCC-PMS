@@ -1,23 +1,23 @@
 let testCaseIdx = 0;
 let unitTestIdx = 0;
-let integrationTestCaseIdx = 0;
+let integrationTestCaseIdx = -1;
 let featureList = [];
 let testCaseDataArray = [];
+
+document.addEventListener('input', function(event) {
+    if (event.target.matches('textarea') && event.target.id !== 'testContent') {
+        let tr = event.target.closest('tr');
+        if (tr) {
+            resizeTextareasInRow(tr);
+        }
+    }
+});
 
 let observer = new MutationObserver(function(mutations) {
     mutations.forEach(function(mutation) {
         mutation.addedNodes.forEach(function(node) {
-            if (node.nodeType === 1) {
-                if (node.matches('tr')) {
-                    resizeTextareasInRow(node);
-                } else if (node.querySelector('tr')) {
-                    resizeTextareasInRow(node.querySelector('tr'));
-                } else {
-                    let tr = node.closest('tr');
-                    if (tr) {
-                        resizeTextareasInRow(tr);
-                    }
-                }
+            if (node.nodeType === 1 && node.matches('tr')) {
+                resizeTextareasInRow(node);
             }
         });
     });
@@ -30,23 +30,19 @@ observer.observe(document.body, {
 
 function resizeTextareasInRow(tr) {
     let textareas = tr.querySelectorAll('textarea');
-    let maxHeight = 0;
+    let maxScrollHeight = 0;
 
     textareas.forEach(function(textarea) {
-        textarea.style.height = 'auto'; // 높이를 초기화하여 scrollHeight를 정확히 측정
-    });
-
-    textareas.forEach(function(textarea) {
+        textarea.style.height = 'auto'; // 높이를 초기화하여 정확한 높이 계산
         let scrollHeight = textarea.scrollHeight;
-        if (scrollHeight > maxHeight) {
-            maxHeight = scrollHeight;
+        if (scrollHeight > maxScrollHeight) {
+            maxScrollHeight = scrollHeight;
         }
     });
 
     textareas.forEach(function(textarea) {
-        textarea.style.height = maxHeight + 'px'; // 최대 높이로 모든 textarea 높이 설정
+        textarea.style.height = maxScrollHeight + 'px';
     });
-
 }
 
 let observer_mem = new MutationObserver(function(mutations) {
@@ -65,20 +61,6 @@ observer_mem.observe(document.body, {
     childList: true,
     subtree: true
 });
-
-function autoResize() {
-    document.addEventListener('input', function(event) {
-        if (event.target.matches('textarea')) {
-            if ('testContent' === event.target.id) {
-                return;
-            }
-            let tr = event.target.closest('tr');
-            if (tr) {
-                resizeTextareasInRow(tr);
-            }
-        }
-    });
-}
 
 $(function() {
     Chart.register(ChartDataLabels);
@@ -289,6 +271,7 @@ $(function() {
     $('#PMS012').change(function() {
         changeTestType($(this));
     });
+    fetchFeatureData();
 
     $(document).on('click', '#addRow', function() {
         if ($('#PMS012').val() === 'PMS01201') {
@@ -636,7 +619,6 @@ $(function() {
         });
     }
 
-    autoResize();
 });
 
 function clearWriter(type, TestIdx) {
@@ -839,7 +821,7 @@ function changeTestType($this) {
 
         $('#test-case-area').html(html);
         $('#test-case-area').show(50);
-        initializeSortable('test-table-body-unit');
+        initializeSortable('test-table-body-unit', 'unit');
     } else if (selectedOption === 'PMS01202') {
         $('.feature-select-area').hide();
 
@@ -869,6 +851,81 @@ function changeTestType($this) {
     collectAndProcessTestData();
     generateCharts();
 }
+
+function initializeTabSortable() {
+    Sortable.create(document.getElementById('integrationTestTabs'), {
+        handle: '.nav-link',
+        animation: 150,
+        filter: '.add-tab', // "탭 추가" 버튼 제외
+        onEnd: function (evt) {
+            // 새 인덱스와 이전 인덱스 가져오기
+            let oldIndex = evt.oldIndex;
+            let newIndex = evt.newIndex;
+
+            // "탭 추가" 버튼 제외
+            let tabs = Array.from(document.querySelectorAll('#integrationTestTabs .nav-item:not(:last-child)'));
+            let tabContents = document.querySelectorAll('#integrationTestTabsContent .tab-pane');
+            updateVisualIndices(tbody);
+            updateTestCaseIndices($(tbody).children('tr'), 'unit');
+
+            // 탭 콘텐츠 이동
+            let movedContent = tabContents[oldIndex];
+            if (newIndex > oldIndex) {
+                movedContent.parentNode.insertBefore(movedContent, tabContents[newIndex + 1]);
+            } else {
+                movedContent.parentNode.insertBefore(movedContent, tabContents[newIndex]);
+            }
+
+            // 인덱스 및 ID 업데이트
+            updateTabIndices();
+        }
+    });
+}
+
+function updateTabIndices() {
+    const tabs = document.querySelectorAll('#integrationTestTabs .nav-item:not(:last-child)');
+    const tabContents = document.querySelectorAll('#integrationTestTabsContent .tab-pane');
+
+    tabs.forEach((tab, index) => {
+        let tabId = `testcase${index + 1}`;
+        let tabContentId = `testcase${index + 1}-content`;
+
+        // 탭 버튼 업데이트
+        let tabLink = tab.querySelector('.nav-link');
+        tabLink.id = `${tabId}-tab`;
+        tabLink.href = `#${tabContentId}`;
+        tabLink.setAttribute('aria-controls', tabContentId);
+
+        // 탭 콘텐츠 업데이트
+        let tabContent = tabContents[index];
+        tabContent.id = tabContentId;
+        tabContent.setAttribute('aria-labelledby', `${tabId}-tab`);
+
+        // 탭 콘텐츠 내부의 인덱스 업데이트
+        updateTestCaseIndicesInTabContent(tabContent, index + 1);
+    });
+}
+
+function updateTestCaseIndicesInTabContent(tabContent, newIndex) {
+    // 탭 콘텐츠 내부에서 탭 인덱스에 의존하는 ID나 데이터 속성을 업데이트
+    let testCaseIdx = newIndex;
+
+    // 테이블의 ID 업데이트
+    let tbody = tabContent.querySelector(`tbody[id^="test-table-body-itg-"]`);
+    if (tbody) {
+        tbody.id = `test-table-body-itg-${testCaseIdx}`;
+    }
+
+    $(tabContent).find('tr').each(function(index, row) {
+        updateTestCaseIndices([row], testCaseIdx);
+    });
+
+    let addRowButton = tabContent.querySelector('.addRow');
+    if (addRowButton) {
+        addRowButton.setAttribute('data-testcase', testCaseIdx);
+    }
+}
+
 
 function generateCharts() {
     // 수집된 데이터를 사용하여 차트 생성
@@ -1162,6 +1219,15 @@ function renderIntegrationTestCases(testCaseList) {
     $('#add-tab-button').off('click').on('click', function() {
         addIntegrationTestCaseTab();
     });
+    fetchFeatureData().then(function() {
+        testCaseList.forEach((testCaseData) => {
+            addIntegrationTestCaseTab(testCaseData);
+        });
+
+        $('#add-tab-button').off('click').on('click', function() {
+            addIntegrationTestCaseTab();
+        });
+    });
 
     $('#test-case-area').html(html);
     $('#test-case-area').show(50);
@@ -1170,7 +1236,6 @@ function renderIntegrationTestCases(testCaseList) {
         resizeTextareasInRow(this);
     });
 
-    autoResize();
     collectAndProcessTestData();
     generateCharts();
 
@@ -1195,7 +1260,7 @@ function generateWorkTask(test) {
     `;
 }
 
-function initializeSortable(elementId) {
+function initializeSortable(elementId, testCaseId) {
     let tbody = document.getElementById(elementId);
     let sortable = Sortable.create(tbody, {
         handle: '.drag-handle',
@@ -1204,12 +1269,8 @@ function initializeSortable(elementId) {
         fallbackOnBody: true,
         fallbackTolerance: 5,
         onEnd: function (evt) {
-            let itemEl = evt.item; // 드래그된 행
-            let oldIndex = evt.oldIndex; // 이전 인덱스
-            let newIndex = evt.newIndex; // 새로운 인덱스
-
-            swapRowData(tbody.rows[oldIndex], tbody.rows[newIndex]);
             updateVisualIndices(tbody);
+            updateTestCaseIndices($(tbody).children('tr'), testCaseId);
         },
     });
 }
@@ -1217,24 +1278,12 @@ function initializeSortable(elementId) {
 function updateVisualIndices(tbody) {
     $(tbody).children('tr').each(function(index, row) {
         let $row = $(row);
+        // 순번 업데이트
         let seqCell = $row.find('td:first-child .drag-handle');
         if (seqCell.length) {
             seqCell.text(index + 1);
         }
     });
-}
-
-function swapRowData(row1, row2) {
-    let $row1 = $(row1);
-    let $row2 = $(row2);
-
-    // 각 행의 데이터를 객체로 직렬화
-    let data1 = serializeRowData($row1);
-    let data2 = serializeRowData($row2);
-
-    // 데이터 교환
-    deserializeRowData($row1, data2);
-    deserializeRowData($row2, data1);
 }
 
 function serializeRowData($row) {
@@ -1258,18 +1307,14 @@ function deserializeRowData($row, data) {
 }
 
 function updateTestCaseIndices(rows, testCaseId) {
-    rows = $(rows);
     rows.each(function(index, row) {
         let newRowIdx = index + 1;
         const $row = $(row);
 
-        const seqCell = $row.find('td:first-child .drag-handle');
-        if (seqCell.length) {
-            seqCell.text(newRowIdx);
-        }
-
+        // 행의 ID 업데이트
         row.id = `test_${testCaseId}_${newRowIdx}_tr`;
 
+        // 입력 필드의 ID 및 이름 속성 업데이트
         const writerInput = $row.find('input[name="writerName"]');
         if (writerInput.length) {
             writerInput.attr('id', `mem_no_${testCaseId}_${newRowIdx}`);
@@ -1281,17 +1326,7 @@ function updateTestCaseIndices(rows, testCaseId) {
             writerNoInput.attr('id', `mem_id_${testCaseId}_${newRowIdx}`);
         }
 
-        const $workTaskTbody = $row.find(`tbody[id^="itg-test-area-"]`);
-        if ($workTaskTbody.length) {
-            let newTbodyId = `itg-test-area-${testCaseId}-${newRowIdx}`;
-            $workTaskTbody.attr('id', newTbodyId);
-        }
-
-        const $addTestButton = $row.find('.addTest');
-        if ($addTestButton.length) {
-            $addTestButton.attr('data-testcase', testCaseId);
-            $addTestButton.attr('data-row', newRowIdx);
-        }
+        // 필요한 경우 다른 ID와 이름도 업데이트
     });
 }
 
@@ -1325,7 +1360,7 @@ function renderUnitTestCases(testCaseList) {
     </tbody>
     <tfoot>
         <tr>
-            <td colspan="11">
+            <td colspan="10">
                 <button id="addRow" style="width: 100%;">테스트 케이스 추가</button>
             </td>
         </tr>
@@ -1334,12 +1369,11 @@ function renderUnitTestCases(testCaseList) {
 
     $('#test-case-area').html(html);
     $('#test-case-area').show(50);
-    initializeSortable('test-table-body-unit');
+    initializeSortable('test-table-body-unit', 'unit');
     $('#test-table-body-unit tr').each(function() {
         resizeTextareasInRow(this);
     });
 
-    autoResize();
     collectAndProcessTestData();
     generateCharts();
 
@@ -1431,11 +1465,12 @@ function addIntegrationTestCaseTab(testCaseData) {
 
     let tabHtml = `
         <li class="nav-item" role="presentation">
-            <button class="nav-link ${integrationTestCaseIdx === 1 ? 'active' : ''}" id="${tabId}-tab" data-bs-toggle="tab" data-bs-target="#${tabContentId}" type="button" role="tab" aria-controls="${tabContentId}" aria-selected="${integrationTestCaseIdx === 1 ? 'true' : 'false'}">${tabTitle}</button>
+            <a class="nav-link ${integrationTestCaseIdx === 1 ? 'active' : ''}" id="${tabId}-tab" data-bs-toggle="tab" href="#${tabContentId}" role="tab" aria-controls="${tabContentId}" aria-selected="${integrationTestCaseIdx === 1 ? 'true' : 'false'}">${tabTitle}</a>
         </li>
     `;
 
     $('#integrationTestTabs').append(tabHtml);
+
     let tabContentHtml = `
         <div class="tab-pane fade ${integrationTestCaseIdx === 1 ? 'show active' : ''}" id="${tabContentId}" role="tabpanel" aria-labelledby="${tabId}-tab">
             ${generateIntegrationTestContent(testCaseData, integrationTestCaseIdx)}
@@ -1443,12 +1478,22 @@ function addIntegrationTestCaseTab(testCaseData) {
     `;
 
     $('#integrationTestTabsContent').append(tabContentHtml);
+    initializeSortable(`test-table-body-itg-${integrationTestCaseIdx}`, integrationTestCaseIdx);
 
+    // 새 탭 활성화
+    var tabTrigger = new bootstrap.Tab(document.querySelector('#integrationTestTabs a:last-child'));
+    tabTrigger.show();
+
+    // 필요한 초기화 작업 수행
+    $(".test-date").datepicker({
+        dateFormat: "yy-mm-dd"
+    });
     $(`#${tabContentId} tr`).each(function() {
         resizeTextareasInRow(this);
     });
-
-    initializeSortable(`test-table-body-itg-${integrationTestCaseIdx}`);
+    initializeSortable(`test-table-body-itg-${integrationTestCaseIdx}`, integrationTestCaseIdx);
+    // 탭 드래그 기능 초기화
+    initializeTabSortable();
 }
 
 function generateIntegrationTestRow(testCaseIdx, rowData, rowIdx) {
@@ -1472,7 +1517,6 @@ function generateIntegrationTestRow(testCaseIdx, rowData, rowIdx) {
         });
     }
 
-    // 기능 선택 셀렉트박스 옵션 생성
     let featureOptions = '<option value="" selected disabled>기능 선택</option>';
     if (featureList.length > 0) {
         featureList.forEach(function(feature) {
@@ -1480,7 +1524,6 @@ function generateIntegrationTestRow(testCaseIdx, rowData, rowIdx) {
         });
     }
 
-    console.log(rowData)
     rowData.testDate = (rowData.testDate?.substring(0, 10)) ?? '';
     return `
         <tr id="test_${testCaseIdx}_${rowIdx}_tr">
@@ -1888,3 +1931,4 @@ function confirmationDialog(text = "이 작업을 진행하시겠습니까?") {
         cancelButtonText: "취소",
     });
 }
+
