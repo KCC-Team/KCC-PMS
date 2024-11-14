@@ -1173,6 +1173,9 @@ function renderIntegrationTestCases(testCaseList) {
     $('[id^="test-table-body-itg-"] tr').each(function() {
         resizeTextareasInRow(this);
     });
+    $(".test-date").datepicker({
+        dateFormat: "yy-mm-dd"
+    });
 }
 
 function generateWorkTask(test) {
