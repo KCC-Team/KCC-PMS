@@ -83,7 +83,10 @@ $(document).ready(function (){
             createMenu(menuData);
             if (featureNo) {
                 console.log("featureNo: " + featureNo);
-                return getFeatureInfo(featureNo).then(initializeProgressField); // getFeatureInfo 완료 후 initializeProgressField 실행
+                return getFeatureInfo(featureNo).then(function() {
+                    initializeProgressField();
+                    checkMemberAccess(); // memberNo 값 비교 후 비활성화 처리
+                });
             }
         })
         .catch(function(error) {
@@ -105,6 +108,29 @@ $(document).ready(function (){
 
 
 })
+
+
+// loginMemberNo와 memberNo 비교 후 비활성화 설정 함수
+function checkMemberAccess() {
+    var featureMemberNo = $('#mem_no').val(); // feature의 담당자 번호
+    var urlParams = new URLSearchParams(window.location.search);
+    var loginMemberNo = urlParams.get('loginMemberNo');
+    var authCode = urlParams.get('authCode'); // authCode도 URL에서 가져옴
+
+    console.log("로그인 유저:", loginMemberNo);
+    console.log("권한 코드:", authCode);
+
+    // authCode가 PMS00201 또는 PMS00202라면 모든 필드를 편집 가능하도록 함
+    if (authCode === 'PMS00201' || authCode === 'PMS00202') {
+        return; // 관리자 권한이므로 비활성화 처리하지 않음
+    }
+
+    if (featureMemberNo !== loginMemberNo) {
+        // loginMemberNo와 다르면 모든 입력 필드와 버튼을 비활성화, 단 '닫기' 버튼은 제외
+        $('#feat_form').find('input, select, textarea, button').not('.btn-close-feature').prop('disabled', true);
+        $('.btn-save-feature').hide(); // 저장 버튼 숨기기
+    }
+}
 
 function initializeProgressField() {
     var initialValue = $('#PMS009').val();
