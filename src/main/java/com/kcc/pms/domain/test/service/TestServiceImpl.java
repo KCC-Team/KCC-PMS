@@ -297,9 +297,11 @@ public class TestServiceImpl implements TestService {
         if (cell == null) {
             cell = row.createCell(13);
         }
-        cell.setCellValue(systemMapper.getSystemName(test.getWorkSystemNo()));
-        cell.setCellStyle(borderStyle);
-        cell.getCellStyle().setWrapText(true);
+        if (test.getWorkSystemNo() != null) {
+            cell.setCellValue(systemMapper.getSystemName(test.getWorkSystemNo()));
+            cell.setCellStyle(borderStyle);
+            cell.getCellStyle().setWrapText(true);
+        }
 
         row = sheet.getRow(5);
         cell = row.getCell(4);
