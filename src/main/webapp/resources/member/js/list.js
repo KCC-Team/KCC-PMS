@@ -10,7 +10,9 @@ $(document).ready(function() {
             // FancyTree를 다시 로드
             loadProjectMembers(prjNo);
             loadTeamData(prjNo);
-            loadTeamMembers(event.data.teamNo);
+            setTimeout(function() {
+                loadTeamMembers(event.data.teamNo);
+            }, 1000);
 
             console.log("팝업으로 받은 팀넘버 : " + event.data.teamNo);
 
@@ -217,7 +219,7 @@ $(document).ready(function() {
 
     setTimeout(function (){
         $(".team-overview, .team-members").hide();
-    }, 100);
+    }, 300);
 
     $("#project-member-grid-section").show();
 });
@@ -516,7 +518,8 @@ function loadTeamMembers(teamKey) {
         dataType: 'json',
         success: function(response) {
             console.log("팀원 목록 데이터:", response);
-
+            console.log("aaa" + response.length);
+            $(".header1").html('<span class="member-title">인력</span> ' + (response.length || 0));
             const dataWithTeamKey = response.map(member => {
                 member.teamNo = teamKey;
                 if (member.endDate && member.endDate.startsWith("2999")) {
