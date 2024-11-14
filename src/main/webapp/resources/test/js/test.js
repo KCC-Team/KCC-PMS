@@ -490,10 +490,9 @@ $(function() {
     function parseTestData(jsonData) {
         console.log(jsonData);
         let testMasterData = {};
-        console.log(jsonData);
-        // 테스트 마스터 데이터 파싱 (예시로 작성, 실제 셀 위치에 따라 수정 필요)
         testMasterData.testTitle = jsonData[3][4]; // 예: 테스트 명이 A1 셀에 위치
         testMasterData.testId = jsonData[4][4];    // 예: 테스트 ID가 A2 셀에 위치
+        testMasterData.workSystemNo = jsonData[4][13]; // 예: 시스템 번호가 B2 셀에 위치
         testMasterData.testType = jsonData[2][1];  // 예: 테스트 구분이 A3 셀에 위치
         testMasterData.testStatus = jsonData[3][1]; // 예: 테스트 상태가 A4 셀에 위치
         testMasterData.testStartDate = jsonData[4][1]; // 예: 테스트 시작일이 A5 셀에 위치
@@ -576,6 +575,7 @@ $(function() {
             $('#testId').val(data.testMasterData.testId);
             $('#PMS012').val(data.testType).trigger('change');
             $('#PMS013').val("PMS01301");
+            setSystemPathText(data.testMasterData.workSystemNo);
             $('#testStartDate').val(data.testMasterData.testStartDate);
             $('#testEndDate').val(data.testMasterData.testEndDate);
             $('#testContent').val(data.testMasterData.testContent);
@@ -585,7 +585,7 @@ $(function() {
             $('#PMS012').val('PMS01201').trigger('change');
             $('#PMS013').val('PMS01301').trigger('change');
             $('#testDetailId').val(data.testMasterData.testId + '_01');
-            $('#feature').val("1").trigger('change');
+            $('#feature').val(data.testMasterData.featNumbers).trigger('change');
             $('.feature-select-area').show();
             renderUnitTestCases(data.testData);
         } else if (data.testType === 'PMS01202') {
@@ -705,6 +705,10 @@ function setSystemPath(systemNo) {
         let path = selectedItem.data('parent-path') || selectedItem.text();
         $('#system-select span:first-child').text(path);
     }
+}
+
+function setSystemPathText(systemNo) {
+    $('#system-select span:first-child').text(systemNo);
 }
 
 function fetchOptions() {
@@ -1204,12 +1208,7 @@ function initializeSortable(elementId) {
             let oldIndex = evt.oldIndex; // 이전 인덱스
             let newIndex = evt.newIndex; // 새로운 인덱스
 
-            console.log('swapRowData 호출됨:', oldIndex, newIndex);
-
-            // 이동된 두 행의 데이터를 교환
             swapRowData(tbody.rows[oldIndex], tbody.rows[newIndex]);
-
-            // 시각적인 순번 업데이트
             updateVisualIndices(tbody);
         },
     });
