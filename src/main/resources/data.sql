@@ -1405,7 +1405,7 @@ INSERT INTO Defect (df_no, df_id, df_ttl, stat_cd, pri_cd, df_cont, df_fd_dt, me
 VALUES (seq_defect.nextval, 'TRN-0026', '예약 입력 시 자동 저장 기능 작동 안함 문제', 'PMS00702', 'PMS00601', '자동 저장이 작동하지 않습니다.', TO_DATE('2024-10-26', 'YYYY-MM-DD'), 1, 1, 'PMS00802');
 INSERT INTO Defect (df_no, df_id, df_ttl, stat_cd, pri_cd, df_cont, df_fd_dt, mem_fd_no, prj_no, type_cd)
 VALUES (seq_defect.nextval, 'TRN-0027', '열차 운행 관리 시스템 메모리 누수 현상 발생', 'PMS00703', 'PMS00602', '장시간 사용 시 메모리 사용량 증가.', TO_DATE('2024-10-27', 'YYYY-MM-DD'), 1, 1, 'PMS00803');
-INSERT INTO Defect (df_no, df_id, df_ttl, stat_cd, pri_cd, df_cont, df_fd_dt, mem_fd_no, prj_no, type_cd
+INSERT INTO Defect (df_no, df_id, df_ttl, stat_cd, pri_cd, df_cont, df_fd_dt, mem_fd_no, prj_no, type_cd)
 VALUES (seq_defect.nextval, 'TRN-0028', '승무원이 접근하지 못하는 페이지 권한 오류 발생', 'PMS00704', 'PMS00603', '비인가 사용자가 페이지에 접근 가능합니다.', TO_DATE('2024-10-28', 'YYYY-MM-DD'), 1, 1, 'PMS00801');
 INSERT INTO Defect (df_no, df_id, df_ttl, stat_cd, pri_cd, df_cont, df_fd_dt, mem_fd_no, prj_no, type_cd)
 VALUES (seq_defect.nextval, 'TRN-0029', '열차 번호 입력 시 특수문자 입력 불가 문제', 'PMS00701', 'PMS00604', '특정 필드에 입력이 불가능합니다.', TO_DATE('2024-10-29', 'YYYY-MM-DD'), 1, 1, 'PMS00802');
