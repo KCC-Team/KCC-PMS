@@ -1182,10 +1182,9 @@ function generateDefect(defectData) {
     }
     for (let defect of defectData) {
         html += `
-            <a href="#" onclick="openDefectPopup(${defect.defectNumber})" class="defect-badge">
+            <a href="#" onclick="openDefectPopup(${defect.defectNumber})" class="defect-badge" data-defect-status-code="${defect.defectStatusCode}">
                 ${defect.defectId}
             </a>
-            <input type="hidden" name="defectStatusCode" value="${defect.defectStatusCode}"/>
         `;
     }
     return html;
@@ -1879,8 +1878,8 @@ function collectAndProcessTestData() {
                     defectOccurredCount++;
 
                     // Collect defect status code from the test case
-                    $(this).find('input[name="defectStatusCode"]').each(function() {
-                        let defectStatusCode = $(this).val();
+                    $(this).find('a.defect-badge').each(function() {
+                        let defectStatusCode = $(this).data('defect-status-code');
                         updateDefectCounts(defectCounts, defectStatusCode);
                     });
                 } else if (result === 'PMS01401') {
