@@ -1879,8 +1879,10 @@ function collectAndProcessTestData() {
                     defectOccurredCount++;
 
                     // Collect defect status code from the test case
-                    let defectStatusCode = $(this).find('input[name="defectStatusCode"]').val();
-                    updateDefectCounts(defectCounts, defectStatusCode);
+                    $(this).find('input[name="defectStatusCode"]').each(function() {
+                        let defectStatusCode = $(this).val();
+                        updateDefectCounts(defectCounts, defectStatusCode);
+                    });
                 } else if (result === 'PMS01401') {
                     completedCount++;
                 }
